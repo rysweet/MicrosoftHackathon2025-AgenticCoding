@@ -126,25 +126,40 @@ Amplifier transforms AI coding assistants into force multipliers by providing:
 
 ## Key Design Principles
 
-### Ruthless Simplicity
+### Ruthless Simplicity & Zero-BS
 - Every component must justify its complexity
+- No placeholder code or stubs - everything works or doesn't exist
 - Start minimal, grow as needed
-- Avoid premature optimization
+- Avoid premature optimization and future-proofing
+- Trust in emergence over central control
 
-### Modular Architecture
-- Self-contained modules ("bricks and studs")
-- Clear contracts and interfaces
-- Regeneratable components
+### Modular Architecture ("Bricks and Studs")
+- Self-contained modules as regeneratable bricks
+- Clear contracts as stable connection points (studs)
+- Regeneration over line-by-line editing
+- Blueprint-driven development with AI builders
+- Human architects, AI implementers
+
+### Analysis-First Development
+- Analyze problems before implementing
+- Document multiple approaches with trade-offs
+- Create structured implementation plans
+- Validate approach before coding
+- Track decision rationale
 
 ### Parallel Development
-- Multiple solutions tested simultaneously
+- Multiple solutions built and tested simultaneously
 - Isolated worktrees with data synchronization
-- Rapid experimentation and iteration
+- Rapid experimentation through regeneration
+- Learn from variant performance
+- Merge successful patterns
 
 ### Knowledge-Driven
 - Extract knowledge from all content
 - Synthesize patterns across sources
+- Preserve productive tensions and contradictions
 - Query accumulated wisdom
+- Document discoveries for reuse
 
 ## Performance Requirements
 
