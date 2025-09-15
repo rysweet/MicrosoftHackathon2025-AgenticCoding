@@ -14,8 +14,8 @@ Maintain comprehensive AI context files and enforce development guidelines that 
 - MUST update context on significant changes
 - MUST validate context completeness
 
-#### FR-AC-002: Git Collector Files
-- MUST generate git history context
+#### FR-AC-002: Version History Collection
+- MUST generate version control history context
 - MUST extract patterns from commit history
 - MUST identify code evolution patterns
 - MUST document refactoring history
@@ -30,8 +30,8 @@ Maintain comprehensive AI context files and enforce development guidelines that 
 
 ### Project Guidelines Documentation
 
-#### FR-AC-004: CLAUDE.md Maintenance
-- MUST maintain Claude-specific instructions
+#### FR-AC-004: AI Assistant Instructions Maintenance
+- MUST maintain AI assistant-specific instructions
 - MUST document working philosophy
 - MUST track memory system guidelines
 - MUST specify agent usage patterns
@@ -67,7 +67,7 @@ Maintain comprehensive AI context files and enforce development guidelines that 
 - MUST minimize preamble and postamble
 - MUST answer questions directly
 - MUST avoid unnecessary explanations
-- MUST respect CLI interface constraints
+- MUST respect command-line interface constraints
 
 #### FR-RG-003: Tone and Style Guidelines
 - MUST maintain professional tone
@@ -93,10 +93,10 @@ Maintain comprehensive AI context files and enforce development guidelines that 
 - MUST follow security guidelines
 
 #### FR-DG-003: Dependency Management
-- MUST use uv for Python dependencies
-- MUST use pnpm for npm packages
-- MUST check package.json before assuming libraries
-- MUST verify library availability
+- MUST use appropriate dependency management tools for the language
+- MUST use recommended package managers for external libraries
+- MUST check project dependency files before assuming library availability
+- MUST verify library availability before use
 - MUST manage dependency versions properly
 
 ## Analysis and Decision Guidelines

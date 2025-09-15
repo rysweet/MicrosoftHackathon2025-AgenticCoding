@@ -45,34 +45,34 @@ Provide automated workflow integration through configurable hooks that execute a
 ## Input Requirements
 
 ### IR-HA-001: Hook Configuration
-- Hook trigger patterns (regex matching)
-- Command specifications
-- Timeout values
-- Environment variables
-- Conditional execution rules
+- The system must accept hook trigger patterns using regular expression matching
+- The system must process command specifications for hook execution
+- The system must respect configured timeout values
+- The system must support environment variable configuration
+- The system must evaluate conditional execution rules
 
 ### IR-HA-002: Event Data
-- Tool name and parameters
-- Execution context
-- User session information
-- File modifications
-- Error conditions
+- The system must receive tool names and their parameters
+- The system must capture execution context information
+- The system must track user session information
+- The system must detect file modifications
+- The system must handle error conditions appropriately
 
 ## Output Requirements
 
 ### OR-HA-001: Hook Results
-- Execution success/failure status
-- Command output
-- Error messages
-- Performance metrics
-- Side effects produced
+- The system must report execution success or failure status
+- The system must capture and return command output
+- The system must provide detailed error messages
+- The system must collect performance metrics
+- The system must document side effects produced
 
 ### OR-HA-002: Log Records
-- Timestamped event logs
-- Hook execution traces
-- Subagent interaction logs
-- Session activity logs
-- Error and warning logs
+- The system must generate timestamped event logs
+- The system must record hook execution traces
+- The system must log subagent interactions
+- The system must maintain session activity logs
+- The system must preserve error and warning logs
 
 ## Performance Requirements
 
@@ -106,7 +106,7 @@ Provide automated workflow integration through configurable hooks that execute a
 ## Configuration Requirements
 
 ### CR-HA-001: Hook Settings
-- MUST support JSON configuration
+- MUST support structured configuration formats
 - MUST allow per-project settings
 - MUST enable user overrides
 - MUST validate configurations

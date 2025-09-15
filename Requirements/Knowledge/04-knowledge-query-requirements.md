@@ -36,42 +36,42 @@ Enable natural language querying and retrieval of knowledge from the knowledge b
 - MUST group related results
 
 #### FR-KQ-005: Export Capabilities
-- MUST export results as JSON
+- MUST export results in structured data formats
 - MUST generate text reports
-- MUST create markdown summaries
-- MUST support CSV export for data
+- MUST create formatted documentation
+- MUST support tabular data export
 - MUST enable bulk export operations
 
 ## Input Requirements
 
 ### IR-KQ-001: Query Input
-- Natural language questions
-- Keyword search terms
-- Boolean query expressions
-- Filter criteria (date, source, type)
-- Result limit specifications
+- The system must accept natural language questions from users
+- The system must process keyword search terms
+- The system must parse boolean query expressions
+- The system must apply filter criteria including date, source, and type
+- The system must respect result limit specifications
 
 ### IR-KQ-002: Context
-- User query history
-- Active filters
-- Preferred sources
-- Domain focus areas
+- The system must consider user query history for context
+- The system must maintain and apply active filters
+- The system must prioritize preferred sources when available
+- The system must focus on specified domain areas
 
 ## Output Requirements
 
 ### OR-KQ-001: Query Results
-- Ranked list of relevant knowledge items
-- Answer summaries with confidence scores
-- Supporting evidence and citations
-- Related concepts and suggestions
-- Query execution statistics
+- The system must provide a ranked list of relevant knowledge items
+- The system must generate answer summaries with confidence scores
+- The system must include supporting evidence and citations
+- The system must suggest related concepts and queries
+- The system must report query execution statistics
 
 ### OR-KQ-002: Export Formats
-- JSON with full metadata
-- Markdown reports with formatting
-- Plain text summaries
-- CSV data tables
-- HTML presentations
+- The system must provide structured data export with full metadata
+- The system must generate formatted documentation reports
+- The system must create plain text summaries
+- The system must export tabular data in standard formats
+- The system must produce presentation-ready output
 
 ## Performance Requirements
 

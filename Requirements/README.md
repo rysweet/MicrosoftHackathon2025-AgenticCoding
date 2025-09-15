@@ -69,7 +69,7 @@ The system provides 21 specialized agents, each with specific expertise:
 - **[18-content-researcher](Agents/18-content-researcher-requirements.md)** - Content research
 - **[19-subagent-architect](Agents/19-subagent-architect-requirements.md)** - Creating new agents
 - **[20-post-task-cleanup](Agents/20-post-task-cleanup-requirements.md)** - Codebase hygiene
-- **[21-amplifier-cli-architect](Agents/21-amplifier-cli-architect-requirements.md)** - Hybrid tool creation
+- **[21-amplifier-tool-architect](Agents/21-amplifier-cli-architect-requirements.md)** - Hybrid tool creation
 
 ### 2. Knowledge Management System
 
@@ -91,16 +91,16 @@ Manages source content for knowledge extraction:
 
 Tools for parallel development, code quality, and AI-assisted workflows:
 
-- **[Worktree Management](Development/01-worktree-management-requirements.md)** - Parallel development with git worktrees
+- **[Worktree Management](Development/01-worktree-management-requirements.md)** - Parallel development with version control workspaces
 - **[Code Quality](Development/02-code-quality-requirements.md)** - Formatting, linting, type checking, testing
-- **[Claude Commands](Development/03-claude-commands-requirements.md)** - Planning, execution, review commands and hooks
+- **[AI Commands](Development/03-claude-commands-requirements.md)** - Planning, execution, review commands and hooks
 - **[AI Context & Guidelines](Development/04-ai-context-guidelines-requirements.md)** - Context generation and development guidelines
 
-### 5. CLI Interface
+### 5. Command-Line Interface
 
 Command-line interface for all operations:
 
-- **[CLI Interface](CLI/01-cli-interface-requirements.md)** - Makefile commands and Python CLIs
+- **[Command-Line Interface](CLI/01-cli-interface-requirements.md)** - Build system commands and scripted interfaces
 
 ### 6. Memory & Learning System
 
@@ -167,7 +167,7 @@ Amplifier transforms AI coding assistants into force multipliers by providing:
 - Document extraction: 10-30 seconds per document
 - Knowledge synthesis: < 5 minutes for 100+ documents
 - Graph operations: < 2 seconds for queries
-- CLI response: < 1 second to start
+- Command response: < 1 second to start
 
 ### Scalability
 - Handle 1000+ documents in knowledge base
@@ -212,7 +212,7 @@ Each requirement document follows a consistent structure:
 To implement a new version of Amplifier:
 
 1. Start with core components (Knowledge, Agents)
-2. Build CLI interface for user interaction
+2. Build command-line interface for user interaction
 3. Add development workflow tools
 4. Implement hooks and automation
 5. Integrate memory system

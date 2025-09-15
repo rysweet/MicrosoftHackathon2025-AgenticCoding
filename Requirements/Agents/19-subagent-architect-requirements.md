@@ -12,17 +12,17 @@ Creates new specialized agents by analyzing requirements and generating proper a
 - FR19.6: MUST generate valid agent definitions
 
 ## Input Requirements
-- IR19.1: Task or problem description
-- IR19.2: Existing agent ecosystem context
-- IR19.3: Performance requirements
-- IR19.4: Integration constraints
+- IR19.1: The agent must accept task or problem descriptions requiring specialized expertise
+- IR19.2: The agent must consider the existing agent ecosystem context
+- IR19.3: The agent must incorporate performance requirements
+- IR19.4: The agent must respect integration constraints
 
 ## Output Requirements
-- OR19.1: Agent definition JSON with all fields
-- OR19.2: System prompt with clear instructions
-- OR19.3: whenToUse criteria with examples
-- OR19.4: Integration recommendations
-- OR19.5: Agent capability boundaries
+- OR19.1: The agent must generate complete agent definitions in structured format with all required fields
+- OR19.2: The agent must create system prompts with clear instructions
+- OR19.3: The agent must define whenToUse criteria with concrete examples
+- OR19.4: The agent must provide integration recommendations
+- OR19.5: The agent must specify agent capability boundaries
 
 ## Quality Requirements
 - QR19.1: Agents must be specialized not generic

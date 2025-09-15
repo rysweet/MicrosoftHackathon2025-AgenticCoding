@@ -1,18 +1,18 @@
 # Worktree Management Requirements
 
 ## Purpose
-Enable parallel development through isolated git worktrees with data synchronization, supporting simultaneous exploration of multiple solutions.
+Enable parallel development through isolated version control workspaces with data synchronization, supporting simultaneous exploration of multiple solutions.
 
 ## Functional Requirements
 
 ### Core Worktree Operations
 
 #### FR-WT-001: Worktree Creation
-- MUST create git worktrees with unique branch names
-- MUST copy .data directory to new worktree
+- MUST create version control workspaces with unique branch names
+- MUST copy data directories to new workspace
 - MUST preserve virtual environment settings
 - MUST set up isolated workspace
-- MUST track worktree in git
+- MUST track workspace in version control
 
 #### FR-WT-002: Data Synchronization
 - MUST copy knowledge base to worktree
@@ -36,8 +36,8 @@ Enable parallel development through isolated git worktrees with data synchroniza
 - MUST handle branch conflicts
 
 #### FR-WT-005: Environment Isolation
-- MUST maintain separate Python environments
-- MUST isolate dependencies per worktree
+- MUST maintain separate development environments
+- MUST isolate dependencies per workspace
 - MUST preserve environment variables
 - MUST support environment synchronization
 - MUST handle virtual environment activation
@@ -45,9 +45,9 @@ Enable parallel development through isolated git worktrees with data synchroniza
 ## Input Requirements
 
 ### IR-WT-001: Creation Parameters
-- Branch/worktree name
-- Base branch (default: current)
-- Data copy preferences
+- The system must accept workspace and branch names as input
+- The system must accept a base branch specification, defaulting to current branch
+- The system must accept preferences for which data to copy to the new workspace
 - Environment settings
 
 ### IR-WT-002: Management Commands
@@ -91,7 +91,7 @@ Enable parallel development through isolated git worktrees with data synchroniza
 - MUST prevent accidental data loss
 - MUST validate operations before execution
 
-### SR-WT-002: Git Safety
+### SR-WT-002: Version Control Safety
 - MUST check for uncommitted changes
 - MUST prevent branch conflicts
 - MUST maintain git repository integrity
