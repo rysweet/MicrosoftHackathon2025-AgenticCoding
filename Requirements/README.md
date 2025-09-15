@@ -7,6 +7,7 @@ This directory contains comprehensive functional requirements for the Amplifier 
 ```
 Requirements/
 ├── README.md                    # This overview document
+├── Philosophy/                  # Core philosophy and design principles
 ├── Agents/                      # Requirements for 21 specialized AI agents
 ├── Knowledge/                   # Knowledge management subsystems
 ├── Content/                     # Content management system
