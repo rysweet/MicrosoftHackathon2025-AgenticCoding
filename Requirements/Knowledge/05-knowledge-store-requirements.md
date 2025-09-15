@@ -8,7 +8,7 @@ Provide persistent storage, versioning, and management of extracted and synthesi
 ### Core Storage Capabilities
 
 #### FR-KST-001: Data Persistence
-- MUST store knowledge in JSON Lines format
+- MUST store knowledge in a line-oriented structured format
 - MUST support append-only operations for durability
 - MUST maintain data integrity across crashes
 - MUST support atomic write operations
@@ -45,33 +45,33 @@ Provide persistent storage, versioning, and management of extracted and synthesi
 ## Input Requirements
 
 ### IR-KST-001: Knowledge Data
-- Extracted concepts and definitions
-- Relationship triples
-- Insights and patterns
-- Source metadata
-- Processing status information
+- The system must accept extracted concepts and definitions
+- The system must process relationship triples
+- The system must store insights and patterns
+- The system must preserve source metadata
+- The system must track processing status information
 
 ### IR-KST-002: Configuration
-- Storage paths
-- Retention policies
-- Backup settings
-- Compression options
+- The system must accept storage path configurations
+- The system must implement retention policies
+- The system must support backup settings
+- The system must provide compression options
 
 ## Output Requirements
 
 ### OR-KST-001: Stored Data
-- Persisted knowledge in JSON Lines
-- Status tracking files
-- Version history
-- Index files for fast lookup
-- Backup archives
+- The system must persist knowledge in a line-oriented format
+- The system must maintain status tracking files
+- The system must preserve version history
+- The system must create index files for fast lookup
+- The system must generate backup archives
 
 ### OR-KST-002: Retrieval Results
-- Knowledge items by ID
-- Filtered knowledge sets
-- Processing status reports
-- Storage statistics
-- Version comparisons
+- The system must retrieve knowledge items by identifier
+- The system must return filtered knowledge sets
+- The system must generate processing status reports
+- The system must provide storage statistics
+- The system must produce version comparisons
 
 ## Performance Requirements
 
@@ -104,9 +104,9 @@ Provide persistent storage, versioning, and management of extracted and synthesi
 
 ## Storage Format Requirements
 
-### SF-KST-001: JSON Lines Format
-- MUST use one JSON object per line
+### SF-KST-001: Line-Oriented Storage Format
+- MUST use one structured record per line
 - MUST include metadata in each record
 - MUST support streaming reads
-- MUST enable grep-like operations
+- MUST enable line-based search operations
 - MUST compress efficiently

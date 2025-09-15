@@ -12,16 +12,16 @@ Embodies ruthless simplicity and elegant minimalism in software architecture, cr
 - FR1.6: MUST delegate implementation to appropriate agents after creating specifications
 
 ## Input Requirements
-- IR1.1: Task description or feature requirements
-- IR1.2: Existing codebase context when reviewing
-- IR1.3: Architecture decisions and patterns from project documentation
+- IR1.1: The agent must accept task descriptions or feature requirements as primary input
+- IR1.2: The agent must process existing codebase context when performing reviews
+- IR1.3: The agent must consider architecture decisions and patterns from project documentation
 
 ## Output Requirements
-- OR1.1: Structured analysis with approach options and trade-offs
-- OR1.2: Module specifications with clear contracts (inputs, outputs, side effects)
-- OR1.3: Architecture assessment scores (complexity, coupling, philosophy alignment)
-- OR1.4: Implementation specifications ready for modular-builder agent
-- OR1.5: Review reports with recommendations but no direct code changes
+- OR1.1: The agent must produce structured analysis with approach options and trade-offs
+- OR1.2: The agent must generate module specifications with clear contracts including inputs, outputs, and side effects
+- OR1.3: The agent must provide architecture assessment scores for complexity, coupling, and philosophy alignment
+- OR1.4: The agent must create implementation specifications ready for the modular-builder agent
+- OR1.5: The agent must deliver review reports with recommendations but no direct code changes
 
 ## Quality Requirements
 - QR1.1: Specifications must be complete enough for implementation without clarification

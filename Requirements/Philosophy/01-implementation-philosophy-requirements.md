@@ -19,7 +19,7 @@ Ensure the system embodies and enforces the core implementation philosophy of ru
 - MUST identify and flag TODO comments without accompanying working implementation
 - MUST reject placeholder/mock/fake functions that don't work
 - MUST enforce that every function either works completely or doesn't exist
-- MUST distinguish legitimate patterns (Click groups, Python ABCs) from stubs
+- MUST distinguish legitimate framework patterns and abstract base classes from stubs
 
 #### FR-PH-003: Present-Moment Focus
 - MUST resist building for hypothetical future requirements
@@ -90,10 +90,10 @@ Ensure the system embodies and enforces the core implementation philosophy of ru
 - MUST detect and flag duplicate configuration values
 - MUST read configuration from authoritative sources at runtime
 - MUST reject hardcoded values that duplicate configuration
-- MUST derive all configuration from pyproject.toml when possible
+- MUST derive all configuration from a single authoritative project configuration file when possible
 
 #### FR-PH-012: Configuration Hierarchy
-- MUST establish clear configuration precedence (pyproject.toml > ruff.toml > .vscode)
+- MUST establish clear configuration precedence with project configuration taking priority over tool-specific settings
 - MUST validate configuration consistency across files
 - MUST warn when configuration drift is detected
 - MUST provide configuration validation tools

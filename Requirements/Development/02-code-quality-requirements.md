@@ -8,11 +8,11 @@ Ensure code quality through automated formatting, linting, type checking, and te
 ### Core Quality Operations
 
 #### FR-CQ-001: Code Formatting
-- MUST format Python code with ruff
+- MUST format source code using appropriate formatting tools
 - MUST apply consistent style rules
 - MUST fix formatting automatically
 - MUST preserve code semantics
-- MUST handle all Python files in project
+- MUST handle all source files in project
 
 #### FR-CQ-002: Code Linting
 - MUST detect code style violations
@@ -22,8 +22,8 @@ Ensure code quality through automated formatting, linting, type checking, and te
 - MUST provide clear error messages
 
 #### FR-CQ-003: Type Checking
-- MUST perform static type analysis with pyright
-- MUST validate type hints
+- MUST perform static type analysis using appropriate type checkers
+- MUST validate type annotations
 - MUST detect type mismatches
 - MUST check function signatures
 - MUST report type coverage metrics
@@ -36,7 +36,7 @@ Ensure code quality through automated formatting, linting, type checking, and te
 - MUST distinguish legitimate patterns from stubs
 
 #### FR-CQ-005: Test Execution
-- MUST run unit tests with pytest
+- MUST run unit tests using appropriate test frameworks
 - MUST execute integration tests
 - MUST support smoke tests
 - MUST generate coverage reports
@@ -45,17 +45,17 @@ Ensure code quality through automated formatting, linting, type checking, and te
 ## Input Requirements
 
 ### IR-CQ-001: Configuration
-- Ruff configuration (line length, rules)
-- Pyright settings (strict mode, excludes)
-- Test discovery patterns
-- Coverage thresholds
-- Quality gate criteria
+- The system must accept formatter configuration including line length and style rules
+- The system must accept type checker settings including strictness levels and exclusions
+- The system must accept test discovery patterns for locating test files
+- The system must accept coverage threshold configurations
+- The system must accept quality gate criteria definitions
 
 ### IR-CQ-002: Source Code
-- Python source files
-- Test files
-- Configuration files
-- Documentation files
+- The system must process source code files from the project
+- The system must process test files for execution
+- The system must read configuration files for settings
+- The system must validate documentation files for completeness
 
 ## Output Requirements
 

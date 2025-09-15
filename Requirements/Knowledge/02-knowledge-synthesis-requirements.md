@@ -45,32 +45,32 @@ Synthesize patterns, connections, and insights across extracted knowledge from m
 ## Input Requirements
 
 ### IR-KS-001: Knowledge Sources
-- Extracted concepts from multiple documents
-- Relationship networks (SPO triples)
-- Individual source insights
-- Source metadata and context
+- The system must process extracted concepts from multiple documents
+- The system must integrate relationship networks containing subject-predicate-object triples
+- The system must incorporate individual source insights
+- The system must preserve source metadata and context
 
 ### IR-KS-002: Synthesis Configuration
-- Synthesis depth (quick/thorough)
-- Tension preservation settings
-- Confidence thresholds
-- Focus areas or themes
+- The system must accept synthesis depth settings for quick or thorough analysis
+- The system must respect tension preservation settings
+- The system must apply configurable confidence thresholds
+- The system must focus on specified areas or themes when provided
 
 ## Output Requirements
 
 ### OR-KS-001: Synthesized Knowledge
-- Unified concept definitions with multi-source support
-- Merged relationship networks
-- Cross-source insights with evidence
-- Identified patterns with examples
-- Contradiction maps with viewpoints
+- The system must produce unified concept definitions with multi-source support
+- The system must generate merged relationship networks
+- The system must deliver cross-source insights with supporting evidence
+- The system must present identified patterns with concrete examples
+- The system must create contradiction maps showing different viewpoints
 
 ### OR-KS-002: Synthesis Reports
-- Pattern frequency analysis
-- Confidence distributions
-- Source contribution metrics
-- Synthesis quality scores
-- Areas of uncertainty or conflict
+- The system must provide pattern frequency analysis
+- The system must generate confidence distribution reports
+- The system must calculate source contribution metrics
+- The system must produce synthesis quality scores
+- The system must identify and report areas of uncertainty or conflict
 
 ## Performance Requirements
 

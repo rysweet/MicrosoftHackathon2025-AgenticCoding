@@ -52,34 +52,34 @@ Scan, load, parse, and manage various content sources for knowledge extraction, 
 ## Input Requirements
 
 ### IR-CM-001: Configuration
-- Content directory paths (environment variable)
-- File extension filters
-- Exclusion patterns
-- Scan depth limits
-- Encoding preferences
+- The system must accept content directory paths from environment variables
+- The system must apply file extension filters
+- The system must respect exclusion patterns
+- The system must enforce scan depth limits
+- The system must support configurable encoding preferences
 
 ### IR-CM-002: Search Queries
-- Keyword search terms
-- Metadata filters
-- Date ranges
-- File type filters
-- Status filters
+- The system must accept keyword search terms
+- The system must apply metadata filters
+- The system must support date range filtering
+- The system must enable file type filtering
+- The system must respect status filters
 
 ## Output Requirements
 
 ### OR-CM-001: Content Items
-- File path and location
-- Extracted text content
-- Document metadata
-- Processing status
-- Fingerprint hash
+- The system must provide file paths and locations
+- The system must return extracted text content
+- The system must include document metadata
+- The system must report processing status
+- The system must generate fingerprint hashes
 
 ### OR-CM-002: Status Reports
-- Total files discovered
-- Processing statistics
-- Error summaries
-- Change detection results
-- Storage usage metrics
+- The system must report total files discovered
+- The system must provide processing statistics
+- The system must generate error summaries
+- The system must present change detection results
+- The system must calculate storage usage metrics
 
 ## Performance Requirements
 
@@ -117,10 +117,10 @@ Scan, load, parse, and manage various content sources for knowledge extraction, 
 - MUST support plain text (.txt)
 - MUST support PDF documents
 - MUST support HTML files
-- MUST support JSON/YAML data
+- MUST support structured data formats
 
 ### FS-CM-002: Metadata Extraction
-- MUST extract YAML frontmatter
+- MUST extract structured frontmatter from documents
 - MUST parse PDF metadata
 - MUST read file system metadata
 - MUST extract embedded properties
