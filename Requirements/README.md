@@ -17,6 +17,23 @@ Requirements/
 └── Hooks/                       # Hooks and automation
 ```
 
+## Foundational Philosophy and Principles
+
+The system is built on core philosophical foundations that guide all design and implementation decisions:
+
+### Philosophy and Design Principles
+
+- **[Implementation Philosophy](Philosophy/01-implementation-philosophy-requirements.md)** - Ruthless simplicity, emergence, zero-BS principle
+- **[Modular Design Philosophy](Philosophy/02-modular-design-philosophy-requirements.md)** - Bricks and studs pattern, regeneration over editing
+
+These philosophical requirements ensure the system:
+- Enforces ruthless simplicity and rejects unnecessary complexity
+- Implements the "bricks and studs" modular architecture
+- Prefers module regeneration over line-by-line editing
+- Follows analysis-first development patterns
+- Maintains single source of truth for configuration
+- Embodies trust in emergence over central control
+
 ## Core System Components
 
 ### 1. AI Agent Ecosystem (21 Specialized Agents)
@@ -72,10 +89,12 @@ Manages source content for knowledge extraction:
 
 ### 4. Development Workflow Tools
 
-Tools for parallel development and code quality:
+Tools for parallel development, code quality, and AI-assisted workflows:
 
 - **[Worktree Management](Development/01-worktree-management-requirements.md)** - Parallel development with git worktrees
 - **[Code Quality](Development/02-code-quality-requirements.md)** - Formatting, linting, type checking, testing
+- **[Claude Commands](Development/03-claude-commands-requirements.md)** - Planning, execution, review commands and hooks
+- **[AI Context & Guidelines](Development/04-ai-context-guidelines-requirements.md)** - Context generation and development guidelines
 
 ### 5. CLI Interface
 
