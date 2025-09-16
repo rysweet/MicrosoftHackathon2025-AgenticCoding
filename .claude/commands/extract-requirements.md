@@ -1,6 +1,6 @@
 # extract-requirements
 
-Extract functional requirements from a codebase, separating WHAT the software does from HOW it implements it.
+Extract functional requirements from a codebase, focusing on WHAT the software does rather than HOW it implements it.
 
 ## Usage
 
@@ -12,10 +12,6 @@ Extract functional requirements from a codebase, separating WHAT the software do
 
 - `--output <file>` - Output file path (default: requirements.md)
 - `--format <type>` - Output format: markdown, json, yaml (default: markdown)
-- `--compare <file>` - Compare against existing requirements for gap analysis
-- `--resume` - Resume from previous extraction state
-- `--concurrency <n>` - Number of parallel extractions (default: 3)
-- `--verbose` - Show detailed progress
 
 ## Examples
 
@@ -24,14 +20,9 @@ Extract functional requirements from a codebase, separating WHAT the software do
 /extract-requirements ./my-project
 ```
 
-### Gap analysis against existing requirements
+### Specify output file
 ```
-/extract-requirements ./my-project --compare existing-requirements.md
-```
-
-### Resume interrupted extraction
-```
-/extract-requirements ./my-project --resume
+/extract-requirements ./my-project --output requirements.md
 ```
 
 ### JSON output for programmatic use
@@ -41,32 +32,33 @@ Extract functional requirements from a codebase, separating WHAT the software do
 
 ## Description
 
-This command analyzes a codebase and extracts functional requirements from the implementation. It:
+This command provides clear instructions to Claude for analyzing a codebase and extracting functional requirements. It embraces Claude's intelligence rather than trying to orchestrate every detail through complex code.
 
-1. **Discovers** all code files and groups them into logical modules
-2. **Extracts** requirements using AI to understand code semantics
-3. **Categorizes** requirements by type and priority
-4. **Analyzes** gaps against existing documentation (if provided)
-5. **Formats** output as technology-agnostic requirement documents
+### Philosophy
 
-### Key Features
+**"Code for structure, AI for intelligence"**
 
-- **Resume Capability**: Saves progress after each module for interruption recovery
-- **Parallel Processing**: Analyzes multiple modules concurrently
-- **Gap Analysis**: Identifies missing, extra, and modified requirements
-- **Multiple Formats**: Supports Markdown, JSON, and YAML output
-- **Technology Agnostic**: Generates requirements without implementation details
+The tool follows ruthless simplicity:
+- **130 lines of Python** instead of 700+
+- **No complex orchestration** - Claude handles the analysis
+- **No state management** - Claude manages the process
+- **No SDK dependencies** - Direct, clear instructions
 
 ### How It Works
 
-The tool uses a hybrid code/AI approach:
-- **Code** handles file traversal, state management, and formatting
-- **AI** understands code semantics and extracts functional requirements
+1. **Validates** the project path exists
+2. **Formats** clear instructions for Claude
+3. **Delegates** the actual analysis to Claude's intelligence
+4. **Trusts** Claude to organize and extract requirements naturally
 
-Each module is processed independently with results saved immediately, allowing for:
-- Resume from interruptions
-- Partial results on timeout
-- Incremental updates
+### What Claude Analyzes
+
+When invoked, Claude will:
+1. Explore the project structure to understand the codebase
+2. Identify major functional modules and components
+3. Extract what each module does (functionality, not implementation)
+4. Organize requirements by functional category
+5. Generate properly formatted requirements document
 
 ### Requirements Format
 
@@ -75,57 +67,59 @@ Generated requirements follow standard format:
 ## Category: Feature Name
 
 ### REQ-MOD-001: Requirement Title
-The system SHALL [action] [object] [condition/context]
-
-### REQ-MOD-002: Another Requirement
-The system SHALL [action] [object] [condition/context]
+**Priority:** High/Medium/Low
+**Category:** API/Data/UI/etc
+**Description:** The system shall [action] [object] [condition/context]
+**Evidence:** Brief rationale or code reference
 ```
 
-### Gap Analysis Output
+### Focus Areas
 
-When comparing against existing requirements:
-```markdown
-## Gap Analysis Report
+Claude will focus on:
+- User-facing functionality
+- Business logic and rules
+- Data processing and transformations
+- API endpoints and interfaces
+- Integration points
+- Security and access control
+- Performance-critical operations
 
-### Missing Requirements (in code but not documented)
-- Module: auth - User session management
-- Module: api - Rate limiting functionality
+### What's Excluded
 
-### Extra Requirements (documented but not in code)
-- REQ-AUTH-005: Multi-factor authentication
-- REQ-API-012: GraphQL endpoint support
-
-### Modified Requirements
-- REQ-DB-003: Changed from SQL to support multiple databases
-```
+Claude will avoid:
+- Implementation details
+- Technology stack specifics
+- Code structure descriptions
+- How things are coded
 
 ## Implementation
 
-This command runs the requirement extractor tool located at:
-`tools/requirement_extractor/`
+This simplified tool is located at:
+`.claude/tools/requirement_extractor/`
 
-Internally, it executes:
+To run it:
 ```bash
-python -m tools.requirement_extractor <project-path> [options]
+cd .claude/tools
+python -m requirement_extractor <project-path> --output <file>
 ```
 
-Or via Makefile:
-```bash
-make extract-requirements PATH=<project-path> [OPTIONS="--compare existing.md"]
-```
+The tool is radically simplified from previous versions:
+- **Before:** 700+ lines across 8 files with complex orchestration
+- **After:** 130 lines total (just 2 files) that trust Claude's intelligence
 
-The tool is designed for large codebases with hundreds or thousands of files, using incremental saves and resume capability to handle long-running extractions.
+## Why This Approach is Better
 
-## Error Handling
-
-- **Timeouts**: Individual modules that timeout are skipped, extraction continues
-- **AI Unavailable**: Falls back to basic pattern matching if Claude SDK unavailable
-- **File Errors**: Cloud-synced files are retried with exponential backoff
-- **Partial Success**: Always saves whatever was successfully extracted
+1. **Trusts Claude's Intelligence** - Claude can handle file discovery and analysis without micromanagement
+2. **Ruthlessly Simple** - Follows the principle of minimal code for maximum capability
+3. **Flexible** - Claude adapts to each codebase naturally
+4. **Maintainable** - Less code means fewer bugs and easier updates
+5. **Transparent** - Clear instructions that users can understand
 
 ## Performance
 
-- Processes ~10 modules per minute with AI extraction
-- Handles projects with 10,000+ files
-- Memory efficient with streaming processing
-- Configurable concurrency for rate limit management
+- Claude analyzes the entire codebase holistically
+- No artificial module boundaries or chunking
+- Natural organization based on actual code structure
+- Complete analysis in a single pass when possible
+
+This approach embodies the Amplifier philosophy: amplify Claude's capabilities, don't constrain them with unnecessary complexity.
