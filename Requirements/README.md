@@ -1,221 +1,82 @@
-# Amplifier System Requirements Overview
+# Amplifier System Requirements Documentation
 
-This directory contains comprehensive functional requirements for the Amplifier system, organized by subsystem and component. These requirements specify WHAT each component must do, not HOW it implements the functionality.
+This directory contains comprehensive requirements documentation for the Amplifier system, organized by functional area.
 
-## Directory Structure
+## Main Requirements Document
 
-```
-Requirements/
-├── README.md                    # This overview document
-├── Philosophy/                  # Core philosophy and design principles
-├── Agents/                      # Requirements for 21 specialized AI agents
-├── Knowledge/                   # Knowledge management subsystems
-├── Content/                     # Content management system
-├── Development/                 # Development workflow tools
-├── CLI/                         # Command-line interface
-├── Memory/                      # Memory and learning system
-└── Hooks/                       # Hooks and automation
-```
+- **[Requirements.md](../../amplifier/Requirements.md)** - Core functional and non-functional requirements for the Amplifier system
 
-## Foundational Philosophy and Principles
+## Specialized Requirements
 
-The system is built on core philosophical foundations that guide all design and implementation decisions:
+### Infrastructure & Operations
 
-### Philosophy and Design Principles
+- **[configuration-requirements.md](configuration-requirements.md)** - Centralized configuration and path management
+- **[file-io-requirements.md](file-io-requirements.md)** - File operations with cloud sync handling
+- **[event-system-requirements.md](event-system-requirements.md)** - Event logging, streaming, and replay
+- **[utility-requirements.md](utility-requirements.md)** - Logging, token management, fingerprinting, and stream processing
 
-- **[Implementation Philosophy](Philosophy/01-implementation-philosophy-requirements.md)** - Ruthless simplicity, emergence, zero-BS principle
-- **[Modular Design Philosophy](Philosophy/02-modular-design-philosophy-requirements.md)** - Bricks and studs pattern, regeneration over editing
+### Development & Testing
 
-These philosophical requirements ensure the system:
-- Enforces ruthless simplicity and rejects unnecessary complexity
-- Implements the "bricks and studs" modular architecture
-- Prefers module regeneration over line-by-line editing
-- Follows analysis-first development patterns
-- Maintains single source of truth for configuration
-- Embodies trust in emergence over central control
+- **[testing-validation-requirements.md](testing-validation-requirements.md)** - AI-driven testing and validation
+- **[development-tools-requirements.md](development-tools-requirements.md)** - AI context building and environment tools
+- **[cli-tools-requirements.md](cli-tools-requirements.md)** - Command-line interfaces and hook scripts
 
-## Core System Components
+### Knowledge Management
 
-### 1. AI Agent Ecosystem (21 Specialized Agents)
+- **[knowledge-graph-operations-requirements.md](knowledge-graph-operations-requirements.md)** - Graph visualization, path finding, and analysis
+- **[synthesis-pipeline-requirements.md](synthesis-pipeline-requirements.md)** - Document triage and query-based synthesis
 
-The system provides 21 specialized agents, each with specific expertise:
+## Requirement Format
 
-#### Architecture & Design Agents
-- **[01-zen-architect](Agents/01-zen-architect-requirements.md)** - System design with ruthless simplicity
-- **[02-modular-builder](Agents/02-modular-builder-requirements.md)** - Modular component implementation
-- **[05-api-contract-designer](Agents/05-api-contract-designer-requirements.md)** - Clean API design
-- **[08-database-architect](Agents/08-database-architect-requirements.md)** - Database design and optimization
-- **[09-integration-specialist](Agents/09-integration-specialist-requirements.md)** - External service integration
+All requirements follow a consistent format:
 
-#### Quality & Security Agents
-- **[03-bug-hunter](Agents/03-bug-hunter-requirements.md)** - Systematic debugging
-- **[04-test-coverage](Agents/04-test-coverage-requirements.md)** - Comprehensive testing
-- **[06-security-guardian](Agents/06-security-guardian-requirements.md)** - Security analysis
-- **[07-performance-optimizer](Agents/07-performance-optimizer-requirements.md)** - Performance profiling
+- **Technology-agnostic** - Focus on WHAT, not HOW
+- **Complete sentences** - Clear, testable statements using SHALL
+- **Unique identifiers** - Each requirement has a traceable ID
+- **Organized by category** - Grouped by functional area
 
-#### Knowledge Processing Agents
-- **[10-analysis-engine](Agents/10-analysis-engine-requirements.md)** - Multi-mode analysis
-- **[11-concept-extractor](Agents/11-concept-extractor-requirements.md)** - Document concept extraction
-- **[12-insight-synthesizer](Agents/12-insight-synthesizer-requirements.md)** - Finding hidden connections
-- **[13-knowledge-archaeologist](Agents/13-knowledge-archaeologist-requirements.md)** - Tracing idea evolution
-- **[14-pattern-emergence](Agents/14-pattern-emergence-requirements.md)** - Pattern recognition
-- **[15-ambiguity-guardian](Agents/15-ambiguity-guardian-requirements.md)** - Preserving productive contradictions
+## Requirement ID Convention
 
-#### Visualization & System Agents
-- **[16-visualization-architect](Agents/16-visualization-architect-requirements.md)** - Data visualization
-- **[17-graph-builder](Agents/17-graph-builder-requirements.md)** - Knowledge graph construction
+Requirements use the following ID format: `[CATEGORY]-[SUBCATEGORY]-[NUMBER]`
 
-#### Meta & Support Agents
-- **[18-content-researcher](Agents/18-content-researcher-requirements.md)** - Content research
-- **[19-subagent-architect](Agents/19-subagent-architect-requirements.md)** - Creating new agents
-- **[20-post-task-cleanup](Agents/20-post-task-cleanup-requirements.md)** - Codebase hygiene
-- **[21-amplifier-tool-architect](Agents/21-amplifier-cli-architect-requirements.md)** - Hybrid tool creation
+Examples:
+- `CFG-PATH-001` - Configuration Path requirement #1
+- `FIO-CLOUD-003` - File I/O Cloud sync requirement #3
+- `TST-AI-002` - Testing AI-driven requirement #2
 
-### 2. Knowledge Management System
+## Purpose
 
-The knowledge management system extracts, synthesizes, and manages structured knowledge:
+These requirements serve as:
+1. **Contract for implementation** - Define what must be built
+2. **Test criteria** - Verify system meets specifications
+3. **Knowledge transfer** - Document system capabilities
+4. **Design guidance** - Inform architectural decisions
 
-- **[Knowledge Extraction](Knowledge/01-knowledge-extraction-requirements.md)** - Extract concepts, relationships, insights from text
-- **[Knowledge Synthesis](Knowledge/02-knowledge-synthesis-requirements.md)** - Find patterns and connections across sources
-- **[Knowledge Graph](Knowledge/03-knowledge-graph-requirements.md)** - Build and query graph representations
-- **[Knowledge Query](Knowledge/04-knowledge-query-requirements.md)** - Natural language knowledge retrieval
-- **[Knowledge Store](Knowledge/05-knowledge-store-requirements.md)** - Persistent storage and versioning
+## Coverage
 
-### 3. Content Management System
+The requirements cover all major system components including:
+- Core knowledge management functionality
+- Development workflow automation
+- AI agent ecosystem
+- Testing and validation frameworks
+- File and configuration management
+- Event systems and logging
+- Command-line interfaces
+- Graph operations and visualization
+- Document synthesis pipelines
+- Utility functions and helpers
 
-Manages source content for knowledge extraction:
+## Maintenance
 
-- **[Content Management](Content/01-content-management-requirements.md)** - Scan, load, parse, and track content files
+Requirements should be updated when:
+- New functionality is added to the system
+- Existing functionality changes significantly
+- Gaps are discovered in current coverage
+- Clarification is needed for ambiguous areas
 
-### 4. Development Workflow Tools
-
-Tools for parallel development, code quality, and AI-assisted workflows:
-
-- **[Worktree Management](Development/01-worktree-management-requirements.md)** - Parallel development with version control workspaces
-- **[Code Quality](Development/02-code-quality-requirements.md)** - Formatting, linting, type checking, testing
-- **[AI Commands](Development/03-claude-commands-requirements.md)** - Planning, execution, review commands and hooks
-- **[AI Context & Guidelines](Development/04-ai-context-guidelines-requirements.md)** - Context generation and development guidelines
-
-### 5. Command-Line Interface
-
-Command-line interface for all operations:
-
-- **[Command-Line Interface](CLI/01-cli-interface-requirements.md)** - Build system commands and scripted interfaces
-
-### 6. Memory & Learning System
-
-Persistent context and cumulative learning:
-
-- **[Memory System](Memory/01-memory-system-requirements.md)** - Store and retrieve interaction memories
-
-### 7. Hooks & Automation
-
-Automated workflows and quality gates:
-
-- **[Hooks & Automation](Hooks/01-hooks-automation-requirements.md)** - Event-driven automation and notifications
-
-## System Value Proposition
-
-Amplifier transforms AI coding assistants into force multipliers by providing:
-
-1. **Specialized Expertise** - 21 agents each excelling at specific tasks
-2. **Knowledge Accumulation** - Every interaction builds persistent knowledge
-3. **Parallel Exploration** - Test multiple solutions simultaneously
-4. **Automated Quality** - Hooks ensure consistent code quality
-5. **Contextual Memory** - Learn from past interactions and decisions
-
-## Key Design Principles
-
-### Ruthless Simplicity & Zero-BS
-- Every component must justify its complexity
-- No placeholder code or stubs - everything works or doesn't exist
-- Start minimal, grow as needed
-- Avoid premature optimization and future-proofing
-- Trust in emergence over central control
-
-### Modular Architecture ("Bricks and Studs")
-- Self-contained modules as regeneratable bricks
-- Clear contracts as stable connection points (studs)
-- Regeneration over line-by-line editing
-- Blueprint-driven development with AI builders
-- Human architects, AI implementers
-
-### Analysis-First Development
-- Analyze problems before implementing
-- Document multiple approaches with trade-offs
-- Create structured implementation plans
-- Validate approach before coding
-- Track decision rationale
-
-### Parallel Development
-- Multiple solutions built and tested simultaneously
-- Isolated worktrees with data synchronization
-- Rapid experimentation through regeneration
-- Learn from variant performance
-- Merge successful patterns
-
-### Knowledge-Driven
-- Extract knowledge from all content
-- Synthesize patterns across sources
-- Preserve productive tensions and contradictions
-- Query accumulated wisdom
-- Document discoveries for reuse
-
-## Performance Requirements
-
-### Processing Speed
-- Document extraction: 10-30 seconds per document
-- Knowledge synthesis: < 5 minutes for 100+ documents
-- Graph operations: < 2 seconds for queries
-- Command response: < 1 second to start
-
-### Scalability
-- Handle 1000+ documents in knowledge base
-- Support 100,000+ concepts in graph
-- Process 10,000 word chunks
-- Manage 50+ parallel worktrees
-
-## Reliability Requirements
-
-### Fault Tolerance
-- Graceful degradation on failures
-- Incremental processing with saves
-- Retry mechanisms for I/O operations
-- Cloud sync handling
-
-### Data Integrity
-- Atomic write operations
-- Version management
-- Backup and restore
-- Consistency validation
-
-## Using These Requirements
-
-These requirements serve multiple purposes:
-
-1. **Implementation Guide** - Define what must be built
-2. **Test Planning** - Generate test cases from requirements
-3. **Documentation** - Create user guides from functional specs
-4. **Validation** - Verify implementations meet requirements
-5. **Evolution** - Track changes and additions over time
-
-Each requirement document follows a consistent structure:
-- Purpose statement
-- Functional requirements (FR-*)
-- Input requirements (IR-*)
-- Output requirements (OR-*)
-- Performance requirements (PR-*)
-- Quality/reliability requirements (QR-*/RR-*)
-
-## Next Steps
-
-To implement a new version of Amplifier:
-
-1. Start with core components (Knowledge, Agents)
-2. Build command-line interface for user interaction
-3. Add development workflow tools
-4. Implement hooks and automation
-5. Integrate memory system
-6. Test with parallel worktrees
-
-Each component can be developed independently following its requirements, then integrated using the defined interfaces.
+Each requirement should be:
+- **Atomic** - One requirement per statement
+- **Testable** - Can verify if met
+- **Necessary** - Required for system operation
+- **Consistent** - No conflicts with other requirements
+- **Clear** - Unambiguous meaning

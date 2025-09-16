@@ -59,11 +59,11 @@ Build, maintain, and query a graph-based representation of extracted knowledge, 
 ## Output Requirements
 
 ### OR-KG-001: Graph Exports
-- GEXF format for Gephi
-- GraphML format for standard tools
-- JSON graph representation
-- Interactive HTML visualization
-- Graph statistics summary
+- The system must export graphs in standard visualization formats
+- The system must export graphs in interchange formats
+- The system must provide structured graph representations
+- The system must generate interactive visualizations
+- The system must produce graph statistics summaries
 
 ### OR-KG-002: Query Results
 - Semantic search results with relevance scores
