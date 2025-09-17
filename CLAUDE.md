@@ -64,12 +64,6 @@ specialized agents when possible.
 - **Pattern Recognition**: Use `patterns.md` to identify reusable solutions
 - **Analysis**: Use `analyzer.md` for deep code understanding
 - **Ambiguity**: Use `ambiguity.md` when requirements are unclear
-- **CI Failures**: Use `ci-diagnostics.md` for environment comparison and
-  version mismatches
-- **Silent Failures**: Use `silent-failure-detector.md` when tools appear to run
-  but don't apply changes
-- **Historical Patterns**: Use `pattern-matcher.md` to match current issues to
-  documented solutions
 
 #### Parallel Agent Execution
 
@@ -85,13 +79,50 @@ Example - Building a new feature:
 - api-designer: Define API contracts
 ```
 
+### Development Workflow Agents
+
+**Stage-Based Diagnostic Workflows:**
+
+#### Stage 1: Pre-Commit Issues (Before Push)
+
+- **Pre-Commit Workflow**: Use `pre-commit-diagnostic.md` when pre-commit hooks
+  fail locally. Handles formatting, linting, type checking, and ensures code is
+  committable BEFORE pushing.
+- **Trigger**: "Pre-commit failed", "Can't commit", "Hooks failing"
+
+#### Stage 2: CI Issues (After Push)
+
+- **CI Workflow**: Use `ci-diagnostic-workflow.md` after pushing when CI checks
+  fail. Monitors CI status, diagnoses failures, fixes issues, and iterates until
+  PR is mergeable (but never auto-merges).
+- **Trigger**: "CI failing", "Fix CI", "Make PR mergeable"
+
+**Supporting Diagnostic Agents:**
+
+- **CI Environment**: Use `ci-diagnostics.md` for environment comparison and
+  version mismatches (called by workflow agents)
+- **Silent Failures**: Use `silent-failure-detector.md` when tools appear to run
+  but don't apply changes (called by workflow agents)
+- **Historical Patterns**: Use `pattern-matcher.md` to match current issues to
+  documented solutions (called by workflow agents)
+
 ```
-Example - Debugging CI failure:
-"I'll deploy debugging agents to quickly diagnose this CI failure"
-[Single message with multiple Task tool calls]:
-- ci-diagnostics: Compare local vs CI environments
-- silent-failure-detector: Check for merge conflicts and hook issues
-- pattern-matcher: Search for similar historical failures
+Example - Pre-commit failure:
+"My pre-commit hooks are failing"
+[Use pre-commit-diagnostic agent]:
+- Diagnoses all hook failures
+- Fixes formatting/linting automatically
+- Resolves type errors
+- Ensures clean commit
+
+Example - CI failure after push:
+"CI is failing on my PR"
+[Use ci-diagnostic-workflow agent]:
+- Monitors CI status with check_ci_status tool
+- Diagnoses failures (tests, linting, etc.)
+- Fixes issues and pushes updates
+- Iterates until all checks pass
+- Stops at mergeable (never auto-merges)
 ```
 
 #### Creating Custom Agents
