@@ -81,7 +81,7 @@ Example - Building a new feature:
 
 ### Development Workflow Agents
 
-**Stage-Based Diagnostic Workflows:**
+**Two-Stage Diagnostic Workflow:**
 
 #### Stage 1: Pre-Commit Issues (Before Push)
 
@@ -97,32 +97,18 @@ Example - Building a new feature:
   PR is mergeable (but never auto-merges).
 - **Trigger**: "CI failing", "Fix CI", "Make PR mergeable"
 
-**Supporting Diagnostic Agents:**
-
-- **CI Environment**: Use `ci-diagnostics.md` for environment comparison and
-  version mismatches (called by workflow agents)
-- **Silent Failures**: Use `silent-failure-detector.md` when tools appear to run
-  but don't apply changes (called by workflow agents)
-- **Historical Patterns**: Use `pattern-matcher.md` to match current issues to
-  documented solutions (called by workflow agents)
-
 ```
 Example - Pre-commit failure:
 "My pre-commit hooks are failing"
-[Use pre-commit-diagnostic agent]:
-- Diagnoses all hook failures
-- Fixes formatting/linting automatically
-- Resolves type errors
-- Ensures clean commit
+→ Use pre-commit-diagnostic agent
+→ Automatically fixes all issues
+→ Ready to commit
 
 Example - CI failure after push:
 "CI is failing on my PR"
-[Use ci-diagnostic-workflow agent]:
-- Monitors CI status with check_ci_status tool
-- Diagnoses failures (tests, linting, etc.)
-- Fixes issues and pushes updates
-- Iterates until all checks pass
-- Stops at mergeable (never auto-merges)
+→ Use ci-diagnostic-workflow agent
+→ Iterates until PR is mergeable
+→ Never auto-merges without permission
 ```
 
 #### Creating Custom Agents
