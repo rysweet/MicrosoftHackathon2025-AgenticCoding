@@ -377,15 +377,17 @@ After MAX_ITERATIONS:
 4. Suggest manual investigation areas
 5. Provide rollback option
 
-### Rollback Procedure
+### Recovery Procedure
 
 ```bash
-# If fixes made things worse
-git log --oneline -10  # Find last good commit
-git reset --hard <commit>  # Reset to good state
-git push --force-with-lease  # Update PR
+# If fixes made things worse, create a revert commit
+git log --oneline -10  # Review recent commits
+git revert HEAD  # Revert last commit safely
+git commit -m "revert: undo failed fix attempt"
+git push  # Push revert (no force!)
 
 # Then re-analyze with fresh approach
+# NEVER use force push - always create new commits
 ```
 
 ## Success Metrics
