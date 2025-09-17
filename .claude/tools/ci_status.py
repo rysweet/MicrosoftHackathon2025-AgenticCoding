@@ -10,10 +10,10 @@ import json
 import re
 import subprocess
 import sys
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 
-def run_gh_command(args: List[str], timeout: int = 30) -> Tuple[int, str, str]:
+def run_gh_command(args: List[str], timeout: int = 30) -> "tuple[int, str, str]":
     """
     Run a gh CLI command with timeout.
 
