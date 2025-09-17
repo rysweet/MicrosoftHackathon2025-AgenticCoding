@@ -64,6 +64,12 @@ specialized agents when possible.
 - **Pattern Recognition**: Use `patterns.md` to identify reusable solutions
 - **Analysis**: Use `analyzer.md` for deep code understanding
 - **Ambiguity**: Use `ambiguity.md` when requirements are unclear
+- **CI Failures**: Use `ci-diagnostics.md` for environment comparison and
+  version mismatches
+- **Silent Failures**: Use `silent-failure-detector.md` when tools appear to run
+  but don't apply changes
+- **Historical Patterns**: Use `pattern-matcher.md` to match current issues to
+  documented solutions
 
 #### Parallel Agent Execution
 
@@ -77,6 +83,15 @@ Example - Building a new feature:
 - security: Identify security requirements
 - database: Design data schema if needed
 - api-designer: Define API contracts
+```
+
+```
+Example - Debugging CI failure:
+"I'll deploy debugging agents to quickly diagnose this CI failure"
+[Single message with multiple Task tool calls]:
+- ci-diagnostics: Compare local vs CI environments
+- silent-failure-detector: Check for merge conflicts and hook issues
+- pattern-matcher: Search for similar historical failures
 ```
 
 #### Creating Custom Agents
