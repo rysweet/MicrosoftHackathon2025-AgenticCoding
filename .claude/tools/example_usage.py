@@ -6,7 +6,8 @@ This demonstrates practical usage patterns for the github_issue module.
 """
 
 import sys
-sys.path.insert(0, '/Users/ryan/src/hackathon/MicrosoftHackathon2025-AgenticCoding/.claude/tools')
+
+sys.path.insert(0, "/Users/ryan/src/hackathon/MicrosoftHackathon2025-AgenticCoding/.claude/tools")
 
 from github_issue import create_issue
 
@@ -31,12 +32,12 @@ Login should work with all allowed password characters.
 - Browser: Chrome 120
 - App Version: 2.1.0
 """,
-        labels=["bug", "authentication", "high-priority"]
+        labels=["bug", "authentication", "high-priority"],
     )
 
-    if result['success']:
+    if result["success"]:
         print(f"✓ Created bug report: {result['issue_url']}")
-        return result['issue_number']
+        return result["issue_number"]
     else:
         print(f"✗ Failed to create bug report: {result['error']}")
         return None
@@ -61,12 +62,12 @@ Add a dark mode option to reduce eye strain during night usage.
 ## Priority
 Medium - requested by 50+ users
 """,
-        labels=["enhancement", "ui/ux"]
+        labels=["enhancement", "ui/ux"],
     )
 
-    if result['success']:
+    if result["success"]:
         print(f"✓ Created feature request: {result['issue_url']}")
-        return result['issue_number']
+        return result["issue_number"]
     else:
         print(f"✗ Failed to create feature request: {result['error']}")
         return None
@@ -79,17 +80,19 @@ def create_task_list(tasks):
     for task in tasks:
         result = create_issue(
             title=f"Task: {task['title']}",
-            body=task.get('description', ''),
-            labels=task.get('labels', ['task']),
-            milestone=task.get('milestone')
+            body=task.get("description", ""),
+            labels=task.get("labels", ["task"]),
+            milestone=task.get("milestone"),
         )
 
-        if result['success']:
-            created_issues.append({
-                'title': task['title'],
-                'number': result['issue_number'],
-                'url': result['issue_url']
-            })
+        if result["success"]:
+            created_issues.append(
+                {
+                    "title": task["title"],
+                    "number": result["issue_number"],
+                    "url": result["issue_url"],
+                }
+            )
             print(f"✓ Created task #{result['issue_number']}: {task['title']}")
         else:
             print(f"✗ Failed to create task '{task['title']}': {result['error']}")
@@ -127,5 +130,5 @@ def main():
     print("\nTo run these examples, uncomment the function calls in main()")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

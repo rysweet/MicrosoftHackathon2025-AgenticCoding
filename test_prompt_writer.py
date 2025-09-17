@@ -4,12 +4,17 @@ Test script for PromptWriter Agent integration.
 """
 
 import sys
-import os
+from importlib import import_module
+from pathlib import Path
 
 # Add tools directory to path
-sys.path.insert(0, '.claude/tools')
+tools_dir = Path(__file__).parent / ".claude" / "tools"
+sys.path.insert(0, str(tools_dir))
 
-from github_issue import create_issue
+# Dynamic import to avoid module resolution issues
+github_issue = import_module("github_issue")
+create_issue = github_issue.create_issue
+
 
 def test_prompt_writer_workflow():
     """Test the full PromptWriter workflow."""
@@ -90,7 +95,7 @@ Users have requested better visibility into their usage patterns and performance
     title = "Feature: User Dashboard Analytics"
 
     print(f"  Title: {title}")
-    print(f"  Labels: ['enhancement', 'feature']")
+    print("  Labels: ['enhancement', 'feature']")
     print(f"  Body length: {len(test_prompt)} characters")
 
     print("\n4. Integration Points:")
@@ -112,19 +117,16 @@ Users have requested better visibility into their usage patterns and performance
     print("\nTo create a real issue, run with --create flag")
 
     # Check if user wants to create real issue
-    if len(sys.argv) > 1 and sys.argv[1] == '--create':
+    if len(sys.argv) > 1 and sys.argv[1] == "--create":
         print("\nCreating real GitHub issue...")
-        result = create_issue(
-            title=title,
-            body=test_prompt,
-            labels=["enhancement", "feature"]
-        )
+        result = create_issue(title=title, body=test_prompt, labels=["enhancement", "feature"])
 
-        if result['success']:
+        if result["success"]:
             print(f"✓ Created issue #{result['issue_number']}")
             print(f"  View at: {result['issue_url']}")
         else:
             print(f"✗ Failed: {result['error']}")
+
 
 if __name__ == "__main__":
     test_prompt_writer_workflow()

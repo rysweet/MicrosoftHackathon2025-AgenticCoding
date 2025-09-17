@@ -6,12 +6,10 @@ A simple wrapper around GitHub CLI (gh) for creating issues programmatically.
 Provides validation, error handling, and structured output.
 """
 
-import subprocess
-import json
-import shutil
 import re
-from typing import Dict, Optional, List, Any
-from pathlib import Path
+import shutil
+import subprocess
+from typing import Any, Dict, List, Optional
 
 
 class GitHubIssueCreator:
@@ -23,16 +21,15 @@ class GitHubIssueCreator:
 
     def _validate_gh_cli(self) -> None:
         """Check that gh CLI is installed and authenticated."""
-        if not shutil.which('gh'):
-            raise RuntimeError("GitHub CLI (gh) is not installed. Install from: https://cli.github.com/")
+        if not shutil.which("gh"):
+            raise RuntimeError(
+                "GitHub CLI (gh) is not installed. Install from: https://cli.github.com/"
+            )
 
         # Check authentication status
         try:
             result = subprocess.run(
-                ['gh', 'auth', 'status'],
-                capture_output=True,
-                text=True,
-                check=False
+                ["gh", "auth", "status"], capture_output=True, text=True, check=False
             )
             if result.returncode != 0:
                 raise RuntimeError("GitHub CLI is not authenticated. Run: gh auth login")
@@ -47,7 +44,7 @@ class GitHubIssueCreator:
         assignees: Optional[List[str]] = None,
         milestone: Optional[str] = None,
         project: Optional[str] = None,
-        repo: Optional[str] = None
+        repo: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
         Create a GitHub issue.
@@ -79,92 +76,70 @@ class GitHubIssueCreator:
         """
         # Validate required inputs
         if not title or not title.strip():
-            return {
-                'success': False,
-                'error': 'Title is required and cannot be empty'
-            }
+            return {"success": False, "error": "Title is required and cannot be empty"}
 
         # Build command
-        cmd = ['gh', 'issue', 'create']
+        cmd = ["gh", "issue", "create"]
 
         # Add title
-        cmd.extend(['--title', title])
+        cmd.extend(["--title", title])
 
         # Add optional parameters
         if body:
-            cmd.extend(['--body', body])
+            cmd.extend(["--body", body])
 
         if labels:
             for label in labels:
-                cmd.extend(['--label', label])
+                cmd.extend(["--label", label])
 
         if assignees:
             for assignee in assignees:
-                cmd.extend(['--assignee', assignee])
+                cmd.extend(["--assignee", assignee])
 
         if milestone:
-            cmd.extend(['--milestone', milestone])
+            cmd.extend(["--milestone", milestone])
 
         if project:
-            cmd.extend(['--project', project])
+            cmd.extend(["--project", project])
 
         if repo:
-            cmd.extend(['--repo', repo])
+            cmd.extend(["--repo", repo])
 
         # Execute command
         try:
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                check=False,
-                timeout=30
-            )
+            result = subprocess.run(cmd, capture_output=True, text=True, check=False, timeout=30)
 
             if result.returncode != 0:
                 return {
-                    'success': False,
-                    'error': f"Failed to create issue: {result.stderr.strip()}"
+                    "success": False,
+                    "error": f"Failed to create issue: {result.stderr.strip()}",
                 }
 
             # Parse output to extract URL and issue number
             output = result.stdout.strip()
             if not output:
-                return {
-                    'success': False,
-                    'error': 'No output from gh command'
-                }
+                return {"success": False, "error": "No output from gh command"}
 
             # gh issue create returns the URL directly
             issue_url = output
 
             # Extract issue number from URL
             # Format: https://github.com/owner/repo/issues/123
-            match = re.search(r'/issues/(\d+)$', issue_url)
+            match = re.search(r"/issues/(\d+)$", issue_url)
             if not match:
                 return {
-                    'success': False,
-                    'error': f'Could not parse issue number from URL: {issue_url}'
+                    "success": False,
+                    "error": f"Could not parse issue number from URL: {issue_url}",
                 }
 
             issue_number = int(match.group(1))
 
-            return {
-                'success': True,
-                'issue_url': issue_url,
-                'issue_number': issue_number
-            }
+            return {"success": True, "issue_url": issue_url, "issue_number": issue_number}
 
         except subprocess.TimeoutExpired:
-            return {
-                'success': False,
-                'error': 'Command timed out after 30 seconds'
-            }
+            return {"success": False, "error": "Command timed out after 30 seconds"}
         except Exception as e:
-            return {
-                'success': False,
-                'error': f'Unexpected error: {str(e)}'
-            }
+            return {"success": False, "error": f"Unexpected error: {str(e)}"}
 
 
 def create_issue(
@@ -174,7 +149,7 @@ def create_issue(
     assignees: Optional[List[str]] = None,
     milestone: Optional[str] = None,
     project: Optional[str] = None,
-    repo: Optional[str] = None
+    repo: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Convenience function to create a GitHub issue.
@@ -212,27 +187,31 @@ def create_issue(
             assignees=assignees,
             milestone=milestone,
             project=project,
-            repo=repo
+            repo=repo,
         )
     except RuntimeError as e:
-        return {
-            'success': False,
-            'error': str(e)
-        }
+        return {"success": False, "error": str(e)}
 
 
 def main():
     """Command-line interface for testing."""
     import argparse
 
-    parser = argparse.ArgumentParser(description='Create a GitHub issue')
-    parser.add_argument('title', help='Issue title')
-    parser.add_argument('--body', help='Issue body/description')
-    parser.add_argument('--label', action='append', dest='labels', help='Add label (can be used multiple times)')
-    parser.add_argument('--assignee', action='append', dest='assignees', help='Assign user (can be used multiple times)')
-    parser.add_argument('--milestone', help='Milestone name or number')
-    parser.add_argument('--project', help='Project name or number')
-    parser.add_argument('--repo', help='Repository (owner/repo format)')
+    parser = argparse.ArgumentParser(description="Create a GitHub issue")
+    parser.add_argument("title", help="Issue title")
+    parser.add_argument("--body", help="Issue body/description")
+    parser.add_argument(
+        "--label", action="append", dest="labels", help="Add label (can be used multiple times)"
+    )
+    parser.add_argument(
+        "--assignee",
+        action="append",
+        dest="assignees",
+        help="Assign user (can be used multiple times)",
+    )
+    parser.add_argument("--milestone", help="Milestone name or number")
+    parser.add_argument("--project", help="Project name or number")
+    parser.add_argument("--repo", help="Repository (owner/repo format)")
 
     args = parser.parse_args()
 
@@ -243,10 +222,10 @@ def main():
         assignees=args.assignees,
         milestone=args.milestone,
         project=args.project,
-        repo=args.repo
+        repo=args.repo,
     )
 
-    if result['success']:
+    if result["success"]:
         print(f"✓ Created issue #{result['issue_number']}")
         print(f"  URL: {result['issue_url']}")
         return 0
@@ -255,6 +234,7 @@ def main():
         return 1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
+
     sys.exit(main())

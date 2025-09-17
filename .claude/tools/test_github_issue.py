@@ -5,7 +5,7 @@ Test script for GitHub issue creation tool.
 This demonstrates how to use the github_issue module.
 """
 
-from github_issue import create_issue, GitHubIssueCreator
+from github_issue import GitHubIssueCreator, create_issue
 
 
 def test_validation():
@@ -14,14 +14,14 @@ def test_validation():
 
     # Test empty title
     result = create_issue(title="")
-    assert not result['success']
-    assert 'Title is required' in result['error']
+    assert not result["success"]
+    assert "Title is required" in result["error"]
     print("✓ Empty title validation works")
 
     # Test whitespace-only title
     result = create_issue(title="   ")
-    assert not result['success']
-    assert 'Title is required' in result['error']
+    assert not result["success"]
+    assert "Title is required" in result["error"]
     print("✓ Whitespace title validation works")
 
     print()
@@ -32,7 +32,7 @@ def test_gh_cli_check():
     print("Testing GitHub CLI check...")
 
     try:
-        creator = GitHubIssueCreator()
+        GitHubIssueCreator()
         print("✓ GitHub CLI is installed and authenticated")
     except RuntimeError as e:
         print(f"✗ GitHub CLI check failed: {e}")
@@ -105,6 +105,7 @@ def main():
     return 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
+
     sys.exit(main())
