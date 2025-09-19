@@ -42,9 +42,12 @@ class ProxyConfig:
         Returns:
             True if configuration is valid, False otherwise.
         """
-        required_keys = ["ANTHROPIC_API_KEY"]
+        # For proxy configuration, we need the OpenAI/Azure credentials, not Anthropic
+        # ANTHROPIC_API_KEY is optional - only needed if you want to validate clients
+        required_keys = ["OPENAI_API_KEY"]  # The actual API key for the backend
         for key in required_keys:
             if key not in self.config or not self.config[key]:
+                print(f"Missing required configuration: {key}")
                 return False
         return True
 
