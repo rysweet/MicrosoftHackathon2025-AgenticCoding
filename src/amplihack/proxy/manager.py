@@ -153,6 +153,8 @@ class ProxyManager:
             proxy_env = os.environ.copy()
             if self.proxy_config:
                 proxy_env.update(self.proxy_config.to_env_dict())
+            # Ensure PORT is set for the proxy process
+            proxy_env["PORT"] = str(self.proxy_port)
 
             # Check if we should use 'npm start' or 'python' based on project structure
             start_command = ["npm", "start"]
