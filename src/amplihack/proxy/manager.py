@@ -25,7 +25,13 @@ class ProxyManager:
         self.proxy_process: Optional[subprocess.Popen] = None
         self.proxy_dir = Path.home() / ".amplihack" / "proxy"
         self.env_manager = ProxyEnvironment()
-        self.proxy_port = 8080
+        # Read PORT from proxy_config if available, otherwise use default
+        if proxy_config and proxy_config.get("PORT"):
+            self.proxy_port = int(proxy_config.get("PORT"))
+            print(f"Using proxy port from config: {self.proxy_port}")
+        else:
+            self.proxy_port = 8080  # Default port
+            print(f"Using default proxy port: {self.proxy_port}")
 
     def ensure_proxy_installed(self) -> bool:
         """Ensure claude-code-proxy is installed.
