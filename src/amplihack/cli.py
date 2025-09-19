@@ -39,17 +39,9 @@ def launch_command(args: argparse.Namespace) -> int:
 
         # When using proxy, automatically use Azure persistence prompt
         default_prompt = Path(__file__).parent / "prompts" / "azure_persistence.md"
-        if default_prompt.exists() and not args.append_system_prompt:
+        if default_prompt.exists():
             system_prompt_path = default_prompt
             print("Auto-appending Azure persistence prompt for proxy integration")
-
-    # Handle explicit system prompt (overrides auto prompt)
-    if args.append_system_prompt:
-        system_prompt_path = Path(args.append_system_prompt).resolve()
-        if not system_prompt_path.exists():
-            print(f"Error: System prompt file not found: {system_prompt_path}")
-            return 1
-        print(f"Will append system prompt from: {system_prompt_path}")
 
     # Launch Claude
     launcher = ClaudeLauncher(proxy_manager=proxy_manager, append_system_prompt=system_prompt_path)
@@ -82,12 +74,7 @@ def create_parser() -> argparse.ArgumentParser:
     launch_parser.add_argument(
         "--with-proxy-config",
         metavar="PATH",
-        help="Path to .env file with proxy configuration (for Azure OpenAI integration)",
-    )
-    launch_parser.add_argument(
-        "--append-system-prompt",
-        metavar="PATH",
-        help="Path to markdown file to append as system prompt",
+        help="Path to .env file with proxy configuration (for Azure OpenAI integration with auto persistence prompt)",
     )
 
     # Hidden local install command
