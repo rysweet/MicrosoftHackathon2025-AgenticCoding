@@ -32,6 +32,9 @@ OpenAI:
 ```sh
 # Launch Claude Code with amplihack from any directory
 uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding amplihack launch
+
+# Or from a specific branch (e.g., during development)
+uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding@feat/amplihack-proxy-launcher amplihack launch
 ```
 
 **With Azure OpenAI proxy (automatically includes persistence prompt):**
@@ -39,6 +42,9 @@ uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding a
 ```sh
 # Launch with Azure OpenAI proxy - persistence prompt is automatically included
 uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding amplihack launch --with-proxy-config ./azure.env
+
+# Or from a specific branch
+uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding@feat/amplihack-proxy-launcher amplihack launch --with-proxy-config ./azure.env
 ```
 
 The proxy integration allows you to use Azure OpenAI models with Claude Code,
