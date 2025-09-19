@@ -97,6 +97,20 @@ class ProxyManager:
         proxy_repo = self.proxy_dir / "claude-code-proxy"
 
         try:
+            # Install dependencies if needed
+            package_json = proxy_repo / "package.json"
+            node_modules = proxy_repo / "node_modules"
+
+            if package_json.exists() and not node_modules.exists():
+                print("Installing proxy dependencies...")
+                install_result = subprocess.run(
+                    ["npm", "install"], cwd=str(proxy_repo), capture_output=True, text=True
+                )
+                if install_result.returncode != 0:
+                    print(f"Failed to install dependencies: {install_result.stderr}")
+                    return False
+                print("Dependencies installed successfully")
+
             # Start the proxy process
             print(f"Starting claude-code-proxy on port {self.proxy_port}...")
 
@@ -105,12 +119,21 @@ class ProxyManager:
             if self.proxy_config:
                 proxy_env.update(self.proxy_config.to_env_dict())
 
+            # Check if we should use 'npm start' or 'python' based on project structure
+            start_command = ["npm", "start"]
+            if (proxy_repo / "start_proxy.py").exists():
+                # It's a Python project
+                start_command = ["python", "start_proxy.py"]
+            elif (proxy_repo / "src" / "proxy.py").exists():
+                # Alternative Python structure
+                start_command = ["python", "-m", "src.proxy"]
+
             self.proxy_process = subprocess.Popen(
-                ["npm", "start"],
+                start_command,
                 cwd=str(proxy_repo),
                 env=proxy_env,
-                stdout=subprocess.DEVNULL,  # Prevent buffer accumulation
-                stderr=subprocess.DEVNULL,  # Prevent buffer accumulation
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
                 text=True,
                 preexec_fn=os.setsid if os.name != "nt" else None,
                 creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0,
@@ -124,9 +147,10 @@ class ProxyManager:
 
             # Check if proxy is still running
             if self.proxy_process.poll() is not None:
-                print(
-                    f"Proxy failed to start. Process exited with code {self.proxy_process.returncode}"
-                )
+                stdout, stderr = self.proxy_process.communicate(timeout=0.1)
+                print(f"Proxy failed to start. Exit code: {self.proxy_process.returncode}")
+                if stderr:
+                    print(f"Error output: {stderr}")
                 return False
 
             # Set up environment variables
