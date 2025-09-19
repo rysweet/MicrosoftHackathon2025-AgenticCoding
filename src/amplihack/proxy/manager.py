@@ -43,7 +43,7 @@ class ProxyManager:
                     [
                         "git",
                         "clone",
-                        "https://github.com/codewithcheese/claude-code-proxy.git",
+                        "https://github.com/fuergaosi233/claude-code-proxy.git",
                         str(proxy_repo),
                     ],
                     check=True,
