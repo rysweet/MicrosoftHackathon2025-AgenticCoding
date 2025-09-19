@@ -32,7 +32,9 @@ def launch_command(args: argparse.Namespace) -> int:
         proxy_config = ProxyConfig(config_path)
 
         if not proxy_config.validate():
-            print("Error: Invalid proxy configuration. Missing required ANTHROPIC_API_KEY")
+            print(
+                "Error: Invalid proxy configuration. Check that OPENAI_API_KEY is set in your .env file"
+            )
             return 1
 
         proxy_manager = ProxyManager(proxy_config)
