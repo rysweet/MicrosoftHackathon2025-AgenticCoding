@@ -23,30 +23,34 @@ pip install -e .
 
 ## Usage
 
-### Install Agents
+### Quick Start with uvx (No Clone Required)
 
-Install amplihack agents and tools to `~/.claude`:
+Run directly from GitHub without cloning:
 
 ```bash
-amplihack install
+# Install agents
+uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding amplihack install
+
+# Launch Claude Code
+uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding amplihack launch
+
+# Launch with Azure OpenAI proxy (includes persistence prompt automatically)
+uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding amplihack launch --with-proxy-config ./azure.env
 ```
 
-### Launch Claude with Proxy
+### Local Usage
 
-Launch Claude Code with Azure OpenAI proxy configuration:
+If you have the package installed locally:
 
 ```bash
+# Install agents
+amplihack install
+
 # Basic launch (no proxy)
 amplihack launch
 
-# Launch with proxy configuration
+# Launch with proxy configuration (auto-includes Azure persistence prompt)
 amplihack launch --with-proxy-config /path/to/.env
-
-# Launch with custom system prompt
-amplihack launch --append-system-prompt /path/to/prompt.md
-
-# Combined: proxy + system prompt
-amplihack launch --with-proxy-config .env --append-system-prompt prompts/azure.md
 ```
 
 ### Uninstall Agents
