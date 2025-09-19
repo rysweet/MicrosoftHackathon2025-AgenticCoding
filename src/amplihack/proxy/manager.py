@@ -97,19 +97,36 @@ class ProxyManager:
         proxy_repo = self.proxy_dir / "claude-code-proxy"
 
         try:
-            # Install dependencies if needed
+            # Determine project type and install dependencies
+            requirements_txt = proxy_repo / "requirements.txt"
             package_json = proxy_repo / "package.json"
-            node_modules = proxy_repo / "node_modules"
 
-            if package_json.exists() and not node_modules.exists():
-                print("Installing proxy dependencies...")
+            # Install Python dependencies if needed
+            if requirements_txt.exists():
+                print("Installing Python proxy dependencies...")
                 install_result = subprocess.run(
-                    ["npm", "install"], cwd=str(proxy_repo), capture_output=True, text=True
+                    ["pip", "install", "-r", "requirements.txt"],
+                    cwd=str(proxy_repo),
+                    capture_output=True,
+                    text=True,
                 )
                 if install_result.returncode != 0:
-                    print(f"Failed to install dependencies: {install_result.stderr}")
+                    print(f"Failed to install Python dependencies: {install_result.stderr}")
                     return False
-                print("Dependencies installed successfully")
+                print("Python dependencies installed successfully")
+
+            # Install npm dependencies if needed
+            elif package_json.exists():
+                node_modules = proxy_repo / "node_modules"
+                if not node_modules.exists():
+                    print("Installing npm proxy dependencies...")
+                    install_result = subprocess.run(
+                        ["npm", "install"], cwd=str(proxy_repo), capture_output=True, text=True
+                    )
+                    if install_result.returncode != 0:
+                        print(f"Failed to install npm dependencies: {install_result.stderr}")
+                        return False
+                    print("npm dependencies installed successfully")
 
             # Start the proxy process
             print(f"Starting claude-code-proxy on port {self.proxy_port}...")
