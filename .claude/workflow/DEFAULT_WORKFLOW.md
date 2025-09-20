@@ -3,13 +3,30 @@
 This file defines the default workflow for all non-trivial code changes.
 You can customize this workflow by editing this file.
 
-## Integration with UltraThink
+## How This Workflow Works
 
-This workflow integrates with `/ultrathink` for deep analysis:
+**This workflow is the single source of truth for:**
 
-- Use `/ultrathink` at Step 1 for complex requirement analysis
-- Use `/ultrathink` at Step 4 for complex architecture decisions
-- UltraThink will follow these workflow steps when implementing solutions
+- The order of operations (steps must be followed sequentially)
+- Git workflow (branch, commit, push, PR process)
+- CI/CD integration points
+- Review and merge requirements
+
+**Execution approach:**
+
+- Start with `/ultrathink` for any non-trivial task
+- UltraThink reads this workflow and orchestrates agents to execute it
+- Each step leverages specialized agents for maximum effectiveness
+- The workflow defines the process; agents execute the work
+
+## Default Execution with UltraThink
+
+**For all non-trivial tasks, start with `/ultrathink` to orchestrate the workflow:**
+
+- `/ultrathink` reads this workflow and executes it with multi-agent coordination
+- Each step below leverages specialized agents whenever possible
+- UltraThink orchestrates parallel agent execution for maximum efficiency
+- When you customize this workflow, UltraThink adapts automatically
 
 ## When This Workflow Applies
 
@@ -24,14 +41,16 @@ This workflow should be followed for:
 
 ### Step 1: Rewrite and Clarify Requirements
 
-- [ ] For complex tasks, use `/ultrathink` for deep analysis first
-- [ ] Use the prompt-writer agent to clarify task requirements
+- [ ] **Always use** prompt-writer agent to clarify task requirements
+- [ ] **Use** analyzer agent to understand existing codebase context
+- [ ] **Use** ambiguity agent if requirements are unclear
 - [ ] Remove ambiguity from the task description
 - [ ] Define clear success criteria
 - [ ] Document acceptance criteria
 
 ### Step 2: Create GitHub Issue
 
+- [ ] **Use** GitHub issue creation tool via agent
 - [ ] Create issue using `gh issue create`
 - [ ] Include clear problem description
 - [ ] Define requirements and constraints
@@ -47,16 +66,19 @@ This workflow should be followed for:
 
 ### Step 4: Research and Design with TDD
 
-- [ ] For complex architecture, use `/ultrathink` to orchestrate analysis
-- [ ] Use architect agent to design solution architecture
+- [ ] **Use** architect agent to design solution architecture
+- [ ] **Use** api-designer agent for API contracts (if applicable)
+- [ ] **Use** database agent for data model design (if applicable)
+- [ ] **Use** tester agent to write failing tests (TDD approach)
+- [ ] **Use** security agent to identify security requirements
 - [ ] Document module specifications
-- [ ] Use tester agent to write failing tests (TDD)
 - [ ] Create detailed implementation plan
 - [ ] Identify risks and dependencies
 
 ### Step 5: Implement the Solution
 
-- [ ] Use builder agent to implement from specifications
+- [ ] **Always use** builder agent to implement from specifications
+- [ ] **Use** integration agent for external service connections
 - [ ] Follow the architecture design
 - [ ] Make failing tests pass iteratively
 - [ ] Ensure all requirements are met
@@ -64,7 +86,8 @@ This workflow should be followed for:
 
 ### Step 6: Refactor and Simplify
 
-- [ ] Use cleanup agent for ruthless simplification
+- [ ] **Always use** cleanup agent for ruthless simplification
+- [ ] **Use** optimizer agent for performance improvements
 - [ ] Remove unnecessary abstractions
 - [ ] Eliminate dead code
 - [ ] Simplify complex logic
@@ -73,6 +96,7 @@ This workflow should be followed for:
 
 ### Step 7: Run Tests and Pre-commit Hooks
 
+- [ ] **Use** pre-commit-diagnostic agent if hooks fail
 - [ ] Run all unit tests
 - [ ] Execute `pre-commit run --all-files`
 - [ ] Fix any linting issues
@@ -100,7 +124,8 @@ This workflow should be followed for:
 
 ### Step 10: Review the PR
 
-- [ ] Use reviewer agent for code review
+- [ ] **Always use** reviewer agent for comprehensive code review
+- [ ] **Use** security agent for security review
 - [ ] Check code quality and standards
 - [ ] Verify philosophy compliance
 - [ ] Ensure adequate test coverage
@@ -110,7 +135,8 @@ This workflow should be followed for:
 ### Step 11: Implement Review Feedback
 
 - [ ] Review all feedback comments
-- [ ] Use builder agent to implement changes
+- [ ] **Always use** builder agent to implement changes
+- [ ] **Use** relevant specialized agents for specific feedback
 - [ ] Address each review comment
 - [ ] Push updates to PR
 - [ ] Respond to review comments
@@ -118,7 +144,8 @@ This workflow should be followed for:
 
 ### Step 12: Philosophy Compliance Check
 
-- [ ] Use reviewer agent for final check
+- [ ] **Always use** reviewer agent for final philosophy check
+- [ ] **Use** patterns agent to verify pattern compliance
 - [ ] Verify ruthless simplicity achieved
 - [ ] Confirm bricks & studs pattern followed
 - [ ] Ensure zero-BS implementation (no stubs)
@@ -128,7 +155,7 @@ This workflow should be followed for:
 ### Step 13: Ensure PR is Mergeable
 
 - [ ] Check CI status (all checks passing)
-- [ ] Use ci-diagnostic-workflow agent if CI fails
+- [ ] **Always use** ci-diagnostic-workflow agent if CI fails
 - [ ] Resolve any merge conflicts
 - [ ] Verify all review comments addressed
 - [ ] Confirm PR is approved

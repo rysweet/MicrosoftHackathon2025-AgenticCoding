@@ -14,41 +14,23 @@ Deep analysis mode for complex tasks. Orchestrates multiple agents to break down
 
 ## Integration with Default Workflow
 
-UltraThink integrates seamlessly with the 13-step workflow in `.claude/workflow/DEFAULT_WORKFLOW.md`:
+UltraThink dynamically follows the workflow defined in `.claude/workflow/DEFAULT_WORKFLOW.md`:
 
-- Can be invoked from workflow Step 1 for requirement analysis
-- Can be invoked from workflow Step 4 for architecture design
-- When implementing, follows the workflow steps automatically
-- Provides deep analysis that feeds into workflow execution
+- Reads and follows whatever workflow steps are defined
+- Adapts automatically when users customize the workflow
+- Provides deep multi-agent analysis within the workflow structure
+- No need to update UltraThink when workflow changes
 
 ## Process
 
-For non-trivial code changes, UltraThink follows the workflow:
+For non-trivial code changes, UltraThink:
 
-### Phase 1: Deep Analysis (Workflow Steps 1 & 4)
+1. **Reads the current workflow** from `.claude/workflow/DEFAULT_WORKFLOW.md`
+2. **Provides deep analysis** using multiple agents where complexity requires it
+3. **Follows each workflow step** as defined by the user
+4. **Orchestrates agents** according to workflow requirements
 
-- Use prompt-writer to clarify requirements (Step 1)
-- Use architect agent to decompose the problem
-- Design solution architecture (Step 4)
-- Create specifications
-- Use tester agent for TDD test design (Step 4)
-
-### Phase 2: Implementation (Workflow Steps 5-8)
-
-- Create GitHub issue if needed (Step 2)
-- Setup worktree and branch (Step 3)
-- Use builder agent to implement (Step 5)
-- Use cleanup agent for simplification (Step 6)
-- Run tests and pre-commit hooks (Step 7)
-- Commit and push changes (Step 8)
-
-### Phase 3: Review & Finalization (Workflow Steps 9-13)
-
-- Open pull request (Step 9)
-- Use reviewer agent for code review (Step 10)
-- Implement feedback with builder agent (Step 11)
-- Philosophy compliance check (Step 12)
-- Ensure PR is mergeable (Step 13)
+The workflow is the single source of truth - UltraThink adapts to it automatically.
 
 ## Agent Orchestration
 
@@ -94,14 +76,13 @@ Always use TodoWrite to:
 ## Example Flow
 
 ```
-1. Deep analysis with architect & tester (Workflow Steps 1 & 4)
-2. Create issue and branch (Workflow Steps 2-3)
-3. Build with builder agent (Workflow Step 5)
-4. Simplify with cleanup agent (Workflow Step 6)
-5. Test and commit (Workflow Steps 7-8)
-6. PR and review cycle (Workflow Steps 9-13)
+1. Read workflow from DEFAULT_WORKFLOW.md
+2. Begin executing workflow steps with deep analysis
+3. Orchestrate multiple agents where complexity requires
+4. Follow all workflow steps as defined
+5. Adapt to any user customizations automatically
 ```
 
-The workflow ensures consistent, high-quality implementation while UltraThink provides the deep analysis needed for complex tasks.
+UltraThink enhances the workflow with deep multi-agent analysis while respecting user customizations.
 
 Remember: Ultra-thinking means thorough analysis before action.
