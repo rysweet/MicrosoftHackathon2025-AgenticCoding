@@ -3,6 +3,14 @@
 This file defines the default workflow for all non-trivial code changes.
 You can customize this workflow by editing this file.
 
+## Integration with UltraThink
+
+This workflow integrates with `/ultrathink` for deep analysis:
+
+- Use `/ultrathink` at Step 1 for complex requirement analysis
+- Use `/ultrathink` at Step 4 for complex architecture decisions
+- UltraThink will follow these workflow steps when implementing solutions
+
 ## When This Workflow Applies
 
 This workflow should be followed for:
@@ -16,6 +24,7 @@ This workflow should be followed for:
 
 ### Step 1: Rewrite and Clarify Requirements
 
+- [ ] For complex tasks, use `/ultrathink` for deep analysis first
 - [ ] Use the prompt-writer agent to clarify task requirements
 - [ ] Remove ambiguity from the task description
 - [ ] Define clear success criteria
@@ -38,6 +47,7 @@ This workflow should be followed for:
 
 ### Step 4: Research and Design with TDD
 
+- [ ] For complex architecture, use `/ultrathink` to orchestrate analysis
 - [ ] Use architect agent to design solution architecture
 - [ ] Document module specifications
 - [ ] Use tester agent to write failing tests (TDD)
