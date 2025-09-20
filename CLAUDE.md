@@ -30,8 +30,9 @@ When starting a session, import these files for context:
 
 - **Always think through a plan**: For any non-trivial task, break it down and
   use TodoWrite tool to manage a todo list
-- **Use the workflow system**: For feature implementation or bug fixes, use
-  `/workflow start` to execute the standardized 13-step process
+- **Follow the default workflow**: For all non-trivial changes, follow the
+  13-step workflow defined in `.claude/workflow/DEFAULT_WORKFLOW.md` (users can
+  customize this file to modify the workflow)
 - **Use specialized agents**: Check `.claude/agents/amplihack/*.md` for
   available agents and use them proactively
 - **Ask for clarity**: If requirements are unclear, ask questions before
@@ -178,36 +179,16 @@ Bad:
 .claude/
 ├── context/          # Philosophy, patterns, project info
 ├── agents/           # Specialized AI agents
-├── commands/         # Slash commands (/workflow, /ultrathink, /analyze, /improve)
+├── commands/         # Slash commands (/ultrathink, /analyze, /improve)
 ├── tools/            # Hooks and utilities
-├── workflow/         # Default workflow system
-│   ├── engine/       # Workflow orchestration
-│   ├── config/       # Configuration files
-│   ├── executors/    # Step executors (13 steps)
-│   ├── integration/  # Agent integration
-│   └── state/        # State management
+├── workflow/         # Default workflow definition
+│   └── DEFAULT_WORKFLOW.md  # Customizable 13-step workflow
 └── runtime/          # Logs, metrics, analysis
-    └── workflow-state/  # Workflow persistence
 
 Specs/               # Module specifications
 ```
 
 ## Key Commands
-
-### /workflow <action> [options]
-
-Execute the default 13-step coding workflow for features and fixes.
-
-- `/workflow start <task>` - Start new workflow with task description
-- `/workflow status` - Check current workflow status
-- `/workflow resume` - Resume paused workflow
-- `/workflow config` - View/edit workflow configuration
-
-Example:
-
-```
-/workflow start "Add authentication to the API"
-```
 
 ### /ultrathink <task>
 
