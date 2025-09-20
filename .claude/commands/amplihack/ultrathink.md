@@ -12,6 +12,8 @@
 
 Deep analysis mode for complex tasks. Orchestrates multiple agents to break down, analyze, and solve challenging problems.
 
+**Note:** For non-trivial code changes, follow the default 13-step workflow in `.claude/workflow/DEFAULT_WORKFLOW.md` instead. Use ultrathink for analysis, research, and planning that doesn't involve code changes.
+
 ## Process
 
 ### Phase 1: Analysis

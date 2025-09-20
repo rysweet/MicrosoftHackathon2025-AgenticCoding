@@ -16,101 +16,113 @@ This workflow should be followed for:
 
 ### Step 1: Rewrite and Clarify Requirements
 
-Use the prompt-writer agent to clarify the task requirements, remove ambiguity, and define clear success criteria.
+- [ ] Use the prompt-writer agent to clarify task requirements
+- [ ] Remove ambiguity from the task description
+- [ ] Define clear success criteria
+- [ ] Document acceptance criteria
 
 ### Step 2: Create GitHub Issue
 
-Create a GitHub issue using `gh issue create` with a clear description, requirements, and success criteria.
+- [ ] Create issue using `gh issue create`
+- [ ] Include clear problem description
+- [ ] Define requirements and constraints
+- [ ] Add success criteria
+- [ ] Assign appropriate labels
 
 ### Step 3: Setup Worktree and Branch
 
-Create a new git worktree and branch for the issue:
-
-- Branch name format: `feat/issue-{number}-{brief-description}`
-- Use worktrees to keep work isolated
+- [ ] Create new git worktree for isolated development
+- [ ] Create branch with format: `feat/issue-{number}-{brief-description}`
+- [ ] Push branch to remote with tracking
+- [ ] Switch to new worktree directory
 
 ### Step 4: Research and Design with TDD
 
-1. Use the architect agent to design the solution architecture
-2. Use the tester agent to write failing tests first (TDD approach)
-3. Create an implementation plan
+- [ ] Use architect agent to design solution architecture
+- [ ] Document module specifications
+- [ ] Use tester agent to write failing tests (TDD)
+- [ ] Create detailed implementation plan
+- [ ] Identify risks and dependencies
 
 ### Step 5: Implement the Solution
 
-Use the builder agent to implement based on:
-
-- The architecture design
-- The failing tests
-- The clarified requirements
-  Make tests pass iteratively.
+- [ ] Use builder agent to implement from specifications
+- [ ] Follow the architecture design
+- [ ] Make failing tests pass iteratively
+- [ ] Ensure all requirements are met
+- [ ] Add inline documentation
 
 ### Step 6: Refactor and Simplify
 
-Use the cleanup agent to apply ruthless simplicity:
-
-- Remove unnecessary abstractions
-- Eliminate dead code
-- Simplify complex logic
-- Ensure single responsibility
+- [ ] Use cleanup agent for ruthless simplification
+- [ ] Remove unnecessary abstractions
+- [ ] Eliminate dead code
+- [ ] Simplify complex logic
+- [ ] Ensure single responsibility principle
+- [ ] Verify no placeholders remain
 
 ### Step 7: Run Tests and Pre-commit Hooks
 
-Run all tests, linters, and pre-commit hooks:
-
-- Execute `pre-commit run --all-files`
-- Fix any issues found
-- Iterate until all checks pass
+- [ ] Run all unit tests
+- [ ] Execute `pre-commit run --all-files`
+- [ ] Fix any linting issues
+- [ ] Fix any formatting issues
+- [ ] Resolve type checking errors
+- [ ] Iterate until all checks pass
 
 ### Step 8: Commit and Push
 
-Create a detailed commit message:
-
-- Reference the issue number
-- Describe what changed and why
-- Push to the remote branch
+- [ ] Stage all changes
+- [ ] Write detailed commit message
+- [ ] Reference issue number in commit
+- [ ] Describe what changed and why
+- [ ] Push to remote branch
+- [ ] Verify push succeeded
 
 ### Step 9: Open Pull Request
 
-Create a PR using `gh pr create`:
-
-- Link to the issue
-- Include comprehensive description
-- Provide test plan
+- [ ] Create PR using `gh pr create`
+- [ ] Link to the GitHub issue
+- [ ] Write comprehensive description
+- [ ] Include test plan
+- [ ] Add screenshots if UI changes
+- [ ] Request appropriate reviewers
 
 ### Step 10: Review the PR
 
-Use the reviewer agent to:
-
-- Check code quality
-- Verify philosophy compliance
-- Ensure adequate test coverage
-- Post review comments
+- [ ] Use reviewer agent for code review
+- [ ] Check code quality and standards
+- [ ] Verify philosophy compliance
+- [ ] Ensure adequate test coverage
+- [ ] Post review comments on PR
+- [ ] Identify potential improvements
 
 ### Step 11: Implement Review Feedback
 
-Use the builder agent to:
-
-- Address all review comments
-- Make necessary changes
-- Push updates
+- [ ] Review all feedback comments
+- [ ] Use builder agent to implement changes
+- [ ] Address each review comment
+- [ ] Push updates to PR
+- [ ] Respond to review comments
+- [ ] Request re-review if needed
 
 ### Step 12: Philosophy Compliance Check
 
-Final check using the reviewer agent:
-
-- Ruthless simplicity achieved?
-- Bricks & studs pattern followed?
-- Zero-BS implementation?
-- All tests passing?
+- [ ] Use reviewer agent for final check
+- [ ] Verify ruthless simplicity achieved
+- [ ] Confirm bricks & studs pattern followed
+- [ ] Ensure zero-BS implementation (no stubs)
+- [ ] Verify all tests passing
+- [ ] Check documentation completeness
 
 ### Step 13: Ensure PR is Mergeable
 
-Use the ci-diagnostic-workflow agent if needed to:
-
-- Ensure CI is passing
-- Resolve any merge conflicts
-- Verify all review comments addressed
-- Confirm PR is ready to merge
+- [ ] Check CI status (all checks passing)
+- [ ] Use ci-diagnostic-workflow agent if CI fails
+- [ ] Resolve any merge conflicts
+- [ ] Verify all review comments addressed
+- [ ] Confirm PR is approved
+- [ ] Notify that PR is ready to merge
 
 ## Customization
 
