@@ -30,14 +30,13 @@ When starting a session, import these files for context:
 
 - **Always think through a plan**: For any non-trivial task, break it down and
   use TodoWrite tool to manage a todo list
-- **Follow the default workflow**: For all non-trivial changes, follow the
-  13-step workflow defined in `.claude/workflow/DEFAULT_WORKFLOW.md` (users can
-  customize this file to modify the workflow)
-- **Integrate UltraThink with Workflow**: For complex tasks, use `/ultrathink`
-  which integrates with the workflow - it provides deep analysis at Steps 1 & 4,
-  then follows all 13 workflow steps for implementation
-- **Use specialized agents**: Check `.claude/agents/amplihack/*.md` for
-  available agents and use them proactively
+- **The workflow is authoritative**: The 13-step workflow in
+  `.claude/workflow/DEFAULT_WORKFLOW.md` defines the order of operations, git
+  workflow, and CI/CD process (users can customize this file)
+- **Use UltraThink by default**: For non-trivial tasks, start with `/ultrathink`
+  which reads the workflow and orchestrates agents to execute it
+- **Maximize agent usage**: Every workflow step should leverage specialized
+  agents - delegate aggressively to agents in `.claude/agents/amplihack/*.md`
 - **Ask for clarity**: If requirements are unclear, ask questions before
   proceeding
 - **Document learnings**: Update DISCOVERIES.md with new insights
@@ -137,26 +136,32 @@ cleaning some data).
 
 ### Workflow and UltraThink Integration
 
-For complex tasks, UltraThink and the workflow work together:
+**The workflow defines WHAT to do, UltraThink orchestrates HOW to do it:**
 
 ```
-Example - Complex Feature Implementation:
+Example - Any Non-Trivial Task:
 
-User: "Add real-time collaborative editing to the document system"
+User: "Add authentication to the API"
 
-1. Start with /ultrathink for deep analysis
-   → UltraThink begins with workflow Step 1 (requirement clarification)
-   → Orchestrates architect, tester, api-designer in parallel
-   → Provides deep analysis at workflow Step 4 (architecture)
+1. Invoke /ultrathink with the task
+   → UltraThink reads DEFAULT_WORKFLOW.md
+   → Follows all 13 steps in order
+   → Orchestrates multiple agents at each step
 
-2. UltraThink follows workflow Steps 2-13 automatically
-   → Creates GitHub issue (Step 2)
-   → Sets up worktree (Step 3)
-   → Implements with builder (Step 5)
-   → Continues through PR merge (Step 13)
+2. Workflow provides the authoritative process:
+   → Step order (1-13) must be followed
+   → Git operations (branch, commit, push)
+   → CI/CD integration points
+   → Review and merge requirements
+
+3. Agents execute the actual work:
+   → prompt-writer clarifies requirements
+   → architect designs the solution
+   → builder implements the code
+   → reviewer ensures quality
 ```
 
-For simpler tasks, follow the workflow directly without UltraThink.
+The workflow file is the single source of truth - edit it to change the process.
 
 ### Parallel Execution
 
@@ -218,12 +223,12 @@ Specs/               # Module specifications
 
 ### /ultrathink <task>
 
-Deep analysis mode that integrates with the 13-step workflow. Use for complex
-tasks requiring multi-agent coordination. UltraThink will:
+Default execution mode for non-trivial tasks. UltraThink:
 
-- Provide deep analysis at workflow Steps 1 & 4
-- Follow all 13 workflow steps when implementing
-- Orchestrate multiple agents throughout the process
+- Reads the workflow from `.claude/workflow/DEFAULT_WORKFLOW.md`
+- Follows all steps in the exact order defined
+- Orchestrates multiple agents at each step for maximum effectiveness
+- Adapts automatically when you customize the workflow file
 
 ### /analyze <path>
 
