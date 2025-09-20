@@ -33,6 +33,9 @@ When starting a session, import these files for context:
 - **Follow the default workflow**: For all non-trivial changes, follow the
   13-step workflow defined in `.claude/workflow/DEFAULT_WORKFLOW.md` (users can
   customize this file to modify the workflow)
+- **Integrate UltraThink with Workflow**: For complex tasks, use `/ultrathink`
+  which integrates with the workflow - it provides deep analysis at Steps 1 & 4,
+  then follows all 13 workflow steps for implementation
 - **Use specialized agents**: Check `.claude/agents/amplihack/*.md` for
   available agents and use them proactively
 - **Ask for clarity**: If requirements are unclear, ask questions before
@@ -132,6 +135,29 @@ granularity of tasks (eg when going off to do something specific where context
 from the whole conversation is not necessary, such as managing a git worktree or
 cleaning some data).
 
+### Workflow and UltraThink Integration
+
+For complex tasks, UltraThink and the workflow work together:
+
+```
+Example - Complex Feature Implementation:
+
+User: "Add real-time collaborative editing to the document system"
+
+1. Start with /ultrathink for deep analysis
+   → UltraThink begins with workflow Step 1 (requirement clarification)
+   → Orchestrates architect, tester, api-designer in parallel
+   → Provides deep analysis at workflow Step 4 (architecture)
+
+2. UltraThink follows workflow Steps 2-13 automatically
+   → Creates GitHub issue (Step 2)
+   → Sets up worktree (Step 3)
+   → Implements with builder (Step 5)
+   → Continues through PR merge (Step 13)
+```
+
+For simpler tasks, follow the workflow directly without UltraThink.
+
 ### Parallel Execution
 
 **CRITICAL**: Always consider what can be done in parallel. Use a single call to
@@ -192,7 +218,12 @@ Specs/               # Module specifications
 
 ### /ultrathink <task>
 
-Deep analysis mode using multiple agents
+Deep analysis mode that integrates with the 13-step workflow. Use for complex
+tasks requiring multi-agent coordination. UltraThink will:
+
+- Provide deep analysis at workflow Steps 1 & 4
+- Follow all 13 workflow steps when implementing
+- Orchestrate multiple agents throughout the process
 
 ### /analyze <path>
 
