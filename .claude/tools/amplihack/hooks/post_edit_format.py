@@ -162,15 +162,28 @@ def format_file(file_path: Path) -> Tuple[bool, Optional[str]]:
         if not command_exists(formatter_name):
             continue
 
-        # Build command
-        command = [arg.replace("{file}", str(file_path)) for arg in command_template]
+        # Build command safely - avoid shell injection
+        command = []
+        for arg in command_template:
+            if arg == "{file}":
+                # Replace placeholder with actual file path as separate argument
+                command.append(str(file_path))
+            elif "{file}" in arg:
+                # Don't allow partial replacements that could enable injection
+                log(f"Skipping unsafe formatter command template: {command_template}", "WARNING")
+                continue
+            else:
+                command.append(arg)
 
         try:
             log(f"Running {formatter_name} on {file_path}")
 
             # Special handling for jq (needs to write output)
             if formatter_name == "jq":
-                result = subprocess.run(command, capture_output=True, text=True, timeout=10)
+                # Use shell=False to prevent injection
+                result = subprocess.run(
+                    command, capture_output=True, text=True, timeout=10, shell=False
+                )
                 if result.returncode == 0:
                     # Write formatted output back to file
                     with open(file_path, "w") as f:
@@ -178,8 +191,10 @@ def format_file(file_path: Path) -> Tuple[bool, Optional[str]]:
                 else:
                     continue
             else:
-                # Run formatter
-                result = subprocess.run(command, capture_output=True, text=True, timeout=10)
+                # Run formatter with shell=False to prevent injection
+                result = subprocess.run(
+                    command, capture_output=True, text=True, timeout=10, shell=False
+                )
 
                 if result.returncode != 0:
                     log(f"{formatter_name} failed: {result.stderr}")
