@@ -191,7 +191,6 @@ def main():
 
         # Extract messages and options
         messages = input_data.get("messages", [])
-        enable_stage2 = input_data.get("enable_stage2", False)  # Optional flag for Stage 2
         create_prs = input_data.get("create_prs", False)  # Whether to actually create PRs
 
         log(f"Processing {len(messages)} messages")
@@ -203,26 +202,17 @@ def main():
         if messages:
             analysis_file, stage1_data = save_session_analysis(messages)
 
-            # Check for significant patterns that warrant Stage 2
-            should_run_stage2 = enable_stage2 or (
-                stage1_data["metrics"].get("errors", 0) > 5
-                or stage1_data["metrics"].get("duration_minutes", 0) > 30
-                or any(
-                    count > 10 for count in stage1_data["metrics"].get("tool_usage", {}).values()
-                )
-            )
+            # Always run Stage 2 reflection for complete analysis
+            log("Triggering Stage 2 reflection for session analysis")
+            stage2_result = trigger_stage2_reflection(analysis_file, stage1_data, create_prs)
 
-            if should_run_stage2:
-                log("Triggering Stage 2 reflection based on session patterns")
-                stage2_result = trigger_stage2_reflection(analysis_file, stage1_data, create_prs)
-
-                if stage2_result:
-                    output["stage2"] = {
-                        "proposals_count": len(stage2_result["stage2_results"]["proposals"]),
-                        "issues_created": len(stage2_result["stage2_results"]["created_issues"]),
-                        "prs_created": len(stage2_result["stage2_results"]["created_prs"]),
-                        "report": stage2_result["report_path"],
-                    }
+            if stage2_result:
+                output["stage2"] = {
+                    "proposals_count": len(stage2_result["stage2_results"]["proposals"]),
+                    "issues_created": len(stage2_result["stage2_results"]["created_issues"]),
+                    "prs_created": len(stage2_result["stage2_results"]["created_prs"]),
+                    "report": stage2_result["report_path"],
+                }
 
             # Build response with learnings
             learnings = extract_learnings(messages)
