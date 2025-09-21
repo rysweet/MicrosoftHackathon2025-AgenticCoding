@@ -33,6 +33,12 @@ class HookProcessor(ABC):
 
         # Setup paths - use resolve() for security and handle symlinks
         self.project_root = Path(__file__).resolve().parents[4]
+
+        # Validate project structure for security
+        expected_marker = self.project_root / ".claude"
+        if not expected_marker.exists():
+            raise ValueError("Invalid project structure - security check failed")
+
         self._setup_paths()
 
         # Setup directories
@@ -53,6 +59,26 @@ class HookProcessor(ABC):
         sys_path = str(self.project_root)
         if sys_path not in sys.path:
             sys.path.insert(0, sys_path)
+
+    def validate_path_containment(self, path: Path) -> Path:
+        """Validate that path stays within project boundaries.
+
+        Args:
+            path: Path to validate
+
+        Returns:
+            Resolved path if valid
+
+        Raises:
+            ValueError: If path escapes project root
+        """
+        resolved = path.resolve()
+        try:
+            # Check if path is within project root
+            resolved.relative_to(self.project_root)
+            return resolved
+        except ValueError:
+            raise ValueError(f"Path escapes project root: {path}")
 
     def log(self, message: str, level: str = "INFO"):
         """Log a message to the hook's log file.
