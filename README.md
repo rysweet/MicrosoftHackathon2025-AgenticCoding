@@ -34,15 +34,18 @@ That's it! The command automatically:
 
 For using claude code and the amplihack frameowrk with Azure OpenAI models:
 
-- Copy ```example.azure.env``` to ```.azure.env``` and then edit it with your Azure OpenAI endpoint settings
+- Copy `example.azure.env` to `.azure.env` and then edit it with your Azure
+  OpenAI endpoint settings
 - Launch amplichack with the proxy to Azure OpenAI:
-- 
+-
+
 ```sh
 # Launch with Azure OpenAI proxy (includes persistence prompt)
 uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding amplihack launch --with-proxy-config ./azure.env
 ```
 
 The Azure integration provides:
+
 - Dynamicaly loaded proxy
 - Azure OpenAI model access through Claude Code interface
 - Automatic persistence prompt for autonomous operation
