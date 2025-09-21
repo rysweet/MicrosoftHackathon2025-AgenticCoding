@@ -23,36 +23,72 @@ class StopHook(HookProcessor):
         super().__init__("stop")
 
     def extract_learnings(self, messages: List[Dict]) -> List[Dict]:
-        """Extract potential learnings from conversation.
+        """Extract learnings using the reflection module.
 
         Args:
             messages: List of conversation messages
 
         Returns:
-            List of potential learnings
+            List of potential learnings with improvement suggestions
+        """
+        try:
+            # Import reflection module
+            from reflection import SessionReflector, save_reflection_summary
+
+            # Create reflector and analyze session
+            reflector = SessionReflector()
+            analysis = reflector.analyze_session(messages)
+
+            # Save detailed analysis if not skipped
+            if not analysis.get("skipped"):
+                summary_file = save_reflection_summary(analysis, self.analysis_dir)
+                if summary_file:
+                    self.log(f"Reflection analysis saved to {summary_file}")
+
+                # Return patterns found as learnings
+                learnings = []
+                for pattern in analysis.get("patterns", []):
+                    learnings.append(
+                        {
+                            "type": pattern["type"],
+                            "suggestion": pattern.get("suggestion", ""),
+                            "priority": "high"
+                            if pattern["type"] == "user_frustration"
+                            else "normal",
+                        }
+                    )
+                return learnings
+            else:
+                self.log("Reflection skipped (loop prevention active)")
+                return []
+
+        except ImportError as e:
+            self.log(f"Could not import reflection module: {e}", "WARNING")
+            # Fall back to simple keyword extraction
+            return self.extract_learnings_simple(messages)
+        except Exception as e:
+            self.log(f"Error in reflection analysis: {e}", "ERROR")
+            return []
+
+    def extract_learnings_simple(self, messages: List[Dict]) -> List[Dict]:
+        """Simple fallback learning extraction.
+
+        Args:
+            messages: List of conversation messages
+
+        Returns:
+            List of simple keyword-based learnings
         """
         learnings = []
-
-        # Look for patterns indicating discoveries
-        keywords = [
-            "discovered",
-            "learned",
-            "found that",
-            "turns out",
-            "issue was",
-            "solution was",
-            "pattern",
-        ]
+        keywords = ["discovered", "learned", "found that", "issue was", "solution was"]
 
         for message in messages:
             content = message.get("content", "")
             if isinstance(content, str):
                 for keyword in keywords:
                     if keyword.lower() in content.lower():
-                        # Could use more sophisticated extraction here
                         learnings.append({"keyword": keyword, "preview": content[:200]})
                         break
-
         return learnings
 
     def save_session_analysis(self, messages: List[Dict]):
@@ -126,14 +162,28 @@ class StopHook(HookProcessor):
         # Build response
         output = {}
         if learnings:
+            # Check for high priority learnings
+            priority_learnings = [
+                learning for learning in learnings if learning.get("priority") == "high"
+            ]
+
             output = {
                 "metadata": {
                     "learningsFound": len(learnings),
-                    "source": "session_analysis",
-                    "reminder": "Check .claude/runtime/analysis/ for session details",
+                    "highPriority": len(priority_learnings),
+                    "source": "reflection_analysis",
+                    "analysisPath": ".claude/runtime/analysis/",
+                    "summary": f"Found {len(learnings)} improvement opportunities",
                 }
             }
-            self.log(f"Found {len(learnings)} potential learnings")
+
+            # Add specific suggestions to output if high priority
+            if priority_learnings:
+                output["metadata"]["urgentSuggestion"] = priority_learnings[0].get("suggestion", "")
+
+            self.log(
+                f"Found {len(learnings)} potential improvements ({len(priority_learnings)} high priority)"
+            )
 
         return output
 
