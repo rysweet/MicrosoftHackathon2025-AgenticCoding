@@ -31,8 +31,13 @@ class HookProcessor(ABC):
         """
         self.hook_name = hook_name
 
-        # Setup paths
-        self.project_root = Path(__file__).parent.parent.parent.parent
+        # Setup paths - use resolve() for security and handle symlinks
+        self.project_root = Path(__file__).resolve().parents[4]
+
+        # Validate project structure for security
+        expected_marker = self.project_root / ".claude"
+        if not expected_marker.exists():
+            raise ValueError("Invalid project structure - security check failed")
         self._setup_paths()
 
         # Setup directories
@@ -54,6 +59,26 @@ class HookProcessor(ABC):
         if sys_path not in sys.path:
             sys.path.insert(0, sys_path)
 
+    def validate_path_containment(self, path: Path) -> Path:
+        """Validate that path stays within project boundaries.
+
+        Args:
+            path: Path to validate
+
+        Returns:
+            Resolved path if valid
+
+        Raises:
+            ValueError: If path escapes project root
+        """
+        resolved = path.resolve()
+        try:
+            # Check if path is within project root
+            resolved.relative_to(self.project_root)
+            return resolved
+        except ValueError:
+            raise ValueError(f"Path escapes project root: {path}")
+
     def log(self, message: str, level: str = "INFO"):
         """Log a message to the hook's log file.
 
@@ -63,6 +88,14 @@ class HookProcessor(ABC):
         """
         timestamp = datetime.now().isoformat()
         try:
+            # Check log file size and rotate if needed (10MB limit)
+            if self.log_file.exists() and self.log_file.stat().st_size > 10 * 1024 * 1024:
+                # Rotate log file
+                backup = self.log_file.with_suffix(
+                    f".{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+                )
+                self.log_file.rename(backup)
+
             with open(self.log_file, "a") as f:
                 f.write(f"[{timestamp}] {level}: {message}\n")
         except Exception as e:
@@ -171,8 +204,15 @@ class HookProcessor(ABC):
             self.log(f"Error in {self.hook_name}: {e}", "ERROR")
             self.log(f"Traceback: {traceback.format_exc()}", "ERROR")
 
-            # Return empty dict to not break the chain
-            self.write_output({})
+            # Also log to stderr for visibility
+            print(f"Hook error in {self.hook_name}: {e}", file=sys.stderr)
+
+            # Return error indicator instead of empty dict
+            error_response = {
+                "error": f"Hook {self.hook_name} encountered an error",
+                "details": str(e)[:200],  # Truncate for safety
+            }
+            self.write_output(error_response)
 
     def get_session_id(self) -> str:
         """Generate or retrieve a session ID.
@@ -180,17 +220,23 @@ class HookProcessor(ABC):
         Returns:
             Session ID based on timestamp
         """
-        return datetime.now().strftime("%Y%m%d_%H%M%S")
+        # Include microseconds to prevent collisions
+        return datetime.now().strftime("%Y%m%d_%H%M%S_%f")
 
     def save_session_data(self, filename: str, data: Any):
-        """Save data to a session-specific file.
+        """Save data to a session-specific file with path validation.
 
         Args:
             filename: Name of the file (without path)
             data: Data to save (will be JSON serialized if dict/list)
         """
+        # Validate filename to prevent path traversal
+        if ".." in filename or "/" in filename or "\\" in filename:
+            self.log(f"Invalid filename attempted: {filename}", "WARNING")
+            raise ValueError("Invalid filename - no path separators allowed")
+
         session_dir = self.log_dir / self.get_session_id()
-        session_dir.mkdir(parents=True, exist_ok=True)
+        session_dir.mkdir(parents=True, exist_ok=True, mode=0o700)  # Restrict permissions
 
         file_path = session_dir / filename
 
