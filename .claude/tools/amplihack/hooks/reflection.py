@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Session reflection module for detecting improvement opportunities.
-Prevents infinite loops via CLAUDE_REFLECTION_MODE environment variable.
+Prevents infinite loops via CLAUDE_HOOK_SEMAPHORE environment variable.
 """
 
 import json
@@ -49,8 +49,8 @@ class SessionReflector:
     }
 
     def __init__(self):
-        # Prevent loops via environment variable
-        self.enabled = os.environ.get("CLAUDE_REFLECTION_MODE") != "1"
+        # Prevent loops via environment variable semaphore
+        self.enabled = os.environ.get("CLAUDE_HOOK_SEMAPHORE") != "1"
 
     def analyze_session(self, messages: List[Dict]) -> Dict[str, Any]:
         """Extract patterns from session messages"""

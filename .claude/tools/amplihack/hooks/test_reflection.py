@@ -20,7 +20,7 @@ from reflection import SessionReflector, save_reflection_summary  # noqa: E402
 
 
 def test_loop_prevention():
-    """Test that CLAUDE_REFLECTION_MODE prevents loops"""
+    """Test that CLAUDE_HOOK_SEMAPHORE prevents loops"""
     print("\n=== Testing Loop Prevention ===")
 
     # Test without environment variable
@@ -29,13 +29,13 @@ def test_loop_prevention():
     print("✓ Reflection enabled without env var")
 
     # Test with environment variable set
-    os.environ["CLAUDE_REFLECTION_MODE"] = "1"
+    os.environ["CLAUDE_HOOK_SEMAPHORE"] = "1"
     reflector2 = SessionReflector()
     assert not reflector2.enabled, "Should be disabled with env var"
-    print("✓ Reflection disabled with CLAUDE_REFLECTION_MODE=1")
+    print("✓ Reflection disabled with CLAUDE_HOOK_SEMAPHORE=1")
 
     # Clean up
-    del os.environ["CLAUDE_REFLECTION_MODE"]
+    del os.environ["CLAUDE_HOOK_SEMAPHORE"]
     print("✓ Loop prevention mechanism working")
 
 
@@ -168,7 +168,7 @@ def test_integration_with_stop_hook():
     from stop import extract_learnings  # noqa: E402
 
     # Test with reflection disabled (loop prevention)
-    os.environ["CLAUDE_REFLECTION_MODE"] = "1"
+    os.environ["CLAUDE_HOOK_SEMAPHORE"] = "1"
     messages = [
         {"role": "user", "content": "Test message"},
         {"role": "assistant", "content": "Response"},
@@ -179,7 +179,7 @@ def test_integration_with_stop_hook():
     print("✓ Stop hook handles disabled reflection gracefully")
 
     # Clean up
-    del os.environ["CLAUDE_REFLECTION_MODE"]
+    del os.environ["CLAUDE_HOOK_SEMAPHORE"]
 
     # Test with reflection enabled
     messages_with_patterns = [
