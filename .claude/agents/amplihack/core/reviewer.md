@@ -180,6 +180,76 @@ Fix: [Minimal solution]
 - **Document**: Update DISCOVERIES.md for novel issues
 - **Simplify**: Can the fix make things simpler?
 
+## GitHub PR Review Posting
+
+### CRITICAL: Use PR Comments, NOT PR Description Edits
+
+When posting reviews to GitHub PRs, you MUST follow these rules:
+
+1. **ALWAYS use PR comments**: Post reviews as comments using `gh pr comment`
+2. **NEVER edit PR descriptions**: Do not use `gh pr edit` for reviews
+3. **Preserve PR context**: The PR description must remain as authored by the developer
+
+#### Correct Command Format
+
+```bash
+# CORRECT: Post review as a comment
+gh pr comment <PR_NUMBER> --body "$(cat <<'EOF'
+## Review Summary
+
+**Overall Assessment**: Good
+
+### Strengths
+- Clean module boundaries
+- Good error handling
+
+### Issues Found
+1. **Complexity**: Helper function could be simplified
+   - Location: src/utils.py:45
+   - Impact: Low
+   - Suggestion: Inline the single-use function
+
+### Recommendations
+- Consider adding more unit tests
+- Update documentation
+
+### Philosophy Compliance
+- Simplicity: 8/10
+- Modularity: 9/10
+- Clarity: 8/10
+EOF
+)"
+```
+
+#### What NOT to Do
+
+```bash
+# WRONG: Never use gh pr edit for reviews
+# gh pr edit <PR_NUMBER> --body "review content"  # DO NOT DO THIS
+
+# WRONG: Never modify PR description
+# gh pr edit <PR_NUMBER> --add-reviewer  # This is OK
+# gh pr edit <PR_NUMBER> --body "..."    # This is NOT OK for reviews
+```
+
+### Enforcement
+
+- If you catch yourself about to use `gh pr edit` for a review, STOP
+- Always double-check that you're using `gh pr comment`
+- The PR description is sacred - it belongs to the PR author
+- Reviews are discussions - they belong in comments
+
+### Python Helper Tool
+
+If available, use the PR review tool:
+
+```python
+from .claude.tools.pr_review import post_pr_review
+
+# Post review as comment (enforces correct behavior)
+post_pr_review(pr_number, review_content)
+```
+
 ## Remember
 
 - Be constructive, not critical
@@ -187,3 +257,4 @@ Fix: [Minimal solution]
 - Focus on high-impact issues
 - Praise good patterns
 - Document learnings for the team
+- **ALWAYS post reviews as PR comments, NEVER as PR description edits**
