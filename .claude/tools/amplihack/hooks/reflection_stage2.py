@@ -35,10 +35,6 @@ class PatternToPRConverter:
     def __init__(self, project_root: Path):
         self.project_root = project_root
         self.analysis_dir = project_root / ".claude" / "runtime" / "analysis"
-        self.pr_templates_dir = (
-            project_root / ".claude" / "tools" / "amplihack" / "hooks" / "pr_templates"
-        )
-        self.pr_templates_dir.mkdir(parents=True, exist_ok=True)
         self._init_templates()
 
     def _init_templates(self):
@@ -47,7 +43,8 @@ class PatternToPRConverter:
             "repeated_commands": {
                 "title": "Automate repetitive {command_type} operations",
                 "body": """## Problem
-The session analysis identified {count} repetitive {command_type} operations that could be automated.
+The session analysis identified {count} repetitive {command_type} operations that could be
+automated.
 
 ## Pattern Details
 {pattern_details}
@@ -138,7 +135,8 @@ Generated from session reflection analysis.""",
             "long_session": {
                 "title": "Task decomposition guide for {task_type}",
                 "body": """## Problem
-Analysis shows extended session duration for {task_type} tasks, indicating need for better decomposition.
+Analysis shows extended session duration for {task_type} tasks, indicating need for better
+decomposition.
 
 ## Session Metrics
 {session_metrics}
@@ -222,6 +220,31 @@ Build a tool that:
 Generated from session reflection analysis.""",
                 "labels": ["tooling", "enhancement", "developer-experience"],
             },
+            "session_summary": {
+                "title": "Session Analysis Summary",
+                "body": """## Session Metrics
+
+{summary_details}
+
+## Analysis Overview
+This session was analyzed for improvement opportunities.
+
+### Key Statistics
+- **Messages**: {total_messages}
+- **Tool Uses**: {tool_uses}
+- **Duration**: {duration} minutes
+- **Errors**: {errors}
+
+## Reflection Status
+✅ Session analyzed by Stage 2 reflection system
+📊 Pattern detection completed
+📝 Report generated
+
+This summary confirms that the session was successfully processed through the two-stage reflection system, providing comprehensive analysis even when no specific improvement patterns were detected.
+
+Generated from session reflection analysis.""",
+                "labels": ["reflection", "session-summary", "analysis"],
+            },
         }
 
     def analyze_stage1_output(self, stage1_file: Path) -> Dict[str, Any]:
@@ -236,7 +259,7 @@ Generated from session reflection analysis.""",
         if "tool_usage" in data.get("metrics", {}):
             tool_stats = data["metrics"]["tool_usage"]
             for tool, count in tool_stats.items():
-                if count > 5:  # Threshold for repetition
+                if count > 3:  # Lowered threshold for repetition detection
                     patterns.append(
                         {
                             "type": "repeated_commands",
@@ -252,7 +275,7 @@ Generated from session reflection analysis.""",
         # Check for error patterns
         if "errors" in data.get("metrics", {}):
             error_count = data["metrics"]["errors"]
-            if error_count > 3:
+            if error_count > 1:  # Lowered threshold for error detection
                 patterns.append(
                     {
                         "type": "error_patterns",
@@ -268,7 +291,7 @@ Generated from session reflection analysis.""",
         # Check for long sessions
         if "duration_minutes" in data.get("metrics", {}):
             duration = data["metrics"]["duration_minutes"]
-            if duration > 30:  # Long session threshold
+            if duration > 15:  # Lowered threshold for long session detection
                 patterns.append(
                     {
                         "type": "long_session",
@@ -296,6 +319,23 @@ Generated from session reflection analysis.""",
                         }
                     )
                     break
+
+        # Always add a session summary pattern for complete analysis
+        session_metrics = data.get("metrics", {})
+        patterns.append(
+            {
+                "type": "session_summary",
+                "priority": "low",
+                "data": {
+                    "summary_type": "general",
+                    "total_messages": session_metrics.get("message_count", 0),
+                    "tool_uses": session_metrics.get("tool_uses", 0),
+                    "duration": session_metrics.get("duration_minutes", 0),
+                    "errors": session_metrics.get("errors", 0),
+                    "summary_details": f"Session completed with {session_metrics.get('message_count', 0)} messages, {session_metrics.get('tool_uses', 0)} tool uses, {session_metrics.get('errors', 0)} errors in {session_metrics.get('duration_minutes', 0)} minutes",
+                },
+            }
+        )
 
         return {
             "patterns": patterns,
@@ -353,7 +393,10 @@ Generated from session reflection analysis.""",
             # Fallback for unknown pattern types
             return (
                 f"Improvement: Address {pattern['type']}",
-                f"Pattern analysis identified improvements needed.\n\nDetails: {json.dumps(pattern['data'], indent=2)}",
+                (
+                    "Pattern analysis identified improvements needed.\n\n"
+                    f"Details: {json.dumps(pattern['data'], indent=2)}"
+                ),
                 ["enhancement"],
             )
 
@@ -368,52 +411,101 @@ Generated from session reflection analysis.""",
 
         return title, body, labels
 
-    def create_pr_branch(self, branch_name: str) -> bool:
-        """Create a new branch for the PR."""
+    def create_pr_branch(self, branch_name: str) -> Dict[str, Any]:
+        """Create a new branch for the PR with proper validation."""
+        # Validate branch name to prevent injection
+        if not re.match(r"^[a-zA-Z0-9/_-]+$", branch_name):
+            return {"success": False, "error": "Invalid branch name format"}
+
         try:
             # Check if branch exists
             result = subprocess.run(
                 ["git", "rev-parse", "--verify", branch_name],
                 capture_output=True,
                 cwd=self.project_root,
+                timeout=10,
             )
 
             if result.returncode == 0:
                 # Branch exists, switch to it
-                subprocess.run(["git", "checkout", branch_name], check=True, cwd=self.project_root)
+                checkout_result = subprocess.run(
+                    ["git", "checkout", branch_name],
+                    capture_output=True,
+                    cwd=self.project_root,
+                    timeout=10,
+                )
+                if checkout_result.returncode != 0:
+                    return {
+                        "success": False,
+                        "error": f"Failed to checkout branch: {checkout_result.stderr.decode()}",
+                    }
             else:
                 # Create new branch
-                subprocess.run(
-                    ["git", "checkout", "-b", branch_name], check=True, cwd=self.project_root
+                create_result = subprocess.run(
+                    ["git", "checkout", "-b", branch_name],
+                    capture_output=True,
+                    cwd=self.project_root,
+                    timeout=10,
                 )
+                if create_result.returncode != 0:
+                    return {
+                        "success": False,
+                        "error": f"Failed to create branch: {create_result.stderr.decode()}",
+                    }
 
-            return True
-        except subprocess.CalledProcessError:
-            return False
+            return {"success": True}
+        except subprocess.CalledProcessError as e:
+            return {"success": False, "error": f"Git command failed: {str(e)}"}
+        except subprocess.TimeoutExpired:
+            return {"success": False, "error": "Git operation timed out"}
 
     def create_pr(self, title: str, body: str, branch: str, labels: List[str]) -> Dict[str, Any]:
-        """Create a pull request using gh CLI."""
+        """Create a pull request using gh CLI with proper validation."""
+        # Validate inputs to prevent injection
+        if not title or len(title) > 256:
+            return {"success": False, "error": "Invalid title length"}
+
+        if not body or len(body) > 65536:  # 64KB limit
+            return {"success": False, "error": "Invalid body length"}
+
+        if not re.match(r"^[a-zA-Z0-9/_-]+$", branch):
+            return {"success": False, "error": "Invalid branch name format"}
+
+        # Validate labels
+        for label in labels:
+            if not re.match(r"^[a-zA-Z0-9-_]+$", label):
+                return {"success": False, "error": f"Invalid label format: {label}"}
+
         try:
-            # Create PR
+            # Create PR with validated inputs
             cmd = ["gh", "pr", "create", "--title", title, "--body", body]
 
-            # Add labels
-            for label in labels:
+            # Add validated labels
+            for label in labels[:5]:  # Limit to 5 labels
                 cmd.extend(["--label", label])
 
-            result = subprocess.run(cmd, capture_output=True, text=True, cwd=self.project_root)
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                cwd=self.project_root,
+                timeout=30,  # 30 second timeout
+            )
 
             if result.returncode == 0:
                 pr_url = result.stdout.strip()
-                # Extract PR number
+                # Extract PR number safely
                 match = re.search(r"/pull/(\d+)$", pr_url)
                 pr_number = int(match.group(1)) if match else None
 
                 return {"success": True, "pr_url": pr_url, "pr_number": pr_number}
             else:
-                return {"success": False, "error": result.stderr.strip()}
+                # Limit error length
+                return {"success": False, "error": result.stderr.strip()[:1000]}
+        except subprocess.TimeoutExpired:
+            return {"success": False, "error": "PR creation timed out"}
         except Exception as e:
-            return {"success": False, "error": str(e)}
+            return {"success": False, "error": str(e)[:1000]}  # Limit error length
 
     def convert_to_prs(self, stage1_file: Path, create_prs: bool = False) -> Dict[str, Any]:
         """Main method to convert Stage 1 output to PRs."""
@@ -463,11 +555,23 @@ Generated from session reflection analysis.""",
                         )
                 else:
                     # Create as PR with implementation stub
-                    branch_name = f"auto/reflection-{proposal['type']}-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+                    branch_name = (
+                        f"auto/reflection-{proposal['type']}-"
+                        f"{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+                    )
 
                     if self.create_pr_branch(branch_name):
                         # Create implementation stub
-                        self._create_implementation_stub(proposal)
+                        # Create investigation issue for complex patterns
+                        issue_result = self._create_implementation_issue(proposal)
+                        if issue_result["success"]:
+                            results["created_issues"].append(
+                                {
+                                    "number": issue_result.get("issue_number"),
+                                    "url": issue_result["issue_url"],
+                                    "title": issue_result["title"],
+                                }
+                            )
 
                         # Commit changes
                         try:
@@ -510,112 +614,57 @@ Generated from session reflection analysis.""",
 
         return results
 
-    def _create_implementation_stub(self, proposal: Dict):
-        """Create a basic implementation stub for the proposal."""
-        if proposal["type"] == "repeated_commands":
-            # Create automation script stub
-            script_dir = self.project_root / ".claude" / "tools" / "automation"
-            script_dir.mkdir(parents=True, exist_ok=True)
+    def _create_implementation_issue(self, proposal: Dict) -> Dict[str, Any]:
+        """Create GitHub issue for complex patterns requiring investigation."""
+        title, body, labels = self.generate_pr_content(proposal)
 
-            script_name = f"auto_{proposal['data']['command_type'].replace(' ', '_').lower()}.py"
-            script_path = script_dir / script_name
+        # Convert PR title to issue title
+        issue_title = title.replace("feat:", "investigate:").replace("refactor:", "investigate:")
 
-            script_content = f'''#!/usr/bin/env python3
-"""
-Automation script for {proposal["data"]["command_type"]} operations.
-Generated from reflection analysis.
-"""
+        # Create investigation issue body
+        issue_body = f"""## Investigation Required
 
-import argparse
-import sys
-from pathlib import Path
+This issue was automatically created from reflection analysis.
 
+## Pattern Detected
+- **Type**: {proposal["type"]}
+- **Priority**: {proposal["priority"]}
 
-def main():
-    """Main entry point for {proposal["data"]["command_type"]} automation."""
-    parser = argparse.ArgumentParser(
-        description="Automate {proposal["data"]["command_type"]} operations"
-    )
-    parser.add_argument("target", help="Target for operation")
-    parser.add_argument("--batch", action="store_true", help="Process in batch mode")
-    parser.add_argument("--retry", type=int, default=3, help="Number of retries on failure")
+## Analysis Details
+{body}
 
-    args = parser.parse_args()
+## Next Steps
+1. Review the detected pattern
+2. Determine if automation/tooling is beneficial
+3. Create implementation plan
+4. Implement solution if justified
 
-    # TODO: Implement automation logic
-    print(f"Processing {{args.target}} with {proposal["data"]["command_type"]} automation")
+## Context
+This pattern was detected during session reflection and requires human investigation
+to determine the best approach."""
 
-    return 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())
-'''
-
-            with open(script_path, "w") as f:
-                f.write(script_content)
-
-            # Make executable
-            script_path.chmod(0o755)
-
-        elif proposal["type"] == "missing_tooling":
-            # Create tool stub
-            tool_dir = self.project_root / ".claude" / "tools"
-            tool_name = (
-                f"{proposal['data'].get('capability', 'new_tool').replace(' ', '_').lower()}.py"
+        try:
+            # Create issue using existing GitHub integration
+            issue_result = create_issue(
+                title=issue_title,
+                body=issue_body,
+                labels=["investigation", "reflection-generated"] + labels,
             )
-            tool_path = tool_dir / tool_name
 
-            tool_content = f'''#!/usr/bin/env python3
-"""
-Tool for {proposal["data"].get("capability", "new capability")}.
-Generated from reflection analysis.
-"""
-
-from typing import Any, Dict, Optional
-
-
-class {proposal["data"].get("capability", "NewTool").replace(" ", "").title()}Tool:
-    """Provides {proposal["data"].get("capability", "new capability")}."""
-
-    def __init__(self, config: Optional[Dict[str, Any]] = None):
-        self.config = config or {{}}
-
-    def execute(self, *args, **kwargs) -> Dict[str, Any]:
-        """Execute the tool operation."""
-        # TODO: Implement tool logic
-        return {{
-            "success": True,
-            "message": "Tool executed successfully"
-        }}
-
-
-def main():
-    """CLI interface for the tool."""
-    import argparse
-
-    parser = argparse.ArgumentParser(
-        description="{proposal["data"].get("capability", "Tool")} operations"
-    )
-    parser.add_argument("command", help="Command to execute")
-    args = parser.parse_args()
-
-    tool = {proposal["data"].get("capability", "NewTool").replace(" ", "").title()}Tool()
-    result = tool.execute(command=args.command)
-    print(result)
-
-    return 0 if result.get("success") else 1
-
-
-if __name__ == "__main__":
-    import sys
-    sys.exit(main())
-'''
-
-            with open(tool_path, "w") as f:
-                f.write(tool_content)
-
-            tool_path.chmod(0o755)
+            if issue_result.get("success"):
+                return {
+                    "success": True,
+                    "issue_url": issue_result.get("issue_url"),
+                    "issue_number": issue_result.get("issue_number"),
+                    "title": issue_title,
+                }
+            else:
+                return {
+                    "success": False,
+                    "error": issue_result.get("error", "Unknown error creating issue"),
+                }
+        except Exception as e:
+            return {"success": False, "error": f"Failed to create issue: {str(e)}"}
 
 
 class ReflectionReportGenerator:
