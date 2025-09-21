@@ -19,8 +19,8 @@ sys.path.insert(0, str(project_root))
 from hook_processor import HookProcessor  # noqa: E402
 
 
-class TestHook(HookProcessor):
-    """Test implementation of HookProcessor."""
+class MockHookProcessor(HookProcessor):
+    """Mock implementation of HookProcessor for testing."""
 
     def __init__(self):
         super().__init__("test_hook")
@@ -50,14 +50,14 @@ class TestHookProcessor(TestCase):
     def test_init_creates_directories(self):
         """Test that initialization creates necessary directories."""
         with patch.object(Path, "mkdir") as mock_mkdir:
-            _ = TestHook()
+            _ = MockHookProcessor()
             # Should create log_dir, metrics_dir, analysis_dir
             self.assertEqual(mock_mkdir.call_count, 3)
 
     def test_logging(self):
         """Test that logging works correctly."""
         with tempfile.TemporaryDirectory() as temp_dir:
-            hook = TestHook()
+            hook = MockHookProcessor()
             hook.log_dir = Path(temp_dir)
             hook.log_file = hook.log_dir / "test.log"
 
@@ -75,7 +75,7 @@ class TestHookProcessor(TestCase):
 
     def test_read_input_json(self):
         """Test reading JSON input from stdin."""
-        hook = TestHook()
+        hook = MockHookProcessor()
         test_input = {"key": "value", "number": 42}
 
         # Mock stdin with JSON
@@ -86,7 +86,7 @@ class TestHookProcessor(TestCase):
 
     def test_read_input_empty(self):
         """Test reading empty input."""
-        hook = TestHook()
+        hook = MockHookProcessor()
 
         # Mock empty stdin
         sys.stdin = StringIO("")
@@ -96,7 +96,7 @@ class TestHookProcessor(TestCase):
 
     def test_write_output(self):
         """Test writing JSON output to stdout."""
-        hook = TestHook()
+        hook = MockHookProcessor()
         test_output = {"result": "success", "count": 5}
 
         # Mock stdout
@@ -111,7 +111,7 @@ class TestHookProcessor(TestCase):
     def test_save_metric(self):
         """Test saving metrics."""
         with tempfile.TemporaryDirectory() as temp_dir:
-            hook = TestHook()
+            hook = MockHookProcessor()
             hook.metrics_dir = Path(temp_dir)
 
             # Save metrics
@@ -137,7 +137,7 @@ class TestHookProcessor(TestCase):
 
     def test_run_success(self):
         """Test successful run of hook processor."""
-        hook = TestHook()
+        hook = MockHookProcessor()
         test_input = {"action": "test", "data": [1, 2, 3]}
 
         # Mock stdin and stdout
@@ -155,7 +155,7 @@ class TestHookProcessor(TestCase):
 
     def test_run_with_invalid_json(self):
         """Test run with invalid JSON input."""
-        hook = TestHook()
+        hook = MockHookProcessor()
 
         # Mock stdin with invalid JSON
         sys.stdin = StringIO("not valid json")
@@ -171,7 +171,7 @@ class TestHookProcessor(TestCase):
 
     def test_run_with_exception(self):
         """Test run when process raises exception."""
-        hook = TestHook()
+        hook = MockHookProcessor()
 
         # Override process to raise exception
         def bad_process(input_data):
@@ -194,24 +194,35 @@ class TestHookProcessor(TestCase):
     def test_save_session_data(self):
         """Test saving session-specific data."""
         with tempfile.TemporaryDirectory() as temp_dir:
-            hook = TestHook()
+            hook = MockHookProcessor()
             hook.log_dir = Path(temp_dir)
 
-            # Save different types of data
-            hook.save_session_data("test.json", {"key": "value"})
-            hook.save_session_data("test.txt", "plain text")
+            # Get session ID once for consistency
+            session_id = hook.get_session_id()
 
-            # Verify files were created
-            session_dir = hook.log_dir / hook.get_session_id()
-            self.assertTrue((session_dir / "test.json").exists())
-            self.assertTrue((session_dir / "test.txt").exists())
+            # Mock get_session_id to return consistent value
+            with patch.object(hook, "get_session_id", return_value=session_id):
+                # Save different types of data
+                hook.save_session_data("test.json", {"key": "value"})
+                hook.save_session_data("test.txt", "plain text")
 
-            # Verify content
-            json_content = json.loads((session_dir / "test.json").read_text())
-            self.assertEqual(json_content, {"key": "value"})
+                # Verify files were created
+                session_dir = hook.log_dir / session_id
+                self.assertTrue((session_dir / "test.json").exists())
+                self.assertTrue((session_dir / "test.txt").exists())
 
-            text_content = (session_dir / "test.txt").read_text()
-            self.assertEqual(text_content, "plain text")
+                # Verify content
+                json_content = json.loads((session_dir / "test.json").read_text())
+                self.assertEqual(json_content, {"key": "value"})
+
+                text_content = (session_dir / "test.txt").read_text()
+                self.assertEqual(text_content, "plain text")
+
+                # Test path validation - should reject path traversal attempts
+                with self.assertRaises(ValueError):
+                    hook.save_session_data("../evil.txt", "malicious")
+                with self.assertRaises(ValueError):
+                    hook.save_session_data("subdir/file.txt", "malicious")
 
 
 class TestRefactoredHooks(TestCase):
