@@ -1,115 +1,127 @@
 #!/usr/bin/env python3
 """
 Claude Code hook for session stop events.
-Captures learnings and updates discoveries.
+Uses unified HookProcessor for common functionality.
 """
 
 import json
+
+# Import the base processor
 import sys
 from datetime import datetime
 from pathlib import Path
+from typing import Any, Dict, List
 
-# Add project to path if needed
-project_root = Path(__file__).parent.parent.parent.parent
-sys.path.insert(0, str(project_root))
-
-# Directories
-LOG_DIR = project_root / ".claude" / "runtime" / "logs"
-ANALYSIS_DIR = project_root / ".claude" / "runtime" / "analysis"
-LOG_DIR.mkdir(parents=True, exist_ok=True)
-ANALYSIS_DIR.mkdir(parents=True, exist_ok=True)
+sys.path.insert(0, str(Path(__file__).parent))
+from hook_processor import HookProcessor
 
 
-def log(message: str, level: str = "INFO"):
-    """Simple logging to file"""
-    timestamp = datetime.now().isoformat()
-    log_file = LOG_DIR / "stop.log"
+class StopHook(HookProcessor):
+    """Hook processor for session stop events."""
 
-    with open(log_file, "a") as f:
-        f.write(f"[{timestamp}] {level}: {message}\n")
+    def __init__(self):
+        super().__init__("stop")
 
+    def extract_learnings(self, messages: List[Dict]) -> List[Dict]:
+        """Extract potential learnings from conversation.
 
-def extract_learnings(messages: list) -> list:
-    """Extract potential learnings from conversation"""
-    learnings = []
+        Args:
+            messages: List of conversation messages
 
-    # Look for patterns indicating discoveries
-    keywords = [
-        "discovered",
-        "learned",
-        "found that",
-        "turns out",
-        "issue was",
-        "solution was",
-        "pattern",
-    ]
+        Returns:
+            List of potential learnings
+        """
+        learnings = []
 
-    for message in messages:
-        content = message.get("content", "")
-        if isinstance(content, str):
-            for keyword in keywords:
-                if keyword.lower() in content.lower():
-                    # Could use more sophisticated extraction here
-                    learnings.append({"keyword": keyword, "preview": content[:200]})
-                    break
+        # Look for patterns indicating discoveries
+        keywords = [
+            "discovered",
+            "learned",
+            "found that",
+            "turns out",
+            "issue was",
+            "solution was",
+            "pattern",
+        ]
 
-    return learnings
+        for message in messages:
+            content = message.get("content", "")
+            if isinstance(content, str):
+                for keyword in keywords:
+                    if keyword.lower() in content.lower():
+                        # Could use more sophisticated extraction here
+                        learnings.append({"keyword": keyword, "preview": content[:200]})
+                        break
 
+        return learnings
 
-def save_session_analysis(messages: list):
-    """Save session analysis for later review"""
-    analysis_file = ANALYSIS_DIR / f"session_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    def save_session_analysis(self, messages: List[Dict]):
+        """Save session analysis for later review.
 
-    # Extract stats
-    stats = {
-        "timestamp": datetime.now().isoformat(),
-        "message_count": len(messages),
-        "tool_uses": 0,
-        "errors": 0,
-    }
+        Args:
+            messages: List of conversation messages
+        """
+        # Generate analysis filename
+        analysis_file = (
+            self.analysis_dir / f"session_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        )
 
-    # Count tool uses and errors
-    for msg in messages:
-        if msg.get("role") == "assistant":
-            content = msg.get("content", "")
-            if "tool_use" in str(content):
-                stats["tool_uses"] += 1
-            if "error" in str(content).lower():
-                stats["errors"] += 1
+        # Extract stats
+        stats = {
+            "timestamp": datetime.now().isoformat(),
+            "message_count": len(messages),
+            "tool_uses": 0,
+            "errors": 0,
+        }
 
-    # Extract learnings
-    learnings = extract_learnings(messages)
-    if learnings:
-        stats["potential_learnings"] = len(learnings)
+        # Count tool uses and errors
+        for msg in messages:
+            if msg.get("role") == "assistant":
+                content = msg.get("content", "")
+                if "tool_use" in str(content):
+                    stats["tool_uses"] += 1
+                if "error" in str(content).lower():
+                    stats["errors"] += 1
 
-    # Save analysis
-    analysis = {"stats": stats, "learnings": learnings}
+        # Extract learnings
+        learnings = self.extract_learnings(messages)
+        if learnings:
+            stats["potential_learnings"] = len(learnings)
 
-    with open(analysis_file, "w") as f:
-        json.dump(analysis, f, indent=2)
+        # Save analysis
+        analysis = {"stats": stats, "learnings": learnings}
 
-    log(f"Saved session analysis to {analysis_file.name}")
+        with open(analysis_file, "w") as f:
+            json.dump(analysis, f, indent=2)
 
+        self.log(f"Saved session analysis to {analysis_file.name}")
 
-def main():
-    """Process stop event"""
-    try:
-        log("Session stopping")
+        # Also save metrics
+        self.save_metric("message_count", stats["message_count"])
+        self.save_metric("tool_uses", stats["tool_uses"])
+        self.save_metric("errors", stats["errors"])
+        if learnings:
+            self.save_metric("potential_learnings", len(learnings))
 
-        # Read input
-        raw_input = sys.stdin.read()
-        input_data = json.loads(raw_input)
+    def process(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Process stop event.
 
+        Args:
+            input_data: Input from Claude Code
+
+        Returns:
+            Metadata about the session
+        """
         # Extract messages
         messages = input_data.get("messages", [])
-        log(f"Processing {len(messages)} messages")
+        self.log(f"Processing {len(messages)} messages")
 
         # Save session analysis
         if messages:
-            save_session_analysis(messages)
+            self.save_session_analysis(messages)
 
         # Check for learnings
-        learnings = extract_learnings(messages)
+        learnings = self.extract_learnings(messages)
 
         # Build response
         output = {}
@@ -121,14 +133,15 @@ def main():
                     "reminder": "Check .claude/runtime/analysis/ for session details",
                 }
             }
-            log(f"Found {len(learnings)} potential learnings")
+            self.log(f"Found {len(learnings)} potential learnings")
 
-        # Write output
-        json.dump(output, sys.stdout)
+        return output
 
-    except Exception as e:
-        log(f"Error: {e}", "ERROR")
-        json.dump({}, sys.stdout)
+
+def main():
+    """Entry point for the stop hook."""
+    hook = StopHook()
+    hook.run()
 
 
 if __name__ == "__main__":
