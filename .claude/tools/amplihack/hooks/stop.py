@@ -10,10 +10,11 @@ from datetime import datetime
 from pathlib import Path
 
 # Add project to path if needed
-project_root = Path(__file__).parent.parent.parent.parent
+# Go up 5 levels: hooks -> amplihack -> tools -> .claude -> project_root
+project_root = Path(__file__).parent.parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-# Directories
+# Directories - use .claude at project root (not nested)
 LOG_DIR = project_root / ".claude" / "runtime" / "logs"
 ANALYSIS_DIR = project_root / ".claude" / "runtime" / "analysis"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
@@ -30,29 +31,56 @@ def log(message: str, level: str = "INFO"):
 
 
 def extract_learnings(messages: list) -> list:
-    """Extract potential learnings from conversation"""
-    learnings = []
+    """Extract learnings using the reflection module"""
+    try:
+        # Import reflection module (local import to avoid circular dependencies)
+        from reflection import SessionReflector, save_reflection_summary  # noqa: E402
 
-    # Look for patterns indicating discoveries
-    keywords = [
-        "discovered",
-        "learned",
-        "found that",
-        "turns out",
-        "issue was",
-        "solution was",
-        "pattern",
-    ]
+        # Create reflector and analyze session
+        reflector = SessionReflector()
+        analysis = reflector.analyze_session(messages)
+
+        # Save detailed analysis
+        if not analysis.get("skipped"):
+            summary_file = save_reflection_summary(analysis, ANALYSIS_DIR)
+            log(f"Reflection analysis saved to {summary_file}")
+
+            # Return patterns found as learnings
+            learnings = []
+            for pattern in analysis.get("patterns", []):
+                learnings.append(
+                    {
+                        "type": pattern["type"],
+                        "suggestion": pattern.get("suggestion", ""),
+                        "priority": "high" if pattern["type"] == "user_frustration" else "normal",
+                    }
+                )
+            return learnings
+        else:
+            log("Reflection skipped (loop prevention active)")
+            return []
+
+    except ImportError as e:
+        log(f"Could not import reflection module: {e}", "WARNING")
+        # Fall back to simple keyword extraction
+        return extract_learnings_simple(messages)
+    except Exception as e:
+        log(f"Error in reflection analysis: {e}", "ERROR")
+        return []
+
+
+def extract_learnings_simple(messages: list) -> list:
+    """Simple fallback learning extraction"""
+    learnings = []
+    keywords = ["discovered", "learned", "found that", "issue was", "solution was"]
 
     for message in messages:
         content = message.get("content", "")
         if isinstance(content, str):
             for keyword in keywords:
                 if keyword.lower() in content.lower():
-                    # Could use more sophisticated extraction here
                     learnings.append({"keyword": keyword, "preview": content[:200]})
                     break
-
     return learnings
 
 
@@ -114,14 +142,28 @@ def main():
         # Build response
         output = {}
         if learnings:
+            # Create human-readable feedback
+            priority_learnings = [
+                learning for learning in learnings if learning.get("priority") == "high"
+            ]
+
             output = {
                 "metadata": {
                     "learningsFound": len(learnings),
-                    "source": "session_analysis",
-                    "reminder": "Check .claude/runtime/analysis/ for session details",
+                    "highPriority": len(priority_learnings),
+                    "source": "reflection_analysis",
+                    "analysisPath": ".claude/runtime/analysis/",
+                    "summary": f"Found {len(learnings)} improvement opportunities",
                 }
             }
-            log(f"Found {len(learnings)} potential learnings")
+
+            # Add specific suggestions to output
+            if priority_learnings:
+                output["metadata"]["urgentSuggestion"] = priority_learnings[0].get("suggestion", "")
+
+            log(
+                f"Found {len(learnings)} potential improvements ({len(priority_learnings)} high priority)"
+            )
 
         # Write output
         json.dump(output, sys.stdout)
