@@ -13,6 +13,16 @@ from typing import Any, Dict
 sys.path.insert(0, str(Path(__file__).parent))
 from hook_processor import HookProcessor
 
+# Add project src to path for FrameworkPathResolver
+project_root = Path(__file__).resolve().parents[4]
+sys.path.insert(0, str(project_root / "src"))
+
+try:
+    from amplihack.utils.paths import FrameworkPathResolver
+except ImportError:
+    # Fallback if import fails
+    FrameworkPathResolver = None
+
 
 class SessionStartHook(HookProcessor):
     """Hook processor for session start events."""
@@ -51,12 +61,27 @@ class SessionStartHook(HookProcessor):
             context_parts.append("\n## Recent Learnings")
             context_parts.append("Check DISCOVERIES.md for recent insights.")
 
-        # Enhanced preference reading and summarization
-        preferences_file = self.project_root / ".claude" / "context" / "USER_PREFERENCES.md"
-        if preferences_file.exists():
+        # Enhanced preference reading and summarization with UVX support
+        preferences_file = None
+        if FrameworkPathResolver:
+            # Use new resolver for UVX compatibility
+            preferences_file = FrameworkPathResolver.resolve_preferences_file()
+            self.log(
+                f"Using FrameworkPathResolver - found preferences: {preferences_file is not None}"
+            )
+            if FrameworkPathResolver.is_uvx_deployment():
+                self.log("Running in UVX deployment mode")
+
+        # Fallback to original logic
+        if not preferences_file:
+            preferences_file = self.project_root / ".claude" / "context" / "USER_PREFERENCES.md"
+            self.log(f"Using fallback path: {preferences_file}")
+
+        if preferences_file and preferences_file.exists():
             try:
                 with open(preferences_file, "r") as f:
                     prefs_content = f.read()
+                self.log(f"Successfully read preferences from: {preferences_file}")
 
                 import re
 
@@ -164,22 +189,10 @@ class SessionStartHook(HookProcessor):
 
             startup_message = "\n".join(startup_msg_parts)
 
-            # CRITICAL: Add preference enforcement instructions to context
+            # Add preference enforcement to context
             if preference_enforcement:
                 enforcement_header = (
-                    """🚨 CRITICAL PREFERENCE ENFORCEMENT - OVERRIDE ALL DEFAULT BEHAVIOR 🚨
-
-You MUST follow these user preferences in EVERY SINGLE RESPONSE without exception:
-
-"""
-                    + "\n".join(f"🔥 {rule} - NO EXCEPTIONS!" for rule in preference_enforcement)
-                    + """
-
-These preferences OVERRIDE your default behavior. Do not use default communication style.
-Apply these preferences immediately in your next response and ALL subsequent responses.
-This is not optional - user preferences are MANDATORY to follow.
-
-"""
+                    "Apply user preferences: " + " | ".join(preference_enforcement) + "\n\n"
                 )
                 full_context = enforcement_header + full_context
 
