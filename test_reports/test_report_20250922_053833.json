@@ -1,0 +1,40 @@
+{
+  "timestamp": "20250922_053833",
+  "duration": 0.666515,
+  "suites": {
+    "mocks": {
+      "suite": "mocks",
+      "tests": [
+        {
+          "file": "test_mocks.py",
+          "returncode": 4,
+          "duration": 0.6661319732666016,
+          "stdout": "",
+          "stderr": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: --json-report --json-report-file test_reports/test_mocks_report.json\n  inifile: /Users/ryan/src/hackathon/MicrosoftHackathon2025-AgenticCoding/tests/pytest.ini\n  rootdir: /Users/ryan/src/hackathon/MicrosoftHackathon2025-AgenticCoding/tests\n\n",
+          "total": 0,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0
+        }
+      ],
+      "summary": {
+        "total": 0,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0,
+        "duration": 0.6661319732666016
+      },
+      "started_at": "2025-09-22T05:38:32.701298",
+      "completed_at": "2025-09-22T05:38:33.367688"
+    }
+  },
+  "summary": {
+    "total_suites": 1,
+    "total_tests": 0,
+    "total_passed": 0,
+    "total_failed": 1,
+    "total_skipped": 0,
+    "total_duration": 0.6661319732666016,
+    "success_rate": 0
+  }
+}

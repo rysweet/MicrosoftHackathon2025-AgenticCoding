@@ -1,0 +1,9 @@
+{
+  "automation_enabled": true,
+  "use_improvement_workflow_agent": true,
+  "workflow_timeout_minutes": 30,
+  "max_retries": 2,
+  "pr_auto_merge": false,
+  "issue_labels": ["automated", "improvement"],
+  "branch_prefix": "auto-improve"
+}
