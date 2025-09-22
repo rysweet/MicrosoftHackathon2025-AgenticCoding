@@ -438,6 +438,49 @@ class StopHook(HookProcessor):
         if messages:
             self.save_session_analysis(messages)
 
+            # Try AI-powered automation (respects REFLECTION_ENABLED environment variable)
+            try:
+                sys.path.append(str(Path(__file__).parent.parent / "reflection"))
+                from reflection import process_reflection_analysis
+
+                self.log("Starting AI-powered reflection analysis...")
+
+                # Find the most recent analysis file
+                analysis_files = list(self.analysis_dir.glob("session_*.json"))
+                if analysis_files:
+                    latest_analysis = max(analysis_files, key=lambda f: f.stat().st_mtime)
+                    self.log(f"Processing analysis file: {latest_analysis}")
+
+                    # Add messages to the analysis data for AI processing
+                    try:
+                        with open(latest_analysis, "r") as f:
+                            analysis_data = json.load(f)
+
+                        # Add the actual session messages for AI analysis
+                        analysis_data["messages"] = messages
+
+                        # Save updated analysis with messages
+                        with open(latest_analysis, "w") as f:
+                            json.dump(analysis_data, f, indent=2)
+
+                    except Exception as e:
+                        self.log(f"Warning: Could not add messages to analysis: {e}", "WARNING")
+
+                    # Run AI analysis
+                    result = process_reflection_analysis(latest_analysis)
+                    if result:
+                        self.log(f"✅ AI automation completed: Issue #{result}")
+                    else:
+                        self.log("AI analysis complete - no automation triggered")
+                else:
+                    self.log("No analysis files found for AI processing", "WARNING")
+
+            except Exception as auto_error:
+                self.log(f"AI automation error: {auto_error}", "ERROR")
+                import traceback
+
+                self.log(f"Stack trace: {traceback.format_exc()}", "DEBUG")
+
         # Check for learnings
         learnings = self.extract_learnings(messages)
 

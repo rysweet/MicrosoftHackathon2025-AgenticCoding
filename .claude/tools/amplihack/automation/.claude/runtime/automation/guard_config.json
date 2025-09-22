@@ -1,8 +1,0 @@
-{
-  "max_prs_per_day": 3,
-  "max_prs_per_week": 10,
-  "max_failed_attempts": 5,
-  "cooldown_hours": 4,
-  "min_score_threshold": 60,
-  "critical_override_threshold": 150
-}
