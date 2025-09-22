@@ -297,6 +297,35 @@ We measure success by:
 - Knowledge capture rate
 - Development velocity
 
+## User Preferences
+
+### Simple Preference Integration
+
+**Ruthlessly Simple Approach:**
+
+1. **Session Start**: USER_PREFERENCES.md is automatically imported at session
+   start
+2. **Agent Usage**: When invoking agents, include preference context in prompts
+   manually as needed
+3. **No Complex Systems**: No hooks, validators, or injection frameworks needed
+
+**Example Usage:**
+
+```
+"Design an API using pirate communication style"
+→ Pass USER_PREFERENCES.md context to architect agent
+```
+
+**What We DON'T Do:**
+
+- Complex preference injection hooks
+- Automated validation systems
+- Multi-file preference architectures
+- Over-engineered preference frameworks
+
+**Philosophy**: Simple prompting with preference context is sufficient. Complex
+systems add unnecessary overhead for marginal benefit.
+
 ## Getting Help
 
 - Review `.claude/context/PHILOSOPHY.md` for principles
