@@ -53,6 +53,8 @@ def prepare_session_for_analysis(messages: List[Dict]) -> str:
     assistant_messages = 0
     tool_uses = 0
     errors = 0
+    error_messages = []  # Capture actual error messages
+    user_requests = []  # Capture what user asked for
 
     for msg in messages:
         role = msg.get("role", "unknown")
@@ -61,20 +63,36 @@ def prepare_session_for_analysis(messages: List[Dict]) -> str:
         if role == "user":
             user_messages += 1
             content_parts.append(f"USER: {content[:500]}")
+            # Capture user requests for context
+            if len(user_requests) < 5:  # Keep first 5 user requests
+                user_requests.append(content[:200])
         elif role == "assistant":
             assistant_messages += 1
             content_parts.append(f"ASSISTANT: {content[:500]}")
 
-        # Count tool uses and errors
+        # Count tool uses and capture actual errors
         if "tool_use" in content.lower():
             tool_uses += 1
         if any(error_word in content.lower() for error_word in ["error", "failed", "exception"]):
             errors += 1
+            # Capture actual error messages for context
+            if len(error_messages) < 10:  # Keep up to 10 error examples
+                # Extract the error line
+                for line in content.split("\n"):
+                    if any(word in line.lower() for word in ["error", "failed", "exception"]):
+                        error_messages.append(line[:300])
+                        break
 
     summary = f"""SESSION SUMMARY:
 - Messages: {len(messages)} total ({user_messages} user, {assistant_messages} assistant)
 - Tool uses: {tool_uses}
 - Errors detected: {errors}
+
+USER REQUESTS:
+{chr(10).join(f"- {req}" for req in user_requests)}
+
+ACTUAL ERROR MESSAGES:
+{chr(10).join(f"- {err}" for err in error_messages) if error_messages else "(No errors captured)"}
 
 CONTENT SAMPLE (first 20 messages):
 {chr(10).join(content_parts[:20])}
@@ -91,7 +109,15 @@ def simulate_ai_analysis(session_content: str) -> List[Dict]:
     # Look for actual indicators in the session content
     content_lower = session_content.lower()
 
-    # Check for error patterns
+    # Extract actual error examples from the content
+    error_examples = []
+    for line in session_content.split("\n"):
+        if "error" in line.lower() or "failed" in line.lower():
+            error_examples.append(line.strip()[:200])
+            if len(error_examples) >= 3:
+                break
+
+    # Check for error patterns with actual examples
     if "error" in content_lower or "failed" in content_lower:
         patterns.append(
             {
@@ -99,6 +125,7 @@ def simulate_ai_analysis(session_content: str) -> List[Dict]:
                 "priority": "high",
                 "suggestion": "Improve error handling and user feedback based on session failures",
                 "evidence": "Multiple errors or failures detected in session",
+                "examples": error_examples[:3],  # Include actual error examples
             }
         )
 
@@ -127,12 +154,69 @@ def simulate_ai_analysis(session_content: str) -> List[Dict]:
     return patterns
 
 
+def check_for_duplicate_issues(pattern: Dict) -> Optional[str]:
+    """Check if a similar issue already exists."""
+    print("🔍 Checking for duplicate issues...")
+
+    try:
+        # Search for open issues with similar type
+        result = subprocess.run(
+            [
+                "gh",
+                "issue",
+                "list",
+                "--state",
+                "open",
+                "--label",
+                f"{pattern['type']}",
+                "--limit",
+                "10",
+                "--json",
+                "number,title,labels",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+
+        if result.returncode == 0 and result.stdout:
+            issues = json.loads(result.stdout)
+            for issue in issues:
+                # Check if issue has ai-improvement label
+                labels = [label.get("name", "") for label in issue.get("labels", [])]
+                if "ai-improvement" in labels:
+                    print(f"⚠️  Found similar existing issue #{issue['number']}: {issue['title']}")
+                    return issue["number"]
+
+        print("✅ No duplicate issues found")
+        return None
+
+    except Exception as e:
+        print(f"⚠️  Could not check for duplicates: {e}")
+        return None
+
+
 def create_github_issue(pattern: Dict) -> Optional[str]:
     """Create GitHub issue using gh CLI with full logging."""
     print(f"🎫 Creating GitHub issue for {pattern['type']} improvement...")
 
+    # Check for duplicates first
+    existing_issue = check_for_duplicate_issues(pattern)
+    if existing_issue:
+        print(f"ℹ️  Using existing issue #{existing_issue} instead of creating duplicate")
+        return existing_issue
+
     try:
-        title = f"AI-detected improvement: {pattern['type']} optimization"
+        # Create more specific title based on actual problem
+        title = f"AI-detected {pattern['type']}: {pattern['suggestion'][:60]}"
+
+        # Build body with actual examples
+        examples_section = ""
+        if pattern.get("examples"):
+            examples_section = "\n## Actual Examples from Session\n"
+            for i, example in enumerate(pattern["examples"], 1):
+                examples_section += f"{i}. `{example}`\n"
+
         body = f"""# AI-Detected Improvement Opportunity
 
 **Type**: {pattern["type"]}
@@ -141,9 +225,14 @@ def create_github_issue(pattern: Dict) -> Optional[str]:
 
 ## Suggestion
 {pattern["suggestion"]}
-
+{examples_section}
 ## Analysis Details
 This improvement was identified by AI analysis of session logs. The system detected patterns indicating this area needs attention.
+
+### Session Context
+- Pattern detected: {pattern["type"]}
+- Priority level: {pattern["priority"]}
+- Automated fix: Will be attempted via UltraThink workflow
 
 ## Next Steps
 UltraThink will analyze this issue and implement the necessary changes following the complete DEFAULT_WORKFLOW.md process.
