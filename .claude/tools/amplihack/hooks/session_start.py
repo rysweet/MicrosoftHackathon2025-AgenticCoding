@@ -38,7 +38,7 @@ class SessionStartHook(HookProcessor):
 
         # Build context if needed
         context_parts = []
-        preferences_summary = []
+        preference_enforcement = []
 
         # Add project context
         context_parts.append("## Project Context")
@@ -76,29 +76,36 @@ class SessionStartHook(HookProcessor):
                 }
 
                 active_prefs = []
+
                 for pref_name, pattern in preference_patterns.items():
                     match = re.search(pattern, prefs_content)
                     if match:
                         value = match.group(1).strip()
                         if value and value != "(not set)":
-                            # Special handling for communication style
-                            if pref_name == "Communication Style" and "pirate" in value.lower():
-                                active_prefs.append(f"• **{pref_name}**: {value} 🏴‍☠️")
-                                preferences_summary.append(
-                                    "🏴‍☠️ Pirate mode active - All responses will use pirate language"
+                            active_prefs.append(f"• **{pref_name}**: {value}")
+
+                            # Add enforcement instruction for any meaningful preference
+                            if pref_name == "Communication Style":
+                                preference_enforcement.append(
+                                    f"MUST use {value} communication style in ALL responses"
                                 )
-                            else:
-                                active_prefs.append(f"• **{pref_name}**: {value}")
+                            elif pref_name == "Verbosity":
+                                preference_enforcement.append(
+                                    f"MUST respond with {value} level of detail"
+                                )
+                            elif pref_name == "Collaboration Style":
+                                preference_enforcement.append(
+                                    f"MUST follow {value} collaboration approach"
+                                )
+                            elif pref_name == "Priority Type":
+                                preference_enforcement.append(
+                                    f"MUST prioritize {value} concerns in solutions"
+                                )
+
                             self.log(f"Found preference - {pref_name}: {value}")
 
                 if active_prefs:
                     context_parts.extend(active_prefs)
-
-                    # Add explanation for special preferences
-                    if any("pirate" in pref.lower() for pref in active_prefs):
-                        context_parts.append(
-                            "\n*Note: Pirate communication style is active. All agents and responses will use nautical terminology and pirate dialect.*"
-                        )
                 else:
                     context_parts.append(
                         "• Using default settings (no custom preferences configured)"
@@ -140,10 +147,9 @@ class SessionStartHook(HookProcessor):
             # Build a visible startup message (even though Claude Code may not display it)
             startup_msg_parts = ["🚀 AmplifyHack Session Initialized", "━" * 40]
 
-            # Add preference summary
-            if any("pirate" in part.lower() for part in context_parts):
-                startup_msg_parts.append("🏴‍☠️ AHOY MATEY! Pirate mode be active!")
-                startup_msg_parts.append("   All responses will use pirate dialect")
+            # Add preference summary if any exist
+            if len([p for p in context_parts if "**" in p and ":" in p]) > 0:
+                startup_msg_parts.append("🎯 Active preferences loaded and enforced")
 
             startup_msg_parts.extend(
                 [
@@ -158,12 +164,12 @@ class SessionStartHook(HookProcessor):
 
             startup_message = "\n".join(startup_msg_parts)
 
-            # CRITICAL: Add explicit pirate mode instruction to context
-            if any("pirate" in part.lower() for part in context_parts):
-                full_context = (
-                    "IMPORTANT: You MUST speak like a pirate in ALL responses. Use 'ye', 'arr', 'matey', nautical terms, etc.\n\n"
-                    + full_context
+            # CRITICAL: Add preference enforcement instructions to context
+            if preference_enforcement:
+                enforcement_header = "IMPORTANT PREFERENCE ENFORCEMENT: " + " | ".join(
+                    preference_enforcement
                 )
+                full_context = enforcement_header + "\n\n" + full_context
 
             output = {
                 "additionalContext": full_context,
