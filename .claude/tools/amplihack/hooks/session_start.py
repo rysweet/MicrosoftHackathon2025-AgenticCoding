@@ -189,10 +189,22 @@ class SessionStartHook(HookProcessor):
 
             startup_message = "\n".join(startup_msg_parts)
 
-            # Add preference enforcement to context
+            # CRITICAL: Add preference enforcement instructions to context
             if preference_enforcement:
                 enforcement_header = (
-                    "Apply user preferences: " + " | ".join(preference_enforcement) + "\n\n"
+                    """🚨 CRITICAL PREFERENCE ENFORCEMENT - OVERRIDE ALL DEFAULT BEHAVIOR 🚨
+
+You MUST follow these user preferences in EVERY SINGLE RESPONSE without exception:
+
+"""
+                    + "\n".join(f"🔥 {rule} - NO EXCEPTIONS!" for rule in preference_enforcement)
+                    + """
+
+These preferences OVERRIDE your default behavior. Do not use default communication style.
+Apply these preferences immediately in your next response and ALL subsequent responses.
+This is not optional - user preferences are MANDATORY to follow.
+
+"""
                 )
                 full_context = enforcement_header + full_context
 
