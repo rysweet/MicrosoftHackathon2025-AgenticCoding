@@ -49,7 +49,8 @@ When starting a session, import these files for context:
 ### Agent Delegation Strategy
 
 **GOLDEN RULE**: You are an orchestrator, not an implementer. ALWAYS delegate to
-specialized agents when possible.
+specialized agents when possible. **DEFAULT TO PARALLEL EXECUTION** unless
+dependencies require sequential order.
 
 #### When to Use Agents (ALWAYS IF POSSIBLE)
 
@@ -69,6 +70,104 @@ specialized agents when possible.
 - **Pattern Recognition**: Use `patterns.md` to identify reusable solutions
 - **Analysis**: Use `analyzer.md` for deep code understanding
 - **Ambiguity**: Use `ambiguity.md` when requirements are unclear
+
+#### Parallel Execution Decision Engine
+
+**AUTOMATIC PARALLEL TRIGGERS** - Always deploy parallel execution for:
+
+**1. Multi-File Operations**
+
+```
+TRIGGER: Reading, analyzing, or editing multiple files
+ACTION: Batch all file operations in single tool call
+EXAMPLE: [Read file1.py, Read file2.py, Read file3.py]
+```
+
+**2. Multi-Agent Coordination**
+
+```
+TRIGGER: Multiple specialized perspectives needed
+ACTION: Deploy all relevant agents simultaneously
+EXAMPLE: [architect, security, database, api-designer] for new feature
+```
+
+**3. Independent Analysis Tasks**
+
+```
+TRIGGER: Multiple components requiring separate analysis
+ACTION: Parallel analysis with different agents
+EXAMPLE: [patterns analysis, security audit, performance review]
+```
+
+**4. Research and Information Gathering**
+
+```
+TRIGGER: Multiple data sources or perspectives needed
+ACTION: Parallel research with specialized agents
+EXAMPLE: [codebase analysis, requirement clarification, dependency check]
+```
+
+**5. Diagnostic Workflows**
+
+```
+TRIGGER: System state analysis from multiple angles
+ACTION: Parallel diagnostic agents
+EXAMPLE: [environment check, log analysis, pattern detection]
+```
+
+#### Parallel Execution Templates
+
+**Template 1: Feature Development**
+
+```
+"I'll coordinate multiple agents for comprehensive feature development"
+[Single message with parallel Task calls]:
+- architect: Design system architecture and module boundaries
+- security: Identify security requirements and threat vectors
+- database: Design data schema and migration strategy
+- api-designer: Define API contracts and integration points
+- tester: Design test strategy and acceptance criteria
+```
+
+**Template 2: Code Analysis**
+
+```
+"I'll analyze this codebase from multiple perspectives"
+[Single message with parallel analysis]:
+- analyzer: Deep code structure and pattern analysis
+- security: Security vulnerability assessment
+- optimizer: Performance bottleneck identification
+- patterns: Reusable pattern detection
+- reviewer: Philosophy compliance check
+```
+
+**Template 3: Problem Diagnosis**
+
+```
+"I'll diagnose this issue comprehensively"
+[Single message with parallel diagnosis]:
+- analyzer: Root cause analysis
+- environment: System and dependency analysis
+- patterns: Similar issue pattern matching
+- logs: Error and warning pattern analysis
+```
+
+#### Sequential Execution (Exception Cases)
+
+**Only use sequential when:**
+
+- **Hard Dependencies**: Output of A required as input for B
+- **State Mutations**: Agent A changes state that B depends on
+- **Progressive Context**: Each step builds knowledge for next
+- **Resource Conflicts**: Agents would conflict on same resources
+
+**Examples of Required Sequential:**
+
+```
+architect → builder → reviewer  (specification → implementation → review)
+git operations with dependencies (checkout → modify → commit)
+test-driven development (write test → implement → validate)
+```
 
 #### Parallel Agent Execution
 
