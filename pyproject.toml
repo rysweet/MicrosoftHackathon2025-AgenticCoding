@@ -15,7 +15,12 @@ where = ["src"]
 include = ["amplihack*"]
 
 [tool.setuptools.package-data]
-amplihack = ["prompts/*.md"]
+amplihack = [
+    "prompts/*.md",
+    "../.claude/**/*",
+    "../CLAUDE.md",
+    "../DISCOVERIES.md"
+]
 
 [tool.ruff]
 # Essential Ruff settings only

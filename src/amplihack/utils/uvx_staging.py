@@ -51,21 +51,26 @@ class UVXStager:
             path = Path(path_str)
 
             # Look for amplihack package directory
-            amplihack_paths = [
-                path / "amplihack",  # Direct package
-                path.parent,  # Parent of site-packages
-            ]
+            amplihack_package = path / "amplihack"
+            if amplihack_package.exists():
+                # Check if framework files are included as package data
+                framework_markers = [
+                    amplihack_package / ".claude",
+                    amplihack_package / "CLAUDE.md",
+                ]
 
-            for candidate in amplihack_paths:
-                if candidate.exists():
-                    # Check if it contains framework files
-                    framework_markers = [
-                        candidate / ".claude",
-                        candidate / "CLAUDE.md",
-                    ]
+                if any(marker.exists() for marker in framework_markers):
+                    return amplihack_package
 
-                    if any(marker.exists() for marker in framework_markers):
-                        return candidate
+            # Also check parent directories for traditional layout
+            candidate = path.parent
+            if candidate.exists():
+                framework_markers = [
+                    candidate / ".claude",
+                    candidate / "CLAUDE.md",
+                ]
+                if any(marker.exists() for marker in framework_markers):
+                    return candidate
 
         # Strategy 3: Check UVX cache directories
         cache_dirs = []
