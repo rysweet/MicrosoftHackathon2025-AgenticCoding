@@ -36,24 +36,8 @@ class ClaudeLauncher:
         Returns:
             True if preparation successful, False otherwise.
         """
-        # Try UVX staging if no .claude directory found
+        # Check for .claude directory
         claude_dir = self.detector.find_claude_directory()
-        if not claude_dir:
-            try:
-                from ..utils.uvx_staging import is_uvx_deployment, stage_uvx_framework
-
-                if is_uvx_deployment():
-                    print("UVX deployment detected, attempting to stage framework files...")
-                    if stage_uvx_framework():
-                        print("Framework files staged successfully")
-                        # Check again for .claude directory
-                        claude_dir = self.detector.find_claude_directory()
-                    else:
-                        print("Framework staging failed")
-            except ImportError:
-                pass  # UVX staging not available
-
-        # Check for .claude directory (again, after potential staging)
         if claude_dir:
             print(f"Found .claude directory at: {claude_dir}")
             project_root = self.detector.get_project_root(claude_dir)
