@@ -4,6 +4,8 @@ import atexit
 import os
 import shutil
 import sys
+import tempfile
+import urllib.request
 from pathlib import Path
 from typing import Optional, Set
 
@@ -106,6 +108,60 @@ class UVXStager:
             for repo_path in cache_dir.rglob("MicrosoftHackathon2025-AgenticCoding"):
                 if (repo_path / ".claude").exists():
                     return repo_path
+
+        # Strategy 4: Download from GitHub if in UVX environment
+        if self.detect_uvx_deployment():
+            return self._download_framework_files()
+
+        return None
+
+    def _download_framework_files(self) -> Optional[Path]:
+        """Download framework files from GitHub to temporary location.
+
+        Returns:
+            Path to temporary directory with framework files, None on failure.
+        """
+        try:
+            # Create temporary directory for downloaded files
+            temp_dir = Path(tempfile.mkdtemp(prefix="amplihack_framework_"))
+
+            # GitHub raw file base URL for the current branch
+            # This should be updated to use the correct branch/commit
+            base_url = "https://raw.githubusercontent.com/rysweet/MicrosoftHackathon2025-AgenticCoding/feat/issue-83-preference-uvx-fixes"
+
+            # Essential files to download
+            files_to_download = [
+                "CLAUDE.md",
+                "DISCOVERIES.md",
+                ".claude/context/USER_PREFERENCES.md",
+                ".claude/context/PHILOSOPHY.md",
+                ".claude/context/PROJECT.md",
+                ".claude/context/PATTERNS.md",
+                ".claude/context/TRUST.md",
+                ".claude/workflow/DEFAULT_WORKFLOW.md",
+            ]
+
+            success_count = 0
+            for file_path in files_to_download:
+                try:
+                    file_url = f"{base_url}/{file_path}"
+                    target_path = temp_dir / file_path
+
+                    # Create parent directories
+                    target_path.parent.mkdir(parents=True, exist_ok=True)
+
+                    # Download file
+                    urllib.request.urlretrieve(file_url, target_path)
+                    success_count += 1
+
+                except Exception as e:
+                    print(f"Warning: Could not download {file_path}: {e}")
+
+            if success_count > 0:
+                return temp_dir
+
+        except Exception as e:
+            print(f"Error downloading framework files: {e}")
 
         return None
 
