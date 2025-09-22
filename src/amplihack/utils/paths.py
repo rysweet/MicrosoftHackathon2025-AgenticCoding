@@ -29,6 +29,20 @@ class FrameworkPathResolver:
             if env_path.exists() and (env_path / ".claude").exists():
                 return env_path
 
+        # Strategy 3: If UVX deployment detected, attempt staging
+        if FrameworkPathResolver.is_uvx_deployment():
+            try:
+                # Import here to avoid circular imports
+                from .uvx_staging import stage_uvx_framework
+
+                # Attempt to stage framework files
+                if stage_uvx_framework():
+                    # Check if staging worked
+                    if (Path.cwd() / ".claude").exists():
+                        return Path.cwd()
+            except ImportError:
+                pass  # uvx_staging not available
+
         return None
 
     @staticmethod
@@ -73,12 +87,18 @@ class FrameworkPathResolver:
         Returns:
             True if likely running in UVX, False otherwise.
         """
-        # Check for UVX-specific environment variables or paths
-        return (
-            "UV_PYTHON" in os.environ
-            or any("uv" in path for path in sys.path)
-            or not (Path.cwd() / ".claude").exists()
-        )
+        # Try using the more comprehensive UVX staging detection
+        try:
+            from .uvx_staging import is_uvx_deployment
+
+            return is_uvx_deployment()
+        except ImportError:
+            # Fallback to original logic
+            return (
+                "UV_PYTHON" in os.environ
+                or any("uv" in path for path in sys.path)
+                or not (Path.cwd() / ".claude").exists()
+            )
 
 
 class PathResolver:

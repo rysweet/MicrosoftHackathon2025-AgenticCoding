@@ -46,6 +46,21 @@ class SessionStartHook(HookProcessor):
         # Save metric
         self.save_metric("prompt_length", len(prompt))
 
+        # Early UVX staging attempt if needed
+        try:
+            from amplihack.utils.uvx_staging import is_uvx_deployment, stage_uvx_framework
+
+            if is_uvx_deployment():
+                self.log("UVX deployment detected - attempting framework staging")
+                staged = stage_uvx_framework()
+                self.log(f"UVX staging result: {staged}")
+                if staged:
+                    self.save_metric("uvx_staging_success", True)
+                else:
+                    self.save_metric("uvx_staging_success", False)
+        except ImportError:
+            self.log("UVX staging not available - continuing with normal path resolution")
+
         # Build context if needed
         context_parts = []
         preference_enforcement = []
