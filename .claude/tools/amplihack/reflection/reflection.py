@@ -25,28 +25,6 @@ def analyze_session(messages: List[Dict]) -> List[Dict]:
         # Prepare session content for AI analysis
         session_summary = prepare_session_for_analysis(messages)
 
-        # Create temporary analysis prompt
-        analysis_prompt = f"""Analyze this Claude Code session for automation opportunities:
-
-SESSION CONTENT:
-{session_summary}
-
-ANALYSIS TASK:
-Identify specific, actionable improvements that could be automated. Look for:
-1. User frustration patterns (repeated failures, confusion)
-2. Recurring technical issues (errors, bugs, inefficiencies)
-3. Workflow gaps (missing tools, repetitive tasks)
-4. Code quality opportunities (refactoring, testing, documentation)
-
-For each opportunity, provide:
-- Type: (error_handling, workflow, testing, documentation, etc.)
-- Priority: (high, medium, low) based on impact and frequency
-- Specific suggestion: Clear description of what should be improved
-- Evidence: What in the session indicates this need
-
-Format as JSON array of objects with keys: type, priority, suggestion, evidence
-"""
-
         # Use Task tool to invoke analyzer agent
         print("🤖 Invoking analyzer agent for session review...")
 

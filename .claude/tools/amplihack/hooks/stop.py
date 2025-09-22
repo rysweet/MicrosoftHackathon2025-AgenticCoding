@@ -441,7 +441,7 @@ class StopHook(HookProcessor):
             # Try AI-powered automation (respects REFLECTION_ENABLED environment variable)
             try:
                 sys.path.append(str(Path(__file__).parent.parent / "reflection"))
-                from reflection import process_reflection_analysis
+                from reflection import process_reflection_analysis  # type: ignore
 
                 self.log("Starting AI-powered reflection analysis...")
 
