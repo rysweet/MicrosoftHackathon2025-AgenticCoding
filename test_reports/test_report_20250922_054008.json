@@ -1,0 +1,40 @@
+{
+  "timestamp": "20250922_054008",
+  "duration": 0.791895,
+  "suites": {
+    "mocks": {
+      "suite": "mocks",
+      "tests": [
+        {
+          "file": "test_mocks.py",
+          "returncode": 0,
+          "duration": 0.7914650440216064,
+          "total": 4,
+          "passed": 4,
+          "failed": 0,
+          "skipped": 0,
+          "stdout": "....                                                                     [100%]\n4 passed in 0.02s\n",
+          "stderr": "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/pytest_asyncio/plugin.py:217: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.\nThe event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: \"function\", \"class\", \"module\", \"package\", \"session\"\n\n  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))\n"
+        }
+      ],
+      "summary": {
+        "total": 4,
+        "passed": 4,
+        "failed": 0,
+        "skipped": 0,
+        "duration": 0.7914650440216064
+      },
+      "started_at": "2025-09-22T05:40:07.862346",
+      "completed_at": "2025-09-22T05:40:08.654122"
+    }
+  },
+  "summary": {
+    "total_suites": 1,
+    "total_tests": 4,
+    "total_passed": 4,
+    "total_failed": 0,
+    "total_skipped": 0,
+    "total_duration": 0.7914650440216064,
+    "success_rate": 100.0
+  }
+}

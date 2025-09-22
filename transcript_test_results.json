@@ -1,0 +1,100 @@
+{
+  "timestamp": "2025-09-22T05:46:36.158941",
+  "summary": {
+    "passed": 11,
+    "total": 15,
+    "success_rate": 73.33333333333333
+  },
+  "results": [
+    {
+      "test": "None transcript_path handling",
+      "passed": true,
+      "details": "Should handle None transcript_path without crashing",
+      "timestamp": "2025-09-22T05:46:35.570537"
+    },
+    {
+      "test": "None transcript_path warning logged",
+      "passed": true,
+      "details": "Should log appropriate warning message",
+      "timestamp": "2025-09-22T05:46:35.573976"
+    },
+    {
+      "test": "Direct messages priority",
+      "passed": true,
+      "details": "Direct messages should be used even when transcript_path is provided",
+      "timestamp": "2025-09-22T05:46:35.644853"
+    },
+    {
+      "test": "Direct messages used over transcript",
+      "passed": false,
+      "details": "Log should show direct messages were used",
+      "timestamp": "2025-09-22T05:46:35.650539"
+    },
+    {
+      "test": "Claude Code format parsing",
+      "passed": true,
+      "details": "Should parse Claude Code JSONL format successfully",
+      "timestamp": "2025-09-22T05:46:35.720702"
+    },
+    {
+      "test": "Claude Code format message count",
+      "passed": true,
+      "details": "Should correctly extract 3 messages from Claude Code format",
+      "timestamp": "2025-09-22T05:46:35.727778"
+    },
+    {
+      "test": "Pattern detection with real data",
+      "passed": true,
+      "details": "Should detect patterns and generate learnings from session data (Found 1 learnings)",
+      "timestamp": "2025-09-22T05:46:35.845200"
+    },
+    {
+      "test": "Frustration pattern detection",
+      "passed": false,
+      "details": "Should detect user frustration patterns",
+      "timestamp": "2025-09-22T05:46:35.845661"
+    },
+    {
+      "test": "Empty file handling",
+      "passed": true,
+      "details": "Should handle empty transcript files",
+      "timestamp": "2025-09-22T05:46:35.924170"
+    },
+    {
+      "test": "Malformed JSON handling",
+      "passed": true,
+      "details": "Should handle malformed JSON gracefully",
+      "timestamp": "2025-09-22T05:46:35.999132"
+    },
+    {
+      "test": "Missing file handling",
+      "passed": true,
+      "details": "Should handle missing files gracefully",
+      "timestamp": "2025-09-22T05:46:36.083600"
+    },
+    {
+      "test": "Reflection analysis quality",
+      "passed": false,
+      "details": "Should generate reflection analysis with insights",
+      "timestamp": "2025-09-22T05:46:36.151055"
+    },
+    {
+      "test": "Reflection analysis file created",
+      "passed": true,
+      "details": "Should create reflection analysis file",
+      "timestamp": "2025-09-22T05:46:36.158140"
+    },
+    {
+      "test": "Real transcript processing",
+      "passed": false,
+      "details": "No real transcript file found to test",
+      "timestamp": "2025-09-22T05:46:36.158599"
+    },
+    {
+      "test": "Bug fix demonstration",
+      "passed": true,
+      "details": "Successfully demonstrated improvements",
+      "timestamp": "2025-09-22T05:46:36.158624"
+    }
+  ]
+}
