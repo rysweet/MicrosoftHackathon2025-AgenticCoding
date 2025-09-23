@@ -51,6 +51,7 @@
 
 2. **Path Resolution Issue**: If project references amplihack hooks with
    relative paths:
+
    ```json
    "command": ".claude/tools/amplihack/hooks/session_start.py"
    ```
