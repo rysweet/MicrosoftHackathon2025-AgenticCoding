@@ -18,9 +18,9 @@ include = ["amplihack*"]
 amplihack = ["prompts/*.md"]
 
 [tool.setuptools.data-files]
-# Include .claude directory and framework files in UVX package
-"amplihack/.claude" = [".claude/**/*"]
-"amplihack/" = ["CLAUDE.md", "DISCOVERIES.md", "README.md"]
+# Include essential framework files for UVX package
+"amplihack/.claude/context" = [".claude/context/**/*"]
+"amplihack/" = ["CLAUDE.md"]
 
 [tool.ruff]
 # Essential Ruff settings only
