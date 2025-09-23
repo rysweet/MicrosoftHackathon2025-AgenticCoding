@@ -43,7 +43,7 @@ class FrameworkPathResolver:
         path traversal attacks.
         """
         # Basic validation for obvious attacks
-        if ".." in relative_path or "\x00" in relative_path:
+        if ".." in relative_path or "\x00" in relative_path or relative_path.startswith("/"):
             return None
 
         framework_root = FrameworkPathResolver.find_framework_root()
