@@ -129,7 +129,7 @@ else
     "allow": ["Bash", "TodoWrite", "WebSearch", "WebFetch"],
     "deny": [],
     "defaultMode": "bypassPermissions",
-    "additionalDirectories": [".claude", "Specs"]
+    "additionalDirectories": [".claude"]
   },
   "enableAllProjectMcpServers": false,
   "enabledMcpjsonServers": [],
