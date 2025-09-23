@@ -12,35 +12,49 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-try:
-    from amplihack.utils.uvx_staging import UVXStager
-    from amplihack.utils.uvx_staging_enhanced import EnhancedUVXStager
-except ImportError:
-    # Fallback for CI environments
 
-    # Import UVXStager
-    uvx_staging_spec = importlib.util.spec_from_file_location(
-        "uvx_staging",
-        Path(__file__).parent.parent / "src" / "amplihack" / "utils" / "uvx_staging.py",
-    )
-    if uvx_staging_spec and uvx_staging_spec.loader:
-        uvx_staging_module = importlib.util.module_from_spec(uvx_staging_spec)
-        uvx_staging_spec.loader.exec_module(uvx_staging_module)
-        UVXStager = uvx_staging_module.UVXStager
-    else:
-        raise ImportError("Could not load UVXStager")
+# Use dynamic imports to avoid pyright issues in CI
+def _load_stagers():
+    """Load UVX stager classes dynamically."""
+    try:
+        from amplihack.utils.uvx_staging import UVXStager
+        from amplihack.utils.uvx_staging_enhanced import EnhancedUVXStager
 
-    # Import EnhancedUVXStager
-    enhanced_spec = importlib.util.spec_from_file_location(
-        "uvx_staging_enhanced",
-        Path(__file__).parent.parent / "src" / "amplihack" / "utils" / "uvx_staging_enhanced.py",
-    )
-    if enhanced_spec and enhanced_spec.loader:
-        enhanced_module = importlib.util.module_from_spec(enhanced_spec)
-        enhanced_spec.loader.exec_module(enhanced_module)
-        EnhancedUVXStager = enhanced_module.EnhancedUVXStager
-    else:
-        raise ImportError("Could not load EnhancedUVXStager")
+        return UVXStager, EnhancedUVXStager
+    except ImportError:
+        # Fallback for CI environments
+        # Import UVXStager
+        uvx_staging_spec = importlib.util.spec_from_file_location(
+            "uvx_staging",
+            Path(__file__).parent.parent / "src" / "amplihack" / "utils" / "uvx_staging.py",
+        )
+        if uvx_staging_spec and uvx_staging_spec.loader:
+            uvx_staging_module = importlib.util.module_from_spec(uvx_staging_spec)
+            uvx_staging_spec.loader.exec_module(uvx_staging_module)
+            UVXStager = uvx_staging_module.UVXStager
+        else:
+            raise ImportError("Could not load UVXStager")
+
+        # Import EnhancedUVXStager
+        enhanced_spec = importlib.util.spec_from_file_location(
+            "uvx_staging_enhanced",
+            Path(__file__).parent.parent
+            / "src"
+            / "amplihack"
+            / "utils"
+            / "uvx_staging_enhanced.py",
+        )
+        if enhanced_spec and enhanced_spec.loader:
+            enhanced_module = importlib.util.module_from_spec(enhanced_spec)
+            enhanced_spec.loader.exec_module(enhanced_module)
+            EnhancedUVXStager = enhanced_module.EnhancedUVXStager
+        else:
+            raise ImportError("Could not load EnhancedUVXStager")
+
+        return UVXStager, EnhancedUVXStager
+
+
+UVXStager, EnhancedUVXStager = _load_stagers()
 
 
 class OptimizationBenchmark:
