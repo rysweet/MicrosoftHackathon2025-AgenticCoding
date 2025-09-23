@@ -37,7 +37,12 @@ class FrameworkPathResolver:
 
     @staticmethod
     def resolve_framework_file(relative_path: str) -> Optional[Path]:
-        """Resolve a framework file path relative to framework root."""
+        """Resolve a framework file path relative to framework root.
+
+        Validates that resolved path stays within framework root to prevent
+        path traversal attacks.
+        """
+        # Basic validation for obvious attacks
         if ".." in relative_path or "\x00" in relative_path:
             return None
 
@@ -45,8 +50,22 @@ class FrameworkPathResolver:
         if not framework_root:
             return None
 
-        file_path = framework_root / relative_path
-        return file_path if file_path.exists() else None
+        # Construct and resolve the absolute path
+        try:
+            # Resolve to absolute path, following any symlinks
+            file_path = (framework_root / relative_path).resolve()
+            framework_root_resolved = framework_root.resolve()
+
+            # Verify the resolved path is within the framework root
+            # This will raise ValueError if file_path is not under framework_root
+            file_path.relative_to(framework_root_resolved)
+
+            # Only return if file actually exists
+            return file_path if file_path.exists() else None
+
+        except (ValueError, OSError):
+            # Path is outside framework root or resolution failed
+            return None
 
     @staticmethod
     def resolve_preferences_file() -> Optional[Path]:
