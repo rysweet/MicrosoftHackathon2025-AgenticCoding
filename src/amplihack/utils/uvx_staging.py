@@ -56,11 +56,18 @@ class UVXStager:
 
         self._debug_log(f"Found UVX framework root at: {uvx_root}")
 
-        # Stage essential files only
-        essential_files = [".claude/context", "CLAUDE.md"]
+        # Stage ALL framework files as explicitly requested by user
         working_dir = Path.cwd()
 
-        for item_name in essential_files:
+        # Find all items in the UVX framework root to stage
+        all_framework_items = []
+        for item in uvx_root.iterdir():
+            # Include all directories and files from framework
+            all_framework_items.append(item.name)
+
+        self._debug_log(f"Staging ALL framework files: {all_framework_items}")
+
+        for item_name in all_framework_items:
             source = uvx_root / item_name
             target = working_dir / item_name
 
@@ -73,7 +80,6 @@ class UVXStager:
                 continue
 
             try:
-                target.parent.mkdir(parents=True, exist_ok=True)
                 if source.is_dir():
                     shutil.copytree(source, target, dirs_exist_ok=True)
                     self._debug_log(f"Copied directory: {source} -> {target}")
