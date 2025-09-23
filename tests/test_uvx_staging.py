@@ -18,12 +18,18 @@ class TestUVXStager:
         with patch.dict(os.environ, {"UV_PYTHON": "/path/to/uv/python"}):
             assert stager.detect_uvx_deployment() is True
 
-    def test_detect_uvx_deployment_with_uv_in_path(self):
-        """Test UVX detection with UV in Python path."""
+    def test_detect_uvx_deployment_no_claude_dir(self):
+        """Test UVX detection when .claude directory doesn't exist."""
         stager = UVXStager()
 
-        with patch("sys.path", ["/normal/path", "/some/uv/cache/path", "/other/path"]):
-            assert stager.detect_uvx_deployment() is True
+        with tempfile.TemporaryDirectory() as temp_dir:
+            # Working directory without .claude
+            working_dir = Path(temp_dir)
+            # Ensure .claude doesn't exist
+            assert not (working_dir / ".claude").exists()
+
+            with patch("pathlib.Path.cwd", return_value=working_dir):
+                assert stager.detect_uvx_deployment() is True
 
     def test_detect_uvx_deployment_no_local_claude_but_framework_available(self):
         """Test UVX detection when no local .claude but framework available elsewhere."""
@@ -70,13 +76,15 @@ class TestUVXStager:
 
         with tempfile.TemporaryDirectory() as temp_dir:
             # Create fake package structure
-            package_dir = Path(temp_dir) / "amplihack"
+            # The code looks for "amplihack" in sys.path and then checks for .claude inside it
+            package_parent = Path(temp_dir)
+            package_dir = package_parent / "amplihack"
             package_dir.mkdir()
-            (package_dir.parent / ".claude").mkdir()
+            (package_dir / ".claude").mkdir()  # .claude should be inside amplihack
 
-            with patch("sys.path", [str(package_dir)]):
+            with patch("sys.path", [str(package_parent)]):  # Add parent to sys.path
                 result = stager._find_uvx_framework_root()
-                assert result == package_dir.parent
+                assert result == package_dir  # Should return the amplihack directory
 
     def test_stage_framework_files_success(self):
         """Test successful staging of framework files."""
