@@ -17,7 +17,6 @@ collaborative problem-solving.
 Launch Claude Code with the amplihack framework from any directory:
 
 ```sh
-# Launch with latest version (recommended)
 uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding amplihack launch
 ```
 
@@ -25,8 +24,21 @@ That's it! The command automatically:
 
 - Downloads the latest framework
 - Sets up the environment
+- **Detects and uses claude-trace for enhanced debugging** (if available)
+- **Attempts to install claude-trace if not found** (requires npm)
 - Launches Claude Code with all agents configured
 - No local installation required
+
+#### Claude-Trace Enhanced Debugging
+
+The framework automatically uses
+[claude-trace](https://github.com/mariozechner/claude-trace) for better
+debugging:
+
+- **Default behavior**: Claude-trace is used automatically when available
+- **Auto-installation**: Attempts to install via npm if not found
+- **Opt-out**: Set `AMPLIHACK_USE_TRACE=0` to use standard claude
+- **Fallback**: Uses regular claude if claude-trace can't be installed
 
 ### Advanced Usage
 
@@ -49,6 +61,29 @@ The Azure integration provides:
 - Dynamicaly loaded proxy
 - Azure OpenAI model access through Claude Code interface
 - Automatic persistence prompt for autonomous operation
+
+**With GitHub Repository Checkout:**
+
+Work directly in any GitHub repository without cloning manually:
+
+```sh
+# Clone and work in a specific repository
+uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding amplihack launch --checkout-repo owner/repo
+
+# Works with different URI formats
+uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding amplihack launch --checkout-repo https://github.com/microsoft/vscode
+uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding amplihack launch --checkout-repo git@github.com:facebook/react.git
+
+# Combine with Azure OpenAI
+uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding amplihack launch --checkout-repo owner/repo --with-proxy-config ./azure.env
+```
+
+The repository checkout feature automatically:
+
+- Clones the specified GitHub repository locally
+- Changes to the repository directory
+- Runs all Claude operations in the repository context
+- Supports owner/repo, HTTPS, and SSH URI formats
 
 **From a Specific Branch:**
 
@@ -121,6 +156,7 @@ uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding a
 | **🐙 GitHub Integration**  | Issue creation, PR management                               | Built-in `gh` CLI commands                                                                        |
 | **🔍 Pattern Recognition** | Identify reusable solutions                                 | `patterns` agent finds common patterns                                                            |
 | **🤖 Azure OpenAI**        | Use Azure models instead of Claude                          | `amplihack launch --with-proxy-config ./azure.env`                                                |
+| **📦 GitHub Checkout**     | Work in any GitHub repo without manual cloning              | `amplihack launch --checkout-repo owner/repo`                                                     |
 | **🎨 Custom Agents**       | Create specialized agents for repeated tasks                | Add to `.claude/agents/amplihack/specialized/`                                                    |
 | **📚 Philosophy**          | Ruthless simplicity, bricks & studs modularity              | Auto-enforced in all operations                                                                   |
 
@@ -129,6 +165,9 @@ uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding a
 ```bash
 # Launch the framework (no installation needed!)
 uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding amplihack launch
+
+# Work directly in any GitHub repository
+uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding amplihack launch --checkout-repo microsoft/vscode
 
 # For any non-trivial task
 /ultrathink Add authentication to my API
@@ -211,6 +250,7 @@ Specs/                # Module specifications
 
 - `amplihack launch` - Start Claude Code with agents
 - `amplihack launch --with-proxy-config` - Use Azure OpenAI
+- `amplihack launch --checkout-repo` - Clone and work in GitHub repository
 - `amplihack uninstall` - Remove configuration
 
 ---
@@ -273,6 +313,7 @@ This project is licensed under the MIT License.
 | ------------------ | ------------------------------------------------------------------------------------------------- |
 | Launch Claude Code | `uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding amplihack launch` |
 | With Azure OpenAI  | Add `--with-proxy-config ./azure.env`                                                             |
+| With GitHub repo   | Add `--checkout-repo owner/repo`                                                                  |
 | From branch        | Use `@branch-name` after repo URL                                                                 |
 | Developer setup    | Clone repo and `uv pip install -e .`                                                              |
 
