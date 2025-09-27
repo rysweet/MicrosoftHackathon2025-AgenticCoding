@@ -65,29 +65,24 @@ def analyze_session_patterns(messages: List[Dict]) -> List[Dict]:
     import time
 
     # Initialize variables
-    SIMPLE_ANALYSIS_AVAILABLE = False
-    SimpleErrorAnalyzer = None
+    CONTEXTUAL_ANALYSIS_AVAILABLE = False
+    ContextualErrorAnalyzer = None
 
     try:
-        from .error_analysis import SimpleErrorAnalyzer
+        from .contextual_error_analyzer import ContextualErrorAnalyzer
 
-        SIMPLE_ANALYSIS_AVAILABLE = True
+        CONTEXTUAL_ANALYSIS_AVAILABLE = True
     except ImportError as e:
         # Try alternative import paths
         try:
-            from error_analysis import SimpleErrorAnalyzer
+            from contextual_error_analyzer import ContextualErrorAnalyzer
 
-            SIMPLE_ANALYSIS_AVAILABLE = True
+            CONTEXTUAL_ANALYSIS_AVAILABLE = True
         except ImportError:
-            try:
-                from error_analysis.simple_analyzer import SimpleErrorAnalyzer
-
-                SIMPLE_ANALYSIS_AVAILABLE = True
-            except ImportError:
-                # Simple analysis not available, fall back to basic detection
-                SIMPLE_ANALYSIS_AVAILABLE = False
-                SimpleErrorAnalyzer = None
-                print(f"Debug: Enhanced error analysis not available: {e}")
+            # Contextual analysis not available, fall back to basic detection
+            CONTEXTUAL_ANALYSIS_AVAILABLE = False
+            ContextualErrorAnalyzer = None
+            print(f"Debug: Contextual error analysis not available: {e}")
 
     start_time = time.time()
     patterns = []
@@ -106,23 +101,23 @@ def analyze_session_patterns(messages: List[Dict]) -> List[Dict]:
     # Join efficiently with size limit for performance
     content = " ".join(content_parts)[:10000]  # Limit content size for performance
 
-    # Simple Error Pattern Detection
-    if SIMPLE_ANALYSIS_AVAILABLE and SimpleErrorAnalyzer is not None:
+    # Contextual Error Pattern Detection
+    if CONTEXTUAL_ANALYSIS_AVAILABLE and ContextualErrorAnalyzer is not None:
         try:
             # Create analyzer instance (no caching to avoid function attribute issues)
-            analyzer = SimpleErrorAnalyzer()
+            analyzer = ContextualErrorAnalyzer()
             top_suggestion = analyzer.get_top_suggestion(content)
 
             if top_suggestion:
                 patterns.append(top_suggestion)
 
         except Exception as e:
-            # Fallback to basic error detection if simple analysis fails
-            print(f"Simple error analysis failed: {e}, falling back to basic detection")
-            SIMPLE_ANALYSIS_AVAILABLE = False
+            # Fallback to basic error detection if contextual analysis fails
+            print(f"Contextual error analysis failed: {e}, falling back to basic detection")
+            CONTEXTUAL_ANALYSIS_AVAILABLE = False
 
     # Fallback for basic error detection
-    if not SIMPLE_ANALYSIS_AVAILABLE:
+    if not CONTEXTUAL_ANALYSIS_AVAILABLE:
         content_lower = content.lower()
         if "error" in content_lower or "failed" in content_lower:
             patterns.append(
