@@ -13,7 +13,7 @@ Provides the main entry point for the claude-trace analysis system.
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from .deduplication_engine import DeduplicationEngine
 from .issue_generator import IssueCreationResult, IssueGenerator
@@ -298,7 +298,7 @@ class TraceAnalyzer:
 
     def _create_issues(
         self, patterns: List[ImprovementPattern]
-    ) -> "tuple[int, List[IssueCreationResult]]":
+    ) -> Tuple[int, List[IssueCreationResult]]:
         """Create GitHub issues for unique patterns.
 
         Args:

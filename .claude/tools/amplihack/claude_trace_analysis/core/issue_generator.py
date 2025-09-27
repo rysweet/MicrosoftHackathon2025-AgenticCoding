@@ -9,7 +9,6 @@ This module creates GitHub issues with:
 """
 
 import json
-import re
 from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
@@ -25,6 +24,7 @@ except ImportError:
     HAS_REQUESTS = False
 
 from .pattern_extractor import ImprovementPattern
+from .security import EnhancedSecretDetector, GitHubTokenValidator, SecurityEvent, security_logger
 
 
 @dataclass
@@ -67,15 +67,8 @@ class ContentSanitizer:
     """Sanitizes content to prevent sensitive information disclosure."""
 
     def __init__(self):
-        # Core sensitive patterns for security
-        self.patterns = [
-            re.compile(r'\b(?:password|token|key|secret)\s*[=:]\s*[^\s\'"]+', re.IGNORECASE),
-            re.compile(r"\b[A-Za-z0-9]{20,}\b"),  # Long strings (likely tokens)
-            re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"),  # Emails
-            re.compile(
-                r"\b(?:10|172\.(?:1[6-9]|2[0-9]|3[01])|192\.168)\.[0-9]{1,3}\.[0-9]{1,3}\b"
-            ),  # Private IPs
-        ]
+        # Use enhanced secret detector for comprehensive security
+        self.secret_detector = EnhancedSecretDetector()
 
     def sanitize(self, content: str) -> str:
         """Sanitize content by redacting sensitive information.
@@ -89,10 +82,19 @@ class ContentSanitizer:
         if not content:
             return content
 
-        sanitized = content
+        sanitized, detection_counts = self.secret_detector.detect_and_redact(content)
 
-        for pattern in self.patterns:
-            sanitized = pattern.sub("[REDACTED]", sanitized)
+        # Log summary if secrets were detected
+        if detection_counts:
+            total_redacted = sum(detection_counts.values())
+            security_logger.log_event(
+                SecurityEvent(
+                    event_type="content_sanitization",
+                    severity="medium",
+                    message=f"Sanitized content: {total_redacted} secrets redacted",
+                    metadata={"detection_counts": detection_counts},
+                )
+            )
 
         return sanitized
 
@@ -280,6 +282,11 @@ class GitHubIssueCreator:
         self.repo_name = repo_name
         self.api_base = "https://api.github.com"
 
+        # Initialize security components
+        self.token_validator = GitHubTokenValidator()
+        self._token_validated = False
+        self._validation_result = None
+
     def create_issue(
         self, title: str, body: str, labels: Optional[List[str]] = None
     ) -> IssueCreationResult:
@@ -305,6 +312,35 @@ class GitHubIssueCreator:
                 error_message="GitHub credentials or repository information not configured",
             )
 
+        # Validate GitHub token if not already validated
+        if not self._token_validated:
+            self._validation_result = self.token_validator.validate_token(
+                self.github_token, {"issues", "repo"}
+            )
+            self._token_validated = True
+
+        # Check token validation result
+        if not self._validation_result or not self._validation_result.is_valid:
+            error_msg = (
+                self._validation_result.error_message
+                if self._validation_result
+                else "Token validation failed"
+            )
+            security_logger.log_authentication_event(False, f"Token validation failed: {error_msg}")
+            return IssueCreationResult(
+                success=False,
+                error_message=f"GitHub token validation failed: {error_msg}",
+            )
+
+        if not self._validation_result.has_required_permissions:
+            security_logger.log_authentication_event(
+                False, f"Token lacks required permissions: {self._validation_result.scopes}"
+            )
+            return IssueCreationResult(
+                success=False,
+                error_message=f"GitHub token lacks required permissions. Available scopes: {self._validation_result.scopes}",
+            )
+
         try:
             # Prepare request
             url = f"{self.api_base}/repos/{self.repo_owner}/{self.repo_name}/issues"
@@ -322,13 +358,22 @@ class GitHubIssueCreator:
             # Make request
             if not HAS_REQUESTS or requests is None:
                 raise RuntimeError("requests module is required for GitHub integration")
+
             response = requests.post(url, headers=headers, data=json.dumps(data), timeout=30)
+
+            # Log the API call
+            security_logger.log_api_call(
+                f"/repos/{self.repo_owner}/{self.repo_name}/issues",
+                response.status_code < 400,
+                response.status_code,
+            )
+
             response.raise_for_status()
 
             # Parse response
             issue_data = response.json()
 
-            return IssueCreationResult(
+            result = IssueCreationResult(
                 success=True,
                 issue_number=issue_data["number"],
                 issue_url=issue_data["html_url"],
@@ -339,7 +384,36 @@ class GitHubIssueCreator:
                 },
             )
 
+            # Log successful issue creation
+            security_logger.log_event(
+                SecurityEvent(
+                    event_type="github_issue_created",
+                    severity="low",
+                    message=f"Successfully created GitHub issue #{issue_data['number']}",
+                    metadata={
+                        "issue_number": issue_data["number"],
+                        "issue_url": issue_data["html_url"],
+                        "repo": f"{self.repo_owner}/{self.repo_name}",
+                    },
+                )
+            )
+
+            return result
+
         except Exception as e:
+            # Log the error
+            security_logger.log_event(
+                SecurityEvent(
+                    event_type="github_issue_creation_failed",
+                    severity="medium",
+                    message=f"Failed to create GitHub issue: {str(e)}",
+                    metadata={
+                        "exception_type": type(e).__name__,
+                        "repo": f"{self.repo_owner}/{self.repo_name}",
+                    },
+                )
+            )
+
             return IssueCreationResult(
                 success=False,
                 error_message=f"GitHub API error: {str(e)}",
