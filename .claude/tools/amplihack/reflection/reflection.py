@@ -42,9 +42,10 @@ def fallback_store_new_issue(
     pass
 
 
-# Import duplicate detection system
+# Import semantic duplicate detection system
 try:
-    from .duplicate_detection import (
+    # Try relative import first
+    from .semantic_duplicate_detector import (
         DuplicateDetectionResult,
         check_duplicate_issue,
         store_new_issue,
@@ -53,15 +54,15 @@ try:
     DUPLICATE_DETECTION_AVAILABLE = True
 except ImportError:
     try:
-        # Try direct import if relative import fails
-        import duplicate_detection
+        # Try absolute import as fallback
+        import semantic_duplicate_detector
 
-        check_duplicate_issue = duplicate_detection.check_duplicate_issue
-        store_new_issue = duplicate_detection.store_new_issue
-        DuplicateDetectionResult = duplicate_detection.DuplicateDetectionResult
+        DuplicateDetectionResult = semantic_duplicate_detector.DuplicateDetectionResult
+        check_duplicate_issue = semantic_duplicate_detector.check_duplicate_issue
+        store_new_issue = semantic_duplicate_detector.store_new_issue
         DUPLICATE_DETECTION_AVAILABLE = True
     except ImportError:
-        # Fallback if duplicate detection is not available
+        # Fallback if semantic duplicate detection is not available
         DUPLICATE_DETECTION_AVAILABLE = False
         check_duplicate_issue = fallback_check_duplicate_issue
         store_new_issue = fallback_store_new_issue
