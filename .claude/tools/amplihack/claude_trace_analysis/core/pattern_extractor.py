@@ -48,15 +48,15 @@ class ImprovementPattern:
         if not self.id or not isinstance(self.id, str):
             raise ValueError("id must be a non-empty string")
 
-    def __getitem__(self, key: str) -> Any:
-        """Allow dictionary-style access for backward compatibility."""
-        return getattr(self, key)
-
         if not self.type or not isinstance(self.type, str):
             raise ValueError("type must be a non-empty string")
 
         if not (0.0 <= self.confidence <= 1.0):
             raise ValueError("confidence must be between 0.0 and 1.0")
+
+    def __getitem__(self, key: str) -> Any:
+        """Allow dictionary-style access for backward compatibility."""
+        return getattr(self, key)
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert pattern to dictionary representation.
