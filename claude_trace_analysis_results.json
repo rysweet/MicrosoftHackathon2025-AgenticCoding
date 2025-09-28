@@ -1,0 +1,198 @@
+{
+  "summary": {
+    "total_tool_calls": 0,
+    "total_commands": 0,
+    "total_file_ops": 0,
+    "total_errors": 40,
+    "performance_issues": 15
+  },
+  "top_tools": [],
+  "top_commands": [],
+  "file_operations": {},
+  "error_patterns": {
+    "HTTP_503": 3,
+    "HTTP_400": 8,
+    "HTTP_520": 1,
+    "HTTP_429": 21,
+    "HTTP_502": 7
+  },
+  "performance_issues": [
+    {
+      "type": "long_session",
+      "duration_seconds": 66052.6970000267,
+      "log": "log-2025-09-28-00-11-57.jsonl"
+    },
+    {
+      "type": "high_error_rate",
+      "rate": 10.0,
+      "log": "log-2025-09-28-00-11-57.jsonl"
+    },
+    {
+      "type": "long_session",
+      "duration_seconds": 16874.11999988556,
+      "log": "log-2025-09-27-17-46-11.jsonl"
+    },
+    {
+      "type": "high_error_rate",
+      "rate": 6.0,
+      "log": "log-2025-09-27-17-46-11.jsonl"
+    },
+    {
+      "type": "long_session",
+      "duration_seconds": 5286.968999862671,
+      "log": "log-2025-09-27-15-36-47.jsonl"
+    },
+    {
+      "type": "long_session",
+      "duration_seconds": 6380.477999925613,
+      "log": "log-2025-09-27-05-07-07.jsonl"
+    },
+    {
+      "type": "long_session",
+      "duration_seconds": 9671.34700012207,
+      "log": "log-2025-09-27-00-31-00.jsonl"
+    },
+    {
+      "type": "long_session",
+      "duration_seconds": 13442.894000053406,
+      "log": "log-2025-09-26-19-55-38.jsonl"
+    },
+    {
+      "type": "high_error_rate",
+      "rate": 2.0,
+      "log": "log-2025-09-26-19-55-38.jsonl"
+    },
+    {
+      "type": "long_session",
+      "duration_seconds": 13668.011999845505,
+      "log": "log-2025-09-26-19-51-54.jsonl"
+    }
+  ],
+  "repetitive_actions": [
+    {
+      "action": "cmd:: ",
+      "count": 86484,
+      "type": "command"
+    },
+    {
+      "action": "Read:: ",
+      "count": 36824,
+      "type": "file_operation"
+    },
+    {
+      "action": "Edit:: ",
+      "count": 18422,
+      "type": "file_operation"
+    },
+    {
+      "action": "cmd:, ",
+      "count": 14240,
+      "type": "command"
+    },
+    {
+      "action": "Write:: ",
+      "count": 10922,
+      "type": "file_operation"
+    },
+    {
+      "action": "MultiEdit:: ",
+      "count": 5926,
+      "type": "file_operation"
+    },
+    {
+      "action": "cmd:is_error",
+      "count": 4730,
+      "type": "command"
+    },
+    {
+      "action": "read:: ",
+      "count": 4145,
+      "type": "file_operation"
+    },
+    {
+      "action": "Read::",
+      "count": 2198,
+      "type": "file_operation"
+    },
+    {
+      "action": "cmd:}, {",
+      "count": 990,
+      "type": "command"
+    },
+    {
+      "action": "cmd:: \"~/.local/bin/imessR ",
+      "count": 811,
+      "type": "command"
+    },
+    {
+      "action": "READ:: ",
+      "count": 567,
+      "type": "file_operation"
+    },
+    {
+      "action": "write:: ",
+      "count": 444,
+      "type": "file_operation"
+    },
+    {
+      "action": "cmd:environment=dev",
+      "count": 297,
+      "type": "command"
+    },
+    {
+      "action": "cmd:: \"sed -n ",
+      "count": 197,
+      "type": "command"
+    },
+    {
+      "action": "cmd:$2\\\\",
+      "count": 180,
+      "type": "command"
+    },
+    {
+      "action": "cmd:$2",
+      "count": 172,
+      "type": "command"
+    },
+    {
+      "action": "read::",
+      "count": 167,
+      "type": "file_operation"
+    },
+    {
+      "action": "edit:: ",
+      "count": 128,
+      "type": "file_operation"
+    },
+    {
+      "action": "READ:  \u274c Missing: {file_path}",
+      "count": 105,
+      "type": "file_operation"
+    }
+  ],
+  "improvement_opportunities": [
+    {
+      "category": "automation",
+      "issue": "Found 61 repetitive commands",
+      "suggestion": "Create custom tools or aliases for common operations",
+      "impact": "medium"
+    },
+    {
+      "category": "performance",
+      "issue": "9 long sessions detected",
+      "suggestion": "Implement session checkpointing and resumption",
+      "impact": "high"
+    },
+    {
+      "category": "reliability",
+      "issue": "40 errors detected",
+      "suggestion": "Implement better error handling and retry logic",
+      "impact": "high"
+    }
+  ],
+  "api_usage": {
+    "claude-3-5-haiku-20241022": 4265,
+    "claude-sonnet-4-20250514": 5150,
+    "claude-opus-4-1-20250805": 2068
+  }
+}
