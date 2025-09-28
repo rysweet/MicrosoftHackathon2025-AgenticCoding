@@ -1,22 +1,22 @@
 """Test suite for retry mechanisms and exponential backoff."""
 
 import asyncio
-import pytest
 import time
-from unittest.mock import Mock, patch
+from unittest.mock import patch
+
+import pytest
 
 from amplihack.errors import (
-    AmplihackError,
     ProcessError,
-    SecurityError,
-    ValidationError,
-    retry_on_error,
-    retry_async,
     RetryBudget,
     RetryConfig,
-    get_correlation_id,
-    set_correlation_id,
+    SecurityError,
+    ValidationError,
     clear_correlation_id,
+    get_correlation_id,
+    retry_async,
+    retry_on_error,
+    set_correlation_id,
 )
 
 
@@ -99,7 +99,7 @@ class TestRetryConfig:
             base_delay=1.0,
             exponential_base=2.0,
             max_delay=10.0,
-            jitter=False  # Disable for predictable testing
+            jitter=False,  # Disable for predictable testing
         )
 
         assert config.calculate_delay(0) == 0.0
@@ -111,16 +111,11 @@ class TestRetryConfig:
 
     def test_delay_calculation_with_jitter(self):
         """Test delay calculation with jitter."""
-        config = RetryConfig(
-            base_delay=4.0,
-            exponential_base=2.0,
-            max_delay=20.0,
-            jitter=True
-        )
+        config = RetryConfig(base_delay=4.0, exponential_base=2.0, max_delay=20.0, jitter=True)
 
         # With jitter, delay should vary but be within bounds
         delays = [config.calculate_delay(2) for _ in range(10)]
-        base_delay = 4.0  # 4.0 * 2^1 = 8.0
+        # Expected delay: 4.0 * 2^1 = 8.0
 
         for delay in delays:
             assert 6.0 <= delay <= 10.0  # 8.0 ± 25%
@@ -150,8 +145,7 @@ class TestRetryConfig:
     def test_custom_error_types(self):
         """Test custom retryable/non-retryable error types."""
         config = RetryConfig(
-            retryable_errors=(OSError, IOError),
-            non_retryable_errors=(ValueError, TypeError)
+            retryable_errors=(OSError, IOError), non_retryable_errors=(ValueError, TypeError)
         )
 
         assert config.should_retry(OSError("File error"), 1)
@@ -235,7 +229,7 @@ class TestRetryDecorator:
 
     def test_retry_with_correlation_id(self):
         """Test retry with correlation ID tracking."""
-        correlation_id = set_correlation_id("test-retry")
+        set_correlation_id("test-retry")
         call_count = 0
 
         @retry_on_error(RetryConfig(max_attempts=2, base_delay=0.01))
@@ -260,9 +254,7 @@ class TestRetryDecorator:
 
         # Very small budget that should be exhausted quickly
         config = RetryConfig(
-            max_attempts=5,
-            base_delay=1.0,
-            budget=RetryBudget(max_total_delay=2.0)
+            max_attempts=5, base_delay=1.0, budget=RetryBudget(max_total_delay=2.0)
         )
 
         @retry_on_error(config)
@@ -290,7 +282,7 @@ class TestRetryDecorator:
             max_attempts=4,
             base_delay=0.001,
             retryable_errors=(ValueError, OSError),
-            non_retryable_errors=()  # Clear default non-retryable errors
+            non_retryable_errors=(),  # Clear default non-retryable errors
         )
 
         @retry_on_error(custom_config)
@@ -391,7 +383,7 @@ class TestAsyncRetry:
     @pytest.mark.asyncio
     async def test_async_correlation_id_tracking(self):
         """Test correlation ID tracking in async retries."""
-        correlation_id = set_correlation_id("async-test")
+        set_correlation_id("async-test")
         call_count = 0
 
         @retry_async(RetryConfig(max_attempts=2, base_delay=0.01))
@@ -435,7 +427,7 @@ class TestRetryLogging:
                 raise ConnectionError("Network error")
             return "success"
 
-        with patch('amplihack.errors.retry.error_logger') as mock_logger:
+        with patch("amplihack.errors.retry.error_logger") as mock_logger:
             result = logged_retry_operation()
 
             assert result == "success"
@@ -444,11 +436,12 @@ class TestRetryLogging:
 
     def test_retry_exhausted_logging(self):
         """Test that retry exhaustion is logged."""
+
         @retry_on_error(RetryConfig(max_attempts=2, base_delay=0.01))
         def exhausted_operation():
             raise ConnectionError("Persistent error")
 
-        with patch('amplihack.errors.retry.error_logger') as mock_logger:
+        with patch("amplihack.errors.retry.error_logger") as mock_logger:
             with pytest.raises(ConnectionError):
                 exhausted_operation()
 
@@ -457,11 +450,12 @@ class TestRetryLogging:
 
     def test_error_logging_during_retry(self):
         """Test that errors are logged during retry attempts."""
+
         @retry_on_error(RetryConfig(max_attempts=2, base_delay=0.01))
         def error_logged_operation():
             raise ConnectionError("Network error")
 
-        with patch('amplihack.errors.retry.log_error') as mock_log_error:
+        with patch("amplihack.errors.retry.log_error") as mock_log_error:
             with pytest.raises(ConnectionError):
                 error_logged_operation()
 
@@ -530,15 +524,15 @@ class TestRetryIntegration:
 
     def test_concurrent_retry_operations(self):
         """Test concurrent operations with retries."""
-        import threading
         import queue
+        import threading
 
         results = queue.Queue()
 
         @retry_on_error(RetryConfig(max_attempts=2, base_delay=0.01))
         def concurrent_operation(worker_id):
             # Each worker fails once then succeeds
-            if not hasattr(concurrent_operation, 'failed_workers'):
+            if not hasattr(concurrent_operation, "failed_workers"):
                 concurrent_operation.failed_workers = set()
 
             if worker_id not in concurrent_operation.failed_workers:

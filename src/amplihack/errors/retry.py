@@ -5,7 +5,7 @@ import random
 import time
 from typing import Any, Callable, Optional, Tuple, Type
 
-from .base import AmplihackError, TimeoutError
+from .base import TimeoutError
 from .logging import log_error
 
 
@@ -115,11 +115,14 @@ def retry_on_error(
                     last_error = error
 
                     # Log the error
-                    log_error(error, context={
-                        'function': func.__name__,
-                        'attempt': attempt,
-                        'max_attempts': config.max_attempts,
-                    })
+                    log_error(
+                        error,
+                        context={
+                            "function": func.__name__,
+                            "attempt": attempt,
+                            "max_attempts": config.max_attempts,
+                        },
+                    )
 
                     # Check if we should retry
                     if not config.should_retry(error, attempt):
@@ -135,6 +138,7 @@ def retry_on_error(
                 raise last_error
 
         return wrapper
+
     return decorator
 
 
@@ -168,11 +172,14 @@ def retry_async(
                     last_error = error
 
                     # Log the error
-                    log_error(error, context={
-                        'function': func.__name__,
-                        'attempt': attempt,
-                        'max_attempts': config.max_attempts,
-                    })
+                    log_error(
+                        error,
+                        context={
+                            "function": func.__name__,
+                            "attempt": attempt,
+                            "max_attempts": config.max_attempts,
+                        },
+                    )
 
                     # Check if we should retry
                     if not config.should_retry(error, attempt):
@@ -188,4 +195,5 @@ def retry_async(
                 raise last_error
 
         return wrapper
+
     return decorator

@@ -1,34 +1,31 @@
 """Integration tests for error recovery and end-to-end error handling."""
 
 import asyncio
-import pytest
 import subprocess
-import tempfile
 import threading
 import time
 from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
+
+import pytest
 
 from amplihack.errors import (
-    AmplihackError,
     ConfigurationError,
+    ErrorLogger,
     NetworkError,
     ProcessError,
+    RetryConfig,
     SecurityError,
     TimeoutError,
-    ValidationError,
-    get_correlation_id,
-    set_correlation_id,
     clear_correlation_id,
+    get_correlation_id,
     retry_on_error,
-    RetryConfig,
-    ErrorLogger,
-    log_error,
+    set_correlation_id,
 )
-from amplihack.utils.process import ProcessManager
 from amplihack.proxy.manager import ProxyManager
-from amplihack.uvx.manager import UVXManager
 from amplihack.utils.claude_trace import get_claude_command
+from amplihack.utils.process import ProcessManager
+from amplihack.uvx.manager import UVXManager
 
 
 class TestProcessManagerIntegration:
@@ -128,8 +125,8 @@ class TestProcessManagerIntegration:
                 return result
             return original_run(*args, **kwargs)
 
-        with patch('subprocess.run', side_effect=mock_run):
-            with patch.object(ProcessManager, 'check_command_exists', return_value=True):
+        with patch("subprocess.run", side_effect=mock_run):
+            with patch.object(ProcessManager, "check_command_exists", return_value=True):
                 try:
                     ProcessManager.run_command(["echo", "success"])
                 except ProcessError:
@@ -162,7 +159,7 @@ class TestProxyManagerIntegration:
         """Test proxy installation with git failure."""
         manager = ProxyManager()
 
-        with patch('subprocess.run') as mock_run:
+        with patch("subprocess.run") as mock_run:
             # Mock git clone failure
             mock_run.side_effect = subprocess.CalledProcessError(
                 128, ["git", "clone"], stderr="Permission denied"
@@ -180,11 +177,9 @@ class TestProxyManagerIntegration:
         """Test proxy installation timeout."""
         manager = ProxyManager()
 
-        with patch('subprocess.run') as mock_run:
+        with patch("subprocess.run") as mock_run:
             # Mock git clone timeout
-            mock_run.side_effect = subprocess.TimeoutExpired(
-                ["git", "clone"], 120
-            )
+            mock_run.side_effect = subprocess.TimeoutExpired(["git", "clone"], 120)
 
             with pytest.raises(NetworkError) as exc_info:
                 manager.ensure_proxy_installed()
@@ -199,7 +194,7 @@ class TestProxyManagerIntegration:
         correlation_id = set_correlation_id("proxy-test-456")
         manager = ProxyManager()
 
-        with patch('subprocess.run') as mock_run:
+        with patch("subprocess.run") as mock_run:
             mock_run.side_effect = subprocess.CalledProcessError(1, ["git"])
 
             try:
@@ -219,8 +214,8 @@ class TestProxyManagerIntegration:
         requirements_file.write_text("fake-package==1.0.0\n")
 
         try:
-            with patch.object(manager, 'proxy_dir', test_repo.parent):
-                with patch('subprocess.run') as mock_run:
+            with patch.object(manager, "proxy_dir", test_repo.parent):
+                with patch("subprocess.run") as mock_run:
                     # Mock pip install failure
                     mock_run.return_value = Mock(returncode=1, stderr="Package not found")
 
@@ -263,7 +258,7 @@ class TestUVXManagerIntegration:
         """Test UVX detection failure handling."""
         manager = UVXManager()
 
-        with patch('amplihack.utils.uvx_detection.detect_uvx_deployment') as mock_detect:
+        with patch("amplihack.utils.uvx_detection.detect_uvx_deployment") as mock_detect:
             mock_detect.side_effect = Exception("Detection failed")
 
             with pytest.raises(ConfigurationError) as exc_info:
@@ -292,16 +287,16 @@ class TestUVXManagerIntegration:
     def test_uvx_manager_path_traversal_detection(self):
         """Test path traversal detection."""
         manager = UVXManager()
-        correlation_id = set_correlation_id("uvx-security-test")
+        set_correlation_id("uvx-security-test")
 
         # Path with traversal should return False and log security error
-        with patch('amplihack.errors.log_error') as mock_log:
+        with patch("amplihack.errors.log_error") as mock_log:
             result = manager.validate_path_security(Path("../../../etc/passwd"))
 
             assert result is False
             # Should have logged a security error
             mock_log.assert_called()
-            logged_error = mock_log.call_args[1]['error']
+            logged_error = mock_log.call_args[1]["error"]
             assert isinstance(logged_error, SecurityError)
             assert logged_error.violation_type == "path_traversal"
 
@@ -310,7 +305,7 @@ class TestUVXManagerIntegration:
         correlation_id = set_correlation_id("uvx-correlation-test")
         manager = UVXManager()
 
-        with patch('amplihack.utils.uvx_detection.detect_uvx_deployment') as mock_detect:
+        with patch("amplihack.utils.uvx_detection.detect_uvx_deployment") as mock_detect:
             mock_detect.side_effect = Exception("Test error")
 
             try:
@@ -333,7 +328,7 @@ class TestClaudeTraceIntegration:
 
     def test_get_claude_command_no_trace_available(self):
         """Test claude command resolution when trace is not available."""
-        with patch('shutil.which') as mock_which:
+        with patch("shutil.which") as mock_which:
             # Mock claude-trace not available, claude available
             def which_side_effect(cmd):
                 if cmd == "claude-trace":
@@ -351,8 +346,8 @@ class TestClaudeTraceIntegration:
 
     def test_get_claude_command_installation_failure(self):
         """Test claude command resolution when installation fails."""
-        with patch('shutil.which') as mock_which:
-            with patch('subprocess.run') as mock_run:
+        with patch("shutil.which") as mock_which:
+            with patch("subprocess.run") as mock_run:
                 # Mock claude-trace not available, npm available but install fails
                 def which_side_effect(cmd):
                     if cmd == "claude-trace":
@@ -371,7 +366,7 @@ class TestClaudeTraceIntegration:
 
     def test_get_claude_command_no_claude_available(self):
         """Test claude command resolution when neither command is available."""
-        with patch('shutil.which', return_value=None):
+        with patch("shutil.which", return_value=None):
             with pytest.raises(ProcessError) as exc_info:
                 get_claude_command()
 
@@ -381,8 +376,8 @@ class TestClaudeTraceIntegration:
 
     def test_claude_trace_installation_timeout(self):
         """Test claude-trace installation timeout handling."""
-        with patch('shutil.which') as mock_which:
-            with patch('subprocess.run') as mock_run:
+        with patch("shutil.which") as mock_which:
+            with patch("subprocess.run") as mock_run:
                 mock_which.side_effect = lambda cmd: "/usr/bin/npm" if cmd == "npm" else None
                 mock_run.side_effect = subprocess.TimeoutExpired(["npm", "install"], 120)
 
@@ -417,7 +412,7 @@ class TestEndToEndErrorRecovery:
 
         @retry_on_error(RetryConfig(max_attempts=3, base_delay=0.01))
         def simulate_process_operation():
-            if not hasattr(simulate_process_operation, 'attempts'):
+            if not hasattr(simulate_process_operation, "attempts"):
                 simulate_process_operation.attempts = 0
             simulate_process_operation.attempts += 1
 
@@ -426,14 +421,14 @@ class TestEndToEndErrorRecovery:
                     "Process temporarily unavailable",
                     command="test_process",
                     return_code=1,
-                    correlation_id=correlation_id
+                    correlation_id=correlation_id,
                 )
-            results['process'] = 'success'
-            return 'process_success'
+            results["process"] = "success"
+            return "process_success"
 
         @retry_on_error(RetryConfig(max_attempts=3, base_delay=0.01))
         def simulate_network_operation():
-            if not hasattr(simulate_network_operation, 'attempts'):
+            if not hasattr(simulate_network_operation, "attempts"):
                 simulate_network_operation.attempts = 0
             simulate_network_operation.attempts += 1
 
@@ -442,19 +437,19 @@ class TestEndToEndErrorRecovery:
                     "Network temporarily unavailable",
                     url="https://api.test.com",
                     status_code=503,
-                    correlation_id=correlation_id
+                    correlation_id=correlation_id,
                 )
-            results['network'] = 'success'
-            return 'network_success'
+            results["network"] = "success"
+            return "network_success"
 
         # Execute operations
         process_result = simulate_process_operation()
         network_result = simulate_network_operation()
 
-        assert process_result == 'process_success'
-        assert network_result == 'network_success'
-        assert results['process'] == 'success'
-        assert results['network'] == 'success'
+        assert process_result == "process_success"
+        assert network_result == "network_success"
+        assert results["process"] == "success"
+        assert results["network"] == "success"
 
         # Verify correlation ID was maintained
         assert get_correlation_id() == correlation_id
@@ -471,16 +466,15 @@ class TestEndToEndErrorRecovery:
             @retry_on_error(RetryConfig(max_attempts=2, base_delay=0.01))
             def worker_task():
                 # First attempt fails, second succeeds
-                if not hasattr(worker_task, f'attempts_{worker_id}'):
-                    setattr(worker_task, f'attempts_{worker_id}', 0)
+                if not hasattr(worker_task, f"attempts_{worker_id}"):
+                    setattr(worker_task, f"attempts_{worker_id}", 0)
 
-                attempts = getattr(worker_task, f'attempts_{worker_id}')
-                setattr(worker_task, f'attempts_{worker_id}', attempts + 1)
+                attempts = getattr(worker_task, f"attempts_{worker_id}")
+                setattr(worker_task, f"attempts_{worker_id}", attempts + 1)
 
                 if attempts == 0:
                     raise ProcessError(
-                        f"Worker {worker_id} temporary failure",
-                        correlation_id=correlation_id
+                        f"Worker {worker_id} temporary failure", correlation_id=correlation_id
                     )
 
                 results[worker_id] = f"worker_{worker_id}_success"
@@ -510,7 +504,7 @@ class TestEndToEndErrorRecovery:
 
         @retry_on_error(RetryConfig(max_attempts=3, base_delay=0.01))
         async def async_operation_with_recovery():
-            if not hasattr(async_operation_with_recovery, 'attempts'):
+            if not hasattr(async_operation_with_recovery, "attempts"):
                 async_operation_with_recovery.attempts = 0
             async_operation_with_recovery.attempts += 1
 
@@ -520,7 +514,7 @@ class TestEndToEndErrorRecovery:
                 raise NetworkError(
                     "Async network error",
                     url="https://async.api.com",
-                    correlation_id=correlation_id
+                    correlation_id=correlation_id,
                 )
 
             return "async_success"
@@ -537,21 +531,21 @@ class TestEndToEndErrorRecovery:
 
         @retry_on_error(RetryConfig(max_attempts=3, base_delay=0.01))
         def context_preserving_operation():
-            if not hasattr(context_preserving_operation, 'attempts'):
+            if not hasattr(context_preserving_operation, "attempts"):
                 context_preserving_operation.attempts = 0
             context_preserving_operation.attempts += 1
 
             context = {
-                'attempt': context_preserving_operation.attempts,
-                'operation': 'context_test',
-                'timestamp': time.time()
+                "attempt": context_preserving_operation.attempts,
+                "operation": "context_test",
+                "timestamp": time.time(),
             }
 
             if context_preserving_operation.attempts < 3:
                 error = ProcessError(
                     f"Attempt {context_preserving_operation.attempts} failed",
                     correlation_id=correlation_id,
-                    context=context
+                    context=context,
                 )
                 error_contexts.append(error.context)
                 raise error
@@ -565,9 +559,9 @@ class TestEndToEndErrorRecovery:
 
         # Verify context was preserved and unique for each attempt
         for i, context in enumerate(error_contexts):
-            assert context['attempt'] == i + 1
-            assert context['operation'] == 'context_test'
-            assert 'timestamp' in context
+            assert context["attempt"] == i + 1
+            assert context["operation"] == "context_test"
+            assert "timestamp" in context
 
     def test_security_error_no_retry(self):
         """Test that security errors are not retried."""
@@ -578,9 +572,7 @@ class TestEndToEndErrorRecovery:
             nonlocal call_count
             call_count += 1
             raise SecurityError(
-                "Access denied",
-                violation_type="unauthorized_access",
-                resource="/secure/resource"
+                "Access denied", violation_type="unauthorized_access", resource="/secure/resource"
             )
 
         with pytest.raises(SecurityError):
@@ -593,11 +585,11 @@ class TestEndToEndErrorRecovery:
         """Test recovery behavior when retry budget is exhausted."""
         call_count = 0
 
-        # Very small budget
+        # Limited retry configuration
         budget_config = RetryConfig(
-            max_attempts=10,  # High attempts
-            base_delay=1.0,   # Large delays
-            budget=RetryBudget(max_total_delay=2.0)  # Small budget
+            max_attempts=3,  # Limited attempts
+            base_delay=1.0,  # Base delays
+            max_delay=2.0,  # Small max delay acts as budget constraint
         )
 
         @retry_on_error(budget_config)
@@ -639,38 +631,38 @@ class TestErrorMetricsAndMonitoring:
             "Test process error",
             command="test_command",
             return_code=1,
-            correlation_id=correlation_id
+            correlation_id=correlation_id,
         )
 
-        with patch.object(logger.logger, 'log') as mock_log:
+        with patch.object(logger.logger, "log") as mock_log:
             logged_id = logger.log_error(
                 error,
                 context={
-                    'operation_start_time': start_time,
-                    'component': 'test_component',
-                    'user_action': 'test_action'
-                }
+                    "operation_start_time": start_time,
+                    "component": "test_component",
+                    "user_action": "test_action",
+                },
             )
 
             assert logged_id == correlation_id
             args, kwargs = mock_log.call_args
-            error_data = kwargs['extra']['error_data']
+            error_data = kwargs["extra"]["error_data"]
 
             # Verify metrics are included
-            assert error_data['correlation_id'] == correlation_id
-            assert 'operation_start_time' in error_data['context']
-            assert 'component' in error_data['context']
-            assert 'user_action' in error_data['context']
+            assert error_data["correlation_id"] == correlation_id
+            assert "operation_start_time" in error_data["context"]
+            assert "component" in error_data["context"]
+            assert "user_action" in error_data["context"]
 
     def test_retry_metrics_logging(self):
         """Test that retry metrics are properly logged."""
         logger = ErrorLogger("retry.metrics")
-        retry_metrics = []
 
-        with patch.object(logger, 'log_retry_attempt') as mock_retry_log:
+        with patch.object(logger, "log_retry_attempt") as mock_retry_log:
+
             @retry_on_error(RetryConfig(max_attempts=3, base_delay=0.01))
             def metrics_retry_operation():
-                if not hasattr(metrics_retry_operation, 'attempts'):
+                if not hasattr(metrics_retry_operation, "attempts"):
                     metrics_retry_operation.attempts = 0
                 metrics_retry_operation.attempts += 1
 

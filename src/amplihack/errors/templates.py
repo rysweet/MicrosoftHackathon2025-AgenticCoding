@@ -1,17 +1,17 @@
 """Simple error message formatting utilities."""
 
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from .security import sanitize_error_message, sanitize_path
 
 # Simple error message templates
 ERROR_TEMPLATES = {
-    'PROCESS_FAILED': "Process '{command}' failed with exit code {return_code}",
-    'NETWORK_TIMEOUT': "Network request to '{url}' timed out after {timeout} seconds",
-    'CONFIG_MISSING': "Required configuration '{key}' is missing",
-    'VALIDATION_REQUIRED': "Field '{field}' is required",
-    'FILE_NOT_FOUND': "File not found: {file_path}",
-    'OPERATION_FAILED': "Operation '{operation}' failed: {reason}",
+    "PROCESS_FAILED": "Process '{command}' failed with exit code {return_code}",
+    "NETWORK_TIMEOUT": "Network request to '{url}' timed out after {timeout} seconds",
+    "CONFIG_MISSING": "Required configuration '{key}' is missing",
+    "VALIDATION_REQUIRED": "Field '{field}' is required",
+    "FILE_NOT_FOUND": "File not found: {file_path}",
+    "OPERATION_FAILED": "Operation '{operation}' failed: {reason}",
 }
 
 
@@ -39,7 +39,7 @@ def format_error_message(template_key: str, **kwargs: Any) -> str:
         sanitized_kwargs = {}
         for key, value in kwargs.items():
             if isinstance(value, str):
-                if key in ('file_path', 'directory_path', 'path'):
+                if key in ("file_path", "directory_path", "path"):
                     sanitized_kwargs[key] = sanitize_path(value)
                 else:
                     sanitized_kwargs[key] = sanitize_error_message(value)
@@ -70,9 +70,9 @@ def format_process_error(
     safe_command = sanitize_error_message(command)
 
     base_message = format_error_message(
-        'PROCESS_FAILED',
+        "PROCESS_FAILED",
         command=safe_command,
-        return_code=return_code or 'unknown',
+        return_code=return_code or "unknown",
     )
 
     # Add stderr if available and informative
