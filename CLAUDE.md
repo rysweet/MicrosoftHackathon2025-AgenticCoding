@@ -94,7 +94,8 @@ dependencies require sequential order.
 - **Pattern Recognition**: Use `patterns.md` to identify reusable solutions
 - **Analysis**: Use `analyzer.md` for deep code understanding
 - **Ambiguity**: Use `ambiguity.md` when requirements are unclear
-- **Fix Workflows**: Use `fix-agent.md` for rapid resolution of common error patterns (imports, CI, tests, config, quality, logic)
+- **Fix Workflows**: Use `fix-agent.md` for rapid resolution of common error
+  patterns (imports, CI, tests, config, quality, logic)
 
 #### Parallel Execution Decision Engine
 
@@ -214,8 +215,11 @@ test-driven development (write test → implement → validate)
 
 #### Stage 3: General Fix Workflow (Optimized for Common Patterns)
 
-- **Fix Workflow**: Use `fix-agent.md` for rapid resolution of the most common fix patterns identified in usage analysis. Provides QUICK (template-based), DIAGNOSTIC (root cause), and COMPREHENSIVE (full workflow) modes.
-- **Trigger**: "Fix this", "Something's broken", "Error in", specific error patterns
+- **Fix Workflow**: Use `fix-agent.md` for rapid resolution of the most common
+  fix patterns identified in usage analysis. Provides QUICK (template-based),
+  DIAGNOSTIC (root cause), and COMPREHENSIVE (full workflow) modes.
+- **Trigger**: "Fix this", "Something's broken", "Error in", specific error
+  patterns
 - **Command**: `/fix [pattern] [scope]` for intelligent fix dispatch
 
 ```
@@ -430,10 +434,12 @@ Intelligent fix workflow optimization for common error patterns. Key features:
 
 - **Auto-detection**: Automatically identifies fix pattern from error context
 - **Template-based**: Uses pre-built templates for 80% of common fixes
-- **Mode selection**: QUICK (< 5 min), DIAGNOSTIC (root cause), COMPREHENSIVE (full workflow)
+- **Mode selection**: QUICK (< 5 min), DIAGNOSTIC (root cause), COMPREHENSIVE
+  (full workflow)
 - **Integration**: Seamlessly works with UltraThink and existing agents
 
 **Usage Examples:**
+
 ```bash
 /fix                    # Auto-detect pattern and scope
 /fix import             # Target import/dependency issues
@@ -442,7 +448,8 @@ Intelligent fix workflow optimization for common error patterns. Key features:
 /fix logic comprehensive # Full workflow for complex logic issues
 ```
 
-**Common Patterns:** import (15%), ci (20%), test (18%), config (12%), quality (25%), logic (10%)
+**Common Patterns:** import (15%), ci (20%), test (18%), config (12%), quality
+(25%), logic (10%)
 
 ## Available Tools
 

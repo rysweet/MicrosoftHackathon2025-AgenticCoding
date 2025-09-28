@@ -53,20 +53,24 @@ Time: [Execution time]
 # Diagnostic Analysis: [Issue]
 
 ## Root Cause
+
 **Primary Issue**: [Description]
 **Contributing Factors**: [Secondary issues]
 
 ## Investigation Steps
+
 1. [Step taken]: [Finding]
 2. [Step taken]: [Finding]
 3. [Step taken]: [Finding]
 
 ## Solution Strategy
+
 - **Immediate**: [Quick fix to stop bleeding]
 - **Root Cause**: [Address core issue]
 - **Prevention**: [Avoid recurrence]
 
 ## Fix Implementation
+
 [Detailed fix steps]
 ```
 
@@ -87,24 +91,30 @@ Time: [Execution time]
 # Comprehensive Fix Plan
 
 ## Scope Assessment
+
 - **Impact**: [Systems affected]
 - **Complexity**: [Implementation effort]
 - **Risk**: [Potential issues]
 
 ## Workflow Integration
+
 Following DEFAULT_WORKFLOW.md steps:
+
 1. [Requirements clarification]
 2. [Issue creation]
 3. [Branch setup]
-[... full workflow]
+   [... full workflow]
 
 ## Implementation Strategy
+
 [Detailed approach]
 
 ## Testing Plan
+
 [Validation approach]
 
 ## Rollback Plan
+
 [Safety measures]
 ```
 
@@ -167,6 +177,7 @@ Quick Steps:
 ### Pre-Commit Integration
 
 When pre-commit hooks fail:
+
 1. Use QUICK mode for standard formatting/linting
 2. Use DIAGNOSTIC mode for complex hook failures
 3. Integrate with pre-commit-diagnostic agent
@@ -174,6 +185,7 @@ When pre-commit hooks fail:
 ### CI Integration
 
 When CI fails:
+
 1. Use DIAGNOSTIC mode to analyze CI logs
 2. Use COMPREHENSIVE mode for architecture issues
 3. Integrate with ci-diagnostic-workflow agent
@@ -181,6 +193,7 @@ When CI fails:
 ### Development Workflow
 
 Standard fix integration:
+
 1. Start with QUICK mode for obvious issues
 2. Escalate to DIAGNOSTIC for unclear problems
 3. Use COMPREHENSIVE for complex solutions
@@ -188,18 +201,21 @@ Standard fix integration:
 ## Operating Principles
 
 ### QUICK Mode
+
 - Fix in under 5 minutes
 - Single file/function scope
 - Minimal testing required
 - Immediate resolution
 
 ### DIAGNOSTIC Mode
+
 - Thorough investigation
 - Multiple hypothesis testing
 - Systematic elimination
 - Document findings
 
 ### COMPREHENSIVE Mode
+
 - Full workflow compliance
 - Multi-agent coordination
 - Complete testing suite
