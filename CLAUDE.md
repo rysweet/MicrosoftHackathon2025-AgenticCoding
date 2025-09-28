@@ -40,6 +40,8 @@ When starting a session, import these files for context:
   agents - delegate aggressively to agents in `.claude/agents/amplihack/*.md`
 - **Ask for clarity**: If requirements are unclear, ask questions before
   proceeding
+- **Optimize conversation efficiency**: Use `/plan` command to front-load
+  requirement gathering and minimize session length (target <15 exchanges)
 - **Document learnings**: Update DISCOVERIES.md with new insights
 - **Session Logs**: All interactions MUST be logged in
   .claude/runtime/logs/<session_id> where <session_id> is a unique identifier
@@ -94,6 +96,7 @@ dependencies require sequential order.
 - **Pattern Recognition**: Use `patterns.md` to identify reusable solutions
 - **Analysis**: Use `analyzer.md` for deep code understanding
 - **Ambiguity**: Use `ambiguity.md` when requirements are unclear
+- **Planning**: Use `planning-agent.md` for conversation efficiency optimization
 
 #### Parallel Execution Decision Engine
 
@@ -396,6 +399,44 @@ Default execution mode for non-trivial tasks. UltraThink:
 - Follows all steps in the exact order defined
 - Orchestrates multiple agents at each step for maximum effectiveness
 - Adapts automatically when you customize the workflow file
+
+### /plan <task> [options]
+
+**Conversation efficiency optimization command** - Use for any task to reduce
+session length by 60% through upfront planning:
+
+```bash
+# Examples
+/plan "Add authentication system" --type=feature
+/plan "Fix login bug" --type=bug_fix --urgency=high
+/plan "Analyze performance issues" --type=analysis
+/plan "Explain JWT handling" --type=clarification
+```
+
+**How it works:**
+
+- Automatically classifies session type and complexity
+- Applies optimized templates (feature: 5-8 exchanges, bug fix: 4-6, analysis:
+  3-5, clarification: 2-3)
+- Front-loads comprehensive requirement gathering to eliminate back-and-forth
+- Creates structured execution plans with context preservation
+- Identifies parallel work opportunities
+
+**When to use:**
+
+- **Always** for non-trivial tasks (>30 minutes work)
+- Multi-step implementations or investigations
+- When requirements might be unclear or incomplete
+- Tasks where efficiency is particularly important
+
+**Session templates available:**
+
+- `.claude/workflow/sessions/feature-development-template.md`
+- `.claude/workflow/sessions/bug-fix-template.md`
+- `.claude/workflow/sessions/quick-clarification-template.md`
+
+**Success metrics:** Average session reduction from 35.5 exchanges to <15
+exchanges through aggressive upfront planning.
 
 ### /analyze <path>
 
