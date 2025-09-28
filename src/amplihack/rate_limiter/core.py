@@ -2,6 +2,7 @@
 
 import asyncio
 import functools
+import inspect
 import logging
 import threading
 import time
@@ -71,20 +72,8 @@ class RateLimiter:
             RateLimitExhausted: If max retries exceeded
             TokenBudgetExceeded: If tokens cannot be obtained
         """
-        # Determine if function is async or returns a coroutine
-        is_async = asyncio.iscoroutinefunction(func)
-
-        # If not directly async, check if it returns a coroutine
-        if not is_async:
-            try:
-                test_result = func()
-                if asyncio.iscoroutine(test_result):
-                    # Close the test coroutine to avoid warnings
-                    test_result.close()
-                    is_async = True
-            except Exception:
-                # If calling func() raises an exception, assume it's not async
-                is_async = False
+        # Determine if function is async using inspect to avoid test execution
+        is_async = inspect.iscoroutinefunction(func)
 
         result = await self._execute_with_retry(func, tokens, progress_callback, retry_on, is_async)
 
