@@ -5,6 +5,7 @@
 ## Problem Pattern Recognition
 
 ### Triggers
+
 - GitHub Actions workflow failures
 - Build process errors
 - Deployment pipeline issues
@@ -12,6 +13,7 @@
 - Dependency resolution conflicts
 
 ### Error Indicators
+
 ```bash
 # Common CI error patterns
 "build failed"
@@ -27,6 +29,7 @@
 ## Quick Assessment (60 seconds)
 
 ### Step 1: Identify Failure Stage
+
 ```bash
 # Check CI logs for failure point
 # Build stage, test stage, deploy stage, etc.
@@ -35,6 +38,7 @@ gh run view [run-id] --log
 ```
 
 ### Step 2: Error Category
+
 ```bash
 # Categorize the error type:
 # - Build/compilation errors
@@ -46,6 +50,7 @@ gh run view [run-id] --log
 ```
 
 ### Step 3: Impact Assessment
+
 - **Blocking**: PR cannot merge
 - **Flaky**: Intermittent failures
 - **Environmental**: Specific to CI environment
@@ -129,10 +134,10 @@ permissions:
   contents: read
   pull-requests: write
 
-timeout-minutes: 30  # Prevent infinite runs
+timeout-minutes: 30 # Prevent infinite runs
 
 strategy:
-  fail-fast: false  # Continue other jobs
+  fail-fast: false # Continue other jobs
   matrix:
     os: [ubuntu-latest]
     python-version: ["3.9", "3.10", "3.11"]
@@ -141,6 +146,7 @@ strategy:
 ## Validation Steps
 
 ### 1. Local Reproduction
+
 ```bash
 # Try to reproduce CI failure locally
 act  # Run GitHub Actions locally
@@ -148,6 +154,7 @@ docker run --rm -v $(pwd):/workspace ubuntu:latest bash
 ```
 
 ### 2. Incremental Testing
+
 ```bash
 # Test individual components
 docker build .  # Test build step
@@ -155,6 +162,7 @@ npm run test:ci  # Test CI-specific commands
 ```
 
 ### 3. Full Pipeline Test
+
 ```bash
 # Push and monitor
 git push origin feature-branch
@@ -216,7 +224,7 @@ jobs:
     # ...
 
   deploy:
-    needs: test  # Wait for test completion
+    needs: test # Wait for test completion
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
 ```
@@ -224,16 +232,19 @@ jobs:
 ## Integration Points
 
 ### With CI Diagnostic Workflow Agent
+
 - Use this template for standard CI issues
 - Escalate complex infrastructure problems
 - Hand off deployment-specific issues
 
 ### With Fix Agent
+
 - Apply QUICK mode for obvious config errors
 - Use DIAGNOSTIC mode for unclear failures
 - Escalate to COMPREHENSIVE for architecture changes
 
 ### With Main Workflow
+
 - Use during Step 13 (Ensure PR is Mergeable)
 - Integrate with Step 7 (Pre-commit hooks)
 - Apply in Step 11 (Implement Review Feedback)
@@ -280,12 +291,14 @@ export CI=true
 ## Escalation Triggers
 
 ### When to Use CI Diagnostic Workflow Agent
+
 - Multiple related CI failures
 - Infrastructure-level issues
 - Complex deployment problems
 - Cross-service integration failures
 
 ### When to Use Full Workflow
+
 - New CI pipeline needed
 - Security configuration changes
 - Multi-repository changes
@@ -294,6 +307,7 @@ export CI=true
 ## Quick Reference
 
 ### 10-Minute Fix Checklist
+
 - [ ] Check CI logs for specific error
 - [ ] Identify failure category
 - [ ] Apply relevant fix pattern
@@ -302,6 +316,7 @@ export CI=true
 - [ ] Verify all checks pass
 
 ### Common Quick Fixes
+
 ```bash
 # Cache invalidation
 git commit --allow-empty -m "Trigger CI rebuild"
@@ -318,12 +333,14 @@ docker build --no-cache .
 ## Success Patterns
 
 ### High-Success Scenarios
+
 - Dependency version conflicts (85% success)
 - Environment variable issues (90% success)
 - Configuration syntax errors (95% success)
 - Cache invalidation needs (80% success)
 
 ### Challenging Scenarios
+
 - Infrastructure failures (40% success)
 - Third-party service issues (30% success)
 - Complex timing issues (50% success)
@@ -332,12 +349,14 @@ docker build --no-cache .
 ## Monitoring and Learning
 
 ### Metrics to Track
+
 - CI fix success rate by error type
 - Time from failure to resolution
 - Recurrence rate of similar issues
 - Impact on development velocity
 
 ### Continuous Improvement
+
 - Build failure pattern library
 - Automate common fixes
 - Improve error detection

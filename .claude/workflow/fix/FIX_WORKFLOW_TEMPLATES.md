@@ -5,6 +5,7 @@ This file contains pre-built templates for the most common fix patterns identifi
 ## Template Usage
 
 Each template follows the format:
+
 - **Problem Pattern**: How to identify when this template applies
 - **Quick Assessment**: Rapid diagnosis steps
 - **Solution Steps**: Standardized fix process
@@ -14,36 +15,42 @@ Each template follows the format:
 ## Template Categories
 
 ### Category 1: Code Quality Fixes (25% of fixes)
+
 - Linting violations
 - Type errors
 - Formatting issues
 - Style guide compliance
 
 ### Category 2: CI/CD Problems (20% of fixes)
+
 - Pipeline configuration
 - Dependency conflicts
 - Build environment issues
 - Deployment failures
 
 ### Category 3: Test Failures (18% of fixes)
+
 - Assertion errors
 - Mock setup issues
 - Test data problems
 - Coverage issues
 
 ### Category 4: Import Errors (15% of fixes)
+
 - Missing imports
 - Circular dependencies
 - Path resolution issues
 - Module not found
 
 ### Category 5: Configuration Issues (12% of fixes)
+
 - Environment variables
 - Config file syntax
 - Missing settings
 - Version conflicts
 
 ### Category 6: Logic Errors (10% of fixes)
+
 - Algorithm bugs
 - Edge case handling
 - State management
@@ -108,6 +115,7 @@ To add new templates:
 ## Template Evolution
 
 Templates evolve based on:
+
 - Usage patterns from claude-trace
 - Success/failure rates
 - User feedback

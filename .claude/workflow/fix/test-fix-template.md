@@ -5,6 +5,7 @@
 ## Problem Pattern Recognition
 
 ### Triggers
+
 - Test suite failures
 - Assert statement errors
 - Mock/stub configuration issues
@@ -13,6 +14,7 @@
 - Flaky test behavior
 
 ### Error Indicators
+
 ```bash
 # Common test error patterns
 "AssertionError"
@@ -27,6 +29,7 @@
 ## Quick Assessment (45 seconds)
 
 ### Step 1: Failure Scope
+
 ```bash
 # Single test or multiple?
 pytest --tb=short  # See quick failure summary
@@ -37,6 +40,7 @@ grep -E "(FAILED|ERROR)" test_output | wc -l
 ```
 
 ### Step 2: Error Category
+
 ```bash
 # Categorize test failure:
 # - Assertion failures (logic/expected values)
@@ -48,6 +52,7 @@ grep -E "(FAILED|ERROR)" test_output | wc -l
 ```
 
 ### Step 3: Impact Assessment
+
 - **Critical**: Core functionality broken
 - **Regression**: Previously working tests failing
 - **Flaky**: Intermittent failures
@@ -154,6 +159,7 @@ class TestDatabaseOperations:
 ## Validation Steps
 
 ### 1. Run Specific Test
+
 ```bash
 # Test individual failure
 pytest tests/test_specific.py::test_function -v
@@ -164,6 +170,7 @@ pytest tests/test_specific.py::test_function -s  # Show print statements
 ```
 
 ### 2. Run Related Tests
+
 ```bash
 # Test the module/feature
 pytest tests/test_module.py -v
@@ -174,6 +181,7 @@ pytest tests/ -k "related_functionality"
 ```
 
 ### 3. Full Test Suite
+
 ```bash
 # Ensure no regressions
 pytest
@@ -238,13 +246,13 @@ def test_api_call(mock_get):
 
 ```javascript
 // Before (incorrect async test)
-test('async function', () => {
+test("async function", () => {
   const result = asyncFunction();
   expect(result).toBe(expected);
 });
 
 // After (proper async test)
-test('async function', async () => {
+test("async function", async () => {
   const result = await asyncFunction();
   expect(result).toBe(expected);
 });
@@ -253,16 +261,19 @@ test('async function', async () => {
 ## Integration Points
 
 ### With Test Agent
+
 - Use for complex test design issues
 - Escalate when new test patterns needed
 - Hand off test architecture problems
 
 ### With Fix Agent
+
 - Apply QUICK mode for obvious assertion fixes
 - Use DIAGNOSTIC mode for complex test failures
 - Escalate to COMPREHENSIVE for test infrastructure
 
 ### With Main Workflow
+
 - Use during Step 7 (Run Tests)
 - Apply in Step 11 (Review Feedback)
 - Integrate with Step 4 (TDD approach)
@@ -310,6 +321,7 @@ const { mock, restore } = jest;
 ## Quick Reference
 
 ### 5-Minute Fix Checklist
+
 - [ ] Identify failing test(s)
 - [ ] Read error message carefully
 - [ ] Check if test or code is wrong
@@ -318,6 +330,7 @@ const { mock, restore } = jest;
 - [ ] Check for side effects
 
 ### When to Escalate
+
 - **Multiple test files affected**: Use test agent
 - **Test architecture issues**: Use architect agent
 - **Performance test failures**: Use optimizer agent
@@ -326,12 +339,14 @@ const { mock, restore } = jest;
 ## Success Patterns
 
 ### High-Success Scenarios
+
 - Simple assertion errors (95% success)
 - Mock setup issues (85% success)
 - Test data problems (90% success)
 - Environment variable issues (88% success)
 
 ### Challenging Scenarios
+
 - Race condition tests (60% success)
 - Complex async patterns (55% success)
 - Integration test failures (45% success)
@@ -340,6 +355,7 @@ const { mock, restore } = jest;
 ## Test Quality Principles
 
 ### Good Test Characteristics
+
 - **Independent**: Tests don't depend on each other
 - **Repeatable**: Same result every time
 - **Fast**: Quick execution
@@ -347,6 +363,7 @@ const { mock, restore } = jest;
 - **Timely**: Written close to production code
 
 ### Bad Test Smells
+
 - **Flaky tests**: Inconsistent results
 - **Slow tests**: Taking too long
 - **Brittle tests**: Break with minor changes
@@ -356,12 +373,14 @@ const { mock, restore } = jest;
 ## Continuous Improvement
 
 ### Metrics to Track
+
 - Test fix success rate by error type
 - Time to fix test failures
 - Test flakiness reduction
 - Coverage maintenance
 
 ### Learning Points
+
 - Common test failure patterns
 - Effective debugging techniques
 - Test isolation strategies

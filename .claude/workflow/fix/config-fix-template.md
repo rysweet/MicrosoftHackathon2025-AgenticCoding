@@ -5,6 +5,7 @@
 ## Problem Pattern Recognition
 
 ### Triggers
+
 - Environment variable not set
 - Configuration file syntax errors
 - Missing configuration values
@@ -13,6 +14,7 @@
 - Default configuration issues
 
 ### Error Indicators
+
 ```bash
 # Common config error patterns
 "environment variable not set"
@@ -27,6 +29,7 @@
 ## Quick Assessment (30 seconds)
 
 ### Step 1: Config Type Identification
+
 ```bash
 # What type of configuration?
 # - Environment variables (.env, shell)
@@ -37,6 +40,7 @@
 ```
 
 ### Step 2: Error Location
+
 ```bash
 # Where is the error occurring?
 grep -r "config\|setting\|environment" error_log
@@ -44,6 +48,7 @@ find . -name "*.env*" -o -name "config.*" -o -name "*.config.*"
 ```
 
 ### Step 3: Scope Assessment
+
 - **Local**: Development environment only
 - **CI/CD**: Build/deployment environment
 - **Production**: Runtime configuration
@@ -131,6 +136,7 @@ for setting in required_settings:
 ## Validation Steps
 
 ### 1. Syntax Validation
+
 ```bash
 # JSON validation
 cat config.json | python -m json.tool > /dev/null
@@ -144,6 +150,7 @@ python -c "import tomli; tomli.load(open('config.toml', 'rb'))"
 ```
 
 ### 2. Content Validation
+
 ```bash
 # Check required settings present
 python -c "
@@ -157,6 +164,7 @@ else: print('All required settings present')
 ```
 
 ### 3. Application Integration Test
+
 ```bash
 # Test config loading in application
 python -c "from app import load_config; print(load_config())"
@@ -258,13 +266,13 @@ def get_config():
         return {
             "database_url": "sqlite:///test.db",
             "debug": True,
-            "secret_key": "test_secret",
+            "secret_key": "test_secret",  # pragma: allowlist secret
         }
     else:  # development
         return {
             "database_url": "sqlite:///dev.db",
             "debug": True,
-            "secret_key": "dev_secret",
+            "secret_key": "dev_secret",  # pragma: allowlist secret
         }
 ```
 
@@ -328,16 +336,19 @@ jobs:
 ## Integration Points
 
 ### With Fix Agent
+
 - Use QUICK mode for syntax errors
 - Use DIAGNOSTIC mode for complex config issues
 - Escalate environment setup to COMPREHENSIVE
 
 ### With Main Workflow
+
 - Apply during Step 3 (Setup environment)
 - Use in Step 5 (Implementation)
 - Integrate with Step 7 (Pre-commit hooks)
 
 ### With CI Diagnostic Workflow
+
 - Hand off CI-specific configuration issues
 - Use for deployment configuration problems
 - Integrate with environment setup fixes
@@ -345,6 +356,7 @@ jobs:
 ## Quick Reference
 
 ### 3-Minute Fix Checklist
+
 - [ ] Identify config type and location
 - [ ] Check syntax and format
 - [ ] Verify required values present
@@ -352,6 +364,7 @@ jobs:
 - [ ] Validate in application context
 
 ### Emergency Commands
+
 ```bash
 # Quick syntax check
 python -m json.tool config.json
@@ -369,12 +382,14 @@ chmod 600 .env  # Sensitive files
 ## Success Patterns
 
 ### High-Success Scenarios
+
 - JSON/YAML syntax errors (98% success)
 - Missing environment variables (95% success)
 - File permission issues (90% success)
 - Default value settings (88% success)
 
 ### Challenging Scenarios
+
 - Complex configuration hierarchies (60% success)
 - Environment-specific differences (55% success)
 - Security configuration issues (45% success)
@@ -383,6 +398,7 @@ chmod 600 .env  # Sensitive files
 ## Security Considerations
 
 ### Sensitive Configuration
+
 ```bash
 # Never commit sensitive values
 echo ".env" >> .gitignore
@@ -396,6 +412,7 @@ find . -name "*.env" -exec chmod 600 {} \;
 ```
 
 ### Configuration Encryption
+
 ```python
 # Encrypt sensitive config values
 from cryptography.fernet import Fernet
@@ -414,12 +431,14 @@ def encrypt_config(config, key):
 ## Prevention Strategies
 
 ### Development Practices
+
 - Always provide .env.example
 - Document all configuration options
 - Use configuration validation
 - Test with minimal configuration
 
 ### Deployment Practices
+
 - Environment-specific config files
 - Configuration management tools
 - Automated configuration validation
@@ -428,6 +447,7 @@ def encrypt_config(config, key):
 ## Advanced Scenarios
 
 ### Dynamic Configuration
+
 ```python
 # Configuration that can be updated at runtime
 import json
@@ -452,6 +472,7 @@ class DynamicConfig:
 ```
 
 ### Configuration Testing
+
 ```python
 # Test configuration in different scenarios
 import pytest

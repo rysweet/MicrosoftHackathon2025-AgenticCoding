@@ -44,6 +44,7 @@ Intelligent fix workflow optimization that automatically selects the best fix ap
 ### Step 2: Pattern Recognition
 
 **Automatic Pattern Detection**:
+
 ```bash
 # Error pattern matching
 ERROR_PATTERNS = {
@@ -66,39 +67,48 @@ ERROR_PATTERNS = {
 
 ```markdown
 ## QUICK Mode (Rapid Fixes)
+
 **Auto-triggers when**:
+
 - Single file/function affected
 - Clear error message with obvious solution
 - Standard linting/formatting issues
 - Known pattern with template available
 
 **Process**:
+
 1. Apply relevant fix template
 2. Validate fix works
 3. Run minimal tests
 4. Ready for commit
 
 ## DIAGNOSTIC Mode (Root Cause Analysis)
+
 **Auto-triggers when**:
+
 - Unclear error messages
 - Multiple related failures
 - Intermittent/flaky issues
 - No obvious template match
 
 **Process**:
+
 1. Use fix-agent for investigation
 2. Apply systematic debugging
 3. Document findings
 4. Implement targeted solution
 
 ## COMPREHENSIVE Mode (Full Workflow)
+
 **Auto-triggers when**:
+
 - Multiple components affected
 - Architecture changes needed
 - Breaking changes required
 - Security vulnerabilities
 
 **Process**:
+
 1. Integrate with UltraThink workflow
 2. Follow full DEFAULT_WORKFLOW.md process
 3. Multi-agent coordination
@@ -108,6 +118,7 @@ ERROR_PATTERNS = {
 ### Step 4: Fix Execution
 
 **Template-Based Execution**:
+
 ```bash
 # Quick template application
 if fix_pattern in ["import", "config", "quality"]:
@@ -126,6 +137,7 @@ elif scope == "comprehensive":
 ## Command Examples
 
 ### Basic Usage
+
 ```bash
 # Automatic detection and fixing
 /fix
@@ -242,12 +254,14 @@ git add . && git commit # If fix successful
 ## Success Metrics
 
 ### Performance Tracking
+
 - **Fix Success Rate**: % of issues resolved completely
 - **Time to Resolution**: Average fix implementation time
 - **Pattern Recognition Accuracy**: Correct pattern identification rate
 - **Mode Selection Accuracy**: Optimal mode selection rate
 
 ### Usage Analytics
+
 - **Most Common Patterns**: Track frequency of fix types
 - **Template Effectiveness**: Success rate by template
 - **Escalation Patterns**: When quick fixes escalate
@@ -256,6 +270,7 @@ git add . && git commit # If fix successful
 ## Error Handling
 
 ### Graceful Degradation
+
 ```bash
 # If automatic detection fails:
 /fix → Prompts for manual pattern selection
@@ -268,6 +283,7 @@ git add . && git commit # If fix successful
 ```
 
 ### Fallback Strategies
+
 ```bash
 # No clear pattern detected
 → Use analyzer agent for investigation
@@ -285,6 +301,7 @@ git add . && git commit # If fix successful
 ## Quick Reference
 
 ### Most Common Usage Patterns
+
 ```bash
 /fix                 # Auto-detect and fix (90% of cases)
 /fix import          # Import/dependency issues (15% of cases)
@@ -294,6 +311,7 @@ git add . && git commit # If fix successful
 ```
 
 ### Escalation Path
+
 ```bash
 /fix quick          # Template-based (< 5 min)
     ↓ (if fails)
@@ -305,8 +323,10 @@ git add . && git commit # If fix successful
 ## Advanced Features
 
 ### Context Learning
+
 ```markdown
 The fix command learns from usage patterns:
+
 - Tracks successful fix strategies
 - Improves pattern recognition over time
 - Suggests fixes based on historical success
@@ -314,8 +334,10 @@ The fix command learns from usage patterns:
 ```
 
 ### Integration with Claude-Trace
+
 ```markdown
 When AMPLIHACK_USE_TRACE=1:
+
 - Enhanced error context from trace analysis
 - Pattern recognition from historical data
 - Success rate tracking and optimization
@@ -323,8 +345,10 @@ When AMPLIHACK_USE_TRACE=1:
 ```
 
 ### Custom Fix Patterns
+
 ```markdown
 Projects can define custom fix patterns:
+
 1. Add pattern to .claude/workflow/fix/custom/
 2. Follow template format
 3. Register in fix command configuration
@@ -334,6 +358,7 @@ Projects can define custom fix patterns:
 ## Configuration
 
 ### Project-Specific Settings
+
 ```json
 // .claude/config/fix-command.json
 {
@@ -352,6 +377,7 @@ Projects can define custom fix patterns:
 ```
 
 ### Environment Integration
+
 ```bash
 # Pre-commit hook integration
 export AMPLIHACK_FIX_MODE=quick
@@ -363,6 +389,7 @@ export CI=true  # Automatically prioritizes CI fixes
 ## Remember
 
 The fix command is designed to be the primary entry point for issue resolution:
+
 - Start with `/fix` for automatic detection
 - Use specific patterns when you know the issue type
 - Escalate complexity as needed

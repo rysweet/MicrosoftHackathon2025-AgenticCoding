@@ -5,6 +5,7 @@
 ## Problem Pattern Recognition
 
 ### Triggers
+
 - Incorrect calculation results
 - Wrong conditional logic
 - State inconsistencies
@@ -14,6 +15,7 @@
 - Data flow problems
 
 ### Error Indicators
+
 ```bash
 # Common logic error patterns
 "unexpected result"
@@ -29,6 +31,7 @@
 ## Quick Assessment (60 seconds)
 
 ### Step 1: Error Classification
+
 ```python
 # Logic error types:
 # - Calculation errors (math, formulas)
@@ -40,6 +43,7 @@
 ```
 
 ### Step 2: Impact Assessment
+
 ```bash
 # Scope of the logic error:
 # - Single function/method
@@ -49,6 +53,7 @@
 ```
 
 ### Step 3: Reproducibility Check
+
 ```python
 # Can we reproduce the error?
 # - Consistent reproduction steps
@@ -254,6 +259,7 @@ def process_order(order):
 ## Validation Steps
 
 ### 1. Unit Testing Logic
+
 ```python
 # Test normal cases
 def test_calculate_interest_normal():
@@ -279,6 +285,7 @@ def test_calculate_interest_errors():
 ```
 
 ### 2. Integration Testing
+
 ```python
 # Test business logic in context
 def test_order_processing_workflow():
@@ -293,6 +300,7 @@ def test_order_processing_workflow():
 ```
 
 ### 3. Property-Based Testing
+
 ```python
 # Use hypothesis for property testing
 from hypothesis import given, strategies as st
@@ -312,6 +320,7 @@ def test_interest_properties(principal, rate, time):
 ## Debugging Techniques
 
 ### Add Debugging Information
+
 ```python
 # Before (opaque logic)
 def complex_algorithm(data):
@@ -341,6 +350,7 @@ def complex_algorithm(data, debug=False):
 ```
 
 ### Use Assertions for Invariants
+
 ```python
 def binary_search(arr, target):
     left, right = 0, len(arr) - 1
@@ -366,16 +376,19 @@ def binary_search(arr, target):
 ## Integration Points
 
 ### With Fix Agent
+
 - Use DIAGNOSTIC mode for complex logic issues
 - Use COMPREHENSIVE mode for business logic overhauls
 - Escalate algorithm design to architect agent
 
 ### With Main Workflow
+
 - Apply during Step 5 (Implementation)
 - Use in Step 6 (Refactor and Simplify)
 - Integrate with Step 11 (Review feedback)
 
 ### With Other Agents
+
 - **Architect agent**: For algorithm design issues
 - **Tester agent**: For comprehensive test coverage
 - **Reviewer agent**: For logic validation
@@ -384,6 +397,7 @@ def binary_search(arr, target):
 ## Quick Reference
 
 ### 15-Minute Fix Checklist
+
 - [ ] Identify the specific logic error
 - [ ] Reproduce the error consistently
 - [ ] Trace through the logic step by step
@@ -393,6 +407,7 @@ def binary_search(arr, target):
 - [ ] Verify fix doesn't break other functionality
 
 ### Common Debugging Steps
+
 ```python
 # Add logging
 import logging
@@ -411,12 +426,14 @@ print(f"DEBUG: value at step {i}: {value}")
 ## Success Patterns
 
 ### High-Success Scenarios
+
 - Simple calculation errors (85% success)
 - Basic conditional logic (80% success)
 - Missing validation (90% success)
 - Off-by-one errors (75% success)
 
 ### Challenging Scenarios
+
 - Complex state management (50% success)
 - Race conditions (40% success)
 - Business logic edge cases (60% success)
@@ -425,18 +442,21 @@ print(f"DEBUG: value at step {i}: {value}")
 ## Prevention Strategies
 
 ### Development Practices
+
 - Write tests first (TDD)
 - Use type hints for clarity
 - Add comprehensive validation
 - Document business rules clearly
 
 ### Code Review Focus
+
 - Logic correctness
 - Edge case coverage
 - State management safety
 - Business rule compliance
 
 ### Design Patterns
+
 - Use immutable data structures when possible
 - Separate business logic from presentation
 - Implement proper error handling
@@ -445,6 +465,7 @@ print(f"DEBUG: value at step {i}: {value}")
 ## Advanced Scenarios
 
 ### Concurrent Logic Issues
+
 ```python
 import threading
 
@@ -464,6 +485,7 @@ class ThreadSafeCounter:
 ```
 
 ### Complex Business Rules
+
 ```python
 from dataclasses import dataclass
 from typing import List, Optional

@@ -5,6 +5,7 @@
 ## Problem Pattern Recognition
 
 ### Triggers
+
 - ModuleNotFoundError
 - ImportError
 - Circular import errors
@@ -13,6 +14,7 @@
 - Relative import issues
 
 ### Error Indicators
+
 ```bash
 # Common import error patterns
 "ModuleNotFoundError: No module named"
@@ -26,6 +28,7 @@
 ## Quick Assessment (30 seconds)
 
 ### Step 1: Error Type Classification
+
 ```python
 # ModuleNotFoundError: Missing package/module
 # ImportError: Available but import structure wrong
@@ -34,6 +37,7 @@
 ```
 
 ### Step 2: Scope Check
+
 ```bash
 # Single import or widespread?
 grep -r "import missing_module" .
@@ -41,6 +45,7 @@ find . -name "*.py" -exec grep -l "from problematic" {} \;
 ```
 
 ### Step 3: Environment Check
+
 ```bash
 # Virtual environment active?
 echo $VIRTUAL_ENV
@@ -143,6 +148,7 @@ module = importlib.util.module_from_spec(spec)
 ## Validation Steps
 
 ### 1. Test Import Directly
+
 ```python
 # Quick verification
 python -c "import problematic_module; print('Success')"
@@ -150,6 +156,7 @@ node -e "require('problematic_module'); console.log('Success')"
 ```
 
 ### 2. Check in Context
+
 ```bash
 # Run the actual code that was failing
 python script_that_failed.py
@@ -157,6 +164,7 @@ npm run script_that_failed
 ```
 
 ### 3. Dependency Verification
+
 ```bash
 # Verify all dependencies satisfied
 pip check  # Check for dependency conflicts
@@ -268,16 +276,19 @@ declare module 'untyped-package' {
 ## Integration Points
 
 ### With Fix Agent
+
 - Use QUICK mode for obvious missing packages
 - Use DIAGNOSTIC mode for circular imports
 - Escalate complex restructuring to COMPREHENSIVE
 
 ### With Main Workflow
+
 - Apply during Step 5 (Implementation)
 - Use in Step 7 (Pre-commit hooks)
 - Integrate with Step 11 (Review feedback)
 
 ### With Other Agents
+
 - **Builder agent**: For restructuring imports
 - **Architect agent**: For resolving circular dependencies
 - **Cleanup agent**: For optimizing import organization
@@ -285,6 +296,7 @@ declare module 'untyped-package' {
 ## Quick Reference
 
 ### 2-Minute Fix Checklist
+
 - [ ] Identify exact error message
 - [ ] Check if package is installed
 - [ ] Verify import path is correct
@@ -292,6 +304,7 @@ declare module 'untyped-package' {
 - [ ] Fix and verify in context
 
 ### Emergency Commands
+
 ```bash
 # Quick package install
 pip install package_name
@@ -308,12 +321,14 @@ npm ci
 ## Success Patterns
 
 ### High-Success Scenarios
+
 - Missing package installation (98% success)
 - Simple import path fixes (95% success)
 - Typo corrections (99% success)
 - Environment activation (90% success)
 
 ### Challenging Scenarios
+
 - Circular import refactoring (60% success)
 - Complex path resolution (50% success)
 - Version compatibility issues (70% success)
@@ -322,18 +337,21 @@ npm ci
 ## Prevention Strategies
 
 ### Code Organization
+
 - Use absolute imports when possible
 - Minimize circular dependencies
-- Clear package structure with __init__.py
+- Clear package structure with **init**.py
 - Document complex import patterns
 
 ### Dependency Management
+
 - Pin dependency versions
 - Regular dependency updates
 - Use virtual environments
 - Clear installation documentation
 
 ### Development Practices
+
 - Import linting (isort, import-linter)
 - Dependency scanning
 - Clear module boundaries
@@ -342,6 +360,7 @@ npm ci
 ## Advanced Scenarios
 
 ### Dynamic Imports
+
 ```python
 # When static imports won't work
 import importlib
@@ -355,6 +374,7 @@ def load_module(module_name):
 ```
 
 ### Conditional Imports
+
 ```python
 # Platform-specific imports
 import sys
