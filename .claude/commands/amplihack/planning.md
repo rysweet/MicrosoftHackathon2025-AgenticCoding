@@ -1,14 +1,17 @@
 # Planning Command
 
 ## Usage
+
 `/plan <task> [options]`
 
 ## Purpose
+
 **Conversation efficiency optimization command** - Reduces session length by 60% through aggressive upfront planning and requirement gathering.
 
 ## How It Works
 
 ### Automatic Session Classification
+
 The planning command automatically detects session type and complexity:
 
 1. **Feature Development** (5-8 exchange target)
@@ -88,16 +91,19 @@ Every planning session produces:
 ## Integration Points
 
 ### UltraThink Workflow
+
 - Provides structured input for the 14-step workflow
 - Pre-loads all requirement gathering and clarification
 - Enables parallel agent execution planning
 
 ### TodoWrite Integration
+
 - Automatically generates detailed todo lists from planning
 - Creates clear task breakdown with completion criteria
 - Enables progress tracking throughout execution
 
 ### Agent Orchestration
+
 - Plans multi-agent coordination strategies
 - Identifies parallel vs sequential agent usage
 - Optimizes agent handoffs with context preservation
@@ -105,6 +111,7 @@ Every planning session produces:
 ## Success Metrics
 
 **Performance Targets**:
+
 - **Session Length Reduction**: 35.5 exchanges → <15 exchanges (60% improvement)
 - **First Exchange Information Capture**: >90% success rate
 - **Context Re-explanation Incidents**: <10% of sessions
@@ -113,6 +120,7 @@ Every planning session produces:
 ## When to Use
 
 ### Always Use For:
+
 - **Non-trivial tasks** (estimated >30 minutes work)
 - **Multi-step implementations** or investigations
 - **Unclear or incomplete requirements**
@@ -120,6 +128,7 @@ Every planning session produces:
 - **When efficiency is particularly important**
 
 ### Automatic Triggers:
+
 - Task mentions multiple components/systems
 - Requirements contain ambiguous language
 - Implementation involves multiple steps

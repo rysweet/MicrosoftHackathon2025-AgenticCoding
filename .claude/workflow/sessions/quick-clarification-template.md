@@ -6,6 +6,7 @@
 ## Phase 1: Scope Control (Exchange 1)
 
 ### Immediate Boundary Setting
+
 **Define exactly what needs clarification:**
 
 1. **Specific Question**
@@ -29,12 +30,14 @@
 ## Phase 2: Complete Response (Exchange 2)
 
 ### Comprehensive Answer
+
 - **Direct Answer**: Address the specific question clearly
 - **Context**: Provide necessary background information
 - **Examples**: Include relevant examples if requested
 - **Caveats**: Note any limitations or exceptions
 
 ### Preemptive Clarification
+
 - **Common Follow-ups**: Address likely next questions
 - **Related Information**: Include relevant adjacent information
 - **Edge Cases**: Mention important exceptions or special cases
@@ -43,6 +46,7 @@
 ## Phase 3: Validation (Exchange 3 - if needed)
 
 ### Confirmation
+
 - **Understanding Check**: Verify the explanation was clear
 - **Application Guidance**: Provide guidance on how to apply the information
 - **Next Steps**: Suggest logical next steps if applicable
@@ -50,6 +54,7 @@
 ## Success Criteria
 
 **Clarification Complete When**:
+
 - ✅ Original question fully answered
 - ✅ Appropriate level of detail provided
 - ✅ Examples included where helpful
@@ -60,18 +65,21 @@
 ## Efficiency Optimizations
 
 ### Front-Loading Information
+
 - **Anticipate Follow-ups**: Address likely next questions in initial response
 - **Provide Context**: Include enough background to prevent confusion
 - **Use Examples**: Concrete examples prevent misunderstanding
 - **Define Terms**: Clarify any technical terms used
 
 ### Scope Management
+
 - **Stay Focused**: Don't expand beyond the specific question
 - **Prevent Scope Creep**: Politely redirect if questions expand
 - **Clear Boundaries**: Be explicit about what's included/excluded
 - **Time Boxing**: Keep responses appropriately sized
 
 ### Context Preservation
+
 - **Self-Contained**: Response should be understandable without re-reading conversation
 - **Reference Materials**: Include links or references for deeper exploration
 - **Application Notes**: How to practically use the information provided
