@@ -9,6 +9,53 @@ from .base import TimeoutError
 from .logging import log_error
 
 
+class RetryBudget:
+    """Budget manager for retry operations."""
+
+    def __init__(self, max_tokens: int = 10, refill_rate: float = 1.0):
+        """Initialize retry budget.
+
+        Args:
+            max_tokens: Maximum number of retry tokens
+            refill_rate: Rate at which tokens are refilled per second
+        """
+        self.max_tokens = max_tokens
+        self.refill_rate = refill_rate
+        self.tokens = max_tokens
+        self.last_refill = time.time()
+
+    def can_retry(self) -> bool:
+        """Check if retry is allowed based on budget.
+
+        Returns:
+            True if retry tokens are available
+        """
+        self._refill_tokens()
+        return self.tokens > 0
+
+    def consume_token(self) -> bool:
+        """Consume a retry token.
+
+        Returns:
+            True if token was consumed, False if no tokens available
+        """
+        self._refill_tokens()
+        if self.tokens > 0:
+            self.tokens -= 1
+            return True
+        return False
+
+    def _refill_tokens(self) -> None:
+        """Refill tokens based on elapsed time."""
+        now = time.time()
+        elapsed = now - self.last_refill
+        tokens_to_add = int(elapsed * self.refill_rate)
+
+        if tokens_to_add > 0:
+            self.tokens = min(self.max_tokens, self.tokens + tokens_to_add)
+            self.last_refill = now
+
+
 class RetryConfig:
     """Configuration for retry behavior."""
 
