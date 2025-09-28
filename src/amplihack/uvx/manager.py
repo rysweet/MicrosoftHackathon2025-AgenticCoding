@@ -12,6 +12,15 @@ import threading
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from ..errors import (
+    ConfigurationError,
+    RetryConfig,
+    SecurityError,
+    ValidationError,
+    format_error_message,
+    log_error,
+    retry_on_error,
+)
 from ..utils.uvx_detection import detect_uvx_deployment, resolve_framework_paths
 from ..utils.uvx_models import (
     PathResolutionResult,
@@ -37,26 +46,73 @@ class UVXManager:
         self._path_resolution: Optional[PathResolutionResult] = None
         self._lock = threading.RLock()  # Reentrant lock for thread safety
 
+    @retry_on_error(RetryConfig(max_attempts=2, base_delay=0.5))
     def _ensure_detection(self) -> None:
-        """Ensure detection has been performed (thread-safe)."""
+        """Ensure detection has been performed (thread-safe).
+
+        Raises:
+            ConfigurationError: If UVX detection fails
+        """
         with self._lock:
             if self._detection_state is None:
-                self._detection_state = detect_uvx_deployment(self._config)
-                logger.debug(f"UVX detection result: {self._detection_state.result.name}")
-                for reason in self._detection_state.detection_reasons:
-                    logger.debug(f"  - {reason}")
+                try:
+                    self._detection_state = detect_uvx_deployment(self._config)
+                    logger.debug(f"UVX detection result: {self._detection_state.result.name}")
+                    for reason in self._detection_state.detection_reasons:
+                        logger.debug(f"  - {reason}")
 
+                except Exception as e:
+                    error = ConfigurationError(
+                        format_error_message("UVX_DETECTION_FAILED", reason=str(e)),
+                        context={"cause": str(e)},
+                    )
+                    log_error(error)
+                    raise error
+
+    @retry_on_error(RetryConfig(max_attempts=2, base_delay=0.5))
     def _ensure_path_resolution(self) -> None:
-        """Ensure path resolution has been performed."""
+        """Ensure path resolution has been performed.
+
+        Raises:
+            ConfigurationError: If path resolution fails
+        """
         self._ensure_detection()
         if self._path_resolution is None and self._detection_state:
-            self._path_resolution = resolve_framework_paths(self._detection_state, self._config)
-            if self._path_resolution.is_successful and self._path_resolution.location:
-                logger.debug(f"Framework path resolved: {self._path_resolution.location.root_path}")
-            else:
-                logger.debug("Framework path resolution failed")
-                for attempt in self._path_resolution.attempts:
-                    logger.debug(f"  - {attempt['strategy']}: {attempt['notes']}")
+            # Correlation ID functionality removed in cleanup
+            try:
+                self._path_resolution = resolve_framework_paths(self._detection_state, self._config)
+                if self._path_resolution.is_successful and self._path_resolution.location:
+                    logger.debug(
+                        f"Framework path resolved: {self._path_resolution.location.root_path}"
+                    )
+                else:
+                    logger.debug("Framework path resolution failed")
+                    for attempt in self._path_resolution.attempts:
+                        logger.debug(f"  - {attempt['strategy']}: {attempt['notes']}")
+
+                    # Log detailed failure information
+                    failure_reasons = [
+                        f"{attempt['strategy']}: {attempt['notes']}"
+                        for attempt in self._path_resolution.attempts
+                    ]
+                    error = ConfigurationError(
+                        format_error_message(
+                            "UVX_PATH_RESOLUTION_FAILED", reason="; ".join(failure_reasons)
+                        ),
+                        context={"attempts": failure_reasons},
+                    )
+                    log_error(error)
+                    # Don't raise here - path resolution failure should not be fatal
+
+            except Exception as e:
+                if isinstance(e, ConfigurationError):
+                    raise
+                error = ConfigurationError(
+                    f"Unexpected error during path resolution: {e}",
+                    context={"cause": str(e)},
+                )
+                log_error(error)
+                raise error
 
     def is_uvx_environment(self) -> bool:
         """Detect if we're running in a UVX environment.
@@ -152,9 +208,14 @@ class UVXManager:
 
         Returns:
             True if path is safe, False otherwise
+
+        Raises:
+            SecurityError: If path contains obvious security violations
         """
         if path is None:
             return False
+
+        # Correlation ID functionality removed in cleanup
 
         try:
             # Convert to absolute path for validation
@@ -169,11 +230,21 @@ class UVXManager:
             # This catches "../../../etc" patterns while allowing legitimate paths
             # like "/usr/local/my..app/" that happen to contain ".."
             if "/../" in original_str or original_str.startswith("../"):
+                error = SecurityError(
+                    format_error_message("SECURITY_PATH_TRAVERSAL", path=str(path)),
+                    context={"violation_type": "path_traversal", "resource": str(path)},
+                )
+                log_error(error)
                 logger.warning(f"Path contains directory traversal pattern: {path}")
                 return False
 
             # Check for null bytes (path injection)
             if "\x00" in path_str:
+                error = SecurityError(
+                    f"Path contains null bytes: {path}",
+                    context={"violation_type": "null_byte_injection", "resource": str(path)},
+                )
+                log_error(error)
                 logger.warning(f"Path contains null bytes: {path}")
                 return False
 
@@ -205,6 +276,14 @@ class UVXManager:
 
             for prefix in suspicious_prefixes:
                 if check_path == prefix or check_path.startswith(prefix + "/"):
+                    error = SecurityError(
+                        f"Path targets system directory: {abs_path}",
+                        context={
+                            "violation_type": "system_directory_access",
+                            "resource": str(abs_path),
+                        },
+                    )
+                    log_error(error)
                     logger.warning(f"Path targets system directory: {abs_path}")
                     return False
 
@@ -212,6 +291,11 @@ class UVXManager:
             return True
 
         except (OSError, ValueError) as e:
+            error = ValidationError(
+                f"Path validation error: {e}",
+                context={"field": "path", "value": str(path), "cause": str(e)},
+            )
+            log_error(error)
             logger.error(f"Path validation error: {e}")
             return False
 

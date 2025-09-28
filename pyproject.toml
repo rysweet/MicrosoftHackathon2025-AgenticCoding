@@ -3,6 +3,9 @@ name = "microsofthackathon2025-agenticcoding"
 version = "0.1.0"
 description = "Agentic Coding Framework for Microsoft Hackathon 2025"
 requires-python = ">=3.8"
+dependencies = [
+    "pytest>=8.3.5",
+]
 
 [project.scripts]
 amplihack = "amplihack:main"
@@ -55,10 +58,10 @@ python_functions = ["test_*"]
 addopts = [
     "-ra",
     "--strict-markers",
-    "--cov-report=term-missing",
     "--tb=short",
 ]
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "integration: marks tests as integration tests",
+    "asyncio: marks tests as asyncio tests",
 ]
