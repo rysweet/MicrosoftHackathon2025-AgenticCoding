@@ -18,11 +18,11 @@ def sanitize_error_message(message: str) -> str:
 
     # Basic patterns to sanitize
     patterns = [
-        (r'api[_-]?key[=:\s]+["\']?[a-zA-Z0-9_-]{10,}["\']?', r'api_key=***'),
-        (r'token[=:\s]+["\']?[a-zA-Z0-9_.-]{20,}["\']?', r'token=***'),
-        (r'password[=:\s]+["\']?[^\s"\']{8,}["\']?', r'password=***'),
-        (r'/Users/[^/\s]+', r'/Users/***'),
-        (r'/home/[^/\s]+', r'/home/***'),
+        (r'api[_-]?key[=:\s]+["\']?[a-zA-Z0-9_-]{10,}["\']?', r"api_key=***"),
+        (r'token[=:\s]+["\']?[a-zA-Z0-9_.-]{20,}["\']?', r"token=***"),
+        (r'password[=:\s]+["\']?[^\s"\']{8,}["\']?', r"password=***"),
+        (r"/Users/[^/\s]+", r"/Users/***"),
+        (r"/home/[^/\s]+", r"/home/***"),
     ]
 
     sanitized = message
@@ -55,6 +55,6 @@ def sanitize_path(path: str) -> str:
         pass
 
     # Basic path sanitization
-    path_str = re.sub(r'/Users/[^/]+', '/Users/***', path)
-    path_str = re.sub(r'/home/[^/]+', '/home/***', path_str)
+    path_str = re.sub(r"/Users/[^/]+", "/Users/***", path)
+    path_str = re.sub(r"/home/[^/]+", "/home/***", path_str)
     return path_str

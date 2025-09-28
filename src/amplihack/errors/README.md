@@ -32,6 +32,7 @@ error = ProcessError(
 ```
 
 Available error types:
+
 - `AmplihackError` - Base class for all errors
 - `ProcessError` - Process execution failures
 - `NetworkError` - Network operation failures
@@ -105,6 +106,7 @@ The retry system includes built-in security protections:
 Errors are automatically classified as retryable or non-retryable:
 
 **Retryable (by default):**
+
 - `ConnectionError`
 - `TimeoutError`
 - `OSError`
@@ -112,6 +114,7 @@ Errors are automatically classified as retryable or non-retryable:
 - `NetworkError`
 
 **Non-retryable (by default):**
+
 - `ValueError`
 - `TypeError`
 - `SecurityError`
@@ -162,6 +165,7 @@ safe_message = sanitize_error_message(message)
 ```
 
 Sanitized patterns include:
+
 - API keys and tokens
 - Bearer tokens
 - SSH private keys
@@ -317,7 +321,7 @@ message = f"Network request to {url} timed out after {timeout} seconds"
 ```python
 # Good: Errors are automatically sanitized
 try:
-    api_call(api_key="sk-secret123")
+    api_call(api_key="sk-secret123")  # pragma: allowlist secret
 except Exception as e:
     log_error(ProcessError(str(e)))  # Credentials automatically removed
 
@@ -351,6 +355,7 @@ pytest tests/test_error_recovery_integration.py -v
 ### From Basic Exception Handling
 
 **Before:**
+
 ```python
 try:
     subprocess.run(["command"], check=True)
@@ -359,6 +364,7 @@ except subprocess.CalledProcessError as e:
 ```
 
 **After:**
+
 ```python
 from amplihack.errors import ProcessError, retry_on_error, set_correlation_id
 
@@ -379,6 +385,7 @@ except ProcessError as e:
 ### From Manual Retry Logic
 
 **Before:**
+
 ```python
 for attempt in range(3):
     try:
@@ -390,6 +397,7 @@ for attempt in range(3):
 ```
 
 **After:**
+
 ```python
 @retry_on_error(RetryConfig(max_attempts=3, base_delay=1.0))
 def risky_operation():
@@ -450,6 +458,7 @@ logging.getLogger('amplihack.errors').setLevel(logging.DEBUG)
 ```
 
 This provides detailed information about:
+
 - Retry attempts and decisions
 - Correlation ID propagation
 - Error classification

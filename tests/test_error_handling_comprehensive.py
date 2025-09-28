@@ -1,28 +1,26 @@
 """Comprehensive test suite for amplihack error handling system."""
 
-import pytest
 import threading
 import time
-from pathlib import Path
-from typing import Any, Dict, List
-from unittest.mock import Mock, patch
+from unittest.mock import patch
+
+import pytest
 
 from amplihack.errors import (
     AmplihackError,
     ConfigurationError,
+    ErrorLogger,
     NetworkError,
     ProcessError,
     SecurityError,
     TimeoutError,
     ValidationError,
-    get_correlation_id,
-    set_correlation_id,
     clear_correlation_id,
-    ErrorLogger,
+    format_error_message,
+    get_correlation_id,
     sanitize_error_message,
     sanitize_path,
-    format_error_message,
-    ERROR_TEMPLATES,
+    set_correlation_id,
 )
 
 
@@ -40,7 +38,7 @@ class TestAmplihackErrorBase:
             error_code="TEST_001",
             correlation_id=correlation_id,
             context=context,
-            cause=cause
+            cause=cause,
         )
 
         assert str(error) == "Test error"
@@ -56,7 +54,7 @@ class TestAmplihackErrorBase:
             error_code="TEST_001",
             correlation_id="corr-123",
             context={"test": True},
-            cause=ValueError("cause")
+            cause=ValueError("cause"),
         )
 
         error_dict = error.to_dict()
@@ -88,7 +86,7 @@ class TestSpecificErrorTypes:
             message="Field validation failed",
             field="username",
             value="test@user",
-            correlation_id="val-123"
+            correlation_id="val-123",
         )
 
         assert error.field == "username"
@@ -102,7 +100,7 @@ class TestSpecificErrorTypes:
             message="Config missing",
             config_key="api_key",
             config_file="/path/to/config.yml",
-            correlation_id="conf-123"
+            correlation_id="conf-123",
         )
 
         assert error.config_key == "api_key"
@@ -119,7 +117,7 @@ class TestSpecificErrorTypes:
             return_code=1,
             stdout="some output",
             stderr="error output",
-            correlation_id="proc-123"
+            correlation_id="proc-123",
         )
 
         assert error.command == "ls -la"
@@ -136,7 +134,7 @@ class TestSpecificErrorTypes:
             url="https://api.example.com/data",
             status_code=404,
             timeout=30.0,
-            correlation_id="net-123"
+            correlation_id="net-123",
         )
 
         assert error.url == "https://api.example.com/data"
@@ -151,7 +149,7 @@ class TestSpecificErrorTypes:
             message="Path traversal detected",
             violation_type="path_traversal",
             resource="/etc/passwd",
-            correlation_id="sec-123"
+            correlation_id="sec-123",
         )
 
         assert error.violation_type == "path_traversal"
@@ -164,7 +162,7 @@ class TestSpecificErrorTypes:
             message="Operation timed out",
             timeout_duration=30.0,
             operation="database_query",
-            correlation_id="timeout-123"
+            correlation_id="timeout-123",
         )
 
         assert error.timeout_duration == 30.0
@@ -201,7 +199,7 @@ class TestCorrelationIds:
 
     def test_correlation_id_thread_isolation(self):
         """Test that correlation IDs are isolated per thread."""
-        main_corr_id = set_correlation_id("main-thread")
+        set_correlation_id("main-thread")
         thread_corr_id = None
 
         def thread_function():
@@ -242,7 +240,7 @@ class TestErrorLogger:
         """Test basic error logging."""
         error = AmplihackError("Test error")
 
-        with patch.object(self.logger.logger, 'log') as mock_log:
+        with patch.object(self.logger.logger, "log") as mock_log:
             correlation_id = self.logger.log_error(error)
 
             assert correlation_id is not None
@@ -254,7 +252,7 @@ class TestErrorLogger:
         error = AmplihackError("Test error")
         test_corr_id = "test-correlation-123"
 
-        with patch.object(self.logger.logger, 'log') as mock_log:
+        with patch.object(self.logger.logger, "log") as mock_log:
             returned_id = self.logger.log_error(error, correlation_id=test_corr_id)
 
             assert returned_id == test_corr_id
@@ -264,7 +262,7 @@ class TestErrorLogger:
         """Test retry attempt logging."""
         error = ProcessError("Command failed")
 
-        with patch.object(self.logger.logger, 'warning') as mock_warning:
+        with patch.object(self.logger.logger, "warning") as mock_warning:
             self.logger.log_retry_attempt(2, 3, error, 2.5, "test-corr")
 
             mock_warning.assert_called_once()
@@ -275,7 +273,7 @@ class TestErrorLogger:
         """Test retry exhausted logging."""
         error = NetworkError("Connection failed")
 
-        with patch.object(self.logger.logger, 'error') as mock_error:
+        with patch.object(self.logger.logger, "error") as mock_error:
             self.logger.log_retry_exhausted(3, error, "test-corr")
 
             mock_error.assert_called_once()
@@ -312,7 +310,7 @@ class TestSecurityFunctions:
 
     def test_sanitize_urls_with_credentials(self):
         """Test URL credential sanitization."""
-        message = "Failed to connect to https://user:pass@api.example.com/endpoint"
+        message = "Failed to connect to https://user:pass@api.example.com/endpoint"  # pragma: allowlist secret
         sanitized = sanitize_error_message(message)
 
         assert "user:pass" not in sanitized
@@ -336,7 +334,7 @@ class TestSecurityFunctions:
 
     def test_sanitize_preserves_structure(self):
         """Test that sanitization preserves message structure."""
-        message = "Error: api_key=sk-test123 failed at https://user:pass@api.com for john@example.com"
+        message = "Error: api_key=sk-test123 failed at https://user:pass@api.com for john@example.com"  # pragma: allowlist secret
         sanitized = sanitize_error_message(message)
 
         # Should still be readable
@@ -354,11 +352,7 @@ class TestErrorTemplates:
 
     def test_process_failed_template(self):
         """Test process failure template."""
-        message = format_error_message(
-            'PROCESS_FAILED',
-            command='git clone',
-            return_code=128
-        )
+        message = format_error_message("PROCESS_FAILED", command="git clone", return_code=128)
 
         assert "git clone" in message
         assert "128" in message
@@ -366,11 +360,7 @@ class TestErrorTemplates:
 
     def test_network_timeout_template(self):
         """Test network timeout template."""
-        message = format_error_message(
-            'NETWORK_TIMEOUT',
-            url='https://api.example.com',
-            timeout=30
-        )
+        message = format_error_message("NETWORK_TIMEOUT", url="https://api.example.com", timeout=30)
 
         assert "https://api.example.com" in message
         assert "30" in message
@@ -378,20 +368,14 @@ class TestErrorTemplates:
 
     def test_config_missing_template(self):
         """Test missing configuration template."""
-        message = format_error_message(
-            'CONFIG_MISSING',
-            key='database_url'
-        )
+        message = format_error_message("CONFIG_MISSING", key="database_url")
 
         assert "database_url" in message
         assert "missing" in message
 
     def test_validation_error_template(self):
         """Test validation error template."""
-        message = format_error_message(
-            'VALIDATION_REQUIRED',
-            field='username'
-        )
+        message = format_error_message("VALIDATION_REQUIRED", field="username")
 
         assert "username" in message
         assert "required" in message
@@ -399,10 +383,10 @@ class TestErrorTemplates:
     def test_template_sanitization(self):
         """Test that templates sanitize sensitive data."""
         message = format_error_message(
-            'PROCESS_FAILED',
-            command='git clone https://token:secret@github.com/repo.git',
+            "PROCESS_FAILED",
+            command="git clone https://token:secret@github.com/repo.git",  # pragma: allowlist secret
             return_code=1,
-            sanitize=True
+            sanitize=True,
         )
 
         assert "token:secret" not in message
@@ -411,12 +395,12 @@ class TestErrorTemplates:
     def test_unknown_template_raises_error(self):
         """Test that unknown template raises KeyError."""
         with pytest.raises(KeyError):
-            format_error_message('UNKNOWN_TEMPLATE')
+            format_error_message("UNKNOWN_TEMPLATE")
 
     def test_missing_template_variables_raises_error(self):
         """Test that missing variables raise ValueError."""
         with pytest.raises(ValueError):
-            format_error_message('PROCESS_FAILED', command='test')  # Missing return_code
+            format_error_message("PROCESS_FAILED", command="test")  # Missing return_code
 
 
 class TestIntegrationScenarios:
@@ -441,7 +425,7 @@ class TestIntegrationScenarios:
             command="git clone https://github.com/repo.git",
             return_code=128,
             stderr="Permission denied",
-            correlation_id=correlation_id
+            correlation_id=correlation_id,
         )
 
         # Convert to dict and verify structure
@@ -452,7 +436,7 @@ class TestIntegrationScenarios:
 
         # Log the error
         logger = ErrorLogger("integration.test")
-        with patch.object(logger.logger, 'log') as mock_log:
+        with patch.object(logger.logger, "log") as mock_log:
             logged_corr_id = logger.log_error(error)
             assert logged_corr_id == correlation_id
             mock_log.assert_called_once()
@@ -465,7 +449,7 @@ class TestIntegrationScenarios:
             message="Command failed due to invalid input",
             command="process_data",
             return_code=1,
-            cause=original_error
+            cause=original_error,
         )
 
         # Should maintain cause chain
@@ -478,7 +462,7 @@ class TestIntegrationScenarios:
         results = {}
 
         def worker(worker_id: int):
-            corr_id = set_correlation_id(f"worker-{worker_id}")
+            set_correlation_id(f"worker-{worker_id}")
             time.sleep(0.1)  # Simulate work
             results[worker_id] = get_correlation_id()
 
@@ -502,7 +486,7 @@ class TestIntegrationScenarios:
             message="Path traversal attempt detected",
             violation_type="path_traversal",
             resource="../../../etc/passwd",
-            correlation_id="sec-test"
+            correlation_id="sec-test",
         )
 
         # Resource should be sanitized in context
@@ -511,7 +495,7 @@ class TestIntegrationScenarios:
         assert error.resource == "../../../etc/passwd"
 
         # Error message should be safe to log
-        error_dict = error.to_dict()
+        error.to_dict()
         sanitized_message = sanitize_error_message(str(error))
         assert "passwd" not in sanitized_message or "***" in sanitized_message
 

@@ -7,7 +7,7 @@ from typing import Any, Dict, Optional
 class ErrorLogger:
     """Simple error logger."""
 
-    def __init__(self, name: str = 'amplihack.errors'):
+    def __init__(self, name: str = "amplihack.errors"):
         """Initialize error logger.
 
         Args:

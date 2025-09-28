@@ -10,7 +10,7 @@ from .base import (
     ValidationError,
 )
 from .logging import ErrorLogger, log_error
-from .retry import RetryConfig, retry_on_error, retry_async
+from .retry import RetryConfig, retry_async, retry_on_error
 from .security import sanitize_error_message, sanitize_path
 from .templates import ERROR_TEMPLATES, format_error_message, format_process_error
 

@@ -3,20 +3,21 @@
 import logging
 import threading
 import time
+from unittest.mock import patch
+
 import pytest
-from unittest.mock import Mock, patch, MagicMock
 
 from amplihack.errors import (
     AmplihackError,
-    ProcessError,
-    NetworkError,
-    ErrorLogger,
     CorrelationFilter,
-    get_correlation_id,
-    set_correlation_id,
+    ErrorLogger,
+    NetworkError,
+    ProcessError,
     clear_correlation_id,
     generate_correlation_id,
+    get_correlation_id,
     log_error,
+    set_correlation_id,
 )
 
 
@@ -38,7 +39,7 @@ class TestCorrelationIdGeneration:
         assert isinstance(corr_id, str)
         assert len(corr_id) == 16  # 8 bytes hex = 16 characters
         # Should be hexadecimal
-        assert all(c in '0123456789abcdef' for c in corr_id)
+        assert all(c in "0123456789abcdef" for c in corr_id)
 
     def test_generate_correlation_id_uniqueness(self):
         """Test that generated correlation IDs are unique."""
@@ -113,17 +114,14 @@ class TestCorrelationIdManagement:
 
     def test_correlation_id_thread_isolation(self):
         """Test that correlation IDs are isolated between threads."""
-        main_id = set_correlation_id("main-thread")
+        set_correlation_id("main-thread")
         thread_results = {}
 
         def thread_worker(thread_id):
             # Each thread sets its own correlation ID
             corr_id = set_correlation_id(f"thread-{thread_id}")
             time.sleep(0.1)  # Simulate work
-            thread_results[thread_id] = {
-                'set_id': corr_id,
-                'get_id': get_correlation_id()
-            }
+            thread_results[thread_id] = {"set_id": corr_id, "get_id": get_correlation_id()}
 
         threads = []
         for i in range(5):
@@ -140,8 +138,8 @@ class TestCorrelationIdManagement:
         # Each thread should have its own ID
         for i in range(5):
             expected_id = f"thread-{i}"
-            assert thread_results[i]['set_id'] == expected_id
-            assert thread_results[i]['get_id'] == expected_id
+            assert thread_results[i]["set_id"] == expected_id
+            assert thread_results[i]["get_id"] == expected_id
 
     def test_correlation_id_inheritance_in_new_threads(self):
         """Test that new threads start with no correlation ID."""
@@ -186,13 +184,13 @@ class TestCorrelationFilter:
             lineno=0,
             msg="Test message",
             args=(),
-            exc_info=None
+            exc_info=None,
         )
 
         result = filter_instance.filter(record)
 
         assert result is True  # Filter should not block records
-        assert hasattr(record, 'correlation_id')
+        assert hasattr(record, "correlation_id")
         assert record.correlation_id == "test-filter-123"
 
     def test_correlation_filter_with_no_correlation_id(self):
@@ -206,18 +204,18 @@ class TestCorrelationFilter:
             lineno=0,
             msg="Test message",
             args=(),
-            exc_info=None
+            exc_info=None,
         )
 
         result = filter_instance.filter(record)
 
         assert result is True
-        assert hasattr(record, 'correlation_id')
+        assert hasattr(record, "correlation_id")
         assert record.correlation_id == "none"
 
     def test_correlation_filter_thread_specific(self):
         """Test that correlation filter uses thread-specific correlation ID."""
-        main_id = set_correlation_id("main-filter")
+        set_correlation_id("main-filter")
         filter_instance = CorrelationFilter()
         thread_record_correlation = None
 
@@ -232,7 +230,7 @@ class TestCorrelationFilter:
                 lineno=0,
                 msg="Thread message",
                 args=(),
-                exc_info=None
+                exc_info=None,
             )
 
             filter_instance.filter(record)
@@ -250,7 +248,7 @@ class TestCorrelationFilter:
             lineno=0,
             msg="Main message",
             args=(),
-            exc_info=None
+            exc_info=None,
         )
 
         filter_instance.filter(main_record)
@@ -276,27 +274,22 @@ class TestErrorLogger:
 
         assert logger.logger.name == "test.error.logger"
         # Should have correlation filter
-        correlation_filters = [
-            f for f in logger.logger.filters
-            if isinstance(f, CorrelationFilter)
-        ]
+        correlation_filters = [f for f in logger.logger.filters if isinstance(f, CorrelationFilter)]
         assert len(correlation_filters) == 1
 
     def test_error_logger_duplicate_filter_prevention(self):
         """Test that ErrorLogger doesn't add duplicate correlation filters."""
         logger = ErrorLogger("test.logger")
-        original_filter_count = len([
-            f for f in logger.logger.filters
-            if isinstance(f, CorrelationFilter)
-        ])
+        original_filter_count = len(
+            [f for f in logger.logger.filters if isinstance(f, CorrelationFilter)]
+        )
 
         # Re-setup should not add another filter
         logger._setup_logger()
 
-        new_filter_count = len([
-            f for f in logger.logger.filters
-            if isinstance(f, CorrelationFilter)
-        ])
+        new_filter_count = len(
+            [f for f in logger.logger.filters if isinstance(f, CorrelationFilter)]
+        )
 
         assert new_filter_count == original_filter_count
 
@@ -305,7 +298,7 @@ class TestErrorLogger:
         logger = ErrorLogger("test.logger")
         error = AmplihackError("Test error message")
 
-        with patch.object(logger.logger, 'log') as mock_log:
+        with patch.object(logger.logger, "log") as mock_log:
             correlation_id = logger.log_error(error)
 
             assert correlation_id is not None
@@ -316,7 +309,7 @@ class TestErrorLogger:
             args, kwargs = mock_log.call_args
             assert args[0] == logging.ERROR  # Level
             assert "Test error message" in args[1]  # Message
-            assert 'error_data' in kwargs['extra']
+            assert "error_data" in kwargs["extra"]
 
     def test_log_error_with_existing_correlation_id(self):
         """Test logging error with existing correlation ID."""
@@ -324,7 +317,7 @@ class TestErrorLogger:
         logger = ErrorLogger("test.logger")
         error = ProcessError("Process failed")
 
-        with patch.object(logger.logger, 'log') as mock_log:
+        with patch.object(logger.logger, "log") as mock_log:
             returned_id = logger.log_error(error)
 
             assert returned_id == "existing-corr-123"
@@ -336,7 +329,7 @@ class TestErrorLogger:
         error = NetworkError("Network failed")
         custom_id = "custom-correlation-456"
 
-        with patch.object(logger.logger, 'log') as mock_log:
+        with patch.object(logger.logger, "log") as mock_log:
             returned_id = logger.log_error(error, correlation_id=custom_id)
 
             assert returned_id == custom_id
@@ -350,19 +343,19 @@ class TestErrorLogger:
         error = AmplihackError("Test error")
         context = {"operation": "test_operation", "user": "test_user"}
 
-        with patch.object(logger.logger, 'log') as mock_log:
+        with patch.object(logger.logger, "log") as mock_log:
             logger.log_error(error, context=context)
 
             args, kwargs = mock_log.call_args
-            error_data = kwargs['extra']['error_data']
-            assert error_data['context'] == context
+            error_data = kwargs["extra"]["error_data"]
+            assert error_data["context"] == context
 
     def test_log_error_with_custom_level(self):
         """Test logging error with custom log level."""
         logger = ErrorLogger("test.logger")
         error = AmplihackError("Warning level error")
 
-        with patch.object(logger.logger, 'log') as mock_log:
+        with patch.object(logger.logger, "log") as mock_log:
             logger.log_error(error, level=logging.WARNING)
 
             args, kwargs = mock_log.call_args
@@ -373,14 +366,14 @@ class TestErrorLogger:
         logger = ErrorLogger("test.logger")
         error = ProcessError(
             "Command failed: api_key=sk-1234567890abcdef",
-            command="curl -H 'Authorization: Bearer token123'"
+            command="curl -H 'Authorization: Bearer token123'",
         )
 
-        with patch.object(logger.logger, 'log') as mock_log:
+        with patch.object(logger.logger, "log") as mock_log:
             logger.log_error(error)
 
             args, kwargs = mock_log.call_args
-            error_data = kwargs['extra']['error_data']
+            error_data = kwargs["extra"]["error_data"]
 
             # Should not contain sensitive data
             assert "sk-1234567890abcdef" not in str(error_data)
@@ -393,7 +386,7 @@ class TestErrorLogger:
         logger = ErrorLogger("test.logger")
         error = ConnectionError("Network timeout")
 
-        with patch.object(logger.logger, 'warning') as mock_warning:
+        with patch.object(logger.logger, "warning") as mock_warning:
             logger.log_retry_attempt(2, 5, error, 4.0, "retry-corr-123")
 
             mock_warning.assert_called_once()
@@ -404,19 +397,19 @@ class TestErrorLogger:
             assert "ConnectionError" in args[0]
 
             # Verify extra data
-            assert 'retry_data' in kwargs['extra']
-            retry_data = kwargs['extra']['retry_data']
-            assert retry_data['attempt'] == 2
-            assert retry_data['max_attempts'] == 5
-            assert retry_data['delay'] == 4.0
-            assert retry_data['retry_correlation_id'] == "retry-corr-123"
+            assert "retry_data" in kwargs["extra"]
+            retry_data = kwargs["extra"]["retry_data"]
+            assert retry_data["attempt"] == 2
+            assert retry_data["max_attempts"] == 5
+            assert retry_data["delay"] == 4.0
+            assert retry_data["retry_correlation_id"] == "retry-corr-123"
 
     def test_log_retry_exhausted(self):
         """Test retry exhausted logging."""
         logger = ErrorLogger("test.logger")
         final_error = ProcessError("Final process error")
 
-        with patch.object(logger.logger, 'error') as mock_error:
+        with patch.object(logger.logger, "error") as mock_error:
             logger.log_retry_exhausted(3, final_error, "exhausted-corr-456")
 
             mock_error.assert_called_once()
@@ -427,11 +420,11 @@ class TestErrorLogger:
             assert "ProcessError" in args[0]
 
             # Verify extra data
-            assert 'retry_exhausted_data' in kwargs['extra']
-            exhausted_data = kwargs['extra']['retry_exhausted_data']
-            assert exhausted_data['max_attempts'] == 3
-            assert exhausted_data['final_error_type'] == "ProcessError"
-            assert exhausted_data['retry_correlation_id'] == "exhausted-corr-456"
+            assert "retry_exhausted_data" in kwargs["extra"]
+            exhausted_data = kwargs["extra"]["retry_exhausted_data"]
+            assert exhausted_data["max_attempts"] == 3
+            assert exhausted_data["final_error_type"] == "ProcessError"
+            assert exhausted_data["retry_correlation_id"] == "exhausted-corr-456"
 
     def test_log_error_with_structured_error(self):
         """Test logging with error that has to_dict method."""
@@ -440,19 +433,19 @@ class TestErrorLogger:
             "Command failed",
             command="test command",
             return_code=1,
-            correlation_id="struct-corr-789"
+            correlation_id="struct-corr-789",
         )
 
-        with patch.object(logger.logger, 'log') as mock_log:
+        with patch.object(logger.logger, "log") as mock_log:
             logger.log_error(error)
 
             args, kwargs = mock_log.call_args
-            error_data = kwargs['extra']['error_data']
+            error_data = kwargs["extra"]["error_data"]
 
             # Should include data from to_dict method
-            assert error_data['error_type'] == "ProcessError"
-            assert error_data['correlation_id'] == "struct-corr-789"
-            assert error_data['context']['return_code'] == 1
+            assert error_data["error_type"] == "ProcessError"
+            assert error_data["correlation_id"] == "struct-corr-789"
+            assert error_data["context"]["return_code"] == 1
 
 
 class TestGlobalErrorLogging:
@@ -470,7 +463,7 @@ class TestGlobalErrorLogging:
         """Test global log_error function."""
         error = AmplihackError("Global test error")
 
-        with patch('amplihack.errors.logging.error_logger') as mock_logger:
+        with patch("amplihack.errors.logging.error_logger") as mock_logger:
             correlation_id = log_error(error)
 
             mock_logger.log_error.assert_called_once_with(
@@ -483,13 +476,8 @@ class TestGlobalErrorLogging:
         context = {"test": "context"}
         custom_corr_id = "global-test-123"
 
-        with patch('amplihack.errors.logging.error_logger') as mock_logger:
-            returned_id = log_error(
-                error,
-                level=logging.WARNING,
-                correlation_id=custom_corr_id,
-                context=context
-            )
+        with patch("amplihack.errors.logging.error_logger") as mock_logger:
+            log_error(error, level=logging.WARNING, correlation_id=custom_corr_id, context=context)
 
             mock_logger.log_error.assert_called_once_with(
                 error, logging.WARNING, custom_corr_id, context
@@ -513,15 +501,15 @@ class TestConcurrentLogging:
         results = {}
 
         def log_worker(worker_id):
-            correlation_id = set_correlation_id(f"worker-{worker_id}")
+            set_correlation_id(f"worker-{worker_id}")
             error = AmplihackError(f"Error from worker {worker_id}")
 
-            with patch.object(logger.logger, 'log') as mock_log:
+            with patch.object(logger.logger, "log") as mock_log:
                 logged_id = logger.log_error(error)
                 results[worker_id] = {
-                    'correlation_id': logged_id,
-                    'log_called': mock_log.called,
-                    'thread_correlation': get_correlation_id()
+                    "correlation_id": logged_id,
+                    "log_called": mock_log.called,
+                    "thread_correlation": get_correlation_id(),
                 }
 
         threads = []
@@ -536,9 +524,9 @@ class TestConcurrentLogging:
         # Verify each worker had its own correlation ID
         for i in range(5):
             expected_id = f"worker-{i}"
-            assert results[i]['correlation_id'] == expected_id
-            assert results[i]['thread_correlation'] == expected_id
-            assert results[i]['log_called'] is True
+            assert results[i]["correlation_id"] == expected_id
+            assert results[i]["thread_correlation"] == expected_id
+            assert results[i]["log_called"] is True
 
     def test_correlation_filter_thread_safety(self):
         """Test correlation filter thread safety."""
@@ -546,7 +534,7 @@ class TestConcurrentLogging:
         results = {}
 
         def filter_worker(worker_id):
-            correlation_id = set_correlation_id(f"filter-worker-{worker_id}")
+            set_correlation_id(f"filter-worker-{worker_id}")
 
             record = logging.LogRecord(
                 name="test.logger",
@@ -555,14 +543,14 @@ class TestConcurrentLogging:
                 lineno=0,
                 msg=f"Message from worker {worker_id}",
                 args=(),
-                exc_info=None
+                exc_info=None,
             )
 
             filter_result = filter_instance.filter(record)
             results[worker_id] = {
-                'filter_result': filter_result,
-                'record_correlation': record.correlation_id,
-                'thread_correlation': get_correlation_id()
+                "filter_result": filter_result,
+                "record_correlation": record.correlation_id,
+                "thread_correlation": get_correlation_id(),
             }
 
         threads = []
@@ -577,9 +565,9 @@ class TestConcurrentLogging:
         # Verify thread safety
         for i in range(10):
             expected_id = f"filter-worker-{i}"
-            assert results[i]['filter_result'] is True
-            assert results[i]['record_correlation'] == expected_id
-            assert results[i]['thread_correlation'] == expected_id
+            assert results[i]["filter_result"] is True
+            assert results[i]["record_correlation"] == expected_id
+            assert results[i]["thread_correlation"] == expected_id
 
 
 if __name__ == "__main__":

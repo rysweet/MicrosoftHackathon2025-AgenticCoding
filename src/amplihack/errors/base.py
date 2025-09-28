@@ -19,11 +19,13 @@ class AmplihackError(Exception):
 
 class ValidationError(AmplihackError):
     """Raised when input validation fails."""
+
     pass
 
 
 class ConfigurationError(AmplihackError):
     """Raised when configuration is invalid or missing."""
+
     pass
 
 
@@ -44,14 +46,17 @@ class ProcessError(AmplihackError):
 
 class NetworkError(AmplihackError):
     """Raised when network operations fail."""
+
     pass
 
 
 class SecurityError(AmplihackError):
     """Raised when security violations are detected."""
+
     pass
 
 
 class TimeoutError(AmplihackError):
     """Raised when operations timeout."""
+
     pass
