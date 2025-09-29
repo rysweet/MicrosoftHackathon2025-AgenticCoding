@@ -51,7 +51,6 @@ python_functions = ["test_*"]
 addopts = [
     "-ra",
     "--strict-markers",
-    "--cov-report=term-missing",
     "--tb=short",
 ]
 markers = [

@@ -71,8 +71,8 @@ The Docker integration provides:
 
 For using claude code and the amplihack frameowrk with Azure OpenAI models:
 
-- Copy `example.azure.env` to `.azure.env` and then edit it with your Azure
-  OpenAI endpoint settings
+- Copy `.claude/config/example.azure.env` to `.azure.env` and then edit it with
+  your Azure OpenAI endpoint settings
 - Launch amplichack with the proxy to Azure OpenAI:
 -
 
