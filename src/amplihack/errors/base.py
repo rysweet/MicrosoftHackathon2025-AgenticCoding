@@ -62,16 +62,24 @@ class ProcessError(AmplihackError):
 class NetworkError(AmplihackError):
     """Raised when network operations fail."""
 
-    def __init__(self, message: str, timeout: Optional[float] = None, **kwargs):
+    def __init__(
+        self,
+        message: str,
+        timeout: Optional[float] = None,
+        url: Optional[str] = None,
+        **kwargs,
+    ):
         """Initialize network error.
 
         Args:
             message: Error message
             timeout: Timeout duration in seconds
+            url: URL that failed
             **kwargs: Additional arguments for base class
         """
         super().__init__(message, **kwargs)
         self.timeout = timeout
+        self.url = url
 
 
 class SecurityError(AmplihackError):

@@ -106,6 +106,7 @@ class ProxyManager:
                     timeout=120,
                 ),
                 timeout=120.0,
+                url="https://github.com/fuergaosi233/claude-code-proxy.git",
                 correlation_id=corr_id,
                 context={
                     "url": "https://github.com/fuergaosi233/claude-code-proxy.git",
