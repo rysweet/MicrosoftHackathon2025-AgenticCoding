@@ -136,15 +136,25 @@ class TestAnalyzeTracesErrorHandling:
         process_log(str(nonexistent))
 
     @patch("subprocess.run")
-    def test_main_continues_on_subprocess_error(self, mock_run, tmp_path):
+    def test_main_continues_on_subprocess_error(self, mock_run, tmp_path, monkeypatch):
         """Should handle subprocess errors gracefully."""
+        from analyze_traces import main  # noqa: E402
 
         trace_dir = tmp_path / ".claude-trace"
         trace_dir.mkdir()
-        (trace_dir / "session.jsonl").write_text("log")
+        log_file = trace_dir / "session.jsonl"
+        log_file.write_text("log")
 
-        # Mock subprocess to fail
+        # Mock subprocess to raise exception
         mock_run.side_effect = Exception("subprocess failed")
+
+        # Change to test directory and run main
+        monkeypatch.chdir(tmp_path)
+        main()  # Should not crash
+
+        # Logs should not be moved (error path)
+        assert log_file.exists()
+        assert not (trace_dir / "already_processed" / "session.jsonl").exists()
 
     @patch("subprocess.run")
     def test_main_does_not_process_logs_on_failure(self, mock_run, tmp_path, monkeypatch):
