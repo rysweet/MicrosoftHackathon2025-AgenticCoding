@@ -581,16 +581,184 @@ class BundleMigrator:
 - Migration tools provided
 - Documentation for breaking changes
 
+## Integration Patterns
+
+### Claude Code SDK Integration
+
+```python
+from claude_code import Client, Message
+import os
+from typing import Optional
+
+class ClaudeIntegration:
+    """Integration with Claude Code SDK for agent generation."""
+
+    def __init__(self):
+        self.client = Client(
+            api_key=os.environ.get("ANTHROPIC_API_KEY"),
+            timeout=30,
+            max_retries=3
+        )
+        self.rate_limiter = RateLimiter(
+            max_requests_per_minute=50,
+            max_tokens_per_minute=100000
+        )
+
+    async def generate_agent_content(self, intent: Intent) -> str:
+        """Use Claude to generate agent content."""
+
+        # Apply rate limiting
+        await self.rate_limiter.acquire()
+
+        try:
+            response = await self.client.messages.create(
+                model="claude-3-opus-20240229",
+                max_tokens=4000,
+                temperature=0.7,
+                system="You are an expert at creating specialized AI agents.",
+                messages=[
+                    Message(
+                        role="user",
+                        content=self._build_generation_prompt(intent)
+                    )
+                ]
+            )
+
+            return response.content[0].text
+
+        except Exception as e:
+            logging.error(f"Claude API error: {e}")
+            # Fallback to template-based generation
+            return self._fallback_generation(intent)
+```
+
+### GitHub API Integration
+
+```python
+import github
+from github import Github, GithubException
+
+class GitHubIntegration:
+    """Manage GitHub repository creation and management."""
+
+    def __init__(self):
+        self.github = Github(os.environ.get("GITHUB_TOKEN"))
+        self.rate_limit_handler = GitHubRateLimitHandler()
+
+    def create_bundle_repository(
+        self,
+        bundle_name: str,
+        bundle_content: Bundle,
+        private: bool = False
+    ) -> str:
+        """Create GitHub repository for bundle."""
+
+        try:
+            # Check rate limits
+            if not self.rate_limit_handler.can_proceed():
+                self.rate_limit_handler.wait_for_reset()
+
+            # Create repository
+            user = self.github.get_user()
+            repo = user.create_repo(
+                name=bundle_name,
+                description=f"Agent bundle: {bundle_content.description}",
+                private=private,
+                auto_init=True
+            )
+
+            # Upload bundle files
+            for file_path, content in bundle_content.files.items():
+                self._upload_file(repo, file_path, content)
+
+            # Create release
+            repo.create_git_release(
+                tag="v1.0.0",
+                name=f"{bundle_name} v1.0.0",
+                message="Initial bundle release"
+            )
+
+            return repo.clone_url
+
+        except GithubException as e:
+            if e.status == 403 and "rate limit" in str(e):
+                # Handle rate limiting with exponential backoff
+                self._handle_rate_limit(e)
+                return self.create_bundle_repository(bundle_name, bundle_content, private)
+            raise
+```
+
+### UVX Packaging Requirements
+
+```python
+class UvxPackager:
+    """Package bundles for uvx execution."""
+
+    def create_uvx_package(self, bundle: Bundle) -> Package:
+        """Create uvx-compatible package structure."""
+
+        # Generate pyproject.toml with uvx metadata
+        pyproject = f"""
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "{bundle.name}"
+version = "{bundle.version}"
+description = "{bundle.description}"
+requires-python = ">=3.9"
+dependencies = {json.dumps(bundle.dependencies)}
+
+[project.scripts]
+{bundle.name} = "{bundle.name.replace('-', '_')}.__main__:main"
+
+[tool.setuptools]
+packages = ["src/{bundle.name.replace('-', '_')}"]
+        """
+
+        # Create __main__.py for direct uvx execution
+        main_content = """
+#!/usr/bin/env python3
+import sys
+from .cli import main
+
+if __name__ == "__main__":
+    sys.exit(main())
+        """
+
+        # Package structure
+        package_dir = Path(tempfile.mkdtemp())
+        src_dir = package_dir / "src" / bundle.name.replace("-", "_")
+        src_dir.mkdir(parents=True)
+
+        # Write package files
+        (package_dir / "pyproject.toml").write_text(pyproject)
+        (src_dir / "__main__.py").write_text(main_content)
+
+        # Copy bundle content
+        self._copy_bundle_files(bundle, src_dir)
+
+        return Package(path=package_dir, metadata={
+            "name": bundle.name,
+            "version": bundle.version,
+            "uvx_compatible": True
+        })
+```
+
 ## Deployment Architecture
 
 ### Local Development
 
 ```bash
-# Install development version
-pip install -e .
+# Install development version with editable mode
+pip install -e .[dev]
 
-# Run with debug
-amplihack bundle generate --debug "my prompt"
+# Run with debug logging
+AMPLIHACK_DEBUG=1 amplihack bundle generate --verbose "my prompt"
+
+# Use local templates
+amplihack bundle generate --template-dir ./my-templates "my prompt"
 ```
 
 ### Production Deployment
@@ -599,32 +767,72 @@ amplihack bundle generate --debug "my prompt"
 # Install from PyPI
 pip install amplihack-bundle-generator
 
-# Or via uvx
-uvx amplihack-bundle-generator generate "my prompt"
+# Or via uvx for zero-install
+uvx --from amplihack-bundle-generator generate "create security scanner"
+
+# Or directly from GitHub
+uvx --from git+https://github.com/amplihack/bundle-generator generate "my prompt"
 ```
 
 ### CI/CD Integration
 
 ```yaml
-# GitHub Actions workflow
+# GitHub Actions workflow for automatic bundle generation
 name: Generate Bundle
 on:
   issues:
-    types: [opened]
+    types: [opened, labeled]
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: "Bundle generation prompt"
+        required: true
 
 jobs:
   generate:
-    if: contains(github.event.issue.labels.*.name, 'bundle-request')
+    if: contains(github.event.issue.labels.*.name, 'bundle-request') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+
     steps:
-      - uses: amplihack/bundle-generator-action@v1
+      - uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
-          prompt: ${{ github.event.issue.body }}
-          repo: ${{ github.repository }}-bundles
+          python-version: "3.11"
+
+      - name: Install Bundle Generator
+        run: |
+          pip install amplihack-bundle-generator
+
+      - name: Generate Bundle
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PROMPT="${{ github.event.issue.body || github.event.inputs.prompt }}"
+          amplihack bundle generate \
+            --output ./generated-bundle \
+            --publish github \
+            --repo-prefix "bundle-" \
+            "$PROMPT"
+
+      - name: Comment on Issue
+        if: github.event_name == 'issues'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const bundleUrl = process.env.BUNDLE_URL;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `✅ Bundle generated successfully!\n\nExecute with:\n\`\`\`bash\nuvx --from ${bundleUrl} run\n\`\`\``
+            });
 ```
 
 ---
 
-_Document Version: 1.0_
+_Document Version: 2.0_
 _Last Updated: 2025-01-28_
-_Author: Amplihack UltraThink Workflow_
+_Author: Amplihack UltraThink Workflow - Enhanced Edition_
