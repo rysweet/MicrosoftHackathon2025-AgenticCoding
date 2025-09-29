@@ -41,6 +41,10 @@ def main():
             distribute_command(args)
         elif args.command == "pipeline":
             pipeline_command(args)
+        elif args.command == "create-repo":
+            create_repo_command(args)
+        elif args.command == "update":
+            update_command(args)
         else:
             parser.print_help()
             sys.exit(1)
@@ -71,7 +75,7 @@ def create_parser() -> argparse.ArgumentParser:
     gen_parser = subparsers.add_parser("generate", help="Generate agent bundle from prompt")
     gen_parser.add_argument("prompt", nargs="?", help="Natural language prompt")
     gen_parser.add_argument("-f", "--file", help="Read prompt from file")
-    gen_parser.add_argument("-o", "--output", help="Output directory", default="./bundles")
+    gen_parser.add_argument("-o", "--output", help="Output directory", required=True)
     gen_parser.add_argument(
         "--complexity", choices=["simple", "standard", "advanced"], default="standard"
     )
@@ -97,6 +101,32 @@ def create_parser() -> argparse.ArgumentParser:
     dist_parser.add_argument("-r", "--repository", help="Target repository name")
     dist_parser.add_argument("--release", action="store_true", help="Create GitHub release")
     dist_parser.add_argument("--public", action="store_true", help="Make repository public")
+
+    # Create-repo command
+    repo_parser = subparsers.add_parser("create-repo", help="Create GitHub repository for bundle")
+    repo_parser.add_argument("bundle_path", help="Path to bundle directory")
+    repo_parser.add_argument("--name", help="Repository name (default: bundle name)")
+    repo_parser.add_argument("--private", action="store_true", help="Create private repository")
+    repo_parser.add_argument("--push", action="store_true", help="Initialize git and push")
+    repo_parser.add_argument("--org", help="GitHub organization (optional)")
+
+    # Update command (check-only mode currently)
+    update_parser = subparsers.add_parser(
+        "update", help="Check for bundle updates (full update coming soon)"
+    )
+    update_parser.add_argument("bundle_path", help="Path to bundle directory")
+    update_parser.add_argument(
+        "--check-only",
+        action="store_true",
+        default=True,  # Always check-only for now
+        help="Check for updates (currently the only mode)",
+    )
+    update_parser.add_argument(
+        "--no-backup", action="store_true", help="[Preview] Skip backup creation"
+    )
+    update_parser.add_argument(
+        "--force", action="store_true", help="[Preview] Update even with customizations"
+    )
 
     # Pipeline command (all-in-one)
     pipe_parser = subparsers.add_parser("pipeline", help="Run complete pipeline")
@@ -348,6 +378,89 @@ def pipeline_command(args):
     print(f"✅ Agents: {len(bundle.agents)}")
     print(f"📏 Size: {bundle.total_size_kb:.1f} KB")
     print("=" * 50)
+
+
+def create_repo_command(args):
+    """Execute the create-repo command."""
+    from .repository_creator import RepositoryCreator
+
+    logger.info("Creating GitHub repository for bundle...")
+
+    bundle_path = Path(args.bundle_path)
+    if not bundle_path.exists():
+        logger.error(f"Bundle not found: {bundle_path}")
+        sys.exit(1)
+
+    creator = RepositoryCreator()
+    result = creator.create_repository(
+        bundle_path=bundle_path,
+        repo_name=args.name,
+        private=args.private,
+        push=args.push,
+        organization=args.org,
+    )
+
+    if result.success:
+        print("\n✅ Repository created successfully!")
+        print(f"   URL: {result.url}")
+        if args.push:
+            print(f"   Code pushed to: {result.repository}")
+    else:
+        logger.error(f"Repository creation failed: {result.error}")
+        sys.exit(1)
+
+
+def update_command(args):
+    """Execute the update command."""
+    from .update_manager import UpdateManager
+
+    logger.info("Checking for bundle updates...")
+
+    bundle_path = Path(args.bundle_path)
+    if not bundle_path.exists():
+        logger.error(f"Bundle not found: {bundle_path}")
+        sys.exit(1)
+
+    manager = UpdateManager()
+
+    # Check for updates
+    info = manager.check_for_updates(bundle_path)
+
+    print(f"\nCurrent version: {info.current_version}")
+    print(f"Latest version:  {info.latest_version}")
+
+    if not info.available:
+        print("\n✅ Bundle is up to date!")
+        return
+
+    print("\n📦 Updates available!")
+    if info.changes:
+        print("\nChanges:")
+        for change in info.changes[:10]:
+            print(f"  - {change}")
+
+    # If check-only, stop here
+    if args.check_only:
+        return
+
+    # Perform update
+    print("\nUpdating bundle...")
+    result = manager.update_bundle(
+        bundle_path, preserve_edits=not args.force, backup=not args.no_backup
+    )
+
+    if result.success:
+        print("\n✅ Update complete!")
+        print(f"   Updated files: {len(result.updated_files)}")
+        if result.preserved_files:
+            print(f"   Preserved (user-modified): {len(result.preserved_files)}")
+        if result.conflicts:
+            print("\n⚠️  Conflicts (manual review needed):")
+            for conflict in result.conflicts[:5]:
+                print(f"   - {conflict}")
+    else:
+        logger.error(f"Update failed: {result.error}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
