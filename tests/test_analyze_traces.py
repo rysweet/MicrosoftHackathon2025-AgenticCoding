@@ -138,7 +138,6 @@ class TestAnalyzeTracesErrorHandling:
     @patch("subprocess.run")
     def test_main_continues_on_subprocess_error(self, mock_run, tmp_path):
         """Should handle subprocess errors gracefully."""
-        from analyze_traces import main  # noqa: E402
 
         trace_dir = tmp_path / ".claude-trace"
         trace_dir.mkdir()
@@ -146,6 +145,44 @@ class TestAnalyzeTracesErrorHandling:
 
         # Mock subprocess to fail
         mock_run.side_effect = Exception("subprocess failed")
+
+    @patch("subprocess.run")
+    def test_main_does_not_process_logs_on_failure(self, mock_run, tmp_path, monkeypatch):
+        """Should NOT move logs if amplihack fails with non-zero exit code."""
+        from analyze_traces import main  # noqa: E402
+
+        # Create test structure
+        trace_dir = tmp_path / ".claude-trace"
+        trace_dir.mkdir()
+        log_file = trace_dir / "session.jsonl"
+        log_file.write_text("log")
+
+        # Mock subprocess to fail (exit code 1)
+        mock_run.return_value = Mock(returncode=1)
+
+        # Change to test directory
+        monkeypatch.chdir(tmp_path)
+        main()
+
+        # Logs should NOT be moved
+        assert log_file.exists()
+        assert not (trace_dir / "already_processed" / "session.jsonl").exists()
+
+    @patch("builtins.print")
+    def test_main_handles_empty_log_list(self, mock_print, tmp_path, monkeypatch):
+        """Should print message and exit when no logs found."""
+        from analyze_traces import main  # noqa: E402
+
+        # Create empty trace directory
+        trace_dir = tmp_path / ".claude-trace"
+        trace_dir.mkdir()
+
+        # Change to test directory
+        monkeypatch.chdir(tmp_path)
+        main()
+
+        # Should have printed the "no logs" message
+        mock_print.assert_called_once_with("No unprocessed trace logs found.")
 
         # Should not crash
         with patch("analyze_traces.Path.home", return_value=tmp_path):

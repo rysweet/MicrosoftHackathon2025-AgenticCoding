@@ -10,7 +10,7 @@ def find_unprocessed_logs(trace_dir: str) -> List[str]:
     trace_path = Path(trace_dir)
     if not trace_path.exists():
         return []
-    return [str(f) for f in trace_path.glob("*.jsonl") if "already_processed" not in str(f)]
+    return [str(f) for f in trace_path.glob("*.jsonl") if f.parent.name != "already_processed"]
 
 
 def build_analysis_prompt(log_files: List[str]) -> str:
@@ -47,9 +47,15 @@ def main() -> None:
         print("No unprocessed trace logs found.")
         return
     try:
-        subprocess.run(["amplihack", build_analysis_prompt(log_files)], check=False)
-        for log_file in log_files:
-            process_log(log_file)
+        result = subprocess.run(["amplihack", build_analysis_prompt(log_files)], check=False)
+        if result.returncode == 0:
+            for log_file in log_files:
+                process_log(log_file)
+            print(f"Successfully processed {len(log_files)} log file(s).")
+        else:
+            print(
+                f"Analysis failed with exit code {result.returncode}. Logs not marked as processed."
+            )
     except Exception as e:
         print(f"Error during analysis: {e}")
 
