@@ -15,16 +15,64 @@ As a developer, I want to describe an agentic behavior in natural language so th
 #### FR-1: Natural Language Input Processing
 
 - System SHALL accept natural language prompts describing desired agentic behavior
-- System SHALL parse and extract intent from user prompts
-- System SHALL handle ambiguous prompts through clarification dialogue
-- System SHALL support multiple input formats (CLI, API, file)
+- System SHALL parse and extract intent from user prompts using NLP techniques:
+  - **Entity extraction**: Identify agent types, tools, languages, frameworks
+  - **Intent classification**: Map to predefined categories (monitoring, testing, development, etc.)
+  - **Confidence scoring**: Assign 0-100% confidence to extracted intents
+- System SHALL handle ambiguous prompts through clarification dialogue:
+  ```python
+  # Example clarification flow
+  if confidence_score < 70:
+      options = suggest_similar_intents(parsed_prompt)
+      user_choice = prompt_user_selection(options)
+  ```
+- System SHALL support multiple input formats:
+  - **CLI**: `amplihack bundle generate "your prompt"`
+  - **API**: `POST /api/v1/bundles/generate {"prompt": "..."}`
+  - **File**: `amplihack bundle generate --file requirements.txt`
 
 #### FR-2: Agent Generation
 
-- System SHALL generate specialized agent definitions based on extracted intent
-- System SHALL create custom prompts tailored to specific use cases
-- System SHALL generate appropriate workflows for agent coordination
-- System SHALL produce test suites for generated agents
+- System SHALL generate specialized agent definitions with this schema:
+  ```yaml
+  # Agent definition format
+  name: security-scanner
+  type: specialized
+  base: analyzer # Inherits from base agent
+  capabilities:
+    - vulnerability_detection
+    - code_analysis
+    - report_generation
+  prompts:
+    system: "You are a security analysis expert..."
+    user_template: "Analyze {code} for {vulnerability_types}"
+  tools:
+    - semgrep
+    - bandit
+  ```
+- System SHALL create custom prompts using template substitution:
+  ```python
+  template = load_template(agent_type)
+  prompt = template.substitute(
+      domain=extracted_domain,
+      tools=selected_tools,
+      constraints=user_constraints
+  )
+  ```
+- System SHALL generate workflows with dependency management:
+  ```yaml
+  workflow:
+    - step: scan
+      agent: security-scanner
+      depends_on: []
+    - step: analyze
+      agent: vulnerability-analyzer
+      depends_on: [scan]
+    - step: report
+      agent: report-generator
+      depends_on: [analyze]
+  ```
+- System SHALL produce test suites with 80% coverage minimum
 
 #### FR-3: Bundle Creation
 
@@ -44,9 +92,36 @@ As a developer, I want to describe an agentic behavior in natural language so th
 
 #### IR-1: Claude Integration
 
-- System SHALL include claude-trace debugging capabilities
-- System SHALL integrate with Claude Code SDK
-- System SHALL maintain API key security
+- System SHALL include claude-trace debugging capabilities:
+
+  ```python
+  # Claude-trace integration
+  from amplihack.utils import claude_trace
+
+  @claude_trace.trace("bundle_generation")
+  def generate_bundle(prompt: str) -> Bundle:
+      # Automatic tracing of generation process
+      pass
+  ```
+
+- System SHALL integrate with Claude Code SDK:
+
+  ```python
+  # SDK integration pattern
+  from claude_code import Client
+
+  client = Client(
+      api_key=os.environ.get("ANTHROPIC_API_KEY"),
+      timeout=30,
+      max_retries=3
+  )
+  ```
+
+- System SHALL maintain API key security through:
+  - **Environment variables**: Never hardcode keys
+  - **Key rotation**: Support automatic rotation every 90 days
+  - **Scoped access**: Separate keys for different environments
+  - **Audit logging**: Track all API key usage
 
 #### IR-2: GitHub Integration
 
@@ -58,15 +133,61 @@ As a developer, I want to describe an agentic behavior in natural language so th
 
 ### Performance Requirements
 
-- NFR-1: Bundle generation SHALL complete in less than 30 seconds
-- NFR-2: Generated bundles SHALL execute within 10 seconds of invocation
-- NFR-3: System SHALL support parallel bundle generation
+- NFR-1: Bundle generation performance targets:
+  - **Single agent bundle**: < 5 seconds (p50), < 8 seconds (p95), < 12 seconds (p99)
+  - **Multi-agent bundle (2-5 agents)**: < 15 seconds (p50), < 20 seconds (p95), < 25 seconds (p99)
+  - **Complex bundle (>5 agents)**: < 30 seconds (p50), < 45 seconds (p95), < 60 seconds (p99)
+  - **Memory usage**: < 500MB RAM increase during generation
+  - **Disk I/O**: < 100MB temporary files
+- NFR-2: Bundle execution performance:
+  - **Cold start**: < 10 seconds from uvx invocation to first output
+  - **Warm start**: < 2 seconds with cached dependencies
+  - **Memory footprint**: < 200MB base + 50MB per agent
+  - **CPU usage**: < 25% of single core during idle
+- NFR-3: Parallel generation capacity:
+  - **Concurrent bundles**: Support up to 10 simultaneous generations
+  - **Resource isolation**: Each generation in separate process
+  - **Throughput**: 100 bundles/hour on 8-core machine
+  - **Queue management**: FIFO with priority override
 
 ### Security Requirements
 
-- NFR-4: System SHALL NOT expose API keys or secrets in bundles
-- NFR-5: System SHALL validate all generated code for security vulnerabilities
-- NFR-6: System SHALL prevent prompt injection attacks
+- NFR-4: Secret protection mechanisms:
+
+  ```python
+  # Automatic secret detection and removal
+  SECRET_PATTERNS = [
+      r'api[_-]?key["\']?\s*[:=]\s*["\']?[\w-]+',
+      r'token["\']?\s*[:=]\s*["\']?[\w-]+',
+      r'password["\']?\s*[:=]\s*["\']?[\w-]+'
+  ]
+
+  def sanitize_bundle(bundle_path: Path):
+      for pattern in SECRET_PATTERNS:
+          scan_and_remove(bundle_path, pattern)
+  ```
+
+- NFR-5: Code validation pipeline:
+  - **Static analysis**: semgrep with OWASP ruleset
+  - **Dependency scanning**: Check for CVEs in dependencies
+  - **AST validation**: Prevent dangerous patterns (eval, exec)
+  - **Import restrictions**: Whitelist allowed modules
+  ```bash
+  # Validation command
+  semgrep --config=auto --severity=ERROR bundle/
+  safety check --json bundle/requirements.txt
+  ```
+- NFR-6: Prompt injection prevention:
+  ```python
+  # Input sanitization
+  def sanitize_prompt(prompt: str) -> str:
+      # Remove command injection attempts
+      prompt = re.sub(r'[;&|`$]', '', prompt)
+      # Escape special characters
+      prompt = html.escape(prompt)
+      # Length limit
+      return prompt[:1000]
+  ```
 
 ### Compatibility Requirements
 
@@ -268,31 +389,48 @@ uvx --from github.com/user/code-review-agent review --pr 123
 - Bundle packager
 - Distribution system
 
-## Timeline
+## Implementation Phases
 
-### Phase 1: Core Infrastructure (Days 1-2)
+### Phase 1: Core Infrastructure
 
-- Bundle generator module
-- YAML configuration parser
-- Basic template system
+**Dependencies**: None
+**Success Criteria**: Basic bundle structure can be generated from hardcoded template
 
-### Phase 2: Agent Generation (Days 3-4)
+- Bundle generator module with plugin architecture
+- YAML configuration parser with schema validation
+- Template system with Jinja2 for variable substitution
+- File system operations with atomic writes
 
-- Prompt understanding system
-- Agent template library
-- Custom agent generation
+### Phase 2: Agent Generation
 
-### Phase 3: Packaging & Distribution (Days 5-6)
+**Dependencies**: Phase 1 complete, template library available
+**Success Criteria**: Generate working agent from natural language prompt
 
-- uvx packaging integration
-- GitHub repository creation
-- Zero-install execution
+- Prompt parser using spaCy for NLP
+- Intent extraction with confidence scoring
+- Agent template library with 10+ base templates
+- Custom agent generation through template composition
 
-### Phase 4: Testing & Documentation (Day 7)
+### Phase 3: Packaging & Distribution
 
-- Test generation
-- Documentation automation
-- Example bundles
+**Dependencies**: Phase 2 complete, agents generate successfully
+**Success Criteria**: Bundle executes via uvx from GitHub
+
+- uvx packaging with pyproject.toml generation
+- GitHub API integration for repository creation
+- Zero-install execution with dependency bundling
+- Version management and update mechanisms
+
+### Phase 4: Testing & Validation
+
+**Dependencies**: Phase 3 complete, end-to-end flow works
+**Success Criteria**: 80% test coverage, all security scans pass
+
+- Unit tests for all modules (pytest)
+- Integration tests for complete workflows
+- Security validation pipeline
+- Performance benchmarking suite
+- Documentation generation (Sphinx)
 
 ## Appendices
 
