@@ -35,6 +35,48 @@ class ErrorLogger:
             message += f" | Context: {context}"
         self.logger.log(level, message)
 
+    def log_retry_attempt(
+        self,
+        error: Exception,
+        attempt: int,
+        max_attempts: int,
+        delay: float,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Log a retry attempt.
+
+        Args:
+            error: Exception that triggered the retry
+            attempt: Current attempt number
+            max_attempts: Maximum number of attempts
+            delay: Delay before next attempt
+            context: Additional context
+        """
+        message = f"Retry attempt {attempt}/{max_attempts} for {error.__class__.__name__}: {error} (delay: {delay:.2f}s)"
+        if context:
+            message += f" | Context: {context}"
+        self.logger.info(message)
+
+    def log_retry_exhausted(
+        self,
+        error: Exception,
+        attempts: int,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Log retry exhaustion.
+
+        Args:
+            error: Final exception after all retries
+            attempts: Total number of attempts made
+            context: Additional context
+        """
+        message = (
+            f"Retry exhausted after {attempts} attempts for {error.__class__.__name__}: {error}"
+        )
+        if context:
+            message += f" | Context: {context}"
+        self.logger.error(message)
+
 
 # Global error logger instance
 error_logger = ErrorLogger()
