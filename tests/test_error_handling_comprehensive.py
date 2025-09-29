@@ -294,10 +294,11 @@ class TestSecurityFunctions:
 
     def test_sanitize_bearer_tokens(self):
         """Test Bearer token sanitization."""
-        message = "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+        # Using obviously fake token that won't trigger secret detection
+        message = "Authorization: Bearer test_fake_bearer_token_12345_not_real"
         sanitized = sanitize_error_message(message)
 
-        assert "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" not in sanitized
+        assert "test_fake_bearer_token_12345_not_real" not in sanitized
         assert "Bearer ***" in sanitized
 
     def test_sanitize_file_paths(self):
