@@ -131,7 +131,7 @@ def example_complete_pipeline():
         generator = AgentGenerator()
         builder = BundleBuilder()
         packager = UVXPackager()
-        distributor = GitHubDistributor()
+        GitHubDistributor()
 
         # Stage 1: Parse and Extract
         print("\n[Stage 1] Parsing and extracting requirements...")
