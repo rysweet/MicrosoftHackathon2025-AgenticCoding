@@ -439,39 +439,262 @@ class SecretManager:
 
 ## Testing Strategy
 
+### Three-Stage Testing Pipeline
+
+**CRITICAL**: The Agent Bundle Generator follows a rigorous three-stage testing workflow to ensure quality at each stage:
+
+```mermaid
+graph LR
+    A[Generate Agent] --> B[Test Agent Directly]
+    B --> C{Agent Works?}
+    C -->|Yes| D[Bundle Agent]
+    C -->|No| E[Fix Agent]
+    E --> B
+    D --> F[Test Bundle]
+    F --> G{Bundle Works?}
+    G -->|Yes| H[Deploy Bundle]
+    G -->|No| I[Fix Bundling]
+    I --> D
+```
+
+#### Stage 1: Direct Agent Testing (Pre-Bundle)
+
+```python
+class AgentValidator:
+    """Validate agent functionality before bundling."""
+
+    def test_agent_directly(self, agent: AgentDefinition) -> TestResult:
+        """Test agent in isolation before bundling."""
+
+        # 1. Validate agent structure
+        structure_valid = self._validate_structure(agent)
+        if not structure_valid:
+            return TestResult(passed=False, reason="Invalid agent structure")
+
+        # 2. Test agent capabilities
+        test_cases = self._generate_test_cases(agent.capabilities)
+        for test_case in test_cases:
+            # Execute agent with test input
+            result = self._execute_agent(agent, test_case.input)
+
+            # Validate output meets expectations
+            if not self._validate_output(result, test_case.expected):
+                return TestResult(
+                    passed=False,
+                    reason=f"Failed test case: {test_case.name}",
+                    details={"input": test_case.input, "output": result}
+                )
+
+        # 3. Performance validation
+        perf_result = self._test_performance(agent)
+        if perf_result.response_time > agent.sla_ms:
+            return TestResult(
+                passed=False,
+                reason=f"Performance SLA violated: {perf_result.response_time}ms > {agent.sla_ms}ms"
+            )
+
+        return TestResult(passed=True, metrics=perf_result)
+
+    def _execute_agent(self, agent: AgentDefinition, input: str) -> str:
+        """Execute agent in test harness."""
+        # Create isolated test environment
+        test_env = self._create_test_environment()
+
+        # Load agent into test harness
+        harness = TestHarness(agent, test_env)
+
+        # Execute with timeout
+        return harness.execute(input, timeout=30)
+```
+
+#### Stage 2: Bundle Generation with Validation
+
+```python
+class BundleGenerator:
+    """Generate bundle only after agent validation passes."""
+
+    def generate_bundle(self, agent: AgentDefinition) -> Bundle:
+        """Generate bundle with validation gates."""
+
+        # Gate 1: Pre-bundle validation
+        validation_result = self.agent_validator.test_agent_directly(agent)
+        if not validation_result.passed:
+            raise BundleGenerationError(
+                f"Agent validation failed: {validation_result.reason}"
+            )
+
+        # Gate 2: Bundle creation
+        bundle = self._create_bundle_structure(agent)
+
+        # Gate 3: Post-bundle validation
+        bundle_valid = self._validate_bundle_integrity(bundle)
+        if not bundle_valid:
+            raise BundleGenerationError("Bundle integrity check failed")
+
+        return bundle
+```
+
+#### Stage 3: Bundle Testing (Post-Bundle)
+
+```python
+class BundleValidator:
+    """Validate bundle functionality after generation."""
+
+    def test_bundle_execution(self, bundle: Bundle) -> TestResult:
+        """Test complete bundle execution via uvx."""
+
+        # 1. Test uvx packaging
+        package = self._package_for_uvx(bundle)
+        if not self._validate_package_structure(package):
+            return TestResult(passed=False, reason="Invalid package structure")
+
+        # 2. Test zero-install execution
+        test_result = self._test_uvx_execution(package)
+        if not test_result.success:
+            return TestResult(
+                passed=False,
+                reason="uvx execution failed",
+                details=test_result.error
+            )
+
+        # 3. Test all bundled agents work together
+        integration_result = self._test_agent_integration(bundle)
+        if not integration_result.passed:
+            return TestResult(
+                passed=False,
+                reason="Agent integration failed",
+                details=integration_result.failures
+            )
+
+        # 4. Test bundle matches original agent behavior
+        behavior_match = self._compare_behaviors(
+            original_agent=bundle.source_agent,
+            bundled_execution=test_result.output
+        )
+        if behavior_match.deviation > 0.05:  # 5% tolerance
+            return TestResult(
+                passed=False,
+                reason=f"Behavior deviation: {behavior_match.deviation:.2%}",
+                details=behavior_match.differences
+            )
+
+        return TestResult(passed=True, bundle_ready=True)
+
+    def _test_uvx_execution(self, package: Package) -> ExecutionResult:
+        """Test execution via uvx command."""
+        import subprocess
+
+        # Create temporary directory for test
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Deploy package
+            package_path = Path(tmpdir) / "test-bundle"
+            self._deploy_package(package, package_path)
+
+            # Execute via uvx
+            result = subprocess.run(
+                ["uvx", "--from", str(package_path), "run", "--test"],
+                capture_output=True,
+                timeout=60
+            )
+
+            return ExecutionResult(
+                success=result.returncode == 0,
+                output=result.stdout.decode(),
+                error=result.stderr.decode() if result.returncode != 0 else None
+            )
+```
+
 ### Test Architecture
 
 ```
-Unit Tests (60%)
+Pre-Bundle Tests (40%)
+├── Agent Validation Tests
+│   ├── Structure Tests
+│   ├── Capability Tests
+│   └── Performance Tests
 ├── Parser Tests
-├── Generator Tests
-├── Builder Tests
-└── Package Tests
+└── Generator Tests
 
-Integration Tests (30%)
-├── End-to-end Generation
-├── uvx Execution
-└── GitHub Integration
+Bundle Tests (40%)
+├── Package Structure Tests
+├── uvx Execution Tests
+├── Agent Integration Tests
+└── Behavior Comparison Tests
 
-E2E Tests (10%)
-├── Complete Workflows
-└── Real Bundle Creation
+E2E Tests (20%)
+├── Complete Generation Flow
+├── Multi-Agent Bundles
+└── Production Deployment
 ```
 
 ### Test Data Management
 
 ```python
-# Fixture structure
+# Enhanced fixture structure for three-stage testing
 fixtures/
-├── prompts/
+├── agents/
 │   ├── valid/
-│   └── invalid/
-├── templates/
-│   ├── base/
-│   └── custom/
-└── bundles/
-    ├── expected/
-    └── generated/
+│   │   ├── monitoring-agent.yaml
+│   │   ├── testing-agent.yaml
+│   │   └── security-agent.yaml
+│   └── test-cases/
+│       ├── monitoring-tests.json
+│       ├── testing-tests.json
+│       └── security-tests.json
+├── bundles/
+│   ├── pre-bundle-validation/
+│   ├── post-bundle-validation/
+│   └── integration-tests/
+└── performance/
+    ├── benchmarks.yaml
+    └── sla-requirements.yaml
+```
+
+### Automated Test Pipeline
+
+```yaml
+# CI/CD test pipeline
+name: Agent Bundle Test Pipeline
+on: [push, pull_request]
+
+jobs:
+  stage-1-agent-testing:
+    name: Test Agent Directly
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate Agent Structure
+        run: pytest tests/test_agent_structure.py
+
+      - name: Test Agent Capabilities
+        run: pytest tests/test_agent_capabilities.py
+
+      - name: Performance Validation
+        run: pytest tests/test_agent_performance.py
+
+  stage-2-bundle-generation:
+    name: Generate Bundle
+    needs: stage-1-agent-testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Bundle
+        run: amplihack bundle generate --validate
+
+      - name: Validate Bundle Structure
+        run: pytest tests/test_bundle_structure.py
+
+  stage-3-bundle-testing:
+    name: Test Bundle Execution
+    needs: stage-2-bundle-generation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test uvx Execution
+        run: pytest tests/test_uvx_execution.py
+
+      - name: Test Agent Integration
+        run: pytest tests/test_bundle_integration.py
+
+      - name: Compare Behaviors
+        run: pytest tests/test_behavior_consistency.py
 ```
 
 ## Performance Optimization
