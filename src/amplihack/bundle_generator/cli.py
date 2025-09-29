@@ -315,7 +315,7 @@ def pipeline_command(args):
     intent = extractor.extract(parsed)
     agents = generator.generate(intent)
     bundle = builder.build(agents, intent)
-    bundle_path = builder.write_bundle(bundle)
+    builder.write_bundle(bundle)
 
     # Stage 2: Test
     if not args.skip_tests:
