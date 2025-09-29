@@ -1,10 +1,5 @@
 {
-  "exclude": [
-    "**/node_modules",
-    "**/__pycache__",
-    ".venv",
-    "venv"
-  ],
+  "exclude": ["**/node_modules", "**/__pycache__", ".venv", "venv"],
   "ignore": [
     "src/amplihack/bundle_generator",
     "src/amplihack/cli_extensions.py",
@@ -12,7 +7,8 @@
     "test_implementation.py",
     "tests/",
     ".claude/",
-    "Specs/"
+    "Specs/",
+    "scripts/"
   ],
   "reportMissingImports": true,
   "reportMissingTypeStubs": false,
