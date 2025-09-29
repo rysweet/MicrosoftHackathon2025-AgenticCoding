@@ -11,8 +11,10 @@ from ..errors import (
     RetryConfig,
     TimeoutError,
     format_process_error,
+    get_correlation_id,
     log_error,
     retry_on_error,
+    set_correlation_id,
 )
 
 
@@ -211,9 +213,16 @@ class ProcessManager:
 
         # Check if command exists
         if not ProcessManager.check_command_exists(command[0]):
+            # Ensure we have a correlation ID
+            corr_id = get_correlation_id()
+            if not corr_id:
+                corr_id = set_correlation_id()
+
             error = ProcessError(
                 format_process_error(command[0], return_code=127),
                 return_code=127,
+                command=" ".join(command),
+                correlation_id=corr_id,
                 context={"command": " ".join(command)},
             )
             log_error(error)
@@ -237,6 +246,11 @@ class ProcessManager:
 
             # Check if command failed
             if result.returncode != 0:
+                # Ensure we have a correlation ID
+                corr_id = get_correlation_id()
+                if not corr_id:
+                    corr_id = set_correlation_id()
+
                 error = ProcessError(
                     format_process_error(
                         " ".join(command),
@@ -244,6 +258,8 @@ class ProcessManager:
                         stderr=result.stderr,
                     ),
                     return_code=result.returncode,
+                    command=" ".join(command),
+                    correlation_id=corr_id,
                     context={
                         "command": " ".join(command),
                         "stdout": result.stdout,
@@ -256,11 +272,18 @@ class ProcessManager:
             return result
 
         except subprocess.TimeoutExpired as e:
+            # Ensure we have a correlation ID
+            corr_id = get_correlation_id()
+            if not corr_id:
+                corr_id = set_correlation_id()
+
             error = TimeoutError(
                 f"Command timed out after {timeout or 300} seconds: {' '.join(command)}",
+                timeout_duration=timeout or 300,
+                operation="run_command",
+                correlation_id=corr_id,
                 context={
-                    "timeout_duration": timeout or 300,
-                    "operation": f"run_command({' '.join(command)})",
+                    "command": " ".join(command),
                     "cause": str(e),
                 },
             )

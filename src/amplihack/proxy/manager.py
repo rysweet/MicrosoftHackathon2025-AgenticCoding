@@ -13,8 +13,10 @@ from ..errors import (
     ProcessError,
     RetryConfig,
     format_error_message,
+    get_correlation_id,
     log_error,
     retry_on_error,
+    set_correlation_id,
 )
 from .config import ProxyConfig
 from .env import ProxyEnvironment
@@ -92,12 +94,19 @@ class ProxyManager:
             return True
 
         except subprocess.TimeoutExpired as e:
+            # Ensure we have a correlation ID
+            corr_id = get_correlation_id()
+            if not corr_id:
+                corr_id = set_correlation_id()
+
             error = NetworkError(
                 format_error_message(
                     "NETWORK_TIMEOUT",
                     url="https://github.com/fuergaosi233/claude-code-proxy.git",
                     timeout=120,
                 ),
+                timeout=120.0,
+                correlation_id=corr_id,
                 context={
                     "url": "https://github.com/fuergaosi233/claude-code-proxy.git",
                     "timeout": 120.0,
@@ -108,9 +117,16 @@ class ProxyManager:
             raise error
 
         except subprocess.CalledProcessError as e:
+            # Ensure we have a correlation ID
+            corr_id = get_correlation_id()
+            if not corr_id:
+                corr_id = set_correlation_id()
+
             error = ProcessError(
                 f"Git clone failed: {e.stderr or str(e)}",
                 return_code=e.returncode,
+                command="git clone",
+                correlation_id=corr_id,
                 context={"command": "git clone", "stderr": e.stderr, "cause": str(e)},
             )
             log_error(error)
