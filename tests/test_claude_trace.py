@@ -192,7 +192,7 @@ class TestClaudeTrace:
     @patch("subprocess.run")
     def test_test_claude_trace_execution_success(self, mock_run):
         """Test successful execution validation."""
-        mock_run.return_value = Mock(returncode=0, stderr="")
+        mock_run.return_value = Mock(returncode=0, stderr="", stdout="claude-trace")
 
         assert _test_claude_trace_execution("/usr/bin/claude-trace")
         mock_run.assert_called_once_with(
@@ -205,7 +205,7 @@ class TestClaudeTrace:
     @patch("subprocess.run")
     def test_test_claude_trace_execution_returncode_1(self, mock_run):
         """Test execution validation accepts returncode 1 (common for --version)."""
-        mock_run.return_value = Mock(returncode=1, stderr="")
+        mock_run.return_value = Mock(returncode=1, stderr="", stdout="claude-trace")
 
         assert _test_claude_trace_execution("/usr/bin/claude-trace")
 
@@ -213,7 +213,7 @@ class TestClaudeTrace:
     def test_test_claude_trace_execution_syntax_error(self, mock_run):
         """Test execution validation detects JavaScript syntax errors."""
         mock_run.return_value = Mock(
-            returncode=0, stderr="SyntaxError: missing ) after argument list"
+            returncode=0, stderr="SyntaxError: missing ) after argument list", stdout=""
         )
 
         assert not _test_claude_trace_execution("/usr/bin/claude-trace")
@@ -229,7 +229,7 @@ class TestClaudeTrace:
         ]
 
         for error in error_patterns:
-            mock_run.return_value = Mock(returncode=0, stderr=error)
+            mock_run.return_value = Mock(returncode=0, stderr=error, stdout="")
             assert not _test_claude_trace_execution("/usr/bin/claude-trace")
 
     @patch("subprocess.run")

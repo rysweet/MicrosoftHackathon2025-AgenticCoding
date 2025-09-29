@@ -10,15 +10,22 @@ from typing import Optional
 def should_use_trace() -> bool:
     """Check if claude-trace should be used instead of claude.
 
-    Default behavior: Always prefer claude-trace unless explicitly disabled.
+    Default behavior: Use claude-trace when not explicitly configured.
+    Returns True if AMPLIHACK_USE_TRACE is not set or set to truthy values.
+    Returns False if set to any other value (including invalid values).
     """
-    # Check if explicitly disabled
     use_trace_env = os.getenv("AMPLIHACK_USE_TRACE", "").lower()
-    if use_trace_env in ("0", "false", "no"):
-        return False
 
-    # Default to using claude-trace
-    return True
+    # If not set, default to True
+    if not use_trace_env:
+        return True
+
+    # Check if explicitly enabled
+    if use_trace_env in ("1", "true", "yes"):
+        return True
+
+    # Any other value (including "0", "false", "no", or invalid) means False
+    return False
 
 
 def get_claude_command() -> str:
