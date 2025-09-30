@@ -161,29 +161,30 @@ uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding a
 
 ### Key Features Summary
 
-| **Feature**                | **What It Does**                                            | **How to Use It**                                                                                 |
-| -------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| **🚀 Quick Launch**        | Launch Claude Code with agents instantly                    | `uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding amplihack launch` |
-| **🧠 UltraThink**          | Deep analysis & multi-agent orchestration for complex tasks | `/ultrathink <task description>` - Follows 14-step workflow automatically                         |
-| **🏗️ Architect Agent**     | System design, problem decomposition, specifications        | Auto-invoked by UltraThink or use Task tool with `architect`                                      |
-| **🔨 Builder Agent**       | Code implementation from specifications                     | Auto-invoked after architect or use Task tool with `builder`                                      |
-| **👁️ Reviewer Agent**      | Code review, philosophy compliance check                    | Auto-invoked in workflow or use Task tool with `reviewer`                                         |
-| **🧪 Tester Agent**        | Test coverage analysis, TDD implementation                  | Auto-invoked for testing or use Task tool with `tester`                                           |
-| **🔒 Security Agent**      | Vulnerability assessment, security requirements             | Auto-invoked for security review                                                                  |
-| **⚡ Optimizer Agent**     | Performance analysis, bottleneck identification             | Use for performance concerns                                                                      |
-| **🧹 Cleanup Agent**       | Code simplification, dead code removal                      | Auto-runs after implementation                                                                    |
-| **🔄 CI/CD Diagnostics**   | Fix CI failures, pre-commit issues                          | `ci-diagnostic-workflow` (after push) or `pre-commit-diagnostic` (before commit)                  |
-| **📝 14-Step Workflow**    | Complete development lifecycle                              | Automatically followed by `/ultrathink`                                                           |
-| **📊 /analyze**            | Comprehensive code analysis                                 | `/analyze <path>` - Philosophy compliance check                                                   |
-| **🔧 /improve**            | Self-improvement & learning capture                         | `/improve [target]` - Updates DISCOVERIES.md                                                      |
-| **📋 TodoWrite**           | Task management & planning                                  | Automatically used for complex tasks                                                              |
-| **🔀 Parallel Execution**  | Run multiple agents/tasks simultaneously                    | Default behavior - agents run in parallel when possible                                           |
-| **🐙 GitHub Integration**  | Issue creation, PR management                               | Built-in `gh` CLI commands                                                                        |
-| **🔍 Pattern Recognition** | Identify reusable solutions                                 | `patterns` agent finds common patterns                                                            |
-| **🤖 Azure OpenAI**        | Use Azure models instead of Claude                          | `amplihack launch --with-proxy-config ./azure.env`                                                |
-| **📦 GitHub Checkout**     | Work in any GitHub repo without manual cloning              | `amplihack launch --checkout-repo owner/repo`                                                     |
-| **🎨 Custom Agents**       | Create specialized agents for repeated tasks                | Add to `.claude/agents/amplihack/specialized/`                                                    |
-| **📚 Philosophy**          | Ruthless simplicity, bricks & studs modularity              | Auto-enforced in all operations                                                                   |
+| **Feature**                   | **What It Does**                                                    | **How to Use It**                                                                                       |
+| ----------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| **🚀 Quick Launch**           | Launch Claude Code with agents instantly                            | `uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding amplihack launch`       |
+| **🎁 Agent Bundle Generator** | Create specialized zero-install agent bundles from natural language | `amplihack bundle generate "description"` - See [Agent Bundle Generator Guide](#agent-bundle-generator) |
+| **🧠 UltraThink**             | Deep analysis & multi-agent orchestration for complex tasks         | `/ultrathink <task description>` - Follows 14-step workflow automatically                               |
+| **🏗️ Architect Agent**        | System design, problem decomposition, specifications                | Auto-invoked by UltraThink or use Task tool with `architect`                                            |
+| **🔨 Builder Agent**          | Code implementation from specifications                             | Auto-invoked after architect or use Task tool with `builder`                                            |
+| **👁️ Reviewer Agent**         | Code review, philosophy compliance check                            | Auto-invoked in workflow or use Task tool with `reviewer`                                               |
+| **🧪 Tester Agent**           | Test coverage analysis, TDD implementation                          | Auto-invoked for testing or use Task tool with `tester`                                                 |
+| **🔒 Security Agent**         | Vulnerability assessment, security requirements                     | Auto-invoked for security review                                                                        |
+| **⚡ Optimizer Agent**        | Performance analysis, bottleneck identification                     | Use for performance concerns                                                                            |
+| **🧹 Cleanup Agent**          | Code simplification, dead code removal                              | Auto-runs after implementation                                                                          |
+| **🔄 CI/CD Diagnostics**      | Fix CI failures, pre-commit issues                                  | `ci-diagnostic-workflow` (after push) or `pre-commit-diagnostic` (before commit)                        |
+| **📝 14-Step Workflow**       | Complete development lifecycle                                      | Automatically followed by `/ultrathink`                                                                 |
+| **📊 /analyze**               | Comprehensive code analysis                                         | `/analyze <path>` - Philosophy compliance check                                                         |
+| **🔧 /improve**               | Self-improvement & learning capture                                 | `/improve [target]` - Updates DISCOVERIES.md                                                            |
+| **📋 TodoWrite**              | Task management & planning                                          | Automatically used for complex tasks                                                                    |
+| **🔀 Parallel Execution**     | Run multiple agents/tasks simultaneously                            | Default behavior - agents run in parallel when possible                                                 |
+| **🐙 GitHub Integration**     | Issue creation, PR management                                       | Built-in `gh` CLI commands                                                                              |
+| **🔍 Pattern Recognition**    | Identify reusable solutions                                         | `patterns` agent finds common patterns                                                                  |
+| **🤖 Azure OpenAI**           | Use Azure models instead of Claude                                  | `amplihack launch --with-proxy-config ./azure.env`                                                      |
+| **📦 GitHub Checkout**        | Work in any GitHub repo without manual cloning                      | `amplihack launch --checkout-repo owner/repo`                                                           |
+| **🎨 Custom Agents**          | Create specialized agents for repeated tasks                        | Add to `.claude/agents/amplihack/specialized/`                                                          |
+| **📚 Philosophy**             | Ruthless simplicity, bricks & studs modularity                      | Auto-enforced in all operations                                                                         |
 
 ### Quick Start Commands
 
@@ -310,6 +311,149 @@ $EDITOR .claude/workflow/DEFAULT_WORKFLOW.md
 ```
 
 Changes take effect immediately - no restart needed.
+
+---
+
+## Agent Bundle Generator
+
+The Agent Bundle Generator transforms natural language descriptions into
+specialized, zero-install agent bundles. Describe what you want, and get a
+complete, executable agent system.
+
+### What It Does
+
+Creates self-contained agent bundles that:
+
+- Run directly via `uvx` without installation
+- Include specialized agents for your specific use case
+- Package all dependencies and configurations
+- Deploy to GitHub for instant sharing
+
+### Quick Example
+
+Generate a WSL dev environment maintenance agent:
+
+```bash
+# Generate the agent bundle
+uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding amplihack bundle generate \
+  "Build an agent that can run on a WSL windows system and always ensure that I have the latest dev tools including python, rust, golang, uv, node, pnpm, VS Code Insiders, claude code, claude trace etc. The agent should persist in running the install commands and processing the results until all the dev tools are up to date." \
+  --output-dir ~/src/wsl-dev-updater
+
+# Then run your custom agent
+uvx --from ~/src/wsl-dev-updater wsl-dev-updater
+```
+
+### Full Pipeline Example
+
+Generate, package, and distribute in one command:
+
+```bash
+uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding amplihack bundle pipeline \
+  "Create an agent for daily code quality checks including linting, security scanning, and test coverage analysis" \
+  --output-dir ~/src/quality-checker \
+  --distribute
+```
+
+### Available Commands
+
+**Generate a bundle:**
+
+```bash
+amplihack bundle generate "your agent description" \
+  --output-dir ~/my-agent \
+  --validate  # Optional: validate the generated bundle
+  --test      # Optional: run tests before finalizing
+```
+
+**Package for distribution:**
+
+```bash
+amplihack bundle package ~/my-agent \
+  --format uvx  # Options: uvx, tar.gz, zip
+  --output ./packages
+```
+
+**Distribute to GitHub:**
+
+```bash
+amplihack bundle distribute ./packages/my-agent.uvx \
+  --github \
+  --release  # Create a GitHub release
+  --public   # Make repository public
+```
+
+**Complete pipeline:**
+
+```bash
+amplihack bundle pipeline "agent description" \
+  --output-dir ./output \
+  --distribute  # Auto-distribute to GitHub
+```
+
+### Use Cases
+
+**1. Development Environment Maintenance**
+
+```bash
+amplihack bundle generate \
+  "create an agent I can run every day to reason over my dev system and keep it up to date for development in c++, golang, and rust" \
+  --output-dir ~/dev-maintainer
+```
+
+**2. GitHub Issue Triage**
+
+```bash
+amplihack bundle generate \
+  "create an agent that can triage all the issues in my gh repo" \
+  --output-dir ~/issue-triager
+```
+
+**3. Code Review Automation**
+
+```bash
+amplihack bundle generate \
+  "create an agent that reviews PRs for security vulnerabilities and code quality" \
+  --output-dir ~/code-reviewer
+```
+
+**4. Documentation Generator**
+
+```bash
+amplihack bundle generate \
+  "create an agent that automatically generates and updates API documentation from code comments" \
+  --output-dir ~/doc-generator
+```
+
+### How It Works
+
+1. **Parse**: Natural language prompt → structured requirements
+2. **Generate**: Requirements → specialized agent definitions
+3. **Build**: Agents → complete Amplihack framework copy
+4. **Package**: Bundle → uvx-compatible package
+5. **Distribute**: Package → GitHub repository
+
+### What Gets Generated
+
+Each bundle includes:
+
+- Specialized agent definitions (`.claude/agents/`)
+- Custom prompts and workflows
+- All necessary dependencies
+- Test suites
+- Documentation
+- Configuration files
+- Entry point scripts
+
+### Documentation
+
+For complete technical documentation, see:
+
+- **[Complete User Guide](docs/agent-bundle-generator-guide.md)** - Step-by-step
+  tutorials, examples, and troubleshooting
+- [Requirements Document](docs/agent-bundle-generator-requirements.md) - Feature
+  specifications
+- [Design Document](docs/agent-bundle-generator-design.md) - Technical
+  architecture
 
 ---
 
