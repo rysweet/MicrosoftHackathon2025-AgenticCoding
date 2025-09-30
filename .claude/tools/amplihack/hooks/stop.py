@@ -447,6 +447,7 @@ class StopHook(HookProcessor):
             # Try AI-powered automation (respects REFLECTION_ENABLED environment variable)
             try:
                 sys.path.append(str(Path(__file__).parent.parent / "reflection"))
+                from recommendation_manager import save_pending  # type: ignore
                 from reflection import process_reflection_analysis  # type: ignore
 
                 self.log("Starting AI-powered reflection analysis...")
@@ -487,9 +488,43 @@ class StopHook(HookProcessor):
                         self.log(f"Warning: Could not add messages to analysis: {e}", "WARNING")
 
                     # Run AI analysis with console visibility
-                    result = process_reflection_analysis(messages)
-                    if result:
-                        self.log(f"✅ AI automation completed: Issue #{result}")
+                    # This returns GitHub issue URL or None
+                    github_result = process_reflection_analysis(messages)
+
+                    # Extract recommendations from learnings for visibility
+                    recommendations = self.extract_learnings(messages)
+
+                    # Save recommendations to pending.json for next session start
+                    if recommendations:
+                        session_id = input_data.get(
+                            "session_id", datetime.now().strftime("%Y%m%d_%H%M%S")
+                        )
+
+                        # Determine GitHub status
+                        github_url = None
+                        github_error = None
+
+                        if isinstance(github_result, str) and github_result.startswith("http"):
+                            github_url = github_result
+                            self.log(f"✅ GitHub issue created: {github_url}")
+                        elif github_result is None:
+                            # Could be disabled or failed - we don't know without more context
+                            # This is OK - recommendations will still be saved
+                            self.log("GitHub issue creation skipped or unavailable")
+
+                        # Save to pending.json for display at next session start
+                        pending_file = save_pending(
+                            recommendations=recommendations,
+                            session_id=session_id,
+                            github_url=github_url,
+                            github_error=github_error,
+                        )
+                        self.log(
+                            f"💾 Saved {len(recommendations)} recommendations to {pending_file}"
+                        )
+
+                    if github_result:
+                        self.log(f"✅ AI automation completed: Issue #{github_result}")
                     else:
                         self.log("AI analysis complete - no automation triggered")
                 else:

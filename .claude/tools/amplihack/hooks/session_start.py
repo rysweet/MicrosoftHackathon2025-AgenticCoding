@@ -43,6 +43,31 @@ class SessionStartHook(HookProcessor):
         Returns:
             Additional context to add to the session
         """
+        # Display pending recommendations from previous session (if any)
+        try:
+            sys.path.insert(0, str(Path(__file__).parent.parent / "reflection"))
+            from recommendation_manager import (  # type: ignore
+                format_recommendations_display,
+                get_pending,
+                mark_as_shown,
+            )
+
+            pending = get_pending()
+            if pending:
+                # Display recommendations to console
+                display_text = format_recommendations_display(pending)
+                print(display_text)
+
+                # Mark as shown by moving to shown/ directory
+                session_id = pending.get("session_id", "unknown")
+                mark_as_shown(session_id)
+                self.log(
+                    f"Displayed {len(pending.get('recommendations', []))} pending recommendations"
+                )
+        except Exception as e:
+            # Fail silently - don't break session start
+            self.log(f"Warning: Could not display pending recommendations: {e}", "DEBUG")
+
         # Extract prompt
         prompt = input_data.get("prompt", "")
         self.log(f"Prompt length: {len(prompt)}")
