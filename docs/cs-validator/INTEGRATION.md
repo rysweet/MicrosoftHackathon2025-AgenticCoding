@@ -20,6 +20,7 @@ The primary use case for this tool is integration with Claude Code's stop hooks.
 ### Setup
 
 1. **Copy the stop hook example**:
+
    ```bash
    cp .claude/hooks/stop.sh.example .claude/hooks/stop.sh
    chmod +x .claude/hooks/stop.sh
@@ -27,6 +28,7 @@ The primary use case for this tool is integration with Claude Code's stop hooks.
 
 2. **Customize validation level** (optional):
    Edit `.claude/hooks/stop.sh` and change the `--level` parameter:
+
    ```bash
    "$VALIDATOR_SCRIPT" --level 2 --verbose
    ```
@@ -47,6 +49,7 @@ The hook runs automatically after Claude Code edits:
 ### Customization
 
 **Skip validation temporarily**:
+
 ```bash
 export SKIP_CS_VALIDATION=1
 # Work with Claude Code
@@ -56,6 +59,7 @@ unset SKIP_CS_VALIDATION
 
 **Change validation level per session**:
 Edit `.claude/hooks/stop.sh` before the session:
+
 ```bash
 # For quick iterations (syntax only)
 "$VALIDATOR_SCRIPT" --level 1
@@ -82,6 +86,7 @@ Integrate with standard Git hooks for broader team adoption.
 Run validation before each commit:
 
 1. **Create pre-commit hook**:
+
    ```bash
    cat > .git/hooks/pre-commit << 'EOF'
    #!/bin/bash
@@ -173,12 +178,14 @@ chmod +x .git/hooks/prepare-commit-msg
 Use tools like [Husky](https://typicode.github.io/husky/) for cross-platform hooks:
 
 1. **Install Husky**:
+
    ```bash
    npm install --save-dev husky
    npx husky install
    ```
 
 2. **Add pre-commit hook**:
+
    ```bash
    npx husky add .husky/pre-commit "./tools/cs-validator.sh --level 2"
    ```
@@ -204,8 +211,8 @@ name: C# Validation
 on:
   pull_request:
     paths:
-      - '**.cs'
-      - '**.csproj'
+      - "**.cs"
+      - "**.csproj"
   push:
     branches: [main, develop]
 
@@ -219,12 +226,12 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: "8.0.x"
 
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install jq
         run: sudo apt-get install -y jq
@@ -256,39 +263,39 @@ trigger:
       - develop
   paths:
     include:
-      - '**/*.cs'
-      - '**/*.csproj'
+      - "**/*.cs"
+      - "**/*.csproj"
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: "ubuntu-latest"
 
 steps:
   - task: UseDotNet@2
     inputs:
-      version: '8.0.x'
+      version: "8.0.x"
 
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.11'
+      versionSpec: "3.11"
 
   - script: |
       sudo apt-get install -y jq
-    displayName: 'Install dependencies'
+    displayName: "Install dependencies"
 
   - script: |
       dotnet restore
-    displayName: 'Restore NuGet packages'
+    displayName: "Restore NuGet packages"
 
   - script: |
       chmod +x tools/*.sh tools/*.py
       ./tools/cs-validator.sh --level 3 --verbose
-    displayName: 'Run C# validation'
+    displayName: "Run C# validation"
 
   - task: PublishBuildArtifacts@1
     condition: always()
     inputs:
-      pathToPublish: '.cache/cs-validator'
-      artifactName: 'validation-results'
+      pathToPublish: ".cache/cs-validator"
+      artifactName: "validation-results"
 ```
 
 ### Jenkins Pipeline
@@ -473,6 +480,7 @@ done
 ```
 
 Usage:
+
 ```bash
 chmod +x watch-validate.sh
 ./watch-validate.sh
@@ -504,6 +512,7 @@ CMD ["--level", "3"]
 ```
 
 Build and run:
+
 ```bash
 docker build -f Dockerfile.validator -t cs-validator .
 docker run --rm -v $(pwd):/workspace cs-validator --level 3
@@ -532,6 +541,7 @@ pre-commit: validate-quick
 ```
 
 Usage:
+
 ```bash
 make validate        # Quick validation
 make validate-full   # Full validation
@@ -549,6 +559,7 @@ make validate-ci     # CI validation
 **Symptoms**: Stop hook doesn't execute after Claude Code edits
 
 **Solutions**:
+
 1. Check hook is executable: `ls -l .claude/hooks/stop.sh`
 2. Verify hook exists: `test -f .claude/hooks/stop.sh && echo "exists"`
 3. Check Claude Code configuration
@@ -558,6 +569,7 @@ make validate-ci     # CI validation
 **Symptoms**: CI builds timeout or take too long
 
 **Solutions**:
+
 1. Use validation level 2 instead of 4
 2. Skip test projects in configuration
 3. Cache dotnet packages
@@ -568,6 +580,7 @@ make validate-ci     # CI validation
 **Symptoms**: Validation passes locally but fails in CI
 
 **Solutions**:
+
 1. Ensure same .NET SDK version
 2. Check git line endings (CRLF vs LF)
 3. Verify all dependencies installed in CI
@@ -578,6 +591,7 @@ make validate-ci     # CI validation
 **Symptoms**: Analyzer reports errors that aren't real issues
 
 **Solutions**:
+
 1. Adjust severity threshold to "Error"
 2. Configure skip patterns for specific rules
 3. Update .editorconfig to match project standards
@@ -587,16 +601,15 @@ make validate-ci     # CI validation
 #### For Large Projects
 
 1. **Skip test projects**:
+
    ```json
    {
-     "skipProjects": [
-       "Tests/**/*.csproj",
-       "**/*.Tests.csproj"
-     ]
+     "skipProjects": ["Tests/**/*.csproj", "**/*.Tests.csproj"]
    }
    ```
 
 2. **Increase timeout**:
+
    ```json
    {
      "timeoutSeconds": 60
@@ -611,6 +624,7 @@ make validate-ci     # CI validation
 #### For CI/CD
 
 1. **Cache dependencies**:
+
    ```yaml
    # GitHub Actions
    - uses: actions/cache@v3
@@ -620,6 +634,7 @@ make validate-ci     # CI validation
    ```
 
 2. **Restore once**:
+
    ```bash
    dotnet restore
    ./tools/cs-validator.sh --level 3

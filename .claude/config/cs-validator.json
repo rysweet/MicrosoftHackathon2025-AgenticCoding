@@ -3,10 +3,7 @@
   "enabled": true,
   "validationLevel": 2,
   "analyzerSeverityThreshold": "Error",
-  "skipProjects": [
-    "Tests/**/*.csproj",
-    "**/*.Tests.csproj"
-  ],
+  "skipProjects": ["Tests/**/*.csproj", "**/*.Tests.csproj"],
   "timeoutSeconds": 30,
   "parallel": true,
   "cacheEnabled": true,

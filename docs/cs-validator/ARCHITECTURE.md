@@ -64,6 +64,7 @@ The C# validator is a modular validation pipeline designed for speed and extensi
 **Purpose**: Coordinate the validation pipeline and aggregate results.
 
 **Responsibilities**:
+
 - Parse command-line arguments
 - Load and validate configuration
 - Detect modified C# files using git
@@ -88,6 +89,7 @@ update_result() {
 ```
 
 **Data Flow**:
+
 1. Load configuration from `.claude/config/cs-validator.json`
 2. Get modified files from `git diff`
 3. Initialize results JSON structure
@@ -96,6 +98,7 @@ update_result() {
 6. Report final status
 
 **Exit Codes**:
+
 - `0`: All checks passed
 - `1`: Validation failed
 - `2`: Configuration error
@@ -107,6 +110,7 @@ update_result() {
 **Purpose**: Fast syntax validation using Python parsing.
 
 **Implementation Strategy**:
+
 - Remove strings and comments to avoid false positives
 - Check balanced delimiters (braces, parentheses, brackets)
 - Pattern matching for common syntax errors
@@ -130,10 +134,12 @@ validate_namespace_class_structure(content, filepath)
 ```
 
 **Performance**:
+
 - Target: <100ms per file
 - Achieved: ~50ms for typical files
 
 **Limitations**:
+
 - Simplified parsing (not full C# parser)
 - May miss complex syntax errors
 - No semantic validation
@@ -143,6 +149,7 @@ validate_namespace_class_structure(content, filepath)
 **Purpose**: Incremental compilation of modified projects.
 
 **Algorithm**:
+
 1. For each modified file, find the containing .csproj
 2. Deduplicate projects
 3. Build each project with `--no-restore`
@@ -150,12 +157,14 @@ validate_namespace_class_structure(content, filepath)
 5. Extract error messages
 
 **Key Features**:
+
 - Only builds affected projects
 - Uses `--no-restore` for speed
 - Parses error codes (CS####)
 - Provides clear error messages with line numbers
 
 **Build Command**:
+
 ```bash
 dotnet build "$project" \
     --no-restore \
@@ -166,6 +175,7 @@ dotnet build "$project" \
 ```
 
 **Performance**:
+
 - Target: 2-4 seconds per project
 - Achieved: 2-3 seconds for typical projects
 
@@ -174,12 +184,14 @@ dotnet build "$project" \
 **Purpose**: Run Roslyn analyzers for code quality.
 
 **Implementation**:
+
 - Uses `dotnet build` with analyzer flags
 - Configurable severity threshold
 - Filters violations by severity
 - Categorizes errors by analyzer (SA, CA, IDE)
 
 **Build Command**:
+
 ```bash
 dotnet build "$project" \
     --no-restore \
@@ -191,11 +203,13 @@ dotnet build "$project" \
 ```
 
 **Severity Thresholds**:
+
 - `Error`: Only fail on errors (recommended)
 - `Warning`: Fail on warnings and errors
 - `Info`: Fail on all analyzer messages
 
 **Performance**:
+
 - Target: 1-3 seconds
 - Achieved: 1-2 seconds for typical projects
 
@@ -204,12 +218,14 @@ dotnet build "$project" \
 **Purpose**: Verify code formatting compliance.
 
 **Implementation**:
+
 - Uses `dotnet format --verify-no-changes`
 - Checks only modified files
 - Provides auto-fix instructions
 - Works with solution or project files
 
 **Format Command**:
+
 ```bash
 dotnet format "$target" \
     --verify-no-changes \
@@ -219,6 +235,7 @@ dotnet format "$target" \
 ```
 
 **Performance**:
+
 - Target: <1 second
 - Achieved: ~500ms
 
