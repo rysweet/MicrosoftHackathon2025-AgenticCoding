@@ -10,7 +10,6 @@ from .docker import DockerManager
 from .launcher import ClaudeLauncher
 from .proxy import ProxyConfig, ProxyManager
 from .utils import is_uvx_deployment, stage_uvx_framework
-from .utils.cleanup_handler import initialize_cleanup_system
 
 
 def launch_command(args: argparse.Namespace, claude_args: Optional[List[str]] = None) -> int:
@@ -76,23 +75,12 @@ def launch_command(args: argparse.Namespace, claude_args: Optional[List[str]] = 
             system_prompt_path = default_prompt
             print("Auto-appending Azure persistence prompt for proxy integration")
 
-    # Initialize cleanup system if in UVX deployment
-    cleanup_handler = None
-    if is_uvx_deployment():
-        debug_mode = os.environ.get("AMPLIHACK_DEBUG", "").lower() == "true"
-        cleanup_handler = initialize_cleanup_system(
-            session_id=None,  # Auto-generated
-            working_directory=Path.cwd(),
-            debug=debug_mode,
-        )
-
     # Launch Claude with checkout repo if specified
     launcher = ClaudeLauncher(
         proxy_manager=proxy_manager,
         append_system_prompt=system_prompt_path,
         checkout_repo=getattr(args, "checkout_repo", None),
         claude_args=claude_args,
-        cleanup_handler=cleanup_handler,
     )
 
     return launcher.launch_interactive()
@@ -221,17 +209,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                 docker_args = ["launch", "--"] + claude_args
                 return docker_manager.run_command(docker_args)
 
-            # Initialize cleanup system if in UVX deployment
-            cleanup_handler = None
-            if is_uvx_deployment():
-                debug_mode = os.environ.get("AMPLIHACK_DEBUG", "").lower() == "true"
-                cleanup_handler = initialize_cleanup_system(
-                    session_id=None,  # Auto-generated
-                    working_directory=Path.cwd(),
-                    debug=debug_mode,
-                )
-
-            launcher = ClaudeLauncher(claude_args=claude_args, cleanup_handler=cleanup_handler)
+            launcher = ClaudeLauncher(claude_args=claude_args)
             return launcher.launch_interactive()
         else:
             create_parser().print_help()
