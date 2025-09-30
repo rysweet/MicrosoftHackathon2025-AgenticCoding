@@ -1,0 +1,16 @@
+{
+  "timestamp": "2025-09-29T21:07:10.150119",
+  "session_id": "test_session_error",
+  "recommendations": [
+    {
+      "type": "error_patterns",
+      "suggestion": "Add better error handling",
+      "priority": "high"
+    }
+  ],
+  "github": {
+    "url": null,
+    "error": "GitHub CLI not available",
+    "attempted": true
+  }
+}

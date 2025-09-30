@@ -1,0 +1,15 @@
+{
+  "enable_reflection": true,
+  "enable_automation": true,
+  "enable_azure_continuation": true,
+  "automation_min_patterns": 2,
+  "automation_timeout": 30,
+  "azure_continuation_timeout": 3600,
+  "azure_todo_check": true,
+  "azure_phrase_check": true,
+  "transcript_read_timeout": 10,
+  "transcript_max_size": 52428800,
+  "_comment": "Unified stop hook configuration - modify as needed",
+  "_version": "1.0.0",
+  "_last_updated": "2025-01-22"
+}

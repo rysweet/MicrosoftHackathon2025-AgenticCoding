@@ -12,7 +12,7 @@ include README.md
 include *.md
 
 # Claude framework structure (ALL files as requested)
-recursive-include .claude *
+recursive-include src/amplihack/.claude *
 
 # Documentation, examples, and specifications
 recursive-include docs *

@@ -1,0 +1,15 @@
+{
+  "operation": "process",
+  "timestamp": "2025-09-25T17:48:59.601894",
+  "session_id": "unknown",
+  "data": {
+    "test_data": "value"
+  },
+  "state": "completed",
+  "result": {
+    "status": "processed",
+    "input": {
+      "test_data": "value"
+    }
+  }
+}
