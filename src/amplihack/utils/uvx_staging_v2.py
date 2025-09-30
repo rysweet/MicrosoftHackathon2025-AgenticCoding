@@ -8,6 +8,7 @@ import shutil
 from pathlib import Path
 from typing import List, Optional
 
+from .cleanup_registry import CleanupRegistry
 from .uvx_detection import detect_uvx_deployment, resolve_framework_paths
 from .uvx_models import (
     FrameworkLocation,
@@ -23,14 +24,20 @@ from .uvx_settings_manager import uvx_settings_manager
 class UVXStager:
     """Handles UVX file staging operations with clean state management."""
 
-    def __init__(self, config: Optional[UVXConfiguration] = None):
+    def __init__(
+        self,
+        config: Optional[UVXConfiguration] = None,
+        cleanup_registry: Optional[CleanupRegistry] = None,
+    ):
         """Initialize UVX stager with configuration.
 
         Args:
             config: Optional UVX configuration
+            cleanup_registry: Optional cleanup registry for tracking staged files
         """
         self.config = config or UVXConfiguration()
         self._debug_enabled = self.config.is_debug_enabled
+        self._cleanup_registry = cleanup_registry
 
     def _debug_log(self, message: str) -> None:
         """Log debug message if debugging is enabled."""
@@ -211,6 +218,9 @@ class UVXStager:
                         if success:
                             self._debug_log("Staged .claude directory with UVX optimizations")
                             result.add_success(target_path, operation)
+                            # Register for cleanup if registry is available
+                            if self._cleanup_registry and self.config.cleanup_on_exit:
+                                self._cleanup_registry.register_directory(target_path, "staged")
                         else:
                             result.add_failure(target_path, "Failed to stage .claude directory")
                     else:
@@ -219,10 +229,16 @@ class UVXStager:
                         )
                         self._debug_log(f"Staged directory: {source_path} -> {target_path}")
                         result.add_success(target_path, operation)
+                        # Register for cleanup if registry is available
+                        if self._cleanup_registry and self.config.cleanup_on_exit:
+                            self._cleanup_registry.register_directory(target_path, "staged")
                 else:
                     shutil.copy2(source_path, target_path)
                     self._debug_log(f"Staged file: {source_path} -> {target_path}")
                     result.add_success(target_path, operation)
+                    # Register for cleanup if registry is available
+                    if self._cleanup_registry and self.config.cleanup_on_exit:
+                        self._cleanup_registry.register_file(target_path, "staged")
 
             except PermissionError as e:
                 result.add_failure(target_path, f"Permission denied: {e}")
@@ -281,6 +297,18 @@ class UVXStager:
             self._debug_log("Cleanup disabled in configuration")
             return 0
 
+        # If we have a cleanup registry, use CleanupHandler
+        if self._cleanup_registry:
+            from .cleanup_handler import cleanup_staged_files as cleanup_with_handler
+
+            report = cleanup_with_handler(
+                registry=self._cleanup_registry,
+                working_directory=Path.cwd(),
+                debug=self._debug_enabled,
+            )
+            return report.total_cleaned
+
+        # Fallback to original implementation if no registry
         cleaned_count = 0
         for staged_path in staging_result.successful:
             try:
