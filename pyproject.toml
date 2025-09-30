@@ -40,6 +40,8 @@ exclude = [
     "**/venv",
     "**/.venv",
     "tests/**",
+    "test_*.py",  # Exclude root level test files
+    "*_test.py",  # Exclude root level test files
     "scripts/**/*.py",  # Exclude scripts from type checking
     ".claude/tools/amplihack/memory/tests/test_interface.py",  # TDD tests - expected to fail
     "Specs/xpia_defense_interface.py",  # Example/demo code with intentional type issues
