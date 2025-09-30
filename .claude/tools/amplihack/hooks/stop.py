@@ -26,6 +26,98 @@ class StopHook(HookProcessor):
     def __init__(self):
         super().__init__("stop")
 
+    def display_decision_summary(self, session_id: Optional[str] = None):
+        """Display decision records summary at session end.
+
+        Args:
+            session_id: Optional session identifier to locate DECISIONS.md
+        """
+        try:
+            # Locate the DECISIONS.md file
+            decisions_file = None
+
+            if session_id:
+                # Try session-specific log directory
+                session_log_dir = self.project_root / ".claude" / "runtime" / "logs" / session_id
+                decisions_file = session_log_dir / "DECISIONS.md"
+
+            # If not found or no session_id, try to find most recent DECISIONS.md
+            if not decisions_file or not decisions_file.exists():
+                logs_dir = self.project_root / ".claude" / "runtime" / "logs"
+                if logs_dir.exists():
+                    # Find all DECISIONS.md files
+                    decision_files = list(logs_dir.glob("*/DECISIONS.md"))
+                    if decision_files:
+                        # Get the most recently modified one
+                        decisions_file = max(decision_files, key=lambda f: f.stat().st_mtime)
+
+            # If still not found, exit gracefully
+            if not decisions_file or not decisions_file.exists():
+                return
+
+            # Read and parse the decisions file
+            try:
+                with open(decisions_file, "r", encoding="utf-8") as f:
+                    content = f.read()
+            except (IOError, OSError, PermissionError) as e:
+                self.log(f"Cannot read decisions file {decisions_file}: {e}", "ERROR")
+                return
+            except UnicodeDecodeError as e:
+                self.log(f"Invalid encoding in decisions file {decisions_file}: {e}", "ERROR")
+                return
+
+            # Count decisions (lines starting with "## Decision")
+            decision_lines = [
+                line for line in content.split("\n") if line.startswith("## Decision")
+            ]
+            decision_count = len(decision_lines)
+
+            # If no decisions, exit gracefully
+            if decision_count == 0:
+                return
+
+            # Get last 3 decisions for preview
+            last_decisions = decision_lines[-3:] if len(decision_lines) >= 3 else decision_lines
+
+            # Format the preview (remove "## Decision:" prefix for cleaner display)
+            previews = []
+            for decision in last_decisions:
+                # Remove "## Decision:" prefix and clean up
+                preview = decision.replace("## Decision:", "").strip()
+                previews.append(preview)
+
+            # Create file:// URL for clickable link
+            file_url = f"file://{decisions_file.resolve()}"
+
+            # Display the summary
+            print("\n")
+            print("═" * 70)
+            print("Decision Records Summary")
+            print("═" * 70)
+            print(f"Location: {file_url}")
+            print(f"Total Decisions: {decision_count}")
+
+            if previews:
+                print("\nRecent Decisions:")
+                for i, preview in enumerate(previews, 1):
+                    # Truncate long decisions for preview
+                    if len(preview) > 80:
+                        preview = preview[:77] + "..."
+                    print(f"  {i}. {preview}")
+
+            print("═" * 70)
+            print("\n")
+
+        except FileNotFoundError as e:
+            self.log(f"Decisions file not found: {e}", "WARNING")
+        except PermissionError as e:
+            self.log(f"Permission denied reading decisions file: {e}", "ERROR")
+        except Exception as e:
+            # Catch-all for unexpected errors with more detail
+            self.log(
+                f"Unexpected error displaying decision summary: {type(e).__name__}: {e}", "ERROR"
+            )
+
     def extract_learnings(self, messages: List[Dict]) -> List[Dict]:
         """Extract learnings using the reflection module.
 
@@ -94,6 +186,71 @@ class StopHook(HookProcessor):
                         learnings.append({"keyword": keyword, "preview": content[:200]})
                         break
         return learnings
+
+    def get_priority_emoji(self, priority: str) -> str:
+        """Get emoji for priority level.
+
+        Args:
+            priority: Priority level (high, medium, low)
+
+        Returns:
+            Emoji string representing priority
+        """
+        PRIORITY_EMOJI = {"high": "🔴", "medium": "🟡", "low": "🟢"}
+        return PRIORITY_EMOJI.get(priority.lower(), "⚪")
+
+    def extract_recommendations_from_patterns(
+        self, patterns: List[Dict], limit: int = 5
+    ) -> List[Dict]:
+        """Extract top N recommendations from reflection patterns.
+
+        Args:
+            patterns: List of pattern dictionaries from reflection analysis
+            limit: Maximum number of recommendations to return
+
+        Returns:
+            List of top recommendations sorted by priority
+        """
+        if not patterns:
+            return []
+
+        # Sort by priority (high > medium > low)
+        priority_order = {"high": 3, "medium": 2, "low": 1}
+        sorted_patterns = sorted(
+            patterns,
+            key=lambda p: priority_order.get(p.get("priority", "low").lower(), 0),
+            reverse=True,
+        )
+
+        # Return top N
+        return sorted_patterns[:limit]
+
+    def format_recommendations_message(self, recommendations: List[Dict]) -> str:
+        """Format recommendations as readable message.
+
+        Args:
+            recommendations: List of recommendation dictionaries
+
+        Returns:
+            Formatted string for display
+        """
+        if not recommendations:
+            return ""
+
+        lines = ["\n" + "=" * 70, "AI-Detected Improvement Recommendations", "=" * 70]
+
+        for i, rec in enumerate(recommendations, 1):
+            priority = rec.get("priority", "medium")
+            rec_type = rec.get("type", "unknown")
+            suggestion = rec.get("suggestion", "No description available")
+
+            emoji = self.get_priority_emoji(priority)
+            lines.append(f"\n{i}. {emoji} [{priority.upper()}] {rec_type}")
+            lines.append(f"   {suggestion}")
+
+        lines.append("\n" + "=" * 70)
+
+        return "\n".join(lines)
 
     def save_session_analysis(self, messages: List[Dict]):
         """Save session analysis for later review.
@@ -440,6 +597,9 @@ class StopHook(HookProcessor):
 
         self.log(f"Processing {len(messages)} messages")
 
+        # Extract session_id for decision summary (used later)
+        session_id = input_data.get("session_id")
+
         # Save session analysis
         if messages:
             self.save_session_analysis(messages)
@@ -447,7 +607,6 @@ class StopHook(HookProcessor):
             # Try AI-powered automation (respects REFLECTION_ENABLED environment variable)
             try:
                 sys.path.append(str(Path(__file__).parent.parent / "reflection"))
-                from recommendation_manager import save_pending  # type: ignore
                 from reflection import process_reflection_analysis  # type: ignore
 
                 self.log("Starting AI-powered reflection analysis...")
@@ -488,43 +647,9 @@ class StopHook(HookProcessor):
                         self.log(f"Warning: Could not add messages to analysis: {e}", "WARNING")
 
                     # Run AI analysis with console visibility
-                    # This returns GitHub issue URL or None
-                    github_result = process_reflection_analysis(messages)
-
-                    # Extract recommendations from learnings for visibility
-                    recommendations = self.extract_learnings(messages)
-
-                    # Save recommendations to pending.json for next session start
-                    if recommendations:
-                        session_id = input_data.get(
-                            "session_id", datetime.now().strftime("%Y%m%d_%H%M%S")
-                        )
-
-                        # Determine GitHub status
-                        github_url = None
-                        github_error = None
-
-                        if isinstance(github_result, str) and github_result.startswith("http"):
-                            github_url = github_result
-                            self.log(f"✅ GitHub issue created: {github_url}")
-                        elif github_result is None:
-                            # Could be disabled or failed - we don't know without more context
-                            # This is OK - recommendations will still be saved
-                            self.log("GitHub issue creation skipped or unavailable")
-
-                        # Save to pending.json for display at next session start
-                        pending_file = save_pending(
-                            recommendations=recommendations,
-                            session_id=session_id,
-                            github_url=github_url,
-                            github_error=github_error,
-                        )
-                        self.log(
-                            f"💾 Saved {len(recommendations)} recommendations to {pending_file}"
-                        )
-
-                    if github_result:
-                        self.log(f"✅ AI automation completed: Issue #{github_result}")
+                    result = process_reflection_analysis(messages)
+                    if result:
+                        self.log(f"✅ AI automation completed: Issue #{result}")
                     else:
                         self.log("AI analysis complete - no automation triggered")
                 else:
@@ -548,13 +673,14 @@ class StopHook(HookProcessor):
                 ]
 
                 output = {
+                    "message": "",  # Initialize for type checking
                     "metadata": {
                         "learningsFound": len(learnings),
                         "highPriority": len(priority_learnings),
                         "source": "reflection_analysis",
                         "analysisPath": ".claude/runtime/analysis/",
                         "summary": f"Found {len(learnings)} improvement opportunities",
-                    }
+                    },
                 }
 
                 # Add specific suggestions to output if high priority
@@ -567,10 +693,28 @@ class StopHook(HookProcessor):
                     f"Found {len(learnings)} potential improvements ({len(priority_learnings)} high priority)"
                 )
 
+                # Extract top recommendations and add to message field
+                recommendations = self.extract_recommendations_from_patterns(learnings, limit=5)
+                if recommendations:
+                    rec_message = self.format_recommendations_message(recommendations)
+                    # Add to output message field (guaranteed to be displayed by Claude Code)
+                    existing_msg = output.get("message", "")
+                    if not isinstance(existing_msg, str):
+                        existing_msg = ""
+                    output["message"] = existing_msg + rec_message
+
+            # Display decision summary at session end (AFTER all processing completes)
+            # This allows other hook parts to write decisions first
+            self.display_decision_summary(session_id)
+
             return output
         else:
             # No messages found
             self.log("No session messages to analyze")
+
+            # Display decision summary even without messages (may have decisions from other sources)
+            self.display_decision_summary(session_id)
+
             return {}
 
 
