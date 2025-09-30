@@ -410,40 +410,55 @@ Test fixtures are provided in `tests/fixtures/{req.name}/`
         """Generate test file contents."""
         test_content = f'''"""
 Tests for {req.name.title().replace("_", " ")}
+
+These are functional tests that verify the agent markdown file structure
+and content without importing it as a Python module. Generated agent bundles
+are standalone packages, not submodules of amplihack.
 """
 
 import pytest
-from amplihack.agents import {req.name}
+from pathlib import Path
 
 
 class Test{req.name.title().replace("_", "")}:
-    """Test suite for {req.name}."""
+    """Test suite for {req.name} agent bundle."""
 
-    def test_basic_functionality(self):
-        """Test basic agent functionality."""
-        result = {req.name}.process("test input")
-        assert result is not None
-        assert result.status == "success"
+    def test_agent_file_exists(self):
+        """Test that agent markdown file exists."""
+        agents_dir = Path(__file__).parent.parent / "agents"
+        agent_file = agents_dir / "{req.name}.md"
+        assert agent_file.exists(), f"Agent file should exist at {{agent_file}}"
 
-    def test_validation(self):
-        """Test input validation."""
-        with pytest.raises(ValueError):
-            {req.name}.process("")
+    def test_agent_content_structure(self):
+        """Test agent file has required sections."""
+        agents_dir = Path(__file__).parent.parent / "agents"
+        agent_file = agents_dir / "{req.name}.md"
+        content = agent_file.read_text()
 
-    def test_error_handling(self):
-        """Test error handling."""
-        result = {req.name}.process("invalid input", safe_mode=True)
-        assert result.status == "error"
-        assert result.error_message is not None
+        # Check required sections exist
+        assert "## Role" in content, "Should have Role section"
+        assert "## Capabilities" in content, "Should have Capabilities section"
+        assert "## Implementation" in content, "Should have Implementation section"
+        assert "## Testing" in content, "Should have Testing section"
 
-    @pytest.mark.parametrize("input_data,expected", [
-        ("data1", "result1"),
-        ("data2", "result2"),
-    ])
-    def test_various_inputs(self, input_data, expected):
-        """Test with various inputs."""
-        result = {req.name}.process(input_data)
-        assert result.data == expected
+    def test_agent_content_not_empty(self):
+        """Test agent file has substantial content."""
+        agents_dir = Path(__file__).parent.parent / "agents"
+        agent_file = agents_dir / "{req.name}.md"
+        content = agent_file.read_text()
+
+        assert len(content) > 500, "Agent file should have substantial content"
+        assert "TODO" not in content, "Agent should not contain TODO placeholders"
+        assert "PLACEHOLDER" not in content, "Agent should not contain PLACEHOLDER text"
+
+    def test_manifest_includes_agent(self):
+        """Test that manifest.json includes this agent."""
+        manifest_file = Path(__file__).parent.parent / "manifest.json"
+        if manifest_file.exists():
+            import json
+            manifest = json.loads(manifest_file.read_text())
+            agent_names = [a.get("name") for a in manifest.get("agents", [])]
+            assert "{req.name}" in agent_names, "Agent should be listed in manifest"
 '''
 
         return [test_content]
@@ -474,34 +489,38 @@ Configuration options can be provided via:
 
 ## Integration Guide
 
+### Using the Agent with Claude Code
+
+This agent bundle is designed to be used with Claude Code. The agent markdown file
+can be referenced in your Claude Code configuration or imported as a custom agent.
+
+**Add to your .claude/agents directory:**
+
+```bash
+# Copy agent to your project's Claude configuration
+cp agents/{req.name}.md /path/to/your/project/.claude/agents/
+```
+
+**Reference in Claude Code:**
+
+```markdown
+@.claude/agents/{req.name}.md
+```
+
 ### Standalone Usage
 
-```python
-from amplihack.agents import {req.name}
-
-agent = {req.name}()
-result = agent.process(data)
-```
-
-### Within Pipeline
-
-```python
-pipeline = Pipeline([
-    preprocessor,
-    {req.name},
-    postprocessor
-])
-result = pipeline.run(data)
-```
+The agent markdown file contains the complete specification and can be used
+as documentation or imported into other AI systems that support markdown-based
+agent definitions.
 
 ## Troubleshooting
 
 Common issues and solutions:
 
-1. **Import Error**: Ensure amplihack is installed
-2. **Validation Error**: Check input format
-3. **Performance Issues**: Enable caching, use batch mode
-4. **Memory Issues**: Process in chunks, adjust limits
+1. **File Not Found**: Ensure the agent file is in the agents/ directory
+2. **Validation Error**: Check that the agent markdown has required sections
+3. **Integration Issues**: Verify Claude Code can access the .claude/agents directory
+4. **Format Issues**: Ensure the agent markdown follows the expected structure
 
 ## Version History
 
