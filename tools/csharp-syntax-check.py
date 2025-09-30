@@ -132,7 +132,7 @@ def validate_cs_syntax(filepath: str) -> Tuple[bool, List[str]]:
 def main():
     """Main entry point."""
     if len(sys.argv) < 2:
-        print("Usage: syntax-check.py <file1.cs> [file2.cs ...]", file=sys.stderr)
+        print("Usage: csharp-syntax-check.py <file1.cs> [file2.cs ...]", file=sys.stderr)
         return 2
 
     files = sys.argv[1:]
