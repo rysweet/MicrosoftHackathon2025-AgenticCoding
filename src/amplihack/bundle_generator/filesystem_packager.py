@@ -254,6 +254,9 @@ class FilesystemPackager:
 
     def _generate_pyproject_toml(self, bundle: AgentBundle) -> str:
         """Generate pyproject.toml content."""
+        # Sanitize description for TOML (single line, no newlines)
+        description_sanitized = bundle.description.replace("\n", " ").replace('"', '\\"').strip()
+
         return f"""[build-system]
 requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
@@ -261,7 +264,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "{bundle.name}"
 version = "{bundle.version}"
-description = "{bundle.description}"
+description = "{description_sanitized}"
 readme = "README.md"
 requires-python = ">=3.11"
 license = {{text = "MIT"}}
@@ -316,6 +319,9 @@ target-version = "py311"
 
     def _generate_setup_py(self, bundle: AgentBundle) -> str:
         """Generate setup.py content."""
+        # Sanitize description for Python string (escape quotes, single line)
+        description_sanitized = bundle.description.replace("\n", " ").replace('"', '\\"').strip()
+
         return f'''"""Setup script for {bundle.name}."""
 
 from setuptools import setup, find_packages
@@ -323,7 +329,7 @@ from setuptools import setup, find_packages
 setup(
     name="{bundle.name}",
     version="{bundle.version}",
-    description="{bundle.description}",
+    description="{description_sanitized}",
     author="Agent Bundle Generator",
     packages=find_packages(),
     python_requires=">=3.11",
