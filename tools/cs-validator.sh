@@ -162,7 +162,7 @@ run_check() {
 echo "Running C# validation (Level $VALIDATION_LEVEL)..."
 
 # Level 1: Syntax Check (always run, fast)
-if ! run_check "syntax" "$SCRIPT_DIR/syntax-check.py"; then
+if ! run_check "syntax" "$SCRIPT_DIR/csharp-syntax-check.py"; then
     echo ""
     echo "✗ Syntax validation failed"
     END_TIME=$(date +%s)

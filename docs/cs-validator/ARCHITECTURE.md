@@ -105,7 +105,7 @@ update_result() {
 - `3`: Timeout
 - `4`: Missing dependency
 
-### 2. Syntax Check (syntax-check.py)
+### 2. Syntax Check (csharp-syntax-check.py)
 
 **Purpose**: Fast syntax validation using Python parsing.
 
@@ -352,7 +352,7 @@ wait $FORMAT_PID || FAILED=1
 Stop at first failure (fail-fast):
 
 ```bash
-if ! run_check "syntax" syntax-check.py; then
+if ! run_check "syntax" csharp-syntax-check.py; then
     exit 1
 fi
 # Don't run build check if syntax failed
@@ -462,7 +462,7 @@ Test each component independently:
 
 ```bash
 # Test syntax checker
-python3 -m pytest tools/test_syntax_check.py
+python3 -m pytest tools/test_csharp_syntax_check.py
 
 # Test build checker
 ./tools/test_build_check.sh
