@@ -56,8 +56,15 @@ class StopHook(HookProcessor):
                 return
 
             # Read and parse the decisions file
-            with open(decisions_file, "r", encoding="utf-8") as f:
-                content = f.read()
+            try:
+                with open(decisions_file, "r", encoding="utf-8") as f:
+                    content = f.read()
+            except (IOError, OSError, PermissionError) as e:
+                self.log(f"Cannot read decisions file {decisions_file}: {e}", "ERROR")
+                return
+            except UnicodeDecodeError as e:
+                self.log(f"Invalid encoding in decisions file {decisions_file}: {e}", "ERROR")
+                return
 
             # Count decisions (lines starting with "## Decision")
             decision_lines = [
@@ -101,9 +108,15 @@ class StopHook(HookProcessor):
             print("═" * 70)
             print("\n")
 
+        except FileNotFoundError as e:
+            self.log(f"Decisions file not found: {e}", "WARNING")
+        except PermissionError as e:
+            self.log(f"Permission denied reading decisions file: {e}", "ERROR")
         except Exception as e:
-            # Log error but don't fail the hook
-            self.log(f"Error displaying decision summary: {e}", "WARNING")
+            # Catch-all for unexpected errors with more detail
+            self.log(
+                f"Unexpected error displaying decision summary: {type(e).__name__}: {e}", "ERROR"
+            )
 
     def extract_learnings(self, messages: List[Dict]) -> List[Dict]:
         """Extract learnings using the reflection module.
@@ -519,11 +532,8 @@ class StopHook(HookProcessor):
 
         self.log(f"Processing {len(messages)} messages")
 
-        # Extract session_id for decision summary
+        # Extract session_id for decision summary (used later)
         session_id = input_data.get("session_id")
-
-        # Display decision summary at session end
-        self.display_decision_summary(session_id)
 
         # Save session analysis
         if messages:
@@ -617,10 +627,18 @@ class StopHook(HookProcessor):
                     f"Found {len(learnings)} potential improvements ({len(priority_learnings)} high priority)"
                 )
 
+            # Display decision summary at session end (AFTER all processing completes)
+            # This allows other hook parts to write decisions first
+            self.display_decision_summary(session_id)
+
             return output
         else:
             # No messages found
             self.log("No session messages to analyze")
+
+            # Display decision summary even without messages (may have decisions from other sources)
+            self.display_decision_summary(session_id)
+
             return {}
 
 
