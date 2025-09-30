@@ -1,0 +1,21 @@
+{
+  "timestamp": "2025-09-29T21:07:02.757797",
+  "session_id": "test_session_20250929",
+  "recommendations": [
+    {
+      "type": "repeated_tool_use",
+      "suggestion": "Consider creating a script to automate these bash commands",
+      "priority": "medium"
+    },
+    {
+      "type": "user_frustration",
+      "suggestion": "Review approach and consider alternative solution",
+      "priority": "high"
+    }
+  ],
+  "github": {
+    "url": "https://github.com/test/repo/issues/123",
+    "error": null,
+    "attempted": true
+  }
+}
