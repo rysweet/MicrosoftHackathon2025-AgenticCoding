@@ -316,18 +316,9 @@ Changes take effect immediately - no restart needed.
 
 ## Agent Bundle Generator
 
-The Agent Bundle Generator transforms natural language descriptions into
-specialized, zero-install agent bundles. Describe what you want, and get a
-complete, executable agent system.
-
-### What It Does
-
-Creates self-contained agent bundles that:
-
-- Run directly via `uvx` without installation
-- Include specialized agents for your specific use case
-- Package all dependencies and configurations
-- Deploy to GitHub for instant sharing
+Transform natural language descriptions into specialized, zero-install agent
+bundles. Describe what you want, and the Agent Bundle Generator creates a
+complete, executable agent system that runs directly via `uvx`.
 
 ### Quick Example
 
@@ -336,124 +327,18 @@ Generate a WSL dev environment maintenance agent:
 ```bash
 # Generate the agent bundle
 uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding amplihack bundle generate \
-  "Build an agent that can run on a WSL windows system and always ensure that I have the latest dev tools including python, rust, golang, uv, node, pnpm, VS Code Insiders, claude code, claude trace etc. The agent should persist in running the install commands and processing the results until all the dev tools are up to date." \
+  "Build an agent that ensures I have the latest dev tools including python, rust, golang, uv, node, pnpm, VS Code Insiders, claude code, etc." \
   --output-dir ~/src/wsl-dev-updater
 
-# Then run your custom agent
+# Run your custom agent
 uvx --from ~/src/wsl-dev-updater wsl-dev-updater
 ```
 
-### Full Pipeline Example
+### Learn More
 
-Generate, package, and distribute in one command:
-
-```bash
-uvx --from git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding amplihack bundle pipeline \
-  "Create an agent for daily code quality checks including linting, security scanning, and test coverage analysis" \
-  --output-dir ~/src/quality-checker \
-  --distribute
-```
-
-### Available Commands
-
-**Generate a bundle:**
-
-```bash
-amplihack bundle generate "your agent description" \
-  --output-dir ~/my-agent \
-  --validate  # Optional: validate the generated bundle
-  --test      # Optional: run tests before finalizing
-```
-
-**Package for distribution:**
-
-```bash
-amplihack bundle package ~/my-agent \
-  --format uvx  # Options: uvx, tar.gz, zip
-  --output ./packages
-```
-
-**Distribute to GitHub:**
-
-```bash
-amplihack bundle distribute ./packages/my-agent.uvx \
-  --github \
-  --release  # Create a GitHub release
-  --public   # Make repository public
-```
-
-**Complete pipeline:**
-
-```bash
-amplihack bundle pipeline "agent description" \
-  --output-dir ./output \
-  --distribute  # Auto-distribute to GitHub
-```
-
-### Use Cases
-
-**1. Development Environment Maintenance**
-
-```bash
-amplihack bundle generate \
-  "create an agent I can run every day to reason over my dev system and keep it up to date for development in c++, golang, and rust" \
-  --output-dir ~/dev-maintainer
-```
-
-**2. GitHub Issue Triage**
-
-```bash
-amplihack bundle generate \
-  "create an agent that can triage all the issues in my gh repo" \
-  --output-dir ~/issue-triager
-```
-
-**3. Code Review Automation**
-
-```bash
-amplihack bundle generate \
-  "create an agent that reviews PRs for security vulnerabilities and code quality" \
-  --output-dir ~/code-reviewer
-```
-
-**4. Documentation Generator**
-
-```bash
-amplihack bundle generate \
-  "create an agent that automatically generates and updates API documentation from code comments" \
-  --output-dir ~/doc-generator
-```
-
-### How It Works
-
-1. **Parse**: Natural language prompt → structured requirements
-2. **Generate**: Requirements → specialized agent definitions
-3. **Build**: Agents → complete Amplihack framework copy
-4. **Package**: Bundle → uvx-compatible package
-5. **Distribute**: Package → GitHub repository
-
-### What Gets Generated
-
-Each bundle includes:
-
-- Specialized agent definitions (`.claude/agents/`)
-- Custom prompts and workflows
-- All necessary dependencies
-- Test suites
-- Documentation
-- Configuration files
-- Entry point scripts
-
-### Documentation
-
-For complete technical documentation, see:
-
-- **[Complete User Guide](docs/agent-bundle-generator-guide.md)** - Step-by-step
-  tutorials, examples, and troubleshooting
-- [Requirements Document](docs/agent-bundle-generator-requirements.md) - Feature
-  specifications
-- [Design Document](docs/agent-bundle-generator-design.md) - Technical
-  architecture
+For complete command reference, additional examples, troubleshooting, and
+advanced topics, see the
+**[Agent Bundle Generator Guide](docs/agent-bundle-generator-guide.md)**.
 
 ---
 
