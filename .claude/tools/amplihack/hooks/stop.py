@@ -26,6 +26,85 @@ class StopHook(HookProcessor):
     def __init__(self):
         super().__init__("stop")
 
+    def display_decision_summary(self, session_id: Optional[str] = None):
+        """Display decision records summary at session end.
+
+        Args:
+            session_id: Optional session identifier to locate DECISIONS.md
+        """
+        try:
+            # Locate the DECISIONS.md file
+            decisions_file = None
+
+            if session_id:
+                # Try session-specific log directory
+                session_log_dir = self.project_root / ".claude" / "runtime" / "logs" / session_id
+                decisions_file = session_log_dir / "DECISIONS.md"
+
+            # If not found or no session_id, try to find most recent DECISIONS.md
+            if not decisions_file or not decisions_file.exists():
+                logs_dir = self.project_root / ".claude" / "runtime" / "logs"
+                if logs_dir.exists():
+                    # Find all DECISIONS.md files
+                    decision_files = list(logs_dir.glob("*/DECISIONS.md"))
+                    if decision_files:
+                        # Get the most recently modified one
+                        decisions_file = max(decision_files, key=lambda f: f.stat().st_mtime)
+
+            # If still not found, exit gracefully
+            if not decisions_file or not decisions_file.exists():
+                return
+
+            # Read and parse the decisions file
+            with open(decisions_file, "r", encoding="utf-8") as f:
+                content = f.read()
+
+            # Count decisions (lines starting with "## Decision")
+            decision_lines = [
+                line for line in content.split("\n") if line.startswith("## Decision")
+            ]
+            decision_count = len(decision_lines)
+
+            # If no decisions, exit gracefully
+            if decision_count == 0:
+                return
+
+            # Get last 3 decisions for preview
+            last_decisions = decision_lines[-3:] if len(decision_lines) >= 3 else decision_lines
+
+            # Format the preview (remove "## Decision:" prefix for cleaner display)
+            previews = []
+            for decision in last_decisions:
+                # Remove "## Decision:" prefix and clean up
+                preview = decision.replace("## Decision:", "").strip()
+                previews.append(preview)
+
+            # Create file:// URL for clickable link
+            file_url = f"file://{decisions_file.resolve()}"
+
+            # Display the summary
+            print("\n")
+            print("═" * 70)
+            print("Decision Records Summary")
+            print("═" * 70)
+            print(f"Location: {file_url}")
+            print(f"Total Decisions: {decision_count}")
+
+            if previews:
+                print("\nRecent Decisions:")
+                for i, preview in enumerate(previews, 1):
+                    # Truncate long decisions for preview
+                    if len(preview) > 80:
+                        preview = preview[:77] + "..."
+                    print(f"  {i}. {preview}")
+
+            print("═" * 70)
+            print("\n")
+
+        except Exception as e:
+            # Log error but don't fail the hook
+            self.log(f"Error displaying decision summary: {e}", "WARNING")
+
     def extract_learnings(self, messages: List[Dict]) -> List[Dict]:
         """Extract learnings using the reflection module.
 
@@ -439,6 +518,12 @@ class StopHook(HookProcessor):
         messages = self.get_session_messages(input_data)
 
         self.log(f"Processing {len(messages)} messages")
+
+        # Extract session_id for decision summary
+        session_id = input_data.get("session_id")
+
+        # Display decision summary at session end
+        self.display_decision_summary(session_id)
 
         # Save session analysis
         if messages:
