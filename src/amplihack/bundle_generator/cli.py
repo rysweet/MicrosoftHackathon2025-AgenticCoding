@@ -213,22 +213,56 @@ def test_command(args):
 
     logger.info(f"Testing {len(manifest['agents'])} agents...")
 
-    # Simplified testing - full implementation would run actual tests
+    # Run actual tests using pytest
+    import subprocess
+
     test_results = {
         "passed": 0,
         "failed": 0,
         "skipped": 0,
     }
 
-    for agent in manifest["agents"]:
-        test_file = bundle_path / "tests" / f"test_{agent['name']}.py"
-        if test_file.exists():
-            # Would run actual tests here
-            logger.info(f"✓ {agent['name']}: PASSED")
-            test_results["passed"] += 1
-        else:
-            logger.warning(f"⚠ {agent['name']}: No tests found")
-            test_results["skipped"] += 1
+    tests_dir = bundle_path / "tests"
+    if not tests_dir.exists() or not any(tests_dir.glob("test_*.py")):
+        logger.warning("No test files found in bundle")
+        test_results["skipped"] = len(manifest["agents"])
+    else:
+        # Run pytest on the tests directory
+        try:
+            result = subprocess.run(
+                ["pytest", str(tests_dir), "-v", "--tb=short"],
+                capture_output=True,
+                text=True,
+                timeout=60,
+            )
+
+            # Parse pytest output for results
+            output = result.stdout + result.stderr
+
+            # Count results from pytest output
+            for line in output.split("\n"):
+                if " PASSED" in line:
+                    test_results["passed"] += 1
+                elif " FAILED" in line:
+                    test_results["failed"] += 1
+                elif " SKIPPED" in line:
+                    test_results["skipped"] += 1
+
+            # If pytest failed to run, mark all as failed
+            if result.returncode != 0 and test_results["passed"] == 0:
+                logger.error("Tests failed to execute properly")
+                logger.error(output)
+                test_results["failed"] = len(manifest["agents"])
+
+        except FileNotFoundError:
+            logger.error("pytest not found. Install pytest to run tests: pip install pytest")
+            test_results["skipped"] = len(manifest["agents"])
+        except subprocess.TimeoutExpired:
+            logger.error("Test execution timed out")
+            test_results["failed"] = len(manifest["agents"])
+        except Exception as e:
+            logger.error(f"Error running tests: {e}")
+            test_results["failed"] = len(manifest["agents"])
 
     # Print results
     print("\n" + "=" * 50)
