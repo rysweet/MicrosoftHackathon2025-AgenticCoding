@@ -9,6 +9,7 @@ from typing import List, Optional
 
 from ..proxy.manager import ProxyManager
 from ..utils.claude_trace import get_claude_command
+from ..utils.cleanup_handler import CleanupHandler
 from ..uvx.manager import UVXManager
 from .detector import ClaudeDirectoryDetector
 from .repo_checkout import checkout_repository
@@ -45,6 +46,7 @@ class ClaudeLauncher:
         force_staging: bool = False,
         checkout_repo: Optional[str] = None,
         claude_args: Optional[List[str]] = None,
+        cleanup_handler: Optional[CleanupHandler] = None,
     ):
         """Initialize Claude launcher.
 
@@ -54,6 +56,7 @@ class ClaudeLauncher:
             force_staging: If True, force staging approach instead of --add-dir.
             checkout_repo: Optional GitHub repository URI to clone and use as working directory.
             claude_args: Additional arguments to forward to Claude.
+            cleanup_handler: Optional cleanup handler for staged files.
         """
         self.proxy_manager = proxy_manager
         self.append_system_prompt = append_system_prompt
@@ -62,6 +65,7 @@ class ClaudeLauncher:
         self.checkout_repo = checkout_repo
         self.claude_args = claude_args or []
         self.claude_process: Optional[subprocess.Popen] = None
+        self.cleanup_handler = cleanup_handler
 
         # Cached computation results for performance optimization
         self._cached_resolved_paths = {}  # Cache for path resolution results
@@ -303,6 +307,7 @@ class ClaudeLauncher:
                     self.claude_process.terminate()
                 if self.proxy_manager:
                     self.proxy_manager.stop_proxy()
+                # Cleanup is automatic via exit handlers
                 sys.exit(0)
 
             signal.signal(signal.SIGINT, signal_handler)
@@ -348,6 +353,7 @@ class ClaudeLauncher:
                 print("\nReceived interrupt signal. Shutting down...")
                 if self.proxy_manager:
                     self.proxy_manager.stop_proxy()
+                # Cleanup is automatic via exit handlers
                 sys.exit(0)
 
             signal.signal(signal.SIGINT, signal_handler)
