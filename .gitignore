@@ -99,4 +99,3 @@ ai_working/tmp
 
 # Smoke test runtime logs
 .smoke_test_data/data
-src/amplihack/.claude/runtime/

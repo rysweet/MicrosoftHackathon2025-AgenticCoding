@@ -20,9 +20,9 @@ include = ["amplihack*"]
 
 [tool.setuptools.package-data]
 # Include prompts and framework files
+# .claude/ is handled by custom build command in setup.py
 amplihack = [
     "prompts/*.md",
-    ".claude/**/*",
 ]
 
 [tool.ruff]
