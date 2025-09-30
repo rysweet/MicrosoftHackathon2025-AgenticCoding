@@ -199,9 +199,6 @@ def test_e2e_repackage_scripts_work(generated_bundle, mock_env):
 
 @pytest.mark.e2e
 @pytest.mark.slow
-@pytest.mark.skip(
-    reason="RepositoryCreator has subprocess text mode bug - needs fix in source code"
-)
 def test_e2e_create_repo_command(generated_bundle, mock_gh_cli, mock_git):
     """
     Test GitHub repository creation for bundles.
@@ -216,10 +213,6 @@ def test_e2e_create_repo_command(generated_bundle, mock_gh_cli, mock_git):
     - Repository creation succeeds
     - Result contains valid repository URL
     - Push operation succeeds when requested
-
-    NOTE: Currently skipped due to bug in RepositoryCreator where subprocess.run
-    doesn't use text=True, causing bytes/str mismatch. This needs to be fixed in
-    the source code (repository_creator.py line ~205).
     """
     # Arrange
     creator = RepositoryCreator()

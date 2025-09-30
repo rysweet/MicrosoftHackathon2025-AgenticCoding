@@ -91,51 +91,75 @@ def mock_git(monkeypatch):
         """Mock subprocess.run for git commands."""
         cmd = args[0] if args else kwargs.get("args", [])
 
+        # Determine if text mode requested
+        text_mode = kwargs.get("text", False)
+
         # git init
         if "init" in cmd:
+            output = "Initialized empty Git repository\n"
             return subprocess.CompletedProcess(
-                args=cmd, returncode=0, stdout=b"Initialized empty Git repository\n", stderr=b""
+                args=cmd,
+                returncode=0,
+                stdout=output if text_mode else output.encode(),
+                stderr="" if text_mode else b"",
             )
 
         # git add
         if "add" in cmd:
-            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout=b"", stderr=b"")
-
-        # git commit
-        if "commit" in cmd:
             return subprocess.CompletedProcess(
                 args=cmd,
                 returncode=0,
-                stdout=b"[main abc123] Initial commit\n",
-                stderr=b"",
+                stdout="" if text_mode else b"",
+                stderr="" if text_mode else b"",
+            )
+
+        # git commit
+        if "commit" in cmd:
+            output = "[main abc123] Initial commit\n"
+            return subprocess.CompletedProcess(
+                args=cmd,
+                returncode=0,
+                stdout=output if text_mode else output.encode(),
+                stderr="" if text_mode else b"",
             )
 
         # git push
         if "push" in cmd:
+            output = "To https://github.com/testuser/test-bundle\n"
             return subprocess.CompletedProcess(
                 args=cmd,
                 returncode=0,
-                stdout=b"To https://github.com/testuser/test-bundle\n",
-                stderr=b"",
+                stdout=output if text_mode else output.encode(),
+                stderr="" if text_mode else b"",
             )
 
         # git status
         if "status" in cmd:
+            output = "On branch main\nnothing to commit\n"
             return subprocess.CompletedProcess(
-                args=cmd, returncode=0, stdout=b"On branch main\nnothing to commit\n", stderr=b""
+                args=cmd,
+                returncode=0,
+                stdout=output if text_mode else output.encode(),
+                stderr="" if text_mode else b"",
             )
 
         # git remote
         if "remote" in cmd:
+            output = "origin\thttps://github.com/testuser/test-bundle\n"
             return subprocess.CompletedProcess(
                 args=cmd,
                 returncode=0,
-                stdout=b"origin\thttps://github.com/testuser/test-bundle\n",
-                stderr=b"",
+                stdout=output if text_mode else output.encode(),
+                stderr="" if text_mode else b"",
             )
 
         # Default success
-        return subprocess.CompletedProcess(args=cmd, returncode=0, stdout=b"", stderr=b"")
+        return subprocess.CompletedProcess(
+            args=cmd,
+            returncode=0,
+            stdout="" if text_mode else b"",
+            stderr="" if text_mode else b"",
+        )
 
     monkeypatch.setattr("subprocess.run", mock_run)
     return mock_run

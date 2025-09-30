@@ -425,16 +425,13 @@ Bundle ID: {bundle.id}
             "created_at": datetime.utcnow().isoformat(),
         }
 
-    def extract_package(
-        self, package_path: Path, target_path: Path, validate: bool = True
-    ) -> AgentBundle:
+    def extract_package(self, package_path: Path, target_path: Path) -> AgentBundle:
         """
         Extract a packaged bundle.
 
         Args:
             package_path: Path to package file
             target_path: Target directory for extraction
-            validate: Whether to validate after extraction
 
         Returns:
             Extracted AgentBundle
@@ -463,24 +460,42 @@ Bundle ID: {bundle.id}
             if not manifest_files:
                 raise PackagingError("No manifest found in package")
 
-            with open(manifest_files[0]) as f:
+            manifest_path = manifest_files[0]
+            bundle_root = manifest_path.parent
+
+            with open(manifest_path) as f:
                 manifest = json.load(f)
 
+            # Load agents from extracted files
+            from .models import GeneratedAgent
+
+            agents = []
+            agents_dir = bundle_root / "agents"
+            if agents_dir.exists():
+                for agent_info in manifest.get("agents", []):
+                    agent_file = agents_dir / f"{agent_info['name']}.md"
+                    if agent_file.exists():
+                        agent = GeneratedAgent(
+                            name=agent_info["name"],
+                            type=agent_info.get("type", "specialized"),
+                            role=agent_info.get("role", ""),
+                            description=agent_info.get("description", ""),
+                            content=agent_file.read_text(),
+                            capabilities=agent_info.get("capabilities", []),
+                            dependencies=agent_info.get("dependencies", []),
+                        )
+                        agents.append(agent)
+
             # Reconstruct bundle
-            # This is simplified - full implementation would rebuild from files
             bundle = AgentBundle(
                 name=manifest["bundle"]["name"],
                 version=manifest["bundle"]["version"],
                 description=manifest["bundle"]["description"],
-                agents=[],  # Would load from files
+                agents=agents,
                 manifest=manifest,
                 metadata=manifest.get("metadata", {}),
                 status="ready",
             )
-
-            if validate:
-                # Validate extracted bundle
-                pass
 
             return bundle
 
