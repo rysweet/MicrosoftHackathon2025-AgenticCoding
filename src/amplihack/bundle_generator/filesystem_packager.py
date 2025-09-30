@@ -49,24 +49,35 @@ class FilesystemPackager:
         """
         resolved = self.output_dir.resolve()
 
-        # Prevent writing to system directories
+        # Prevent writing to system directories (but allow temp directories)
         unsafe_paths = [
             Path("/"),
             Path("/etc"),
             Path("/usr"),
             Path("/bin"),
             Path("/sbin"),
-            Path("/var"),
             Path("/sys"),
             Path("/proc"),
             Path("/dev"),
         ]
 
-        for unsafe_path in unsafe_paths:
-            if resolved == unsafe_path or resolved.is_relative_to(unsafe_path):
-                raise PackagingError(
-                    f"Cannot write to system directory: {resolved}. Choose a user directory for output."
-                )
+        # Allow common temp directory patterns
+        allowed_temp_patterns = [
+            "/tmp/",
+            "/var/tmp/",
+            "/var/folders/",  # macOS temp
+            "/private/var/folders/",  # macOS temp (canonical)
+        ]
+
+        resolved_str = str(resolved)
+        is_temp_dir = any(resolved_str.startswith(pattern) for pattern in allowed_temp_patterns)
+
+        if not is_temp_dir:
+            for unsafe_path in unsafe_paths:
+                if resolved == unsafe_path or resolved.is_relative_to(unsafe_path):
+                    raise PackagingError(
+                        f"Cannot write to system directory: {resolved}. Choose a user directory for output."
+                    )
 
     def create_package(
         self,
