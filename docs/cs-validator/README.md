@@ -55,12 +55,12 @@ Run with verbose output:
 
 Choose the appropriate level based on your needs:
 
-| Level | Checks | Speed | Use Case |
-|-------|--------|-------|----------|
-| 1 | Syntax only | <100ms | Quick pre-commit check |
-| 2 | Syntax + Build | <3s | **Recommended** - Catches most errors |
-| 3 | Syntax + Build + Analyzers | <5s | Ensure code quality |
-| 4 | All + Format | <5s | Strict validation before PR |
+| Level | Checks                     | Speed  | Use Case                              |
+| ----- | -------------------------- | ------ | ------------------------------------- |
+| 1     | Syntax only                | <100ms | Quick pre-commit check                |
+| 2     | Syntax + Build             | <3s    | **Recommended** - Catches most errors |
+| 3     | Syntax + Build + Analyzers | <5s    | Ensure code quality                   |
+| 4     | All + Format               | <5s    | Strict validation before PR           |
 
 ## Configuration
 
@@ -71,9 +71,7 @@ Edit `.claude/config/cs-validator.json` to customize behavior:
   "enabled": true,
   "validationLevel": 2,
   "analyzerSeverityThreshold": "Error",
-  "skipProjects": [
-    "Tests/**/*.csproj"
-  ],
+  "skipProjects": ["Tests/**/*.csproj"],
   "timeoutSeconds": 30,
   "parallel": true,
   "cacheEnabled": true,
@@ -101,6 +99,7 @@ Edit `.claude/config/cs-validator.json` to customize behavior:
 The validator automatically runs after Claude Code edits when integrated as a stop hook:
 
 1. **Copy the example hook**:
+
    ```bash
    cp .claude/hooks/stop.sh.example .claude/hooks/stop.sh
    chmod +x .claude/hooks/stop.sh
