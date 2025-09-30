@@ -65,8 +65,7 @@ class FilesystemPackager:
         for unsafe_path in unsafe_paths:
             if resolved == unsafe_path or resolved.is_relative_to(unsafe_path):
                 raise PackagingError(
-                    f"Cannot write to system directory: {resolved}",
-                    recovery_suggestion="Choose a user directory for output",
+                    f"Cannot write to system directory: {resolved}. Choose a user directory for output."
                 )
 
     def create_package(
@@ -151,8 +150,7 @@ class FilesystemPackager:
         except Exception as e:
             logger.error(f"Failed to create filesystem package: {e}")
             raise PackagingError(
-                f"Failed to create filesystem package: {str(e)}",
-                recovery_suggestion="Check file permissions and disk space",
+                f"Failed to create filesystem package: {str(e)}. Check file permissions and disk space."
             )
 
     def _create_directory_structure(self, package_path: Path) -> None:
