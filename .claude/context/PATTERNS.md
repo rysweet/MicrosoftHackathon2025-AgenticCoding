@@ -1849,7 +1849,7 @@ tests/
 - **Single file module** - One file, one responsibility
 - **Module docstring documents philosophy** - Explain design decisions
 - **Public API in docstring** - List all public exports
-- ****all** defines studs** - Explicit public interface
+- \***\*all** defines studs\*\* - Explicit public interface
 - **Standard library only** - No external dependencies (when possible)
 - **Comprehensive tests** - Test the public API contract
 
