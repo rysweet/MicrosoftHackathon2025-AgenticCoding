@@ -26,11 +26,14 @@ class StopHook(HookProcessor):
     def __init__(self):
         super().__init__("stop")
 
-    def display_decision_summary(self, session_id: Optional[str] = None):
+    def display_decision_summary(self, session_id: Optional[str] = None) -> str:
         """Display decision records summary at session end.
 
         Args:
             session_id: Optional session identifier to locate DECISIONS.md
+
+        Returns:
+            Formatted decision summary string for display
         """
         try:
             # Locate the DECISIONS.md file
@@ -53,7 +56,7 @@ class StopHook(HookProcessor):
 
             # If still not found, exit gracefully
             if not decisions_file or not decisions_file.exists():
-                return
+                return ""
 
             # Read and parse the decisions file
             try:
@@ -61,10 +64,10 @@ class StopHook(HookProcessor):
                     content = f.read()
             except (IOError, OSError, PermissionError) as e:
                 self.log(f"Cannot read decisions file {decisions_file}: {e}", "ERROR")
-                return
+                return ""
             except UnicodeDecodeError as e:
                 self.log(f"Invalid encoding in decisions file {decisions_file}: {e}", "ERROR")
-                return
+                return ""
 
             # Count decisions (lines starting with "## Decision")
             decision_lines = [
@@ -74,7 +77,7 @@ class StopHook(HookProcessor):
 
             # If no decisions, exit gracefully
             if decision_count == 0:
-                return
+                return ""
 
             # Get last 3 decisions for preview
             last_decisions = decision_lines[-3:] if len(decision_lines) >= 3 else decision_lines
@@ -89,34 +92,41 @@ class StopHook(HookProcessor):
             # Create file:// URL for clickable link
             file_url = f"file://{decisions_file.resolve()}"
 
-            # Display the summary
-            print("\n")
-            print("═" * 70)
-            print("Decision Records Summary")
-            print("═" * 70)
-            print(f"Location: {file_url}")
-            print(f"Total Decisions: {decision_count}")
+            # Build summary as string (for return, not print)
+            lines = [
+                "\n",
+                "═" * 70,
+                "Decision Records Summary",
+                "═" * 70,
+                f"Location: {file_url}",
+                f"Total Decisions: {decision_count}",
+            ]
 
             if previews:
-                print("\nRecent Decisions:")
+                lines.append("\nRecent Decisions:")
                 for i, preview in enumerate(previews, 1):
                     # Truncate long decisions for preview
                     if len(preview) > 80:
                         preview = preview[:77] + "..."
-                    print(f"  {i}. {preview}")
+                    lines.append(f"  {i}. {preview}")
 
-            print("═" * 70)
-            print("\n")
+            lines.append("═" * 70)
+            lines.append("\n")
+
+            return "\n".join(lines)
 
         except FileNotFoundError as e:
             self.log(f"Decisions file not found: {e}", "WARNING")
+            return ""
         except PermissionError as e:
             self.log(f"Permission denied reading decisions file: {e}", "ERROR")
+            return ""
         except Exception as e:
             # Catch-all for unexpected errors with more detail
             self.log(
                 f"Unexpected error displaying decision summary: {type(e).__name__}: {e}", "ERROR"
             )
+            return ""
 
     def extract_learnings(self, messages: List[Dict]) -> List[Dict]:
         """Extract learnings using the reflection module.
@@ -705,7 +715,13 @@ class StopHook(HookProcessor):
 
             # Display decision summary at session end (AFTER all processing completes)
             # This allows other hook parts to write decisions first
-            self.display_decision_summary(session_id)
+            decision_summary = self.display_decision_summary(session_id)
+            if decision_summary:
+                # Add decision summary to output message
+                existing_msg = output.get("message", "")
+                if not isinstance(existing_msg, str):
+                    existing_msg = ""
+                output["message"] = existing_msg + decision_summary
 
             return output
         else:
@@ -713,7 +729,9 @@ class StopHook(HookProcessor):
             self.log("No session messages to analyze")
 
             # Display decision summary even without messages (may have decisions from other sources)
-            self.display_decision_summary(session_id)
+            decision_summary = self.display_decision_summary(session_id)
+            if decision_summary:
+                return {"message": decision_summary}
 
             return {}
 
