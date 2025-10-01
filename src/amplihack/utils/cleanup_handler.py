@@ -8,6 +8,7 @@ import logging
 import shutil
 import signal
 import sys
+import tempfile
 from pathlib import Path
 from typing import Optional
 
@@ -90,6 +91,11 @@ class CleanupHandler:
                 continue
 
             try:
+                # SECURITY: Re-check symlink immediately before deletion (TOCTOU mitigation)
+                if path.is_symlink():
+                    logger.warning(f"SECURITY: Symlink detected at cleanup time: {path}")
+                    continue
+
                 if path.is_dir():
                     shutil.rmtree(path)
                     logger.debug(f"Removed directory: {path}")
@@ -102,8 +108,9 @@ class CleanupHandler:
             except Exception as e:
                 logger.debug(f"Failed to cleanup {path}: {e}")
 
-        # Clean up registry file
-        registry_path = Path(f"/tmp/amplihack-cleanup-{self.registry.session_id}.json")
+        # Clean up registry file (use tempfile.gettempdir for cross-platform)
+        temp_dir = Path(tempfile.gettempdir())
+        registry_path = temp_dir / f"amplihack-cleanup-{self.registry.session_id}.json"
         try:
             if registry_path.exists():
                 registry_path.unlink()
@@ -117,15 +124,20 @@ class CleanupHandler:
         # Normal exit
         atexit.register(self.cleanup)
 
-        # Signal handlers (Unix)
+        # Signal handlers (Unix) - improved error handling
         if hasattr(signal, "SIGINT"):
             original_sigint = signal.getsignal(signal.SIGINT)
 
             def sigint_handler(sig, frame):
-                self.cleanup()
-                if callable(original_sigint):
-                    original_sigint(sig, frame)
-                sys.exit(0)
+                try:
+                    self.cleanup()
+                except Exception as e:
+                    logger.error(f"Cleanup failed during SIGINT: {e}")
+                finally:
+                    if callable(original_sigint):
+                        original_sigint(sig, frame)
+                    else:
+                        sys.exit(0)
 
             signal.signal(signal.SIGINT, sigint_handler)
 
@@ -133,10 +145,15 @@ class CleanupHandler:
             original_sigterm = signal.getsignal(signal.SIGTERM)
 
             def sigterm_handler(sig, frame):
-                self.cleanup()
-                if callable(original_sigterm):
-                    original_sigterm(sig, frame)
-                sys.exit(0)
+                try:
+                    self.cleanup()
+                except Exception as e:
+                    logger.error(f"Cleanup failed during SIGTERM: {e}")
+                finally:
+                    if callable(original_sigterm):
+                        original_sigterm(sig, frame)
+                    else:
+                        sys.exit(0)
 
             signal.signal(signal.SIGTERM, sigterm_handler)
 
