@@ -236,6 +236,7 @@ For manual verification of the fix:
 ### Test Case 1: Decision Records Visible with Empty Learnings
 
 1. Create `.claude/runtime/logs/test_session/DECISIONS.md`:
+
    ```markdown
    ## Decision: Test Decision
 
@@ -243,6 +244,7 @@ For manual verification of the fix:
    **Why**: Verify fix works
    **Alternatives**: None
    ```
+
 2. Create test script:
    ```python
    from .claude.tools.amplihack.hooks.stop import StopHook
