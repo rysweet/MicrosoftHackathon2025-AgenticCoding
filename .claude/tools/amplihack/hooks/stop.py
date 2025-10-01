@@ -138,35 +138,24 @@ class StopHook(HookProcessor):
             List of potential learnings with improvement suggestions
         """
         try:
-            # Import reflection module
-            from reflection import SessionReflector, save_reflection_summary
+            # Import reflection analysis directly
+            # NOTE: Only process_reflection_analysis exists in reflection.py
+            from reflection import analyze_session_patterns
 
-            # Create reflector and analyze session
-            reflector = SessionReflector()
-            analysis = reflector.analyze_session(messages)
+            # Get patterns from reflection analysis
+            patterns = analyze_session_patterns(messages)
 
-            # Save detailed analysis if not skipped
-            if not analysis.get("skipped"):
-                summary_file = save_reflection_summary(analysis, self.analysis_dir)
-                if summary_file:
-                    self.log(f"Reflection analysis saved to {summary_file}")
-
-                # Return patterns found as learnings
-                learnings = []
-                for pattern in analysis.get("patterns", []):
-                    learnings.append(
-                        {
-                            "type": pattern["type"],
-                            "suggestion": pattern.get("suggestion", ""),
-                            "priority": "high"
-                            if pattern["type"] == "user_frustration"
-                            else "normal",
-                        }
-                    )
-                return learnings
-            else:
-                self.log("Reflection skipped (loop prevention active)")
-                return []
+            # Convert patterns to learnings format
+            learnings = []
+            for pattern in patterns:
+                learnings.append(
+                    {
+                        "type": pattern["type"],
+                        "suggestion": pattern.get("suggestion", ""),
+                        "priority": pattern.get("priority", "medium"),
+                    }
+                )
+            return learnings
 
         except ImportError as e:
             self.log(f"Could not import reflection module: {e}", "WARNING")
@@ -674,8 +663,9 @@ class StopHook(HookProcessor):
             # Check for learnings
             learnings = self.extract_learnings(messages)
 
-            # Build response
+            # Build response - ALWAYS initialize output dict
             output = {}
+
             if learnings:
                 # Check for high priority learnings
                 priority_learnings = [
@@ -713,8 +703,9 @@ class StopHook(HookProcessor):
                         existing_msg = ""
                     output["message"] = existing_msg + rec_message
 
-            # Display decision summary at session end (AFTER all processing completes)
-            # This allows other hook parts to write decisions first
+            # CRITICAL FIX: Display decision summary OUTSIDE learnings block
+            # This ensures decisions are ALWAYS shown, even when learnings is empty
+            # Decision summary must run after all processing completes
             decision_summary = self.display_decision_summary(session_id)
             if decision_summary:
                 # Add decision summary to output message
