@@ -1,9 +1,10 @@
 """UVX framework staging utilities."""
 
 import os
+import secrets
 import shutil
 import sys
-import uuid
+import time
 from pathlib import Path
 from typing import Optional, Set
 
@@ -56,7 +57,8 @@ class UVXStager:
             from .uvx_models import UVXConfiguration
 
             config = UVXConfiguration()
-            session_id = str(uuid.uuid4())[:8]
+            # SECURITY: Use cryptographically secure session ID with timestamp
+            session_id = f"{int(time.time())}-{secrets.token_hex(8)}"
             self._cleanup_handler = initialize_cleanup_system(config, session_id, Path.cwd())
             self._cleanup_initialized = True
             self._debug_log("Cleanup system initialized")
