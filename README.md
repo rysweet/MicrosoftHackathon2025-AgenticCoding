@@ -10,6 +10,47 @@ collaborative problem-solving.
 
 ---
 
+## Prerequisites
+
+Before using AmplihHack, ensure you have the following tools installed:
+
+- **Node.js** (v18+) - [https://nodejs.org/](https://nodejs.org/)
+- **npm** - [https://www.npmjs.com/](https://www.npmjs.com/) (comes with
+  Node.js)
+- **uv** - [https://docs.astral.sh/uv/](https://docs.astral.sh/uv/)
+- **git** - [https://git-scm.com/](https://git-scm.com/)
+
+### Quick Installation
+
+**macOS:**
+
+```bash
+brew install node uv git
+```
+
+**Linux (Ubuntu/Debian):**
+
+```bash
+sudo apt install nodejs npm git
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+**Windows:**
+
+```powershell
+winget install OpenJS.NodeJS Git.Git
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+For detailed platform-specific installation instructions, see
+[docs/PREREQUISITES.md](docs/PREREQUISITES.md).
+
+**Automatic Checking:** AmplihHack automatically checks for missing
+prerequisites on launch and provides installation instructions if any are
+missing.
+
+---
+
 ## Quick Start
 
 ### Basic Usage
