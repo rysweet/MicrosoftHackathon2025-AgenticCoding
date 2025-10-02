@@ -9,7 +9,7 @@ from typing import List, Optional
 from .docker import DockerManager
 from .launcher import ClaudeLauncher
 from .proxy import ProxyConfig, ProxyManager
-from .utils import is_uvx_deployment, stage_uvx_framework
+from .utils import is_uvx_deployment
 
 
 def launch_command(args: argparse.Namespace, claude_args: Optional[List[str]] = None) -> int:
@@ -192,16 +192,49 @@ def main(argv: Optional[List[str]] = None) -> int:
         Exit code.
     """
     # Initialize UVX staging if needed (before parsing args)
+    temp_claude_dir = None
     if is_uvx_deployment():
-        if stage_uvx_framework():
-            if os.environ.get("AMPLIHACK_DEBUG", "").lower() == "true":
-                print("UVX staging completed")
+        # Create temporary Claude environment for UVX zero-install
+        import tempfile
+
+        temp_dir = tempfile.mkdtemp(prefix="amplihack_uvx_")
+        temp_claude_dir = os.path.join(temp_dir, ".claude")
+
+        # Set CLAUDE_PROJECT_DIR to the temp directory
+        os.environ["CLAUDE_PROJECT_DIR"] = temp_dir
+
+        if os.environ.get("AMPLIHACK_DEBUG", "").lower() == "true":
+            print(f"UVX mode: Created temp Claude environment at {temp_dir}")
+
+        # Stage framework files to the temp .claude directory
+        # Use the built-in _local_install function to copy framework files
+        # Find the amplihack package location
+        from . import copytree_manifest
+
+        amplihack_src = None
+        for path in sys.path:
+            test_path = os.path.join(path, "amplihack", ".claude")
+            if os.path.exists(test_path):
+                amplihack_src = os.path.join(path, "amplihack")
+                break
+
+        if amplihack_src:
+            # Copy .claude contents to temp directory
+            copied = copytree_manifest(amplihack_src, temp_dir, ".claude")
+            if copied and os.environ.get("AMPLIHACK_DEBUG", "").lower() == "true":
+                print(f"UVX staging completed to {temp_claude_dir}")
 
     args, claude_args = parse_args_with_passthrough(argv)
 
     if not args.command:
         # If we have claude_args but no command, default to launching Claude directly
         if claude_args:
+            # If in UVX mode, ensure we use --add-dir for the current directory
+            if is_uvx_deployment():
+                cwd = os.getcwd()
+                if "--add-dir" not in claude_args:
+                    claude_args = ["--add-dir", cwd] + claude_args
+
             # Check if Docker should be used for direct launch
             if DockerManager.should_use_docker():
                 print("Docker mode enabled via AMPLIHACK_USE_DOCKER")
@@ -242,6 +275,13 @@ def main(argv: Optional[List[str]] = None) -> int:
         return 0
 
     elif args.command == "launch":
+        # If in UVX mode, ensure we use --add-dir for the current directory
+        if is_uvx_deployment():
+            # The current directory is the one the user wants to work in
+            cwd = os.getcwd()
+            # Add --add-dir to claude_args if not already present
+            if "--add-dir" not in claude_args:
+                claude_args = ["--add-dir", cwd] + (claude_args or [])
         return launch_command(args, claude_args)
 
     elif args.command == "uvx-help":
