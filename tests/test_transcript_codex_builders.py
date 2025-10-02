@@ -301,11 +301,16 @@ class TestExportOnCompactIntegration(unittest.TestCase):
         logs_dir = self.mock_project_root / ".claude" / "runtime" / "logs"
         logs_dir.mkdir(parents=True, exist_ok=True)
 
+        # Add hook processor path to sys.path
+        test_dir = Path(__file__).parent
+        hook_path = test_dir.parent / ".claude" / "tools" / "amplihack" / "hooks"
+        sys.path.insert(0, str(hook_path))
+
         with patch(
             "builders.export_on_compact_integration.get_project_root",
             return_value=self.mock_project_root,
         ):
-            with patch("builders.export_on_compact_integration.HookProcessor.__init__"):
+            with patch("hook_processor.HookProcessor.__init__", return_value=None):
                 with patch.object(Path, "mkdir"):
                     from builders.export_on_compact_integration import ExportOnCompactIntegration
 

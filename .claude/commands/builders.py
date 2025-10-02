@@ -4,14 +4,15 @@
 Implements Microsoft Amplifier-style session documentation and knowledge extraction.
 """
 
-import json
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional
 
-# Clean import setup
+# Clean import setup - must be done before other imports
 project_root = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(project_root / ".claude" / "tools" / "amplihack"))
+
+import json
+from typing import Dict, List, Optional
 
 from builders import CodexTranscriptsBuilder
 
