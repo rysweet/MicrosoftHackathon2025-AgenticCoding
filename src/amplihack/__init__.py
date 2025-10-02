@@ -275,8 +275,6 @@ def ensure_settings_json():
     """Ensure settings.json exists with proper hook configuration."""
     import sys
 
-    from amplihack.launcher.settings_manager import SettingsManager
-
     settings_path = os.path.join(CLAUDE_DIR, "settings.json")
 
     # Detect UVX environment - if running from UVX, auto-approve settings modification
@@ -289,28 +287,57 @@ def ensure_settings_json():
         or not sys.stdin.isatty()
     )
 
-    # Create settings manager
-    settings_manager = SettingsManager(
-        settings_path=Path(settings_path),
-        session_id=f"install_{int(__import__('time').time())}",
-        non_interactive=os.getenv("AMPLIHACK_YES", "0") == "1" or is_uvx,
-    )
+    # Try to use SettingsManager if available (for backup/restore functionality)
+    settings_manager = None
+    backup_path = None
+    try:
+        # Try different import methods
+        try:
+            from amplihack.launcher.settings_manager import SettingsManager
+        except ImportError:
+            try:
+                from .launcher.settings_manager import SettingsManager
+            except ImportError:
+                # Try adding parent to path temporarily
+                import sys
 
-    # Prompt user for modification (or auto-approve if UVX/non-interactive)
-    if not settings_manager.prompt_user_for_modification():
-        print("  ⚠️  Settings modification declined by user")
-        return False
-    elif is_uvx:
-        print("  🚀 UVX environment detected - auto-configuring hooks")
+                sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+                try:
+                    from amplihack.launcher.settings_manager import SettingsManager
+                except ImportError:
+                    SettingsManager = None
+                finally:
+                    sys.path.pop(0)
 
-    # Create backup
-    success, backup_path = settings_manager.create_backup()
-    if not success:
-        print("  ❌ Failed to create backup - aborting settings modification")
-        return False
+        if SettingsManager:
+            # Create settings manager
+            settings_manager = SettingsManager(
+                settings_path=Path(settings_path),
+                session_id=f"install_{int(__import__('time').time())}",
+                non_interactive=os.getenv("AMPLIHACK_YES", "0") == "1" or is_uvx,
+            )
 
-    if backup_path:
-        print(f"  💾 Backup created at {backup_path}")
+            # Prompt user for modification (or auto-approve if UVX/non-interactive)
+            if not settings_manager.prompt_user_for_modification():
+                print("  ⚠️  Settings modification declined by user")
+                return False
+            elif is_uvx:
+                print("  🚀 UVX environment detected - auto-configuring hooks")
+
+            # Create backup
+            success, backup_path = settings_manager.create_backup()
+            if not success:
+                # Continue without backup rather than failing
+                print("  ⚠️  Could not create backup - continuing anyway")
+                backup_path = None
+            elif backup_path:
+                print(f"  💾 Backup created at {backup_path}")
+
+    except Exception as e:
+        # If SettingsManager fails for any reason, continue without it
+        print(f"  ⚠️  Settings manager unavailable - continuing without backup: {e}")
+        if is_uvx:
+            print("  🚀 UVX environment detected - auto-configuring hooks")
 
     # Load existing settings or use template
     if os.path.exists(settings_path):
