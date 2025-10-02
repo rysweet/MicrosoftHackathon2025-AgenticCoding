@@ -615,10 +615,7 @@ class StopHook(HookProcessor):
         # Recursion guard removed - it was part of the broken reflection system
         self.log("Reflection system DISABLED - see incident reports for details")
 
-        # Attempt 4: Print directly to stdout before JSON output
-        # Google says: "stdout is typically shown to the user, especially in transcript modes"
-        print("\n=====STOP Hook=====\n", flush=True)
-
+        # Return empty dict - message will be printed in main() after JSON output
         return {}
 
     def _should_analyze(self, state_data: ReflectionStateData) -> bool:
@@ -858,6 +855,10 @@ def main():
     """Entry point for the stop hook."""
     hook = StopHook()
     hook.run()
+
+    # Attempt 5: Print to stdout AFTER JSON output (which hook.run() writes)
+    # Google says: "stdout is typically shown to the user, especially in transcript modes"
+    print("\n=====STOP Hook=====\n", flush=True)
 
 
 if __name__ == "__main__":
