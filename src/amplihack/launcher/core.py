@@ -315,6 +315,9 @@ class ClaudeLauncher:
             env = os.environ.copy()
             if self._target_directory:
                 env.update(self.uvx_manager.get_environment_variables())
+            # Pass through CLAUDE_PROJECT_DIR if set (for UVX temp environments)
+            if "CLAUDE_PROJECT_DIR" in os.environ:
+                env["CLAUDE_PROJECT_DIR"] = os.environ["CLAUDE_PROJECT_DIR"]
 
             # Launch Claude
             self.claude_process = subprocess.Popen(cmd, env=env)
@@ -370,6 +373,9 @@ class ClaudeLauncher:
             env = os.environ.copy()
             if self._target_directory:
                 env.update(self.uvx_manager.get_environment_variables())
+            # Pass through CLAUDE_PROJECT_DIR if set (for UVX temp environments)
+            if "CLAUDE_PROJECT_DIR" in os.environ:
+                env["CLAUDE_PROJECT_DIR"] = os.environ["CLAUDE_PROJECT_DIR"]
 
             # Launch Claude with direct I/O (interactive mode)
             exit_code = subprocess.call(cmd, env=env)

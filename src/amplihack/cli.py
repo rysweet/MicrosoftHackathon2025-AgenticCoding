@@ -221,8 +221,69 @@ def main(argv: Optional[List[str]] = None) -> int:
         if amplihack_src:
             # Copy .claude contents to temp directory
             copied = copytree_manifest(amplihack_src, temp_dir, ".claude")
-            if copied and os.environ.get("AMPLIHACK_DEBUG", "").lower() == "true":
-                print(f"UVX staging completed to {temp_claude_dir}")
+
+            # Create settings.json with relative paths (Claude will resolve relative to CLAUDE_PROJECT_DIR)
+            if copied:
+                settings_path = os.path.join(temp_claude_dir, "settings.json")
+                settings = {
+                    "hooks": {
+                        "SessionStart": [
+                            {
+                                "hooks": [
+                                    {
+                                        "type": "command",
+                                        "command": ".claude/tools/amplihack/hooks/session_start.py",
+                                        "timeout": 10000,
+                                    }
+                                ]
+                            }
+                        ],
+                        "Stop": [
+                            {
+                                "hooks": [
+                                    {
+                                        "type": "command",
+                                        "command": ".claude/tools/amplihack/hooks/stop.py",
+                                        "timeout": 30000,
+                                    }
+                                ]
+                            }
+                        ],
+                        "PostToolUse": [
+                            {
+                                "matcher": "*",
+                                "hooks": [
+                                    {
+                                        "type": "command",
+                                        "command": ".claude/tools/amplihack/hooks/post_tool_use.py",
+                                    }
+                                ],
+                            }
+                        ],
+                        "PreCompact": [
+                            {
+                                "hooks": [
+                                    {
+                                        "type": "command",
+                                        "command": ".claude/tools/amplihack/hooks/pre_compact.py",
+                                        "timeout": 30000,
+                                    }
+                                ]
+                            }
+                        ],
+                    }
+                }
+
+                # Write settings.json
+                import json
+
+                os.makedirs(temp_claude_dir, exist_ok=True)
+                with open(settings_path, "w") as f:
+                    json.dump(settings, f, indent=2)
+
+                if os.environ.get("AMPLIHACK_DEBUG", "").lower() == "true":
+                    print(f"UVX staging completed to {temp_claude_dir}")
+                    print("Created settings.json with relative hook paths")
 
     args, claude_args = parse_args_with_passthrough(argv)
 
