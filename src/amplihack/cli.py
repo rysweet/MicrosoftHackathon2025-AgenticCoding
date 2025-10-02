@@ -223,8 +223,12 @@ def main(argv: Optional[List[str]] = None) -> int:
             copied = copytree_manifest(amplihack_src, temp_dir, ".claude")
 
             # Create settings.json with relative paths (Claude will resolve relative to CLAUDE_PROJECT_DIR)
+            # When CLAUDE_PROJECT_DIR is set, Claude will use settings.json from that directory only
             if copied:
                 settings_path = os.path.join(temp_claude_dir, "settings.json")
+                import json
+
+                # Create minimal settings.json with just amplihack hooks
                 settings = {
                     "hooks": {
                         "SessionStart": [
@@ -275,8 +279,6 @@ def main(argv: Optional[List[str]] = None) -> int:
                 }
 
                 # Write settings.json
-                import json
-
                 os.makedirs(temp_claude_dir, exist_ok=True)
                 with open(settings_path, "w") as f:
                     json.dump(settings, f, indent=2)
