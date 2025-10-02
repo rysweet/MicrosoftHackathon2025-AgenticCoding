@@ -296,12 +296,13 @@ User: "Add authentication to the API"
 
 The workflow file is the single source of truth - edit it to change the process.
 
-### Parallel Execution Engine
+### Microsoft Amplifier Parallel Execution Engine
 
 **PARALLEL BY DEFAULT**: Always execute operations in parallel unless
-dependencies require sequential order.
+dependencies require sequential order. This is the core principle of Microsoft
+Amplifier's agentic coding framework.
 
-#### Automatic Parallel Detection Rules
+#### Comprehensive Parallel Detection Framework
 
 **RULE 1: File Operations**
 
@@ -309,6 +310,7 @@ dependencies require sequential order.
 IF: Multiple files mentioned OR file patterns detected
 THEN: Batch all file operations in single tool call
 EXAMPLE: "analyze these Python files" → [Read *.py files in parallel]
+DECISION THRESHOLD: 2+ files = automatic parallel execution
 ```
 
 **RULE 2: Multi-Perspective Analysis**
@@ -317,6 +319,7 @@ EXAMPLE: "analyze these Python files" → [Read *.py files in parallel]
 IF: Task requires multiple viewpoints OR "comprehensive" mentioned
 THEN: Deploy relevant agents in parallel
 EXAMPLE: "review this code" → [security, patterns, optimizer, reviewer]
+DECISION THRESHOLD: 2+ analytical perspectives = parallel deployment
 ```
 
 **RULE 3: Independent Components**
@@ -325,6 +328,7 @@ EXAMPLE: "review this code" → [security, patterns, optimizer, reviewer]
 IF: Task involves separate modules OR multiple systems
 THEN: Analyze each component in parallel
 EXAMPLE: "check frontend and backend" → [frontend analysis, backend analysis]
+DECISION THRESHOLD: Logically separate components = parallel execution
 ```
 
 **RULE 4: Information Gathering**
@@ -333,47 +337,316 @@ EXAMPLE: "check frontend and backend" → [frontend analysis, backend analysis]
 IF: Research phase OR multiple data sources needed
 THEN: Parallel information collection
 EXAMPLE: "understand this system" → [code analysis, docs review, pattern detection]
+DECISION THRESHOLD: Multiple information sources = parallel research
 ```
 
-#### Execution Patterns
-
-**Optimal (Parallel by Default):**
+**RULE 5: Development Lifecycle Tasks**
 
 ```
-"I'll analyze these components comprehensively"
-[Single message: analyzer(component1), security(component1), optimizer(component1),
-                analyzer(component2), security(component2), optimizer(component2)]
+IF: Multiple development activities can occur simultaneously
+THEN: Parallel lifecycle execution
+EXAMPLE: "prepare for deployment" → [testing, documentation, security audit, performance check]
+DECISION THRESHOLD: Independent development tasks = parallel execution
 ```
 
-**Sub-optimal (Sequential without justification):**
+**RULE 6: Cross-Cutting Concerns**
 
 ```
-"Let me analyze the first component"
+IF: Multiple quality attributes need assessment
+THEN: Parallel quality analysis
+EXAMPLE: "evaluate system quality" → [maintainability, performance, security, scalability]
+DECISION THRESHOLD: Multiple quality dimensions = parallel evaluation
+```
+
+#### Microsoft Amplifier Execution Templates
+
+**Template 1: Comprehensive Feature Development**
+
+```
+"I'll orchestrate complete feature development with parallel specialization"
+[Single message with parallel Task calls]:
+- architect: Design system architecture and module boundaries
+- security: Identify security requirements and threat vectors
+- database: Design data schema and migration strategy
+- api-designer: Define API contracts and integration points
+- tester: Design test strategy and acceptance criteria
+- optimizer: Identify performance considerations and bottlenecks
+- integration: Plan external service integrations and dependencies
+```
+
+**Template 2: Multi-Dimensional Code Analysis**
+
+```
+"I'll analyze this codebase from all critical perspectives simultaneously"
+[Single message with parallel analysis]:
+- analyzer: Deep code structure and pattern analysis
+- security: Security vulnerability assessment and threat modeling
+- optimizer: Performance bottleneck identification and recommendations
+- patterns: Reusable pattern detection and architectural insights
+- reviewer: Philosophy compliance check and code quality assessment
+- integration: Dependency analysis and external service evaluation
+```
+
+**Template 3: Comprehensive Problem Diagnosis**
+
+```
+"I'll diagnose this issue from multiple angles for complete understanding"
+[Single message with parallel diagnosis]:
+- analyzer: Root cause analysis and code flow tracing
+- environment: System and dependency analysis
+- patterns: Similar issue pattern matching and historical analysis
+- logs: Error and warning pattern analysis
+- security: Security implications and vulnerability assessment
+- optimizer: Performance impact analysis
+```
+
+**Template 4: System Preparation and Validation**
+
+```
+"I'll prepare the system comprehensively with parallel validation"
+[Single message with parallel preparation]:
+- tester: Execute test suites and validate functionality
+- security: Security audit and compliance checking
+- optimizer: Performance testing and optimization validation
+- integration: External service connectivity and API testing
+- reviewer: Code quality and philosophy compliance verification
+```
+
+**Template 5: Research and Discovery**
+
+```
+"I'll research this domain comprehensively from multiple perspectives"
+[Single message with parallel research]:
+- analyzer: Technical architecture and implementation analysis
+- patterns: Industry best practices and pattern identification
+- security: Security standards and threat landscape research
+- optimizer: Performance benchmarks and optimization strategies
+- integration: Technology ecosystem and compatibility analysis
+```
+
+#### Advanced Execution Patterns
+
+**Optimal (Microsoft Amplifier Standard):**
+
+```
+"I'll execute comprehensive parallel analysis with intelligent coordination"
+[Single message with optimized parallel execution]:
+- Primary Analysis: analyzer(component1), security(component1), optimizer(component1)
+- Secondary Analysis: patterns(component1), reviewer(component1), integration(component1)
+- Cross-Component: analyzer(component2), security(component2), optimizer(component2)
+- Synthesis: patterns(overall_system), integration(system_dependencies)
+```
+
+**Advanced Pattern (Nested Parallel Execution):**
+
+```
+"I'll coordinate layered parallel execution for maximum efficiency"
+[Layer 1 - Foundation]: architect(requirements), database(schema), api-designer(contracts)
+[Layer 2 - Implementation]: builder(core_logic), security(auth_layer), optimizer(performance)
+[Layer 3 - Validation]: tester(test_suites), reviewer(quality_check), integration(e2e_tests)
+```
+
+**Sub-optimal (Anti-Pattern - Sequential without justification):**
+
+```
+"Let me analyze the first component" ❌
 [analyzer(component1)]
-"Now the second component"
+"Now the second component" ❌
 [analyzer(component2)]
+"Finally the third component" ❌
+[analyzer(component3)]
+
+CORRECT APPROACH:
+"I'll analyze all components in parallel for efficiency"
+[analyzer(component1), analyzer(component2), analyzer(component3)]
 ```
 
-#### Parallel Coordination Protocols
+#### Microsoft Amplifier Coordination Protocols
 
-**Agent Coordination Guidelines:**
+**Advanced Agent Coordination Guidelines:**
 
-- **Context Sharing**: Each agent receives full task context
-- **Output Integration**: Orchestrator synthesizes parallel results
-- **Conflict Resolution**: Sequential fallback for resource conflicts
-- **Progress Tracking**: TodoWrite manages parallel task completion
+- **Context Sharing**: Each agent receives full task context plus
+  domain-specific information
+- **Output Integration**: Orchestrator synthesizes parallel results with
+  conflict resolution
+- **Conflict Resolution**: Intelligent sequential fallback with dependency
+  analysis
+- **Progress Tracking**: TodoWrite manages parallel task completion with
+  real-time updates
+- **Resource Management**: Dynamic resource allocation and conflict prevention
+- **Quality Assurance**: Cross-agent validation and consistency checking
+
+**Parallel Execution Optimization Rules:**
+
+1. **Batch Similar Operations**: Group related tasks for efficiency
+2. **Minimize Context Switching**: Reduce agent coordination overhead
+3. **Maximize Concurrency**: Identify and eliminate false dependencies
+4. **Resource Balancing**: Distribute computational load across agents
+5. **Error Propagation**: Handle failures gracefully without blocking parallel
+   streams
 
 **PARALLEL-READY Agents** (can work simultaneously):
 
-- `analyzer`, `security`, `optimizer`, `patterns`, `reviewer`
-- `architect`, `api-designer`, `database`, `tester`
-- `integration`, `cleanup`, `ambiguity`
+- **Core Analysis**: `analyzer`, `security`, `optimizer`, `patterns`, `reviewer`
+- **Design Phase**: `architect`, `api-designer`, `database`, `tester`
+- **Integration**: `integration`, `cleanup`, `ambiguity`
+- **Quality Assurance**: `security`, `optimizer`, `reviewer`, `tester`
+- **Research**: `patterns`, `analyzer`, `integration`, `ambiguity`
 
-**SEQUENTIAL-REQUIRED Agents** (state dependencies):
+**SEQUENTIAL-REQUIRED Agents** (hard dependencies):
 
-- `builder` (after `architect`)
-- `ci-diagnostic-workflow` (after push)
-- `pre-commit-diagnostic` (during commit process)
+- **Design → Implementation**: `architect` → `builder` → `reviewer`
+- **Development → Deployment**: `builder` → `ci-diagnostic-workflow` →
+  deployment
+- **Commit Process**: `pre-commit-diagnostic` (during commit process)
+- **Progressive Enhancement**: Each step builds on previous results
+
+#### Anti-Patterns and Common Mistakes
+
+**Anti-Pattern 1: Unnecessary Sequencing**
+
+```
+❌ INCORRECT:
+"Let me check the database first"
+[database analysis]
+"Now I'll check the API"
+[api analysis]
+"Finally the frontend"
+[frontend analysis]
+
+✅ CORRECT:
+"I'll analyze all system components in parallel"
+[database analysis, api analysis, frontend analysis]
+```
+
+**Anti-Pattern 2: False Dependencies**
+
+```
+❌ INCORRECT:
+"I need to understand the code before checking security"
+[analyzer] → [security]
+
+✅ CORRECT:
+"I'll analyze code structure and security simultaneously"
+[analyzer, security]
+```
+
+**Anti-Pattern 3: Over-Sequencing Complex Tasks**
+
+```
+❌ INCORRECT:
+Step 1: Requirements analysis
+Step 2: Architecture design
+Step 3: Security review
+Step 4: Performance analysis
+Step 5: Implementation planning
+
+✅ CORRECT:
+Parallel Analysis: [requirements, architecture, security, performance, implementation]
+```
+
+#### Systematic Decision Framework
+
+**When to Use Parallel Execution (Default):**
+
+1. **Independent Analysis**: Tasks that don't require others' outputs
+2. **Multiple Perspectives**: Different analytical viewpoints on same target
+3. **Separate Components**: Logically distinct system components
+4. **Batch Operations**: Multiple similar operations (file reads, API calls)
+5. **Research Tasks**: Information gathering from multiple sources
+
+**When to Use Sequential Execution (Exception):**
+
+1. **Hard Dependencies**: Output A is required input for B
+2. **State Mutations**: A changes state that B depends on
+3. **Progressive Context**: Each step builds knowledge for next
+4. **Resource Conflicts**: Agents would conflict on same resources
+5. **Ordered Workflow**: User explicitly requires specific sequence
+
+**Decision Matrix:**
+
+```
+Task Independence + Multiple Targets = PARALLEL
+Task Independence + Single Target + Multiple Perspectives = PARALLEL
+Task Dependence + Sequential Requirements = SEQUENTIAL
+Resource Conflicts + Shared State = SEQUENTIAL
+User-Specified Order = SEQUENTIAL (respect explicit requirements)
+```
+
+#### Template Responses for Common Scenarios
+
+**Scenario 1: New Feature Request**
+
+```
+"I'll coordinate comprehensive feature development with Microsoft Amplifier's parallel approach"
+
+[Parallel Execution]:
+- architect: Design feature architecture and integration points
+- security: Identify security requirements and authentication needs
+- database: Design data models and migration strategies
+- api-designer: Define API contracts and endpoint specifications
+- tester: Plan test strategy and acceptance criteria
+- optimizer: Identify performance considerations and monitoring needs
+```
+
+**Scenario 2: Bug Investigation**
+
+```
+"I'll investigate this issue from multiple angles simultaneously for rapid resolution"
+
+[Parallel Diagnosis]:
+- analyzer: Code flow analysis and root cause investigation
+- logs: Error pattern analysis and failure point identification
+- environment: System state and dependency validation
+- patterns: Similar issue detection and solution matching
+- security: Security implications and vulnerability assessment
+```
+
+**Scenario 3: Code Review Request**
+
+```
+"I'll perform comprehensive code review with parallel specialist perspectives"
+
+[Parallel Review]:
+- reviewer: Code quality and philosophy compliance
+- security: Security vulnerability and threat assessment
+- optimizer: Performance bottlenecks and efficiency analysis
+- patterns: Best practices and architectural pattern validation
+- integration: Dependency management and compatibility checking
+```
+
+**Scenario 4: System Analysis**
+
+```
+"I'll analyze the system comprehensively with parallel specialized analysis"
+
+[Parallel Analysis]:
+- analyzer: Architecture and code structure analysis
+- security: Security posture and vulnerability assessment
+- optimizer: Performance characteristics and bottleneck identification
+- patterns: Design patterns and architectural insights
+- integration: External dependencies and service integration analysis
+```
+
+#### Performance Optimization Guidelines
+
+**Parallel Execution Optimization:**
+
+1. **Minimize Agent Overhead**: Batch related operations efficiently
+2. **Optimize Context Passing**: Share relevant context without duplication
+3. **Reduce Communication**: Minimize inter-agent dependencies
+4. **Resource Allocation**: Balance computational load across parallel streams
+5. **Error Handling**: Implement graceful degradation for failed parallel
+   operations
+
+**Monitoring and Metrics:**
+
+- **Execution Time**: Track parallel vs sequential performance gains
+- **Agent Utilization**: Monitor resource usage across parallel agents
+- **Success Rates**: Measure parallel execution completion rates
+- **Quality Outcomes**: Assess result quality from parallel vs sequential
+  approaches
+- **User Satisfaction**: Track effectiveness from user perspective
 
 ## Development Principles
 
