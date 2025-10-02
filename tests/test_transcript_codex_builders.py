@@ -306,20 +306,17 @@ class TestExportOnCompactIntegration(unittest.TestCase):
         hook_path = test_dir.parent / ".claude" / "tools" / "amplihack" / "hooks"
         sys.path.insert(0, str(hook_path))
 
-        with patch(
-            "builders.export_on_compact_integration.get_project_root",
-            return_value=self.mock_project_root,
-        ):
-            with patch("hook_processor.HookProcessor.__init__", return_value=None):
-                with patch.object(Path, "mkdir"):
+        with patch.object(Path, "mkdir"):
+            with patch("builders.claude_transcript_builder.ClaudeTranscriptBuilder"):
+                with patch("builders.codex_transcripts_builder.CodexTranscriptsBuilder"):
                     from builders.export_on_compact_integration import ExportOnCompactIntegration
 
+                    # Create instance with real HookProcessor init but mocked dependencies
                     self.integration = ExportOnCompactIntegration()
-                    # Set up required attributes
+
+                    # Override session_id for consistent testing
                     self.integration.session_id = "test_session_20241002"
-                    self.integration.log_dir = logs_dir
                     self.integration.session_dir = logs_dir / self.integration.session_id
-                    self.integration.project_root = self.mock_project_root
 
     def test_initialization(self):
         """Test integration initialization."""
