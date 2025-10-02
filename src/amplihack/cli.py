@@ -222,6 +222,52 @@ def main(argv: Optional[List[str]] = None) -> int:
             # Copy .claude contents to temp directory
             copied = copytree_manifest(amplihack_src, temp_dir, ".claude")
 
+            # Special handling for agents and commands - need to flatten structure
+            # Claude expects agents directly in .claude/agents/, not .claude/agents/amplihack/
+            if copied:
+                import shutil
+
+                # Move agents from amplihack subdirectory to parent and flatten structure
+                agents_amplihack = os.path.join(temp_claude_dir, "agents", "amplihack")
+                agents_dir = os.path.join(temp_claude_dir, "agents")
+                if os.path.exists(agents_amplihack):
+                    agent_count = 0
+                    # Find all .md files in subdirectories and move them to the parent
+                    for root, dirs, files in os.walk(agents_amplihack):
+                        for file in files:
+                            if file.endswith(".md"):
+                                src = os.path.join(root, file)
+                                dst = os.path.join(agents_dir, file)
+                                # Handle name conflicts by prefixing with subdirectory name
+                                if os.path.exists(dst):
+                                    subdir = os.path.basename(os.path.dirname(src))
+                                    if subdir != "amplihack":
+                                        dst = os.path.join(agents_dir, f"{subdir}_{file}")
+                                shutil.copy2(src, dst)
+                                agent_count += 1
+                    # Remove the amplihack directory and its subdirectories
+                    shutil.rmtree(agents_amplihack)
+                    if os.environ.get("AMPLIHACK_DEBUG", "").lower() == "true":
+                        print(f"Flattened {agent_count} agent files to .claude/agents/")
+
+                # Move commands from amplihack subdirectory to parent
+                commands_amplihack = os.path.join(temp_claude_dir, "commands", "amplihack")
+                commands_dir = os.path.join(temp_claude_dir, "commands")
+                if os.path.exists(commands_amplihack):
+                    # Move all files up one level
+                    command_count = 0
+                    for item in os.listdir(commands_amplihack):
+                        src = os.path.join(commands_amplihack, item)
+                        dst = os.path.join(commands_dir, item)
+                        if os.path.exists(dst):
+                            os.remove(dst)
+                        shutil.move(src, dst)
+                        command_count += 1
+                    # Remove the now-empty amplihack directory
+                    os.rmdir(commands_amplihack)
+                    if os.environ.get("AMPLIHACK_DEBUG", "").lower() == "true":
+                        print(f"Moved {command_count} command files to .claude/commands/")
+
             # Create settings.json with relative paths (Claude will resolve relative to CLAUDE_PROJECT_DIR)
             # When CLAUDE_PROJECT_DIR is set, Claude will use settings.json from that directory only
             if copied:
