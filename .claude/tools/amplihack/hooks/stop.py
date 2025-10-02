@@ -853,12 +853,13 @@ class StopHook(HookProcessor):
 
 def main():
     """Entry point for the stop hook."""
+    import sys
+
     hook = StopHook()
     hook.run()
 
-    # Attempt 5: Print to stdout AFTER JSON output (which hook.run() writes)
-    # Google says: "stdout is typically shown to the user, especially in transcript modes"
-    print("\n=====STOP Hook=====\n", flush=True)
+    # Print stop hook delineation message to stderr (visible to users)
+    print("\n=====STOP Hook=====\n", file=sys.stderr, flush=True)
 
 
 if __name__ == "__main__":
