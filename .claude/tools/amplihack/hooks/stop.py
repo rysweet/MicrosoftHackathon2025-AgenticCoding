@@ -615,13 +615,12 @@ class StopHook(HookProcessor):
         # Recursion guard removed - it was part of the broken reflection system
         self.log("Reflection system DISABLED - see incident reports for details")
 
-        # Attempt 2: Try printing to stderr before JSON output
-        # stderr might be visible to users according to hooks docs
-        import sys as sys_module
-
-        print("\n=====STOP Hook=====\n", file=sys_module.stderr)
-
-        return {}
+        # Attempt 3: Try additionalContext field (like session_start.py)
+        # This might inject content into the conversation
+        return {
+            "additionalContext": "\n=====STOP Hook=====\n",
+            "message": "\n=====STOP Hook=====\n",
+        }
 
     def _should_analyze(self, state_data: ReflectionStateData) -> bool:
         """Check if enough time has passed since last analysis."""
