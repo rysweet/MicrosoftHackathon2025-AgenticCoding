@@ -170,15 +170,12 @@ class ClaudeLauncher:
             # Already in correct directory
             return True
 
-        # Check if we're in UVX mode and can use --add-dir (avoids directory change)
-        # Cache the UVX decision to avoid repeated expensive checks
-        if self._cached_uvx_decision is None:
-            self._cached_uvx_decision = self.uvx_manager.should_use_add_dir()
-
-        if self._cached_uvx_decision:
-            print("UVX environment detected - will use --add-dir approach")
-            # Store target directory for --add-dir arguments
-            self._target_directory = target_dir
+        # Check if we're in UVX mode - in new approach, we handle this in CLI
+        # Skip the UVX manager's add-dir logic since we're using CLAUDE_PROJECT_DIR
+        # and adding --add-dir in the CLI directly
+        if os.environ.get("CLAUDE_PROJECT_DIR"):
+            # We're in UVX mode with temp Claude environment
+            # Don't change directories, Claude will use CLAUDE_PROJECT_DIR
             return True
 
         # Standard directory change
