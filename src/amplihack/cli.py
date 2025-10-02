@@ -200,11 +200,18 @@ def main(argv: Optional[List[str]] = None) -> int:
         temp_dir = tempfile.mkdtemp(prefix="amplihack_uvx_")
         temp_claude_dir = os.path.join(temp_dir, ".claude")
 
-        # Set CLAUDE_PROJECT_DIR to the temp directory
-        os.environ["CLAUDE_PROJECT_DIR"] = temp_dir
+        # Save original directory - we'll use this for --add-dir
+        original_cwd = os.getcwd()
+
+        # Store it for later use in --add-dir
+        os.environ["AMPLIHACK_ORIGINAL_CWD"] = original_cwd
+
+        # Change to temp directory - this sets CLAUDE_PROJECT_DIR
+        os.chdir(temp_dir)
 
         if os.environ.get("AMPLIHACK_DEBUG", "").lower() == "true":
             print(f"UVX mode: Created temp Claude environment at {temp_dir}")
+            print(f"Changed working directory to {temp_dir}")
 
         # Stage framework files to the temp .claude directory
         # Use the built-in _local_install function to copy framework files
@@ -339,11 +346,12 @@ def main(argv: Optional[List[str]] = None) -> int:
     if not args.command:
         # If we have claude_args but no command, default to launching Claude directly
         if claude_args:
-            # If in UVX mode, ensure we use --add-dir for the current directory
+            # If in UVX mode, ensure we use --add-dir for the ORIGINAL directory
             if is_uvx_deployment():
-                cwd = os.getcwd()
+                # Get the original directory (before we changed to temp)
+                original_cwd = os.environ.get("AMPLIHACK_ORIGINAL_CWD", os.getcwd())
                 if "--add-dir" not in claude_args:
-                    claude_args = ["--add-dir", cwd] + claude_args
+                    claude_args = ["--add-dir", original_cwd] + claude_args
 
             # Check if Docker should be used for direct launch
             if DockerManager.should_use_docker():
@@ -385,13 +393,13 @@ def main(argv: Optional[List[str]] = None) -> int:
         return 0
 
     elif args.command == "launch":
-        # If in UVX mode, ensure we use --add-dir for the current directory
+        # If in UVX mode, ensure we use --add-dir for the ORIGINAL directory
         if is_uvx_deployment():
-            # The current directory is the one the user wants to work in
-            cwd = os.getcwd()
+            # Get the original directory (before we changed to temp)
+            original_cwd = os.environ.get("AMPLIHACK_ORIGINAL_CWD", os.getcwd())
             # Add --add-dir to claude_args if not already present
             if "--add-dir" not in claude_args:
-                claude_args = ["--add-dir", cwd] + (claude_args or [])
+                claude_args = ["--add-dir", original_cwd] + (claude_args or [])
         return launch_command(args, claude_args)
 
     elif args.command == "uvx-help":

@@ -170,13 +170,8 @@ class ClaudeLauncher:
             # Already in correct directory
             return True
 
-        # Check if we're in UVX mode - in new approach, we handle this in CLI
-        # Skip the UVX manager's add-dir logic since we're using CLAUDE_PROJECT_DIR
-        # and adding --add-dir in the CLI directly
-        if os.environ.get("CLAUDE_PROJECT_DIR"):
-            # We're in UVX mode with temp Claude environment
-            # Don't change directories, Claude will use CLAUDE_PROJECT_DIR
-            return True
+        # In UVX mode, we've already changed to the temp directory in CLI
+        # So we don't need to change directories again here
 
         # Standard directory change
         try:
