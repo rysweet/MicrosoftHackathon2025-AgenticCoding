@@ -198,32 +198,70 @@ User: "Add authentication to the API"
 
 The workflow file is the single source of truth - edit it to change the process.
 
-### Parallel Execution Engine
+### Microsoft Amplifier Parallel Execution Engine
 
 **PARALLEL BY DEFAULT**: Always execute operations in parallel unless
 dependencies require sequential order.
 
-#### Execution Templates
+### Comprehensive Parallel Detection Framework
 
-**Feature Development**
+#### RULE 1: File Operations
+
+Batch all file operations in single tool call when multiple files are involved.
+
+#### RULE 2: Multi-Perspective Analysis
+
+Deploy relevant agents in parallel when multiple viewpoints are needed.
+
+#### RULE 3: Independent Components
+
+Analyze separate modules or systems in parallel.
+
+#### RULE 4: Information Gathering
+
+Parallel information collection when multiple data sources are needed.
+
+#### RULE 5: Development Lifecycle Tasks
+
+Execute parallel operations for testing, building, and validation phases.
+
+#### RULE 6: Cross-Cutting Concerns
+
+Apply security, performance, and quality analysis in parallel.
+
+### Microsoft Amplifier Execution Templates
+
+#### Template 1: Comprehensive Feature Development
 
 ```
 [architect, security, database, api-designer, tester] for new feature
 ```
 
-**Code Analysis**
+#### Template 2: Multi-Dimensional Code Analysis
 
 ```
 [analyzer, security, optimizer, patterns, reviewer] for comprehensive review
 ```
 
-**Problem Diagnosis**
+#### Template 3: Comprehensive Problem Diagnosis
 
 ```
 [analyzer, environment, patterns, logs] for issue investigation
 ```
 
-#### Execution Patterns
+#### Template 4: System Preparation and Validation
+
+```
+[environment, validator, tester, ci-checker] for deployment readiness
+```
+
+#### Template 5: Research and Discovery
+
+```
+[analyzer, patterns, explorer, documenter] for knowledge gathering
+```
+
+### Advanced Execution Patterns
 
 **Parallel (Default)**
 
@@ -237,7 +275,7 @@ dependencies require sequential order.
 architect → builder → reviewer
 ```
 
-#### Coordination Protocols
+### Microsoft Amplifier Coordination Protocols
 
 **Agent Guidelines:**
 
@@ -252,20 +290,76 @@ architect → builder → reviewer
 **SEQUENTIAL-REQUIRED Agents**: `architect` → `builder` → `reviewer`,
 `pre-commit-diagnostic`, `ci-diagnostic-workflow`
 
-#### Decision Framework
+### Systematic Decision Framework
 
-**Use Parallel (Default):**
+#### When to Use Parallel Execution
 
 - Independent analysis tasks
 - Multiple perspectives on same target
 - Separate components
 - Batch operations
 
-**Use Sequential (Exception):**
+#### When to Use Sequential Execution
 
 - Hard dependencies (A output → B input)
 - State mutations
 - User-specified order
+
+#### Decision Matrix
+
+| Scenario           | Use Parallel | Use Sequential |
+| ------------------ | ------------ | -------------- |
+| File analysis      | ✓            |                |
+| Multi-agent review | ✓            |                |
+| Dependencies exist |              | ✓              |
+
+### Anti-Patterns and Common Mistakes
+
+#### Anti-Pattern 1: Unnecessary Sequencing
+
+Avoid sequential execution when tasks are independent.
+
+#### Anti-Pattern 2: False Dependencies
+
+Don't create artificial sequential dependencies.
+
+#### Anti-Pattern 3: Over-Sequencing Complex Tasks
+
+Break complex tasks into parallel components when possible.
+
+### Template Responses for Common Scenarios
+
+#### Scenario 1: New Feature Request
+
+Deploy parallel feature development template with architect, security, database,
+api-designer, and tester.
+
+#### Scenario 2: Bug Investigation
+
+Use parallel diagnostic template with analyzer, environment, patterns, and logs.
+
+#### Scenario 3: Code Review Request
+
+Apply multi-dimensional analysis with analyzer, security, optimizer, patterns,
+and reviewer.
+
+#### Scenario 4: System Analysis
+
+Execute comprehensive system review with all relevant agents in parallel.
+
+### Performance Optimization Guidelines
+
+#### Parallel Execution Optimization
+
+- Minimize agent overlap
+- Optimize context sharing
+- Track execution metrics
+
+#### Monitoring and Metrics
+
+- Monitor parallel execution performance
+- Track agent coordination efficiency
+- Measure time savings vs sequential
 
 ## Development Principles
 
