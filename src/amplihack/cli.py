@@ -219,8 +219,9 @@ def main(argv: Optional[List[str]] = None) -> int:
                 break
 
         if amplihack_src:
-            # Copy .claude contents to temp directory
-            copied = copytree_manifest(amplihack_src, temp_dir, ".claude")
+            # Copy .claude contents to temp .claude directory
+            # Note: copytree_manifest copies TO the dst, not INTO dst/.claude
+            copied = copytree_manifest(amplihack_src, temp_claude_dir, ".claude")
 
             # Special handling for agents and commands - need to flatten structure
             # Claude expects agents directly in .claude/agents/, not .claude/agents/amplihack/
