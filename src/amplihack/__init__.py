@@ -273,21 +273,35 @@ def update_hook_paths(settings, hook_system, hooks_to_update, hooks_dir_path):
 
 def ensure_settings_json():
     """Ensure settings.json exists with proper hook configuration."""
+    import sys
+
     from amplihack.launcher.settings_manager import SettingsManager
 
     settings_path = os.path.join(CLAUDE_DIR, "settings.json")
+
+    # Detect UVX environment - if running from UVX, auto-approve settings modification
+    # UVX runs don't have interactive stdin available
+    is_uvx = (
+        # Check for UVX environment variables
+        os.getenv("UV_TOOL_NAME") is not None
+        or os.getenv("UV_TOOL_BIN_DIR") is not None
+        # Check if stdin is not a TTY (non-interactive)
+        or not sys.stdin.isatty()
+    )
 
     # Create settings manager
     settings_manager = SettingsManager(
         settings_path=Path(settings_path),
         session_id=f"install_{int(__import__('time').time())}",
-        non_interactive=os.getenv("AMPLIHACK_YES", "0") == "1",
+        non_interactive=os.getenv("AMPLIHACK_YES", "0") == "1" or is_uvx,
     )
 
-    # Prompt user for modification
+    # Prompt user for modification (or auto-approve if UVX/non-interactive)
     if not settings_manager.prompt_user_for_modification():
         print("  ⚠️  Settings modification declined by user")
         return False
+    elif is_uvx:
+        print("  🚀 UVX environment detected - auto-configuring hooks")
 
     # Create backup
     success, backup_path = settings_manager.create_backup()
