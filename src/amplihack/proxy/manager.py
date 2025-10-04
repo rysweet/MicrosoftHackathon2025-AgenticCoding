@@ -2,11 +2,12 @@
 
 import atexit
 import os
+import re
 import signal
 import subprocess
 import time
 from pathlib import Path
-from typing import Optional
+from typing import Any, Dict, List, Optional
 
 from .config import ProxyConfig
 from .env import ProxyEnvironment
@@ -32,6 +33,11 @@ class ProxyManager:
         else:
             self.proxy_port = 8080  # Default port
             print(f"Using default proxy port: {self.proxy_port}")
+
+        # Performance optimizations - cache URL templates and common operations
+        self._url_template_cache = {}
+        self._endpoint_cache = {}
+        self._api_version_cache = {}
 
     def ensure_proxy_installed(self) -> bool:
         """Ensure claude-code-proxy is installed.
@@ -61,7 +67,53 @@ class ProxyManager:
                 print(f"Failed to clone claude-code-proxy: {e}")
                 return False
 
-        return proxy_repo.exists()
+        if not proxy_repo.exists():
+            return False
+
+        # Install dependencies if they exist
+        requirements_txt = proxy_repo / "requirements.txt"
+        package_json = proxy_repo / "package.json"
+
+        # Install Python dependencies if needed
+        if requirements_txt.exists():
+            print("Installing Python proxy dependencies...")
+            # Try uv first (preferred in uvx context), fall back to pip
+            pip_commands = [
+                ["uv", "pip", "install", "-r", "requirements.txt"],
+                ["pip", "install", "-r", "requirements.txt"],
+            ]
+
+            install_result = None
+            for pip_cmd in pip_commands:
+                install_result = subprocess.run(
+                    pip_cmd,
+                    cwd=str(proxy_repo),
+                    capture_output=True,
+                    text=True,
+                )
+                if install_result.returncode == 0:
+                    print("Python dependencies installed successfully")
+                    break
+            else:
+                print("Failed to install Python dependencies")
+                if install_result:
+                    print(f"Error: {install_result.stderr}")
+                return False
+
+        # Install npm dependencies if needed
+        elif package_json.exists():
+            node_modules = proxy_repo / "node_modules"
+            if not node_modules.exists():
+                print("Installing npm proxy dependencies...")
+                install_result = subprocess.run(
+                    ["npm", "install"], cwd=str(proxy_repo), capture_output=True, text=True
+                )
+                if install_result.returncode != 0:
+                    print(f"Failed to install npm dependencies: {install_result.stderr}")
+                    return False
+                print("npm dependencies installed successfully")
+
+        return True
 
     def setup_proxy_config(self) -> bool:
         """Set up proxy configuration.
@@ -94,6 +146,11 @@ class ProxyManager:
             print("Proxy is already running")
             return True
 
+        # Validate configuration before starting
+        if self.proxy_config and not self.proxy_config.validate():
+            print("Invalid proxy configuration")
+            return False
+
         if not self.ensure_proxy_installed():
             return False
 
@@ -103,38 +160,11 @@ class ProxyManager:
         proxy_repo = self.proxy_dir / "claude-code-proxy"
 
         try:
-            # Determine project type and install dependencies
-            requirements_txt = proxy_repo / "requirements.txt"
+            # Check for npm dependencies that need installation
             package_json = proxy_repo / "package.json"
 
-            # Install Python dependencies if needed
-            if requirements_txt.exists():
-                print("Installing Python proxy dependencies...")
-                # Try uv first (preferred in uvx context), fall back to pip
-                pip_commands = [
-                    ["uv", "pip", "install", "-r", "requirements.txt"],
-                    ["pip", "install", "-r", "requirements.txt"],
-                ]
-
-                install_result = None
-                for pip_cmd in pip_commands:
-                    install_result = subprocess.run(
-                        pip_cmd,
-                        cwd=str(proxy_repo),
-                        capture_output=True,
-                        text=True,
-                    )
-                    if install_result.returncode == 0:
-                        print("Python dependencies installed successfully")
-                        break
-                else:
-                    print("Failed to install Python dependencies")
-                    if install_result:
-                        print(f"Error: {install_result.stderr}")
-                    return False
-
             # Install npm dependencies if needed
-            elif package_json.exists():
+            if package_json.exists():
                 node_modules = proxy_repo / "node_modules"
                 if not node_modules.exists():
                     print("Installing npm proxy dependencies...")
@@ -199,9 +229,14 @@ class ProxyManager:
                     print(f"Error output: {stderr}")
                 return False
 
-            # Set up environment variables
+            # Set up environment variables - handle both OpenAI and Azure configs
             api_key = self.proxy_config.get("ANTHROPIC_API_KEY") if self.proxy_config else None
-            self.env_manager.setup(self.proxy_port, api_key)
+            azure_config = (
+                self.proxy_config.to_env_dict()
+                if self.proxy_config and self.is_azure_mode()
+                else None
+            )
+            self.env_manager.setup(self.proxy_port, api_key, azure_config)
 
             print(f"Proxy started successfully on port {self.proxy_port}")
             return True
@@ -238,11 +273,19 @@ class ProxyManager:
 
                 print("Proxy stopped successfully")
             except Exception as e:
-                print(f"Error stopping proxy: {e}")
+                sanitized_error = self._sanitize_subprocess_error(str(e))
+                print(f"Error stopping proxy: {sanitized_error}")
 
         # Restore environment variables
         self.env_manager.restore()
+
+        # Clear sensitive process information
         self.proxy_process = None
+
+        # Force garbage collection of any cached sensitive data
+        self._url_template_cache.clear()
+        self._endpoint_cache.clear()
+        self._api_version_cache.clear()
 
     def is_running(self) -> bool:
         """Check if proxy is running.
@@ -278,3 +321,237 @@ class ProxyManager:
             exc_tb: Exception traceback if any.
         """
         self.stop_proxy()
+
+    def get_azure_deployment(self, model_name: str) -> Optional[str]:
+        """Get Azure deployment name for OpenAI model.
+
+        Args:
+            model_name: OpenAI model name
+
+        Returns:
+            Azure deployment name if mapping exists, None otherwise.
+        """
+        if not self.proxy_config:
+            return None
+        return self.proxy_config.get_azure_deployment(model_name)
+
+    def is_azure_mode(self) -> bool:
+        """Check if proxy is configured for Azure mode.
+
+        Returns:
+            True if Azure mode is enabled, False otherwise.
+        """
+        if not self.proxy_config:
+            return False
+        return self.proxy_config.is_azure_endpoint()
+
+    def get_active_config_type(self) -> str:
+        """Get the active configuration type.
+
+        Returns:
+            "azure" or "openai" depending on configuration.
+        """
+        if not self.proxy_config:
+            return "openai"
+
+        # Check for explicit proxy mode/type setting
+        explicit_mode = self.proxy_config.get("PROXY_MODE") or self.proxy_config.get("PROXY_TYPE")
+        if explicit_mode:
+            return explicit_mode.lower()
+
+        return self.proxy_config.get_endpoint_type()
+
+    def get_azure_deployments(self) -> Dict[str, str]:
+        """Get Azure deployment mappings.
+
+        Returns:
+            Dictionary mapping OpenAI model names to Azure deployment names.
+        """
+        if not self.proxy_config or not self.is_azure_mode():
+            return {}
+
+        deployments = {}
+        model_mappings = {
+            "gpt-4": "AZURE_GPT4_DEPLOYMENT",
+            "gpt-4o-mini": "AZURE_GPT4_MINI_DEPLOYMENT",
+            "gpt-3.5-turbo": "AZURE_GPT35_DEPLOYMENT",
+        }
+
+        for model, env_var in model_mappings.items():
+            deployment = self.proxy_config.get(env_var)
+            if deployment:
+                deployments[model] = deployment
+
+        return deployments
+
+    def transform_request_for_azure(self, request_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Transform OpenAI request format to Azure format.
+
+        Args:
+            request_data: OpenAI-format request data
+
+        Returns:
+            Azure-format request data
+        """
+        azure_request = request_data.copy()
+
+        # Remove model from request body (Azure uses it in URL path)
+        azure_request.pop("model", None)
+
+        return azure_request
+
+    def construct_azure_url(self, model: str) -> Optional[str]:
+        """Construct Azure OpenAI API URL for a specific model.
+
+        Args:
+            model: OpenAI model name
+
+        Returns:
+            Constructed Azure URL or None if not configured.
+        """
+        if not self.proxy_config or not self.is_azure_mode():
+            return None
+
+        # Check cache first for common model/endpoint combinations
+        cache_key = f"{model}:{id(self.proxy_config)}"
+        if cache_key in self._url_template_cache:
+            return self._url_template_cache[cache_key]
+
+        # Get components (these may also be cached)
+        endpoint_cache_key = id(self.proxy_config)
+        if endpoint_cache_key not in self._endpoint_cache:
+            endpoint = self.proxy_config.get_azure_endpoint()
+            if endpoint:
+                self._endpoint_cache[endpoint_cache_key] = endpoint.rstrip("/")
+            else:
+                return None
+        else:
+            endpoint = self._endpoint_cache[endpoint_cache_key]
+
+        deployment = self.proxy_config.get_azure_deployment(model)
+        if not deployment:
+            return None
+
+        # Cache API version
+        api_version_key = id(self.proxy_config)
+        if api_version_key not in self._api_version_cache:
+            self._api_version_cache[api_version_key] = (
+                self.proxy_config.get_azure_api_version() or "2024-02-01"
+            )
+        api_version = self._api_version_cache[api_version_key]
+
+        # Construct URL using format for better performance
+        url = (
+            f"{endpoint}/openai/deployments/{deployment}/chat/completions?api-version={api_version}"
+        )
+
+        # Cache the result
+        self._url_template_cache[cache_key] = url
+        return url
+
+    def normalize_azure_response(
+        self, response: Dict[str, Any], original_model: str
+    ) -> Dict[str, Any]:
+        """Normalize Azure response to OpenAI format.
+
+        Args:
+            response: Azure response data
+            original_model: Original OpenAI model name requested
+
+        Returns:
+            Normalized response in OpenAI format
+        """
+        normalized = response.copy()
+
+        # Replace Azure deployment name with original model name
+        if "model" in normalized:
+            normalized["model"] = original_model
+
+        return normalized
+
+    def _validate_git_url(self, url: str) -> bool:
+        """Validate git repository URL for security.
+
+        Args:
+            url: Git repository URL
+
+        Returns:
+            True if URL is safe, False otherwise.
+        """
+        # Only allow HTTPS GitHub URLs for security
+        allowed_patterns = [r"https://github\.com/[a-zA-Z0-9\-_.]+/[a-zA-Z0-9\-_.]+\.git$"]
+        return any(re.match(pattern, url) for pattern in allowed_patterns)
+
+    def _sanitize_subprocess_error(self, error_msg: str) -> str:
+        """Sanitize subprocess error messages to prevent credential leakage.
+
+        Args:
+            error_msg: Error message from subprocess
+
+        Returns:
+            Sanitized error message.
+        """
+        if not error_msg:
+            return "<no error message>"
+
+        # Remove potential API keys, passwords, and other sensitive data
+        sensitive_patterns = [
+            r"[a-zA-Z0-9\-_]{20,}",  # Potential API keys
+            r"password[=:]\s*\S+",  # Passwords
+            r"key[=:]\s*\S+",  # Keys
+            r"token[=:]\s*\S+",  # Tokens
+        ]
+
+        sanitized = error_msg
+        for pattern in sensitive_patterns:
+            sanitized = re.sub(pattern, "<redacted>", sanitized, flags=re.IGNORECASE)
+
+        return sanitized
+
+    def _create_secure_env(self) -> Dict[str, str]:
+        """Create a secure environment dictionary.
+
+        Returns:
+            Sanitized environment dictionary.
+        """
+        env = {}
+
+        # Only include necessary environment variables
+        safe_vars = {
+            "PATH",
+            "HOME",
+            "USER",
+            "SHELL",
+            "TERM",
+            "LANG",
+            "LC_ALL",
+            "NODE_ENV",
+            "NPM_CONFIG_PREFIX",
+            "PYTHONPATH",
+            "PORT",
+        }
+
+        for key in safe_vars:
+            if key in os.environ:
+                env[key] = os.environ[key]
+
+        return env
+
+    def _get_secure_start_command(self, proxy_repo: Path) -> Optional[List[str]]:
+        """Get a secure start command for the proxy.
+
+        Args:
+            proxy_repo: Path to proxy repository
+
+        Returns:
+            Secure start command list or None if no valid command found.
+        """
+        # Check for valid start methods in priority order
+        if (proxy_repo / "start_proxy.py").exists():
+            return ["python", "start_proxy.py"]
+        elif (proxy_repo / "src" / "proxy.py").exists():
+            return ["python", "-m", "src.proxy"]
+        elif (proxy_repo / "package.json").exists():
+            return ["npm", "start"]
+        else:
+            return None
