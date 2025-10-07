@@ -1214,9 +1214,12 @@ def create_app(config: Optional[Dict[str, str]] = None) -> FastAPI:
     @app.get("/health")
     async def health():
         """Enhanced health check endpoint with Azure monitoring."""
+        proxy_type = (
+            "integrated_azure_chat" if is_azure_chat_api() else "integrated_azure_responses"
+        )
         health_status = {
             "status": "healthy",
-            "proxy_type": "integrated_azure_responses",
+            "proxy_type": proxy_type,
             "timestamp": asyncio.get_event_loop().time(),
             "azure": {
                 "fallback_active": azure_fallback_manager.fallback_mode,
@@ -2127,8 +2130,43 @@ def analyze_conversation_for_tools(messages: List[Message]) -> ConversationState
 
 
 def is_azure_responses_api() -> bool:
-    """Check if we should use Azure Responses API instead of LiteLLM."""
-    return bool(OPENAI_BASE_URL and "/responses" in OPENAI_BASE_URL)
+    """Check if we should use Azure Responses API instead of Chat API.
+
+    Returns True for Responses API endpoints (/responses), False for Chat API endpoints (/chat).
+    """
+    if not OPENAI_BASE_URL:
+        return False
+
+    # Detect Responses API endpoints
+    if "/responses" in OPENAI_BASE_URL:
+        return True
+
+    # Detect Chat API endpoints (includes /chat/completions, /chat, etc.)
+    if "/chat" in OPENAI_BASE_URL:
+        return False
+
+    # Default to Chat API for unknown patterns
+    return False
+
+
+def is_azure_chat_api() -> bool:
+    """Check if we should use Azure Chat API instead of Responses API.
+
+    Returns True for Chat API endpoints (/chat), False for Responses API endpoints (/responses).
+    """
+    if not OPENAI_BASE_URL:
+        return True  # Default to Chat API
+
+    # Detect Chat API endpoints (includes /chat/completions, /chat, etc.)
+    if "/chat" in OPENAI_BASE_URL:
+        return True
+
+    # Detect Responses API endpoints
+    if "/responses" in OPENAI_BASE_URL:
+        return False
+
+    # Default to Chat API for unknown patterns
+    return True
 
 
 def should_use_responses_api_for_model(model: str) -> bool:
