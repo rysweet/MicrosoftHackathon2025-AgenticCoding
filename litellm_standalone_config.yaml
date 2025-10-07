@@ -1,10 +1,9 @@
 model_list:
   - model_name: gpt-5
     litellm_params:
-      model: azure/gpt-5
-      api_base: https://ai-adapt-oai-eastus2.openai.azure.com
-      api_key: ${AZURE_OPENAI_KEY}
-      api_version: preview
+      model: openai/gpt-5
+      api_base: https://ai-adapt-oai-eastus2.openai.azure.com/openai/v1/responses
+      api_key: b892dc164a634fc49bd07bcbbf9d1a76 # pragma: allowlist secret
       max_tokens: 512000
       timeout: 300
 
