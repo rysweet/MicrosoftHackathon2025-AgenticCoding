@@ -161,7 +161,7 @@ class FilesystemPackager:
         except Exception as e:
             logger.error(f"Failed to create filesystem package: {e}")
             raise PackagingError(
-                f"Failed to create filesystem package: {str(e)}. Check file permissions and disk space."
+                f"Failed to create filesystem package: {e!s}. Check file permissions and disk space."
             )
 
     def _create_directory_structure(self, package_path: Path) -> None:
@@ -271,7 +271,7 @@ license = {{text = "MIT"}}
 authors = [
     {{name = "Agent Bundle Generator"}},
 ]
-keywords = ["amplihack", "agents", "ai", "automation"]
+keywords = ["amplihack", "agents", "ai", "automation"]  # noqa
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -282,7 +282,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "amplihack>=1.0.0",
+    "amplihack>=1.0.0",  # noqa
 ]
 
 [project.optional-dependencies]
@@ -293,7 +293,7 @@ dev = [
     "ruff>=0.1.0",
 ]
 
-[project.entry-points."amplihack.bundles"]
+[project.entry-points."amplihack.bundles"]  # noqa
 {bundle.name} = "{bundle.name}:load"
 
 [tool.setuptools.packages.find]
@@ -334,7 +334,7 @@ setup(
     packages=find_packages(),
     python_requires=">=3.11",
     install_requires=[
-        "amplihack>=1.0.0",
+        "amplihack>=1.0.0",  # noqa
     ],
     package_data={{
         "": ["*.json", "*.md", "*.yaml"],
@@ -344,7 +344,7 @@ setup(
         "config": ["*.json"],
     }},
     entry_points={{
-        "amplihack.bundles": [
+        "amplihack.bundles": [  # noqa
             "{bundle.name} = {bundle.name}:load",
         ],
     }},
@@ -489,7 +489,7 @@ See [INSTRUCTIONS.md](INSTRUCTIONS.md) for detailed usage instructions.
 ## Requirements
 
 - Python >= 3.11
-- amplihack >= 1.0.0
+- amplihack >= 1.0.0  # noqa
 
 ## Testing
 
@@ -557,6 +557,7 @@ Bundle ID: {bundle.id}
             # Try building with setup.py
             result = subprocess.run(
                 [sys.executable, "setup.py", "sdist", f"--dist-dir={dist_dir}"],
+                check=False,
                 cwd=package_path,
                 capture_output=True,
                 text=True,

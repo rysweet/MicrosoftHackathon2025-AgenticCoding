@@ -33,7 +33,7 @@ class UVXSettingsManager:
 
         # Check if existing settings.json lacks bypass permissions
         try:
-            with open(target_settings_path, "r", encoding="utf-8") as f:
+            with open(target_settings_path, encoding="utf-8") as f:
                 existing_settings = json.load(f)
 
             permissions = existing_settings.get("permissions", {})
@@ -64,7 +64,7 @@ class UVXSettingsManager:
                 shutil.copy2(target_path, backup_path)
 
             # Load the UVX template
-            with open(self._template_path, "r", encoding="utf-8") as f:
+            with open(self._template_path, encoding="utf-8") as f:
                 uvx_template = json.load(f)
 
             # Write the UVX-optimized settings
@@ -78,7 +78,7 @@ class UVXSettingsManager:
             # Log error but don't crash the staging process
             import sys
 
-            print(f"[UVX Settings] Warning: Failed to create UVX settings: {e}", file=sys.stderr)
+            print(f"[UVX Settings] Warning: Failed to create UVX settings: {e}", file=sys.stderr)  # noqa: T201 (print)
             return False
 
     def merge_with_existing_settings(
@@ -95,7 +95,7 @@ class UVXSettingsManager:
         """
         try:
             # Load the UVX template
-            with open(self._template_path, "r", encoding="utf-8") as f:
+            with open(self._template_path, encoding="utf-8") as f:
                 uvx_template = json.load(f)
 
             # Merge settings, prioritizing UVX template for permissions and core tools
@@ -137,7 +137,7 @@ class UVXSettingsManager:
         except Exception as e:
             import sys
 
-            print(f"[UVX Settings] Warning: Failed to merge settings: {e}", file=sys.stderr)
+            print(f"[UVX Settings] Warning: Failed to merge settings: {e}", file=sys.stderr)  # noqa: T201 (print)
             return False
 
     def get_template_settings(self) -> Optional[Dict[str, Any]]:
@@ -147,7 +147,7 @@ class UVXSettingsManager:
             Dictionary containing UVX template settings, or None if failed to load
         """
         try:
-            with open(self._template_path, "r", encoding="utf-8") as f:
+            with open(self._template_path, encoding="utf-8") as f:
                 return json.load(f)
         except Exception:
             return None

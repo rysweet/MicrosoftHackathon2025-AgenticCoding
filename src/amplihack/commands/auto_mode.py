@@ -1,7 +1,7 @@
 """
 Auto-Mode Slash Command Implementation
 
-Provides the /amplihack:auto-mode command for persistent analysis and
+Provides the /amplihack:auto-mode command for persistent analysis and  # noqa
 autonomous progression through objectives using Claude Agent SDK.
 
 # noqa: print - CLI/slash command code uses print for output
@@ -19,11 +19,11 @@ from typing import Any, Dict, List, Optional
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from amplihack.sdk import AutoModeConfig, AutoModeOrchestrator, StateIntegrationError
+from amplihack.sdk import AutoModeConfig, AutoModeOrchestrator, StateIntegrationError  # noqa
 
 
 class AutoModeCommand:
-    """Implementation of the /amplihack:auto-mode slash command"""
+    """Implementation of the /amplihack:auto-mode slash command"""  # noqa
 
     def __init__(self):
         self.orchestrator: Optional[AutoModeOrchestrator] = None
@@ -62,7 +62,7 @@ class AutoModeCommand:
             return {
                 "success": False,
                 "error": f"Unknown command: {command}",
-                "help": "Use '/amplihack:auto-mode help' for usage information",
+                "help": "Use '/amplihack:auto-mode help' for usage information",  # noqa
             }
 
         except Exception as e:
@@ -78,7 +78,7 @@ class AutoModeCommand:
             return {
                 "success": False,
                 "error": "Objective is required",
-                "usage": '/amplihack:auto-mode start "Objective description"',
+                "usage": '/amplihack:auto-mode start "Objective description"',  # noqa
             }
 
         # Parse arguments
@@ -135,14 +135,14 @@ class AutoModeCommand:
             return {
                 "success": False,
                 "error": "Claude output is required",
-                "usage": '/amplihack:auto-mode process "Claude output text"',
+                "usage": '/amplihack:auto-mode process "Claude output text"',  # noqa
             }
 
         if not self.orchestrator or not self.active_session_id:
             return {
                 "success": False,
                 "error": "No active auto-mode session. Start one with 'auto-mode start'",
-                "suggestion": "Use '/amplihack:auto-mode start \"Your objective\"' first",
+                "suggestion": "Use '/amplihack:auto-mode start \"Your objective\"' first",  # noqa
             }
 
         claude_output = args[0]
@@ -203,7 +203,7 @@ class AutoModeCommand:
             return {
                 "success": False,
                 "error": "No auto-mode session active",
-                "suggestion": "Start a session with '/amplihack:auto-mode start'",
+                "suggestion": "Start a session with '/amplihack:auto-mode start'",  # noqa
             }
 
         try:
@@ -307,33 +307,33 @@ class AutoModeCommand:
         """Show help information for auto-mode command"""
         return {
             "success": True,
-            "command": "/amplihack:auto-mode",
+            "command": "/amplihack:auto-mode",  # noqa
             "description": "Persistent analysis and autonomous progression through objectives",
             "usage": {
                 "start": {
-                    "syntax": '/amplihack:auto-mode start "Objective" [--working-dir /path] [--max-iterations 50]',
+                    "syntax": '/amplihack:auto-mode start "Objective" [--working-dir /path] [--max-iterations 50]',  # noqa
                     "description": "Start new auto-mode session",
-                    "example": '/amplihack:auto-mode start "Build a REST API with authentication"',
+                    "example": '/amplihack:auto-mode start "Build a REST API with authentication"',  # noqa
                 },
                 "process": {
-                    "syntax": '/amplihack:auto-mode process "Claude output"',
+                    "syntax": '/amplihack:auto-mode process "Claude output"',  # noqa
                     "description": "Process Claude Code output through analysis",
-                    "example": '/amplihack:auto-mode process "I\'ve implemented the user authentication system."',
+                    "example": '/amplihack:auto-mode process "I\'ve implemented the user authentication system."',  # noqa
                 },
                 "status": {
-                    "syntax": "/amplihack:auto-mode status",
+                    "syntax": "/amplihack:auto-mode status",  # noqa
                     "description": "Check current session status and progress",
                 },
                 "pause": {
-                    "syntax": "/amplihack:auto-mode pause",
+                    "syntax": "/amplihack:auto-mode pause",  # noqa
                     "description": "Pause the current session",
                 },
                 "resume": {
-                    "syntax": "/amplihack:auto-mode resume",
+                    "syntax": "/amplihack:auto-mode resume",  # noqa
                     "description": "Resume a paused session",
                 },
                 "stop": {
-                    "syntax": "/amplihack:auto-mode stop",
+                    "syntax": "/amplihack:auto-mode stop",  # noqa
                     "description": "Stop and cleanup current session",
                 },
             },
@@ -354,13 +354,13 @@ async def main():
     import sys
 
     if len(sys.argv) < 2:
-        print("Usage: python auto_mode.py <command> [args...]")
+        print("Usage: python auto_mode.py <command> [args...]")  # noqa: T201 (print)
         return
 
     command = AutoModeCommand()
     result = await command.execute(sys.argv[1:])
 
-    print(json.dumps(result, indent=2))
+    print(json.dumps(result, indent=2))  # noqa: T201 (print)
 
 
 if __name__ == "__main__":

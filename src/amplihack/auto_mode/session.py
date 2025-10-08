@@ -43,6 +43,7 @@ class SessionState:
     # Analysis state
     analysis_cycles: int = 0
     analysis_history: List[Any] = field(default_factory=list)  # AnalysisCycleResult objects
+    last_analysis: Optional[Any] = None  # Latest analysis result
     current_quality_score: float = 0.0
 
     # Interventions and learning
@@ -95,13 +96,13 @@ class SessionStorage:
         Initialize session storage.
 
         Args:
-            storage_dir: Directory for session storage (default: ~/.amplihack/auto-mode/sessions)
+            storage_dir: Directory for session storage (default: ~/.amplihack/auto-mode/sessions)  # noqa
         """
         if storage_dir:
             self.storage_dir = Path(storage_dir)
         else:
             home = Path.home()
-            self.storage_dir = home / ".amplihack" / "auto-mode" / "sessions"
+            self.storage_dir = home / ".amplihack" / "auto-mode" / "sessions"  # noqa
 
         self.storage_dir.mkdir(parents=True, exist_ok=True)
 

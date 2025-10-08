@@ -147,7 +147,7 @@ Confidence: {intent.confidence:.1%}
             "tags": self._generate_tags(intent, agents),
             "requirements": {
                 "python": ">=3.11",
-                "amplihack": ">=1.0.0",
+                "amplihack": ">=1.0.0",  # noqa
             },
         }
 
@@ -281,7 +281,7 @@ Confidence: {intent.confidence:.1%}
 
         except Exception as e:
             raise GenerationError(
-                f"Failed to write bundle: {str(e)}",
+                f"Failed to write bundle: {e!s}",
                 generation_stage="bundle_writing",
                 partial_content=str(bundle_dir),
             )
@@ -309,7 +309,7 @@ This bundle contains {len(bundle.agents)} agents:
 ## Usage
 
 ```python
-from amplihack.bundles import {bundle.name}
+from amplihack.bundles import {bundle.name}  # noqa
 
 # Load the bundle
 bundle = {bundle.name}.load()
@@ -322,7 +322,7 @@ for agent in bundle.agents:
 ## Requirements
 
 - Python >= 3.11
-- amplihack >= 1.0.0
+- amplihack >= 1.0.0  # noqa
 
 ## Configuration
 

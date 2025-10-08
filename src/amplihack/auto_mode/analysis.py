@@ -12,20 +12,20 @@ from enum import Enum
 from typing import Any, Dict, List, Tuple
 
 from .config import (
-    DEFAULT_MIN_MESSAGES_FOR_ANALYSIS,
-    DEFAULT_MAX_SIMILAR_REQUESTS,
-    DEFAULT_MAX_GOALS_CONSIDERATION,
-    DEFAULT_LOW_COMPLETION_RATE_THRESHOLD,
+    DEFAULT_BASIC_QUESTIONS_RATIO,
+    DEFAULT_CONVERSATION_ACTIVITY_MULTIPLIER,
+    DEFAULT_CONVERSATION_ACTIVITY_THRESHOLD,
+    DEFAULT_ERROR_IMPACT_MULTIPLIER,
     DEFAULT_HIGH_LEARNING_MESSAGE_RATIO,
     DEFAULT_KEY_TERMS_SIMILARITY_BOOST,
-    DEFAULT_ERROR_IMPACT_MULTIPLIER,
+    DEFAULT_LOW_COMPLETION_RATE_THRESHOLD,
     DEFAULT_LOW_COMPLETION_THRESHOLD,
-    DEFAULT_BASIC_QUESTIONS_RATIO,
-    DEFAULT_CONVERSATION_ACTIVITY_THRESHOLD,
-    DEFAULT_CONVERSATION_ACTIVITY_MULTIPLIER,
-    DEFAULT_RECENT_ANALYSES_COUNT,
     DEFAULT_LOW_QUALITY_THRESHOLD,
     DEFAULT_MAX_ANALYSIS_FREQUENCY_MULTIPLIER,
+    DEFAULT_MAX_GOALS_CONSIDERATION,
+    DEFAULT_MAX_SIMILAR_REQUESTS,
+    DEFAULT_MIN_MESSAGES_FOR_ANALYSIS,
+    DEFAULT_RECENT_ANALYSES_COUNT,
     DEFAULT_SENTIMENT_BASE_CONFIDENCE,
     DEFAULT_SENTIMENT_CONFIDENCE_INCREMENT,
     DEFAULT_SENTIMENT_MAX_CONFIDENCE,
@@ -425,18 +425,17 @@ class QualityAssessor:
 
         if dimension == "clarity":
             return self._assess_clarity(conversation_context, signals, patterns)
-        elif dimension == "effectiveness":
+        if dimension == "effectiveness":
             return self._assess_effectiveness(conversation_context, signals, patterns)
-        elif dimension == "engagement":
+        if dimension == "engagement":
             return self._assess_engagement(conversation_context, signals, patterns)
-        elif dimension == "technical_accuracy":
+        if dimension == "technical_accuracy":
             return self._assess_technical_accuracy(conversation_context, signals, patterns)
-        elif dimension == "efficiency":
+        if dimension == "efficiency":
             return self._assess_efficiency(conversation_context, signals, patterns)
-        elif dimension == "satisfaction":
+        if dimension == "satisfaction":
             return self._assess_satisfaction(conversation_context, signals, patterns)
-        else:
-            return QualityDimension(dimension=dimension, score=DEFAULT_SENTIMENT_BASE_CONFIDENCE)
+        return QualityDimension(dimension=dimension, score=DEFAULT_SENTIMENT_BASE_CONFIDENCE)
 
     def _assess_clarity(
         self,
@@ -677,7 +676,6 @@ class AnalysisEngine:
     async def initialize(self):
         """Initialize the analysis engine"""
         # Any async initialization can go here
-        pass
 
     async def analyze_conversation(
         self, conversation_context: Dict[str, Any], session_history: List[Any]
@@ -800,10 +798,12 @@ class AnalysisEngine:
         # Simple classification
         if technical_terms > len(user_messages):
             return "advanced"
-        elif technical_terms > 0 and basic_questions < len(user_messages) * DEFAULT_BASIC_QUESTIONS_RATIO:
+        if (
+            technical_terms > 0
+            and basic_questions < len(user_messages) * DEFAULT_BASIC_QUESTIONS_RATIO
+        ):
             return "intermediate"
-        else:
-            return "beginner"
+        return "beginner"
 
     def _identify_domain_context(self, conversation_context: Dict[str, Any]) -> str:
         """Identify the domain context of the conversation"""
@@ -858,11 +858,17 @@ class AnalysisEngine:
             elif avg_quality > 0.8:
                 base_level *= 0.7  # Less frequent analysis needed
 
-        return min(DEFAULT_MAX_ANALYSIS_FREQUENCY_MULTIPLIER, base_level)  # Cap at max frequency multiplier
+        return min(
+            DEFAULT_MAX_ANALYSIS_FREQUENCY_MULTIPLIER, base_level
+        )  # Cap at max frequency multiplier
 
     def _extract_satisfaction_signals(self, analysis: ConversationAnalysis) -> Dict[str, Any]:
         """Extract user satisfaction signals from analysis"""
-        signals = {"overall_sentiment": "neutral", "confidence": DEFAULT_SENTIMENT_BASE_CONFIDENCE, "indicators": []}
+        signals = {
+            "overall_sentiment": "neutral",
+            "confidence": DEFAULT_SENTIMENT_BASE_CONFIDENCE,
+            "indicators": [],
+        }
 
         positive_signals = [
             ConversationSignal.POSITIVE_ENGAGEMENT,
@@ -878,10 +884,18 @@ class AnalysisEngine:
 
         if positive_count > negative_count:
             signals["overall_sentiment"] = "positive"
-            signals["confidence"] = min(DEFAULT_SENTIMENT_MAX_CONFIDENCE, DEFAULT_SENTIMENT_BASE_CONFIDENCE + (positive_count * DEFAULT_SENTIMENT_CONFIDENCE_INCREMENT))
+            signals["confidence"] = min(
+                DEFAULT_SENTIMENT_MAX_CONFIDENCE,
+                DEFAULT_SENTIMENT_BASE_CONFIDENCE
+                + (positive_count * DEFAULT_SENTIMENT_CONFIDENCE_INCREMENT),
+            )
         elif negative_count > positive_count:
             signals["overall_sentiment"] = "negative"
-            signals["confidence"] = min(DEFAULT_SENTIMENT_MAX_CONFIDENCE, DEFAULT_SENTIMENT_BASE_CONFIDENCE + (negative_count * DEFAULT_SENTIMENT_CONFIDENCE_INCREMENT))
+            signals["confidence"] = min(
+                DEFAULT_SENTIMENT_MAX_CONFIDENCE,
+                DEFAULT_SENTIMENT_BASE_CONFIDENCE
+                + (negative_count * DEFAULT_SENTIMENT_CONFIDENCE_INCREMENT),
+            )
 
         signals["indicators"] = [signal.value for signal in analysis.detected_signals]
 

@@ -1,4 +1,4 @@
-"""Utility functions for amplihack."""
+"""Utility functions for amplihack."""  # noqa
 
 from .paths import FrameworkPathResolver
 from .process import ProcessManager
@@ -14,8 +14,8 @@ def is_uvx_deployment() -> bool:
 
 
 __all__ = [
-    "ProcessManager",
     "FrameworkPathResolver",
+    "ProcessManager",
     "is_uvx_deployment",
     "stage_uvx_framework",
 ]

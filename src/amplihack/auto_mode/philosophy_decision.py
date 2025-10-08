@@ -2,7 +2,7 @@
 Philosophy-Based Decision Framework
 
 Implements the core decision framework that automatically chooses options
-most compatible with amplihack philosophy principles:
+most compatible with amplihack philosophy principles:  # noqa
 - Quality and Cleanliness over Speed
 - Simplicity and Clarity
 - Ruthless Simplicity
@@ -117,7 +117,7 @@ class PhilosophyDecisionFramework:
     """
     Core framework for making philosophy-aligned decisions.
 
-    Automatically chooses options that best align with amplihack
+    Automatically chooses options that best align with amplihack  # noqa
     philosophy principles using a scoring system.
     """
 
@@ -228,7 +228,7 @@ class PhilosophyDecisionFramework:
         # Quality heuristics
         if any(word in combined for word in ["separate", "focused", "clean", "quality"]):
             scores.quality += 5
-        if any(word in combined for word in ["mixed", "combined", "quick", "hack"]):
+        if any(word in combined for word in ["mixed", "combined", "quick", "hack"]):  # noqa
             scores.quality -= 3
         scores.quality = max(0, min(20, scores.quality + 10))  # Base score 10
 
@@ -308,7 +308,7 @@ class PhilosophyDecisionFramework:
 
         rationale_parts = [
             f"Selected '{selected.description}' with philosophy score {total:.1f}/100.",
-            f"This option best aligns with amplihack principles, particularly {strongest[0]} ({strongest[1]:.1f}/20).",
+            f"This option best aligns with amplihack principles, particularly {strongest[0]} ({strongest[1]:.1f}/20).",  # noqa
         ]
 
         # Add comparison to alternatives

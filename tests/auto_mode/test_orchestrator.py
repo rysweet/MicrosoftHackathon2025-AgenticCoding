@@ -176,9 +176,8 @@ class TestSessionManagement:
             "create_session",
             new_callable=AsyncMock,
             side_effect=RuntimeError("Maximum concurrent sessions reached"),
-        ):
-            with pytest.raises(RuntimeError, match="Maximum concurrent sessions reached"):
-                await orchestrator.start_session("user2", {})
+        ), pytest.raises(RuntimeError, match="Maximum concurrent sessions reached"):
+            await orchestrator.start_session("user2", {})
 
     @pytest.mark.asyncio
     async def test_update_conversation_success(self, initialized_orchestrator):

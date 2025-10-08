@@ -312,16 +312,16 @@ class Repackager:
 
     def log_info(self, message: str):
         \"\"\"Log info message.\"\"\"
-        print(f"{{Colors.GREEN}}[INFO]{{Colors.NC}} {{message}}")
+        print(f"{{Colors.GREEN}}[INFO]{{Colors.NC}} {{message}}")  # noqa: T201 (print)
 
     def log_warn(self, message: str):
         \"\"\"Log warning message.\"\"\"
-        print(f"{{Colors.YELLOW}}[WARN]{{Colors.NC}} {{message}}")
+        print(f"{{Colors.YELLOW}}[WARN]{{Colors.NC}} {{message}}")  # noqa: T201 (print)
         self.warnings.append(message)
 
     def log_error(self, message: str):
         \"\"\"Log error message.\"\"\"
-        print(f"{{Colors.RED}}[ERROR]{{Colors.NC}} {{message}}")
+        print(f"{{Colors.RED}}[ERROR]{{Colors.NC}} {{message}}")  # noqa: T201 (print)
         self.errors.append(message)
 
     def check_command(self, command: str) -> bool:
@@ -440,7 +440,7 @@ class Repackager:
             return True
         else:
             self.log_error("Tests: FAILED")
-            print("\\nFix test failures before repackaging")
+            print("\\nFix test failures before repackaging")  # noqa: T201 (print)
             return False
 
     def build_package(self) -> bool:
@@ -532,15 +532,15 @@ class Repackager:
 
     def print_summary(self):
         \"\"\"Print repackaging summary.\"\"\"
-        print("\\n" + "=" * 40)
-        print("Repackaging Complete!")
-        print("=" * 40)
-        print(f"Bundle: {{self.bundle_name}}")
-        print(f"Version: {{self.bundle_version}}")
-        print()
+        print("\\n" + "=" * 40)  # noqa: T201 (print)
+        print("Repackaging Complete!")  # noqa: T201 (print)
+        print("=" * 40)  # noqa: T201 (print)
+        print(f"Bundle: {{self.bundle_name}}")  # noqa: T201 (print)
+        print(f"Version: {{self.bundle_version}}")  # noqa: T201 (print)
+        print()  # noqa: T201 (print)
 
         if self.output_dir.exists():
-            print("Output files:")
+            print("Output files:")  # noqa: T201 (print)
             for file_path in sorted(self.output_dir.glob("*")):
                 if file_path.is_file():
                     size = file_path.stat().st_size
@@ -550,44 +550,44 @@ class Repackager:
                         size_str = f"{{size / 1024:.1f}}KB"
                     else:
                         size_str = f"{{size / (1024 * 1024):.1f}}MB"
-                    print(f"  {{file_path.name}} ({{size_str}})")
+                    print(f"  {{file_path.name}} ({{size_str}})")  # noqa: T201 (print)
 
-        print()
-        print("Next steps:")
-        print(f"  1. Test the package: uvx install {{self.output_dir}}/{{self.package_name}}.uvx")
-        print(f"  2. Distribute: Copy files from {{self.output_dir}}/")
-        print("=" * 40)
+        print()  # noqa: T201 (print)
+        print("Next steps:")  # noqa: T201 (print)
+        print(f"  1. Test the package: uvx install {{self.output_dir}}/{{self.package_name}}.uvx")  # noqa: T201 (print)
+        print(f"  2. Distribute: Copy files from {{self.output_dir}}/")  # noqa: T201 (print)
+        print("=" * 40)  # noqa: T201 (print)
 
         if self.warnings:
-            print(f"\\nWarnings: {{len(self.warnings)}}")
+            print(f"\\nWarnings: {{len(self.warnings)}}")  # noqa: T201 (print)
             for warning in self.warnings:
-                print(f"  - {{warning}}")
+                print(f"  - {{warning}}")  # noqa: T201 (print)
 
     def run(self) -> int:
         \"\"\"Run complete repackaging process.\"\"\"
-        print("=" * 40)
-        print(f"Repackaging {{self.bundle_name}} v{{self.bundle_version}}")
-        print("=" * 40)
-        print()
+        print("=" * 40)  # noqa: T201 (print)
+        print(f"Repackaging {{self.bundle_name}} v{{self.bundle_version}}")  # noqa: T201 (print)
+        print("=" * 40)  # noqa: T201 (print)
+        print()  # noqa: T201 (print)
 
         if not self.check_prerequisites():
             return 1
-        print()
+        print()  # noqa: T201 (print)
 
         if not self.validate_structure():
             return 1
-        print()
+        print()  # noqa: T201 (print)
 
         if not self.run_tests():
             return 1
-        print()
+        print()  # noqa: T201 (print)
 
         if not self.build_package():
             return 1
-        print()
+        print()  # noqa: T201 (print)
 
         self.calculate_checksums()
-        print()
+        print()  # noqa: T201 (print)
 
         self.print_summary()
 

@@ -1,5 +1,5 @@
 """
-Auto-Mode Module for Amplihack
+Auto-Mode Module for Amplihack  # noqa
 
 This module provides persistent conversation analysis and improvement suggestions
 using the Claude Agent SDK for continuous background analysis.

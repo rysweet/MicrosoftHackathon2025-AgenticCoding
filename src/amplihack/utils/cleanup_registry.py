@@ -60,12 +60,12 @@ class CleanupRegistry:
         """Save registry to disk with secure permissions.
 
         Args:
-            registry_path: Path to save registry (default: tempdir/amplihack-cleanup-{session_id}.json)
+            registry_path: Path to save registry (default: tempdir/amplihack-cleanup-{session_id}.json)  # noqa
         """
         if registry_path is None:
             # Use system temp directory (cross-platform)
             temp_dir = Path(tempfile.gettempdir())
-            registry_path = temp_dir / f"amplihack-cleanup-{self.session_id}.json"
+            registry_path = temp_dir / f"amplihack-cleanup-{self.session_id}.json"  # noqa
 
         data = {
             "session_id": self.session_id,

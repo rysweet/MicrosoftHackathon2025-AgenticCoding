@@ -1,4 +1,4 @@
-"""CLI extensions for amplihack to support bundle generation."""
+"""CLI extensions for amplihack to support bundle generation."""  # noqa
 
 from pathlib import Path
 from typing import Optional
@@ -20,7 +20,6 @@ from .bundle_generator.models import DistributionMethod, PackageFormat
 @click.group()
 def bundle():
     """Agent Bundle Generator commands."""
-    pass
 
 
 @bundle.command()

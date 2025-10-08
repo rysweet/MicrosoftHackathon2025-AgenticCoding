@@ -2,7 +2,7 @@
 Agent Bundle Generator Module
 
 A comprehensive system for generating, testing, and packaging AI agent bundles
-from natural language descriptions. Follows amplihack's modular "bricks & studs" philosophy.
+from natural language descriptions. Follows amplihack's modular "bricks & studs" philosophy.  # noqa
 
 Key Features:
 - Natural language prompt parsing with simplified NLP

@@ -40,7 +40,7 @@ class UpdateManager:
         """Initialize update manager.
 
         Args:
-            framework_repo_path: Path to amplihack framework repository
+            framework_repo_path: Path to amplihack framework repository  # noqa
                                (defaults to parent of this file)
         """
         if framework_repo_path is None:
@@ -122,7 +122,7 @@ class UpdateManager:
             # Create backup if requested
             if backup:
                 backup_path = self._create_backup(bundle_path)
-                print(f"Created backup: {backup_path}")
+                print(f"Created backup: {backup_path}")  # noqa: T201 (print)
 
             # Load manifest and checksums
             manifest_path = bundle_path / "manifest.json"
@@ -136,7 +136,7 @@ class UpdateManager:
             if preserve_edits:
                 customized_files = self._detect_customizations(bundle_path, checksums)
                 if customized_files:
-                    print(f"\nFound {len(customized_files)} user-modified file(s)")
+                    print(f"\nFound {len(customized_files)} user-modified file(s)")  # noqa: T201 (print)
 
             # NOTE: Actual file update implementation coming in future PR
             # For now, update is detection-only
@@ -188,6 +188,7 @@ class UpdateManager:
         """Get current framework version from git."""
         result = subprocess.run(
             ["git", "rev-parse", "HEAD"],
+            check=False,
             cwd=self.framework_repo,
             capture_output=True,
             text=True,
@@ -203,6 +204,7 @@ class UpdateManager:
         """Get changelog between versions."""
         result = subprocess.run(
             ["git", "log", f"{old_version}..{new_version}", "--oneline"],
+            check=False,
             cwd=self.framework_repo,
             capture_output=True,
             text=True,

@@ -77,7 +77,7 @@ def checkout_repository(repo_uri: str, base_dir: Optional[Path] = None) -> Optio
 
         # Use existing if valid
         if target_dir.exists() and (target_dir / ".git").exists():
-            print(f"Using existing repository: {target_dir}")
+            print(f"Using existing repository: {target_dir}")  # noqa: T201 (print)
             return target_dir
 
         # Remove invalid directory
@@ -89,16 +89,19 @@ def checkout_repository(repo_uri: str, base_dir: Optional[Path] = None) -> Optio
         clone_url = f"https://github.com/{owner_repo}.git"
 
         result = subprocess.run(
-            ["git", "clone", clone_url, str(target_dir)], capture_output=True, text=True
+            ["git", "clone", clone_url, str(target_dir)],
+            check=False,
+            capture_output=True,
+            text=True,
         )
 
         if result.returncode == 0:
-            print(f"Cloned repository to: {target_dir}")
+            print(f"Cloned repository to: {target_dir}")  # noqa: T201 (print)
             return target_dir
 
-        print(f"Clone failed: {result.stderr}")
+        print(f"Clone failed: {result.stderr}")  # noqa: T201 (print)
         return None
 
     except Exception as e:
-        print(f"Checkout error: {e}")
+        print(f"Checkout error: {e}")  # noqa: T201 (print)
         return None

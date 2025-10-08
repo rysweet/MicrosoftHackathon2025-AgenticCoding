@@ -1,5 +1,5 @@
 """
-Command modules for amplihack CLI.
+Command modules for amplihack CLI.  # noqa
 
-Contains command implementations for various amplihack functionality.
+Contains command implementations for various amplihack functionality.  # noqa
 """

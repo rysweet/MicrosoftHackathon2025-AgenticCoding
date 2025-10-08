@@ -85,8 +85,15 @@ repos:
         args:
           - -c
           - |
-            if find src/ -name "*.py" -not -path "*/tests/*" -exec grep -l "print(" {} \; | grep -v "# noqa.*print"; then
-              echo "ERROR: Found print() statements in production code. Use logging instead."
+            files_with_issues=()
+            for file in $(find src/ -name "*.py" -not -path "*/tests/*"); do
+              if grep -n "print(" "$file" | grep -v "# noqa" | grep -v "console.print" | grep -v "^[[:space:]]*#" > /dev/null; then
+                files_with_issues+=("$file")
+              fi
+            done
+            if [ ${#files_with_issues[@]} -gt 0 ]; then
+              echo "ERROR: Found print() statements without noqa in production code:"
+              printf '  %s\n' "${files_with_issues[@]}"
               exit 1
             fi
         language: system
@@ -100,8 +107,15 @@ repos:
         args:
           - -c
           - |
-            if find src/ -name "*.py" -not -path "*/tests/*" -exec grep -l -i "fixme\|todo\|xxx\|hack" {} \; | grep -v "# noqa"; then
-              echo "ERROR: Found development artifacts in production code."
+            files_with_issues=()
+            for file in $(find src/ -name "*.py" -not -path "*/tests/*"); do
+              if grep -n -i "fixme\|todo\|xxx\|hack" "$file" | grep -v "# noqa" > /dev/null; then
+                files_with_issues+=("$file")
+              fi
+            done
+            if [ ${#files_with_issues[@]} -gt 0 ]; then
+              echo "ERROR: Found development artifacts without noqa in production code:"
+              printf '  %s\n' "${files_with_issues[@]}"
               exit 1
             fi
         language: system

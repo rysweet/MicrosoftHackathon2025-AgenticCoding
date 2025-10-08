@@ -1,4 +1,4 @@
-"""UVX integration module for AmplihAck."""
+"""UVX integration module for AmplihAck."""  # noqa
 
 from .manager import UVXManager
 

@@ -1,4 +1,4 @@
-"""Docker availability detection for amplihack."""
+"""Docker availability detection for amplihack."""  # noqa
 
 import os
 import shutil
@@ -19,7 +19,11 @@ class DockerDetector:
 
         try:
             result = subprocess.run(
-                ["docker", "info"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5
+                ["docker", "info"],
+                check=False,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=5,
             )
             return result.returncode == 0
         except (subprocess.TimeoutExpired, subprocess.SubprocessError):
@@ -28,7 +32,7 @@ class DockerDetector:
     def should_use_docker(self) -> bool:
         """Determine if Docker should be used."""
         # Check environment variable
-        if os.getenv("AMPLIHACK_USE_DOCKER", "").lower() not in ("1", "true", "yes"):
+        if os.getenv("AMPLIHACK_USE_DOCKER", "").lower() not in ("1", "true", "yes"):  # noqa
             return False
 
         # Don't use Docker if already in Docker
@@ -41,7 +45,7 @@ class DockerDetector:
     def is_in_docker(self) -> bool:
         """Check if running inside a Docker container."""
         # Check environment variable we set
-        if os.getenv("AMPLIHACK_IN_DOCKER") == "1":
+        if os.getenv("AMPLIHACK_IN_DOCKER") == "1":  # noqa
             return True
 
         # Check for Docker-specific files
@@ -50,7 +54,7 @@ class DockerDetector:
 
         # Check cgroup for docker
         try:
-            with open("/proc/1/cgroup", "r") as f:
+            with open("/proc/1/cgroup") as f:
                 if "docker" in f.read():
                     return True
         except (FileNotFoundError, PermissionError):
@@ -65,7 +69,11 @@ class DockerDetector:
 
         try:
             result = subprocess.run(
-                ["docker", "images", "-q", image_name], capture_output=True, text=True, timeout=5
+                ["docker", "images", "-q", image_name],
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=5,
             )
             return bool(result.stdout.strip())
         except (subprocess.TimeoutExpired, subprocess.SubprocessError):

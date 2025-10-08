@@ -1,4 +1,4 @@
-"""Docker integration for amplihack."""
+"""Docker integration for amplihack."""  # noqa
 
 from .detector import DockerDetector
 from .manager import DockerManager

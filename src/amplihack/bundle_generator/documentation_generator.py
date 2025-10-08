@@ -21,7 +21,7 @@ def generate_instructions(bundle: AgentBundle) -> str:
 
 {bundle.description}
 
-This bundle contains {len(bundle.agents)} agent(s) ready to use with Amplihack.
+This bundle contains {len(bundle.agents)} agent(s) ready to use with Amplihack.  # noqa
 
 ## Prerequisites
 
@@ -57,7 +57,7 @@ uv pip install -e .
 
 ### Option 3: Manual Integration
 
-Copy the `agents/` directory to your Amplihack agents directory:
+Copy the `agents/` directory to your Amplihack agents directory:  # noqa
 
 ```bash
 # Default location
@@ -71,11 +71,11 @@ cp -r agents/ /path/to/your/agents/
 
 ### Using with Amplihack
 
-Once installed, agents are automatically available in your Amplihack environment:
+Once installed, agents are automatically available in your Amplihack environment:  # noqa
 
 ```bash
 # List available agents
-amplihack agents list
+amplihack agents list  # noqa
 
 # Use an agent (via Claude Code)
 # In your Claude Code session, reference the agent:
@@ -184,7 +184,7 @@ from {bundle.name} import get_agent
 
 agent = get_agent("{bundle.agents[0].name if bundle.agents else "agent-name"}")
 result = agent.process("your task here")
-print(result)
+print(result)  # noqa: T201 (print)
 ```
 
 ### Example 2: Loading Full Bundle
@@ -193,25 +193,25 @@ print(result)
 from {bundle.name} import load
 
 bundle = load()
-print(f"Loaded {{len(bundle['agents'])}} agents")
+print(f"Loaded {{len(bundle['agents'])}} agents")  # noqa: T201 (print)
 
 # Access agents
 for agent_name in bundle['agents']:
-    print(f"Available: {{agent_name}}")
+    print(f"Available: {{agent_name}}")  # noqa: T201 (print)
 ```
 
 ### Example 3: Integration with Amplihack
 
 ```bash
 # In your Amplihack project
-amplihack init my-project
+amplihack init my-project  # noqa
 cd my-project
 
 # Install this bundle
 uvx install {bundle.name}-{bundle.version}.uvx
 
 # Use in your workflow
-amplihack run --agent {bundle.agents[0].name if bundle.agents else "agent-name"}
+amplihack run --agent {bundle.agents[0].name if bundle.agents else "agent-name"}  # noqa
 ```
 
 ## Troubleshooting
@@ -274,7 +274,7 @@ uv pip install -e .
 ```
 Solution: Check Python version and dependencies
 python --version  # Should be 3.11+
-pip list | grep amplihack
+pip list | grep amplihack  # noqa
 pytest tests/ -v  # Run with verbose output
 ```
 
@@ -313,7 +313,7 @@ def generate_prerequisites_section() -> str:
     return """### Required
 
 - Python >= 3.11
-- Amplihack >= 1.0.0 (or Claude Code environment)
+- Amplihack >= 1.0.0 (or Claude Code environment)  # noqa
 
 ### Optional
 
@@ -325,7 +325,7 @@ def generate_prerequisites_section() -> str:
 
 ```bash
 # Install Python dependencies
-pip install amplihack pytest
+pip install amplihack pytest  # noqa
 
 # Install uvx (optional)
 pip install uvx

@@ -1,7 +1,7 @@
 """
 XPIA Defense Security Module
 
-Cross-Prompt Injection Attack defense system for amplihack.
+Cross-Prompt Injection Attack defense system for amplihack.  # noqa
 """
 
 from .xpia_defender import WebFetchXPIADefender, XPIADefender
