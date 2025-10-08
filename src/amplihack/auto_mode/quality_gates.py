@@ -12,7 +12,7 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-import yaml
+import yaml  # type: ignore
 
 # Set up logger
 logger = logging.getLogger(__name__)

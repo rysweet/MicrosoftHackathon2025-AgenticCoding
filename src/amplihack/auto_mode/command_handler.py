@@ -13,9 +13,9 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from .config import (
-    DEFAULT_MIN_CONFIDENCE_THRESHOLD,
-    DEFAULT_INTERVENTION_CONFIDENCE_THRESHOLD,
     DEFAULT_ANALYSIS_INTERVAL_SECONDS,
+    DEFAULT_INTERVENTION_CONFIDENCE_THRESHOLD,
+    DEFAULT_MIN_CONFIDENCE_THRESHOLD,
     DEFAULT_QUALITY_THRESHOLD,
 )
 from .orchestrator import AutoModeOrchestrator, OrchestratorConfig
@@ -52,7 +52,8 @@ class AutoModeCommandHandler:
                 intervention_confidence_threshold=DEFAULT_INTERVENTION_CONFIDENCE_THRESHOLD,
             ),
             "minimal_intervention": OrchestratorConfig(
-                analysis_interval_seconds=DEFAULT_ANALYSIS_INTERVAL_SECONDS * 2,  # Conservative mode
+                analysis_interval_seconds=DEFAULT_ANALYSIS_INTERVAL_SECONDS
+                * 2,  # Conservative mode
                 min_quality_threshold=DEFAULT_MIN_CONFIDENCE_THRESHOLD * 0.6,  # Lower threshold
                 intervention_confidence_threshold=0.9,
             ),
@@ -96,33 +97,32 @@ class AutoModeCommandHandler:
             # Route to appropriate handler
             if action == "start":
                 return await self._handle_start(args, context)
-            elif action == "stop":
+            if action == "stop":
                 return await self._handle_stop(args, context)
-            elif action == "status":
+            if action == "status":
                 return await self._handle_status(args, context)
-            elif action == "configure":
+            if action == "configure":
                 return await self._handle_configure(args, context)
-            elif action == "analyze":
+            if action == "analyze":
                 return await self._handle_analyze(args, context)
-            elif action == "insights":
+            if action == "insights":
                 return await self._handle_insights(args, context)
-            elif action == "feedback":
+            if action == "feedback":
                 return await self._handle_feedback(args, context)
-            elif action == "summary":
+            if action == "summary":
                 return await self._handle_summary(args, context)
-            elif action == "help":
+            if action == "help":
                 return await self._handle_help(args, context)
-            else:
-                return CommandResult(
-                    success=False,
-                    message=f"Unknown action '{action}'. Use '/auto-mode help' for available actions.",
-                    error_code="unknown_action",
-                )
+            return CommandResult(
+                success=False,
+                message=f"Unknown action '{action}'. Use '/auto-mode help' for available actions.",
+                error_code="unknown_action",
+            )
 
         except Exception as e:
             return CommandResult(
                 success=False,
-                message=f"Command execution failed: {str(e)}",
+                message=f"Command execution failed: {e!s}",
                 error_code="execution_error",
             )
 
@@ -135,7 +135,7 @@ class AutoModeCommandHandler:
             if not tokens:
                 return {"action": "help"}
 
-            args = {"action": tokens[0]}
+            args: Dict[str, Any] = {"action": tokens[0]}
 
             # Parse remaining arguments
             i = 1
@@ -213,7 +213,7 @@ class AutoModeCommandHandler:
         except Exception as e:
             return CommandResult(
                 success=False,
-                message=f"Failed to start auto-mode session: {str(e)}",
+                message=f"Failed to start auto-mode session: {e!s}",
                 error_code="start_failed",
             )
 
@@ -250,27 +250,25 @@ class AutoModeCommandHandler:
                     data={"stopped_sessions": stopped_count},
                 )
 
-            else:
-                # Stop specific session
-                success = await self.orchestrator.stop_session(session_id)
+            # Stop specific session
+            success = await self.orchestrator.stop_session(session_id)
 
-                if success:
-                    return CommandResult(
-                        success=True,
-                        message=f"Auto-mode session {session_id} stopped successfully",
-                        data={"session_id": session_id},
-                    )
-                else:
-                    return CommandResult(
-                        success=False,
-                        message=f"Failed to stop session {session_id}",
-                        error_code="stop_failed",
-                    )
+            if success:
+                return CommandResult(
+                    success=True,
+                    message=f"Auto-mode session {session_id} stopped successfully",
+                    data={"session_id": session_id},
+                )
+            return CommandResult(
+                success=False,
+                message=f"Failed to stop session {session_id}",
+                error_code="stop_failed",
+            )
 
         except Exception as e:
             return CommandResult(
                 success=False,
-                message=f"Failed to stop auto-mode: {str(e)}",
+                message=f"Failed to stop auto-mode: {e!s}",
                 error_code="stop_error",
             )
 
@@ -306,39 +304,38 @@ class AutoModeCommandHandler:
                     success=True, message=f"Status for session {session_id}", data=session_status
                 )
 
-            else:
-                # General status
-                metrics = self.orchestrator.get_metrics()
-                sdk_status = self.orchestrator.sdk_client.get_connection_status()
+            # General status
+            metrics = self.orchestrator.get_metrics()
+            sdk_status = self.orchestrator.sdk_client.get_connection_status()
 
-                status_data = {
-                    "status": self.orchestrator.state.value,
-                    "active_sessions": len(self.orchestrator.active_sessions),
-                    "total_sessions": metrics["total_sessions"],
-                    "analysis_cycles": metrics["total_analysis_cycles"],
-                    "interventions": metrics["total_interventions"],
-                    "average_quality": metrics["average_quality_score"],
-                    "uptime": f"{metrics['uptime_seconds']:.0f}s",
-                    "sdk_connection": sdk_status["connection_state"],
-                }
+            status_data = {
+                "status": self.orchestrator.state.value,
+                "active_sessions": len(self.orchestrator.active_sessions),
+                "total_sessions": metrics["total_sessions"],
+                "analysis_cycles": metrics["total_analysis_cycles"],
+                "interventions": metrics["total_interventions"],
+                "average_quality": metrics["average_quality_score"],
+                "uptime": f"{metrics['uptime_seconds']:.0f}s",
+                "sdk_connection": sdk_status["connection_state"],
+            }
 
-                if detailed:
-                    status_data.update(
-                        {
-                            "detailed_metrics": metrics,
-                            "sdk_status": sdk_status,
-                            "active_session_details": [
-                                await self.orchestrator.get_session_status(sid)
-                                for sid in self.orchestrator.active_sessions.keys()
-                            ],
-                        }
-                    )
+            if detailed:
+                status_data.update(
+                    {
+                        "detailed_metrics": metrics,
+                        "sdk_status": sdk_status,
+                        "active_session_details": [
+                            await self.orchestrator.get_session_status(sid)
+                            for sid in self.orchestrator.active_sessions.keys()
+                        ],
+                    }
+                )
 
-                return CommandResult(success=True, message="Auto-mode status", data=status_data)
+            return CommandResult(success=True, message="Auto-mode status", data=status_data)
 
         except Exception as e:
             return CommandResult(
-                success=False, message=f"Failed to get status: {str(e)}", error_code="status_error"
+                success=False, message=f"Failed to get status: {e!s}", error_code="status_error"
             )
 
     async def _handle_configure(
@@ -391,16 +388,15 @@ class AutoModeCommandHandler:
                     message=f"Configuration updated: {setting} = {value}",
                     data={setting: value},
                 )
-            else:
-                return CommandResult(
-                    success=False,
-                    message=f"Failed to update configuration: {setting}",
-                    error_code="config_failed",
-                )
+            return CommandResult(
+                success=False,
+                message=f"Failed to update configuration: {setting}",
+                error_code="config_failed",
+            )
 
         except Exception as e:
             return CommandResult(
-                success=False, message=f"Configuration error: {str(e)}", error_code="config_error"
+                success=False, message=f"Configuration error: {e!s}", error_code="config_error"
             )
 
     async def _handle_analyze(self, args: Dict[str, Any], context: Dict[str, Any]) -> CommandResult:
@@ -446,14 +442,14 @@ class AutoModeCommandHandler:
                     message="Conversation analysis completed",
                     data=self._format_analysis_json(analysis),
                 )
-            elif output_format == "detailed":
+            if output_format == "detailed":
                 return CommandResult(success=True, message=self._format_analysis_detailed(analysis))
-            else:  # summary
-                return CommandResult(success=True, message=self._format_analysis_summary(analysis))
+            # summary
+            return CommandResult(success=True, message=self._format_analysis_summary(analysis))
 
         except Exception as e:
             return CommandResult(
-                success=False, message=f"Analysis failed: {str(e)}", error_code="analysis_error"
+                success=False, message=f"Analysis failed: {e!s}", error_code="analysis_error"
             )
 
     async def _handle_insights(
@@ -514,7 +510,7 @@ class AutoModeCommandHandler:
         except Exception as e:
             return CommandResult(
                 success=False,
-                message=f"Failed to generate summary: {str(e)}",
+                message=f"Failed to generate summary: {e!s}",
                 data={"error": str(e)},
             )
 
@@ -531,12 +527,19 @@ class AutoModeCommandHandler:
 
     async def _apply_configuration(self, setting: str, value: str) -> bool:
         """Apply a configuration change"""
+        if not self.orchestrator:
+            return False
+
         try:
             if setting == "analysis_frequency":
                 if value == "low":
-                    self.orchestrator.config.analysis_interval_seconds = DEFAULT_ANALYSIS_INTERVAL_SECONDS * 2
+                    self.orchestrator.config.analysis_interval_seconds = (
+                        DEFAULT_ANALYSIS_INTERVAL_SECONDS * 2
+                    )
                 elif value == "normal":
-                    self.orchestrator.config.analysis_interval_seconds = DEFAULT_ANALYSIS_INTERVAL_SECONDS
+                    self.orchestrator.config.analysis_interval_seconds = (
+                        DEFAULT_ANALYSIS_INTERVAL_SECONDS
+                    )
                 elif value == "high":
                     self.orchestrator.config.analysis_interval_seconds = 15.0
                 elif value == "adaptive":
@@ -648,10 +651,10 @@ class AutoModeCommandHandler:
         # Build summary based on format type
         if format_type == "brief":
             return self._format_brief_summary(session_state, analysis_result)
-        elif format_type == "detailed":
+        if format_type == "detailed":
             return self._format_detailed_summary(session_state, analysis_result)
-        else:  # Default text format optimized for iMessage
-            return self._format_imessage_summary(session_state, analysis_result)
+        # Default text format optimized for iMessage
+        return self._format_imessage_summary(session_state, analysis_result)
 
     def _format_imessage_summary(self, session_state, analysis_result) -> str:
         """Format summary optimized for iMessage sharing"""

@@ -86,7 +86,7 @@ class MemoryMaintenance:
                     conn.commit()
 
             except Exception as e:
-                print(f"Error during session cleanup: {e}")
+                print(f"Error during session cleanup: {e}")  # noqa: T201 (print)
 
         end_time = time.time()
 
@@ -113,7 +113,7 @@ class MemoryMaintenance:
                     conn.execute("VACUUM")
 
             except Exception as e:
-                print(f"Error during database vacuum: {e}")
+                print(f"Error during database vacuum: {e}")  # noqa: T201 (print)
                 return {
                     "success": False,
                     "error": str(e),
@@ -172,7 +172,7 @@ class MemoryMaintenance:
                     age_dist = cursor.fetchone()
 
             except Exception as e:
-                print(f"Error during usage analysis: {e}")
+                print(f"Error during usage analysis: {e}")  # noqa: T201 (print)
                 age_dist = (0, 0, 0)
                 avg_memories_per_session = 0
 
@@ -228,7 +228,7 @@ class MemoryMaintenance:
                     conn.execute("PRAGMA optimize")
 
             except Exception as e:
-                print(f"Error during index optimization: {e}")
+                print(f"Error during index optimization: {e}")  # noqa: T201 (print)
                 return {
                     "success": False,
                     "error": str(e),

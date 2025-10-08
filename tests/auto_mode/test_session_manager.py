@@ -122,7 +122,7 @@ class TestSessionStorage:
         assert session_file.exists()
 
         # Verify content
-        with open(session_file, "r") as f:
+        with open(session_file) as f:
             saved_data = json.load(f)
 
         assert saved_data["session_id"] == "test_session"

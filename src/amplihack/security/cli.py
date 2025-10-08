@@ -20,8 +20,8 @@ except ImportError:
     Panel = None  # type: ignore[assignment]
     Table = None  # type: ignore[assignment]
 
-from amplihack.security.config import get_config
-from amplihack.security.xpia_defender import WebFetchXPIADefender
+from amplihack.security.config import get_config  # noqa
+from amplihack.security.xpia_defender import WebFetchXPIADefender  # noqa
 
 from .xpia_defense_interface import ContentType, RiskLevel
 
@@ -31,7 +31,6 @@ if click is not None:
     @click.group()
     def xpia():
         """XPIA Defense System CLI"""
-        pass
 
 
 @xpia.command()
@@ -85,7 +84,7 @@ def validate(url: str, prompt: str, security_level: str, verbose: bool, output_j
             _display_validation_result(result, url, prompt, verbose)
 
     except Exception as e:
-        console.print(f"[red]Error: {str(e)}[/red]")
+        console.print(f"[red]Error: {e!s}[/red]")  # noqa: T201 (print)
         sys.exit(1)
     finally:
         loop.close()
@@ -117,7 +116,7 @@ def validate_bash(command: str, security_level: str, verbose: bool):
         _display_bash_validation_result(result, command, verbose)
 
     except Exception as e:
-        console.print(f"[red]Error: {str(e)}[/red]")
+        console.print(f"[red]Error: {e!s}[/red]")  # noqa: T201 (print)
         sys.exit(1)
     finally:
         loop.close()
@@ -165,7 +164,7 @@ def validate_content(text: str, type: str, security_level: str, verbose: bool):
         _display_content_validation_result(result, text[:100], type, verbose)
 
     except Exception as e:
-        console.print(f"[red]Error: {str(e)}[/red]")
+        console.print(f"[red]Error: {e!s}[/red]")  # noqa: T201 (print)
         sys.exit(1)
     finally:
         loop.close()
@@ -174,7 +173,7 @@ def validate_content(text: str, type: str, security_level: str, verbose: bool):
 @xpia.command()
 def patterns():
     """List all attack patterns"""
-    from amplihack.security.xpia_patterns import PatternCategory, XPIAPatterns
+    from amplihack.security.xpia_patterns import PatternCategory, XPIAPatterns  # noqa
 
     patterns = XPIAPatterns()
 
@@ -188,7 +187,7 @@ def patterns():
     # Display patterns by category
     for category in PatternCategory:
         if category in categories:
-            console.print(f"\n[bold cyan]{category.value.replace('_', ' ').title()}[/bold cyan]")
+            console.print(f"\n[bold cyan]{category.value.replace('_', ' ').title()}[/bold cyan]")  # noqa: T201 (print)
 
             table = Table(show_header=True, header_style="bold magenta")
             table.add_column("ID", style="dim", width=6)
@@ -207,7 +206,7 @@ def patterns():
                     else pattern.description,
                 )
 
-            console.print(table)
+            console.print(table)  # noqa: T201 (print)
 
 
 @xpia.command()
@@ -243,7 +242,7 @@ def config():
         border_style="blue",
     )
 
-    console.print(panel)
+    console.print(panel)  # noqa: T201 (print)
 
 
 @xpia.command()
@@ -277,10 +276,10 @@ def health():
             border_style="green" if health_status["status"] == "healthy" else "red",
         )
 
-        console.print(panel)
+        console.print(panel)  # noqa: T201 (print)
 
     except Exception as e:
-        console.print(f"[red]Error: {str(e)}[/red]")
+        console.print(f"[red]Error: {e!s}[/red]")  # noqa: T201 (print)
         sys.exit(1)
     finally:
         loop.close()
@@ -292,7 +291,7 @@ def _display_validation_result(result, url: str, prompt: str, verbose: bool):
 
     # Summary panel
     if result.is_valid:
-        console.print(
+        console.print(  # noqa: T201 (print)
             Panel(
                 f"[green]✓ Request is SAFE to proceed[/green]\n"
                 f"Risk Level: [{risk_color}]{result.risk_level.value}[/{risk_color}]",
@@ -301,7 +300,7 @@ def _display_validation_result(result, url: str, prompt: str, verbose: bool):
             )
         )
     else:
-        console.print(
+        console.print(  # noqa: T201 (print)
             Panel(
                 f"[red]✗ Request BLOCKED for security[/red]\n"
                 f"Risk Level: [{risk_color}]{result.risk_level.value}[/{risk_color}]",
@@ -312,13 +311,13 @@ def _display_validation_result(result, url: str, prompt: str, verbose: bool):
 
     # Input details
     if verbose:
-        console.print("\n[bold]Input Details:[/bold]")
-        console.print(f"  URL: {url}")
-        console.print(f"  Prompt: {prompt[:100]}{'...' if len(prompt) > 100 else ''}")
+        console.print("\n[bold]Input Details:[/bold]")  # noqa: T201 (print)
+        console.print(f"  URL: {url}")  # noqa: T201 (print)
+        console.print(f"  Prompt: {prompt[:100]}{'...' if len(prompt) > 100 else ''}")  # noqa: T201 (print)
 
     # Threats table
     if result.threats:
-        console.print("\n[bold]Detected Threats:[/bold]")
+        console.print("\n[bold]Detected Threats:[/bold]")  # noqa: T201 (print)
 
         table = Table(show_header=True, header_style="bold magenta")
         table.add_column("Type", width=20)
@@ -338,13 +337,13 @@ def _display_validation_result(result, url: str, prompt: str, verbose: bool):
                 row.append(threat.mitigation)
             table.add_row(*row)
 
-        console.print(table)
+        console.print(table)  # noqa: T201 (print)
 
     # Recommendations
     if result.recommendations:
-        console.print("\n[bold]Recommendations:[/bold]")
+        console.print("\n[bold]Recommendations:[/bold]")  # noqa: T201 (print)
         for rec in result.recommendations:
-            console.print(f"  • {rec}")
+            console.print(f"  • {rec}")  # noqa: T201 (print)
 
 
 def _display_bash_validation_result(result, command: str, verbose: bool):
@@ -353,7 +352,7 @@ def _display_bash_validation_result(result, command: str, verbose: bool):
 
     # Summary
     if result.is_valid:
-        console.print(
+        console.print(  # noqa: T201 (print)
             Panel(
                 f"[green]✓ Command is SAFE to execute[/green]\n"
                 f"Risk Level: [{risk_color}]{result.risk_level.value}[/{risk_color}]",
@@ -362,7 +361,7 @@ def _display_bash_validation_result(result, command: str, verbose: bool):
             )
         )
     else:
-        console.print(
+        console.print(  # noqa: T201 (print)
             Panel(
                 f"[red]✗ Command BLOCKED for security[/red]\n"
                 f"Risk Level: [{risk_color}]{result.risk_level.value}[/{risk_color}]",
@@ -372,16 +371,16 @@ def _display_bash_validation_result(result, command: str, verbose: bool):
         )
 
     if verbose:
-        console.print(f"\n[bold]Command:[/bold] {command}")
+        console.print(f"\n[bold]Command:[/bold] {command}")  # noqa: T201 (print)
 
     # Show threats if any
     if result.threats:
-        console.print("\n[bold]Security Issues:[/bold]")
+        console.print("\n[bold]Security Issues:[/bold]")  # noqa: T201 (print)
         for threat in result.threats:
             severity_color = _get_risk_color(threat.severity)
-            console.print(f"  [{severity_color}]•[/{severity_color}] {threat.description}")
+            console.print(f"  [{severity_color}]•[/{severity_color}] {threat.description}")  # noqa: T201 (print)
             if verbose and threat.mitigation:
-                console.print(f"    → {threat.mitigation}")
+                console.print(f"    → {threat.mitigation}")  # noqa: T201 (print)
 
 
 def _display_content_validation_result(
@@ -391,7 +390,7 @@ def _display_content_validation_result(
     risk_color = _get_risk_color(result.risk_level)
 
     # Summary
-    console.print(
+    console.print(  # noqa: T201 (print)
         Panel(
             f"Content Type: {content_type}\n"
             f"Risk Level: [{risk_color}]{result.risk_level.value}[/{risk_color}]\n"
@@ -402,14 +401,14 @@ def _display_content_validation_result(
     )
 
     if verbose:
-        console.print(f"\n[bold]Content Preview:[/bold] {content_preview}...")
+        console.print(f"\n[bold]Content Preview:[/bold] {content_preview}...")  # noqa: T201 (print)
 
     # Show threats
     if result.threats:
-        console.print("\n[bold]Detected Patterns:[/bold]")
+        console.print("\n[bold]Detected Patterns:[/bold]")  # noqa: T201 (print)
         for threat in result.threats:
             severity_color = _get_risk_color(threat.severity)
-            console.print(f"  [{severity_color}]•[/{severity_color}] {threat.description}")
+            console.print(f"  [{severity_color}]•[/{severity_color}] {threat.description}")  # noqa: T201 (print)
 
 
 def _get_risk_color(risk_level: RiskLevel) -> str:

@@ -44,7 +44,7 @@ class UVXStager:
         if self._debug_enabled:
             import sys
 
-            print(f"[UVX STAGING DEBUG] {message}", file=sys.stderr)
+            print(f"[UVX STAGING DEBUG] {message}", file=sys.stderr)  # noqa: T201 (print)
 
     def stage_framework_files(
         self, session_state: Optional[UVXSessionState] = None
@@ -135,7 +135,7 @@ class UVXStager:
             return result
 
         for path_str in session_state.detection_state.environment.sys_path_entries:
-            candidate = Path(path_str) / "amplihack"
+            candidate = Path(path_str) / "amplihack"  # noqa
             if candidate.exists() and (candidate / ".claude").exists():
                 source_root = candidate
                 break
@@ -374,11 +374,10 @@ class UVXStager:
                 return uvx_settings_manager.create_uvx_settings(
                     target_settings, preserve_existing=True
                 )
-            else:
-                # Settings already exist and have proper permissions, just copy
-                self._debug_log("Existing settings.json has bypass permissions, copying source")
-                shutil.copy2(source_settings, target_settings)
-                return True
+            # Settings already exist and have proper permissions, just copy
+            self._debug_log("Existing settings.json has bypass permissions, copying source")
+            shutil.copy2(source_settings, target_settings)
+            return True
 
         except Exception as e:
             self._debug_log(f"Error applying UVX settings optimizations: {e}")

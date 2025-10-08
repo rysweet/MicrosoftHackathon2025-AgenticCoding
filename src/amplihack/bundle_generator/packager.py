@@ -117,7 +117,7 @@ class UVXPackager:
 
         except Exception as e:
             raise PackagingError(
-                f"Failed to package bundle: {str(e)}",
+                f"Failed to package bundle: {e!s}",
                 package_format=format,
                 file_path=str(package_path) if "package_path" in locals() else None,
             )
@@ -167,10 +167,10 @@ class UVXPackager:
             "version": bundle.version,
             "description": bundle.description,
             "type": "agent-bundle",
-            "entry_point": f"amplihack.bundles.{bundle.name}",
+            "entry_point": f"amplihack.bundles.{bundle.name}",  # noqa
             "python_requirement": ">=3.11",
             "dependencies": {
-                "amplihack": ">=1.0.0",
+                "amplihack": ">=1.0.0",  # noqa
             },
             "agents": [
                 {
@@ -262,7 +262,7 @@ setup(
     packages=find_packages(),
     python_requires=">=3.11",
     install_requires=[
-        "amplihack>=1.0.0",
+        "amplihack>=1.0.0",  # noqa
     ],
     package_data={{
         "": ["*.json", "*.md", "*.yaml"],
@@ -271,7 +271,7 @@ setup(
         "docs": ["*.md"],
     }},
     entry_points={{
-        "amplihack.bundles": [
+        "amplihack.bundles": [  # noqa
             "{bundle.name} = {bundle.name}:load",
         ],
     }},
@@ -320,7 +320,7 @@ result = agent.process("input data")
 ## Requirements
 
 - Python >= 3.11
-- amplihack >= 1.0.0
+- amplihack >= 1.0.0  # noqa
 
 ## Documentation
 
@@ -418,8 +418,8 @@ Bundle ID: {bundle.id}
             "bundle_name": bundle.name,
             "bundle_version": bundle.version,
             "python_requirement": ">=3.11",
-            "amplihack_requirement": ">=1.0.0",
-            "entry_point": f"amplihack.bundles.{bundle.name}",
+            "amplihack_requirement": ">=1.0.0",  # noqa
+            "entry_point": f"amplihack.bundles.{bundle.name}",  # noqa
             "install_command": f"uvx install {bundle.name}",
             "agent_count": len(bundle.agents),
             "created_at": datetime.utcnow().isoformat(),
@@ -500,6 +500,4 @@ Bundle ID: {bundle.id}
             return bundle
 
         except Exception as e:
-            raise PackagingError(
-                f"Failed to extract package: {str(e)}", file_path=str(package_path)
-            )
+            raise PackagingError(f"Failed to extract package: {e!s}", file_path=str(package_path))

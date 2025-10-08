@@ -1,4 +1,4 @@
-"""Docker container manager for amplihack."""
+"""Docker container manager for amplihack."""  # noqa
 
 import os
 import re
@@ -11,9 +11,9 @@ from .detector import DockerDetector
 
 
 class DockerManager:
-    """Manages Docker containers for amplihack execution."""
+    """Manages Docker containers for amplihack execution."""  # noqa
 
-    IMAGE_NAME = "amplihack:latest"
+    IMAGE_NAME = "amplihack:latest"  # noqa
 
     def __init__(self):
         """Initialize DockerManager."""
@@ -22,21 +22,21 @@ class DockerManager:
     def build_image(self) -> bool:
         """Build the Docker image if it doesn't exist."""
         if not self.detector.is_running():
-            print("Docker is not running.", file=sys.stderr)
+            print("Docker is not running.", file=sys.stderr)  # noqa: T201 (print)
             return False
 
         # Check if image already exists
         if self.detector.check_image_exists(self.IMAGE_NAME):
             return True
 
-        print(f"Building Docker image: {self.IMAGE_NAME}")
+        print(f"Building Docker image: {self.IMAGE_NAME}")  # noqa: T201 (print)
 
         # Find Dockerfile at project root
         project_root = Path(__file__).parent.parent.parent.parent
         dockerfile = project_root / "Dockerfile"
 
         if not dockerfile.exists():
-            print(f"Dockerfile not found at {dockerfile}", file=sys.stderr)
+            print(f"Dockerfile not found at {dockerfile}", file=sys.stderr)  # noqa: T201 (print)
             return False
 
         try:
@@ -50,30 +50,31 @@ class DockerManager:
                     str(dockerfile),
                     str(project_root),
                 ],
+                check=False,
                 capture_output=True,
                 text=True,
             )
 
             if result.returncode != 0:
-                print(f"Docker build failed: {result.stderr}", file=sys.stderr)
+                print(f"Docker build failed: {result.stderr}", file=sys.stderr)  # noqa: T201 (print)
                 return False
 
-            print(f"Successfully built Docker image: {self.IMAGE_NAME}")
+            print(f"Successfully built Docker image: {self.IMAGE_NAME}")  # noqa: T201 (print)
             return True
 
         except subprocess.SubprocessError as e:
-            print(f"Error building Docker image: {e}", file=sys.stderr)
+            print(f"Error building Docker image: {e}", file=sys.stderr)  # noqa: T201 (print)
             return False
 
     def run_command(self, args: List[str], cwd: Optional[str] = None) -> int:
-        """Run amplihack command in Docker container."""
+        """Run amplihack command in Docker container."""  # noqa
         if not self.detector.is_running():
-            print("Docker is not running.", file=sys.stderr)
+            print("Docker is not running.", file=sys.stderr)  # noqa: T201 (print)
             return 1
 
         # Ensure image exists
         if not self.build_image():
-            print("Failed to build Docker image.", file=sys.stderr)
+            print("Failed to build Docker image.", file=sys.stderr)  # noqa: T201 (print)
             return 1
 
         # Mount working directory
@@ -115,9 +116,9 @@ class DockerManager:
 
         # Run the container
         try:
-            return subprocess.run(docker_cmd).returncode
+            return subprocess.run(docker_cmd, check=False).returncode
         except subprocess.SubprocessError as e:
-            print(f"Error running Docker container: {e}", file=sys.stderr)
+            print(f"Error running Docker container: {e}", file=sys.stderr)  # noqa: T201 (print)
             return 1
 
     def _sanitize_env_value(self, value: str) -> str:
@@ -136,10 +137,10 @@ class DockerManager:
         if key_name == "ANTHROPIC_API_KEY":
             # Anthropic keys typically start with sk- and have alphanumeric chars
             return bool(re.match(r"^sk-[a-zA-Z0-9\-_]+$", value))
-        elif key_name in ["OPENAI_API_KEY"]:
+        if key_name in ["OPENAI_API_KEY"]:
             # OpenAI keys typically start with sk- and have alphanumeric chars
             return bool(re.match(r"^sk-[a-zA-Z0-9\-_]+$", value))
-        elif key_name in ["GITHUB_TOKEN", "GH_TOKEN"]:
+        if key_name in ["GITHUB_TOKEN", "GH_TOKEN"]:
             # GitHub tokens have various formats (ghp_, ghs_, github_pat_, etc.)
             return bool(
                 re.match(r"^(ghp_|ghs_|github_pat_|gho_|ghu_)[a-zA-Z0-9_]+$", value)
@@ -159,11 +160,11 @@ class DockerManager:
                 if self._validate_api_key(key, sanitized):
                     env_vars[key] = sanitized
                 else:
-                    print(f"Warning: Invalid format for {key}, skipping", file=sys.stderr)
+                    print(f"Warning: Invalid format for {key}, skipping", file=sys.stderr)  # noqa: T201 (print)
 
         # Amplihack vars (except Docker trigger)
         for key, value in os.environ.items():
-            if key.startswith("AMPLIHACK_") and key != "AMPLIHACK_USE_DOCKER":
+            if key.startswith("AMPLIHACK_") and key != "AMPLIHACK_USE_DOCKER":  # noqa
                 env_vars[key] = self._sanitize_env_value(value)
 
         # Terminal settings

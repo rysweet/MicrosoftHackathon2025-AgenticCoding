@@ -18,11 +18,12 @@ from typing import Any, Dict, List, Optional
 logger = logging.getLogger(__name__)
 
 try:
-    from cryptography.fernet import Fernet
+    from cryptography.fernet import Fernet  # type: ignore
     # Note: hashes and PBKDF2HMAC imports reserved for future encryption implementation
 
     ENCRYPTION_AVAILABLE = True
 except ImportError:
+    Fernet = None  # type: ignore  # noqa
     ENCRYPTION_AVAILABLE = False
     logger.warning("Cryptography package not available - session encryption disabled")
 
@@ -67,13 +68,9 @@ class ConversationMessage:
 class SessionRecoveryError(Exception):
     """Raised when session recovery fails"""
 
-    pass
-
 
 class AuthenticationError(Exception):
     """Raised when authentication fails"""
-
-    pass
 
 
 class SDKSessionManager:
@@ -112,11 +109,11 @@ class SDKSessionManager:
                             encrypted_data = f.read()
                             data_str = self._decrypt_session_data(encrypted_data)
                     else:
-                        with open(sessions_file, "r") as f:
+                        with open(sessions_file) as f:
                             data_str = f.read()
                 except (UnicodeDecodeError, ValueError):
                     # Fall back to plain text if decryption fails
-                    with open(sessions_file, "r") as f:
+                    with open(sessions_file) as f:
                         data_str = f.read()
 
                 data = json.loads(data_str)

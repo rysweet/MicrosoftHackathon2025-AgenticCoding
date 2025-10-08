@@ -15,7 +15,7 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from jinja2 import BaseLoader, Environment, TemplateNotFound
+from jinja2 import BaseLoader, Environment, TemplateNotFound  # type: ignore
 
 logger = logging.getLogger(__name__)
 
@@ -77,13 +77,9 @@ class RenderedPrompt:
 class PromptValidationError(Exception):
     """Raised when prompt validation fails"""
 
-    pass
-
 
 class TemplateRenderError(Exception):
     """Raised when template rendering fails"""
-
-    pass
 
 
 class PromptTemplateLoader(BaseLoader):
@@ -331,7 +327,7 @@ Suggest specific improvements and their priority levels.
 
         for template_file in templates_path.glob("*.json"):
             try:
-                with open(template_file, "r") as f:
+                with open(template_file) as f:
                     template_data = json.load(f)
 
                 template = PromptTemplate(

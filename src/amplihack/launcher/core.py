@@ -87,7 +87,7 @@ class ClaudeLauncher:
         # 3. Find and validate target directory
         target_dir = self._find_target_directory()
         if not target_dir:
-            print("Failed to determine target directory")
+            print("Failed to determine target directory")  # noqa: T201 (print)
             return False
 
         # 4. Handle directory change if needed (unless UVX with --add-dir)
@@ -104,24 +104,24 @@ class ClaudeLauncher:
             True if successful, False otherwise.
         """
         if not self.checkout_repo:
-            print("No repository specified for checkout")
+            print("No repository specified for checkout")  # noqa: T201 (print)
             return False
 
         try:
             repo_path = checkout_repository(self.checkout_repo)
             if not repo_path:
-                print(f"Failed to checkout repository: {self.checkout_repo}")
+                print(f"Failed to checkout repository: {self.checkout_repo}")  # noqa: T201 (print)
                 return False
 
             repo_path_obj = Path(repo_path)
             if not repo_path_obj.exists() or not repo_path_obj.is_dir():
-                print(f"Checked out repository path is not accessible: {repo_path}")
+                print(f"Checked out repository path is not accessible: {repo_path}")  # noqa: T201 (print)
                 return False
 
-            print(f"Successfully checked out repository to: {repo_path}")
+            print(f"Successfully checked out repository to: {repo_path}")  # noqa: T201 (print)
             return True
         except Exception as e:
-            print(f"Repository checkout failed: {str(e)}")
+            print(f"Repository checkout failed: {e!s}")  # noqa: T201 (print)
             return False
 
     def _find_target_directory(self) -> Optional[Path]:
@@ -141,12 +141,10 @@ class ClaudeLauncher:
             project_root = self.detector.get_project_root(claude_dir)
             if project_root.exists() and project_root.is_dir():
                 return project_root
-            else:
-                print(f"Project root is not accessible: {project_root}")
-                return None
-        else:
-            # No .claude directory found - use current directory
-            return Path.cwd()
+            print(f"Project root is not accessible: {project_root}")  # noqa: T201 (print)
+            return None
+        # No .claude directory found - use current directory
+        return Path.cwd()
 
     def _handle_directory_change(self, target_dir: Path) -> bool:
         """Handle directory change based on execution mode.
@@ -176,14 +174,14 @@ class ClaudeLauncher:
         # Standard directory change
         try:
             if not target_dir.exists() or not target_dir.is_dir():
-                print(f"Target directory is not accessible: {target_dir}")
+                print(f"Target directory is not accessible: {target_dir}")  # noqa: T201 (print)
                 return False
 
             os.chdir(target_dir)
-            print(f"Changed directory to: {target_dir}")
+            print(f"Changed directory to: {target_dir}")  # noqa: T201 (print)
             return True
         except OSError as e:
-            print(f"Failed to change directory to {target_dir}: {e}")
+            print(f"Failed to change directory to {target_dir}: {e}")  # noqa: T201 (print)
             return False
 
     def _start_proxy_if_needed(self) -> bool:
@@ -194,9 +192,9 @@ class ClaudeLauncher:
         """
         if self.proxy_manager:
             if not self.proxy_manager.start_proxy():
-                print("Failed to start proxy")
+                print("Failed to start proxy")  # noqa: T201 (print)
                 return False
-            print(f"Proxy running at: {self.proxy_manager.get_proxy_url()}")
+            print(f"Proxy running at: {self.proxy_manager.get_proxy_url()}")  # noqa: T201 (print)
 
         return True
 
@@ -261,24 +259,23 @@ class ClaudeLauncher:
                 cmd.extend(["--run-with"] + claude_args)
 
             return cmd
-        else:
-            # Standard claude command
-            cmd = [claude_binary, "--dangerously-skip-permissions"]
+        # Standard claude command
+        cmd = [claude_binary, "--dangerously-skip-permissions"]
 
-            # Add system prompt if provided
-            if self.append_system_prompt and self.append_system_prompt.exists():
-                cmd.extend(["--append-system-prompt", str(self.append_system_prompt)])
+        # Add system prompt if provided
+        if self.append_system_prompt and self.append_system_prompt.exists():
+            cmd.extend(["--append-system-prompt", str(self.append_system_prompt)])
 
-            # Add --add-dir arguments if UVX mode and we have a target directory
-            # Use cached decision to avoid re-checking
-            if self._target_directory and self._cached_uvx_decision:
-                cmd.extend(["--add-dir", str(self._target_directory)])
+        # Add --add-dir arguments if UVX mode and we have a target directory
+        # Use cached decision to avoid re-checking
+        if self._target_directory and self._cached_uvx_decision:
+            cmd.extend(["--add-dir", str(self._target_directory)])
 
-            # Add forwarded Claude arguments
-            if self.claude_args:
-                cmd.extend(self.claude_args)
+        # Add forwarded Claude arguments
+        if self.claude_args:
+            cmd.extend(self.claude_args)
 
-            return cmd
+        return cmd
 
     def launch(self) -> int:
         """Launch Claude Code with configuration.
@@ -291,11 +288,11 @@ class ClaudeLauncher:
 
         try:
             cmd = self.build_claude_command()
-            print(f"Launching Claude with command: {' '.join(cmd)}")
+            print(f"Launching Claude with command: {' '.join(cmd)}")  # noqa: T201 (print)
 
             # Set up signal handling for graceful shutdown
             def signal_handler(sig, frame):
-                print("\nReceived interrupt signal. Shutting down...")
+                print("\nReceived interrupt signal. Shutting down...")  # noqa: T201 (print)
                 if self.claude_process:
                     self.claude_process.terminate()
                 if self.proxy_manager:
@@ -323,7 +320,7 @@ class ClaudeLauncher:
             return exit_code
 
         except Exception as e:
-            print(f"Error launching Claude: {e}")
+            print(f"Error launching Claude: {e}")  # noqa: T201 (print)
             return 1
         finally:
             # Clean up proxy
@@ -351,11 +348,11 @@ class ClaudeLauncher:
 
         try:
             cmd = self.build_claude_command()
-            print(f"Launching Claude with command: {' '.join(cmd)}")
+            print(f"Launching Claude with command: {' '.join(cmd)}")  # noqa: T201 (print)
 
             # Set up signal handling for graceful shutdown
             def signal_handler(sig, frame):
-                print("\nReceived interrupt signal. Shutting down...")
+                print("\nReceived interrupt signal. Shutting down...")  # noqa: T201 (print)
                 if self.proxy_manager:
                     self.proxy_manager.stop_proxy()
                 sys.exit(0)
@@ -378,15 +375,15 @@ class ClaudeLauncher:
             return exit_code
 
         except Exception as e:
-            print(f"Error launching Claude: {e}")
+            print(f"Error launching Claude: {e}")  # noqa: T201 (print)
             return 1
         finally:
             # Restore settings.json backup if exists
             if settings_manager.backup_path:
                 if settings_manager.restore_backup():
-                    print("  ✅ Restored settings.json from backup")
+                    print("  ✅ Restored settings.json from backup")  # noqa: T201 (print)
                 else:
-                    print(
+                    print(  # noqa: T201 (print)
                         "  ⚠️  Could not restore settings.json - backup remains for manual recovery"
                     )
 

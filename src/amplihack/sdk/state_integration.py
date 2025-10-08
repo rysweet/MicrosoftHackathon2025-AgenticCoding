@@ -132,8 +132,6 @@ class ProgressMilestone:
 class StateIntegrationError(Exception):
     """Raised when state integration operations fail"""
 
-    pass
-
 
 class AutoModeOrchestrator:
     """

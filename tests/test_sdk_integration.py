@@ -305,7 +305,7 @@ class TestPromptCoordinator:
 
             # Verify file exists and has content
             assert Path(template_file).exists()
-            with open(template_file, "r") as f:
+            with open(template_file) as f:
                 data = json.load(f)
                 assert data["id"] == "objective_clarification"
 

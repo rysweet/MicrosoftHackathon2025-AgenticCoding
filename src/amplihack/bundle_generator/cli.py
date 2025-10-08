@@ -185,12 +185,12 @@ def generate_command(args):
     logger.info(f"Bundle written to: {bundle_path}")
 
     # Print summary
-    print("\n" + "=" * 50)
-    print(f"✅ Successfully generated bundle: {bundle.name}")
-    print(f"📦 Agents: {len(bundle.agents)}")
-    print(f"📁 Location: {bundle_path}")
-    print(f"⏱️  Total size: {bundle.total_size_kb:.1f} KB")
-    print("=" * 50)
+    print("\n" + "=" * 50)  # noqa: T201 (print)
+    print(f"✅ Successfully generated bundle: {bundle.name}")  # noqa: T201 (print)
+    print(f"📦 Agents: {len(bundle.agents)}")  # noqa: T201 (print)
+    print(f"📁 Location: {bundle_path}")  # noqa: T201 (print)
+    print(f"⏱️  Total size: {bundle.total_size_kb:.1f} KB")  # noqa: T201 (print)
+    print("=" * 50)  # noqa: T201 (print)
 
 
 def test_command(args):
@@ -231,6 +231,7 @@ def test_command(args):
         try:
             result = subprocess.run(
                 ["pytest", str(tests_dir), "-v", "--tb=short"],
+                check=False,
                 capture_output=True,
                 text=True,
                 timeout=60,
@@ -265,12 +266,12 @@ def test_command(args):
             test_results["failed"] = len(manifest["agents"])
 
     # Print results
-    print("\n" + "=" * 50)
-    print("Test Results:")
-    print(f"✅ Passed: {test_results['passed']}")
-    print(f"❌ Failed: {test_results['failed']}")
-    print(f"⚠️  Skipped: {test_results['skipped']}")
-    print("=" * 50)
+    print("\n" + "=" * 50)  # noqa: T201 (print)
+    print("Test Results:")  # noqa: T201 (print)
+    print(f"✅ Passed: {test_results['passed']}")  # noqa: T201 (print)
+    print(f"❌ Failed: {test_results['failed']}")  # noqa: T201 (print)
+    print(f"⚠️  Skipped: {test_results['skipped']}")  # noqa: T201 (print)
+    print("=" * 50)  # noqa: T201 (print)
 
 
 def package_command(args):
@@ -304,13 +305,13 @@ def package_command(args):
     logger.info(f"Package created: {package.package_path}")
 
     # Print summary
-    print("\n" + "=" * 50)
-    print("✅ Successfully packaged bundle")
-    print(f"📦 Format: {package.format}")
-    print(f"📁 Location: {package.package_path}")
-    print(f"📏 Size: {package.size_bytes / 1024:.1f} KB")
-    print(f"🔐 Checksum: {package.checksum[:16]}...")
-    print("=" * 50)
+    print("\n" + "=" * 50)  # noqa: T201 (print)
+    print("✅ Successfully packaged bundle")  # noqa: T201 (print)
+    print(f"📦 Format: {package.format}")  # noqa: T201 (print)
+    print(f"📁 Location: {package.package_path}")  # noqa: T201 (print)
+    print(f"📏 Size: {package.size_bytes / 1024:.1f} KB")  # noqa: T201 (print)
+    print(f"🔐 Checksum: {package.checksum[:16]}...")  # noqa: T201 (print)
+    print("=" * 50)  # noqa: T201 (print)
 
 
 def distribute_command(args):
@@ -340,13 +341,13 @@ def distribute_command(args):
     )
 
     if result.success:
-        print("\n" + "=" * 50)
-        print("✅ Successfully distributed bundle")
-        print(f"📦 Repository: {result.repository}")
-        print(f"🔗 URL: {result.url}")
+        print("\n" + "=" * 50)  # noqa: T201 (print)
+        print("✅ Successfully distributed bundle")  # noqa: T201 (print)
+        print(f"📦 Repository: {result.repository}")  # noqa: T201 (print)
+        print(f"🔗 URL: {result.url}")  # noqa: T201 (print)
         if result.release_tag:
-            print(f"🏷️  Release: {result.release_tag}")
-        print("=" * 50)
+            print(f"🏷️  Release: {result.release_tag}")  # noqa: T201 (print)
+        print("=" * 50)  # noqa: T201 (print)
     else:
         logger.error(f"Distribution failed: {result.errors}")
         sys.exit(1)
@@ -405,13 +406,13 @@ def pipeline_command(args):
         logger.info("\n[Stage 4/4] Skipping distribution...")
 
     # Final summary
-    print("\n" + "=" * 50)
-    print("🎉 Pipeline Complete!")
-    print(f"📦 Bundle: {bundle.name}")
-    print(f"📁 Location: {output_dir}")
-    print(f"✅ Agents: {len(bundle.agents)}")
-    print(f"📏 Size: {bundle.total_size_kb:.1f} KB")
-    print("=" * 50)
+    print("\n" + "=" * 50)  # noqa: T201 (print)
+    print("🎉 Pipeline Complete!")  # noqa: T201 (print)
+    print(f"📦 Bundle: {bundle.name}")  # noqa: T201 (print)
+    print(f"📁 Location: {output_dir}")  # noqa: T201 (print)
+    print(f"✅ Agents: {len(bundle.agents)}")  # noqa: T201 (print)
+    print(f"📏 Size: {bundle.total_size_kb:.1f} KB")  # noqa: T201 (print)
+    print("=" * 50)  # noqa: T201 (print)
 
 
 def create_repo_command(args):
@@ -435,10 +436,10 @@ def create_repo_command(args):
     )
 
     if result.success:
-        print("\n✅ Repository created successfully!")
-        print(f"   URL: {result.url}")
+        print("\n✅ Repository created successfully!")  # noqa: T201 (print)
+        print(f"   URL: {result.url}")  # noqa: T201 (print)
         if args.push:
-            print(f"   Code pushed to: {result.repository}")
+            print(f"   Code pushed to: {result.repository}")  # noqa: T201 (print)
     else:
         logger.error(f"Repository creation failed: {result.error}")
         sys.exit(1)
@@ -460,38 +461,38 @@ def update_command(args):
     # Check for updates
     info = manager.check_for_updates(bundle_path)
 
-    print(f"\nCurrent version: {info.current_version}")
-    print(f"Latest version:  {info.latest_version}")
+    print(f"\nCurrent version: {info.current_version}")  # noqa: T201 (print)
+    print(f"Latest version:  {info.latest_version}")  # noqa: T201 (print)
 
     if not info.available:
-        print("\n✅ Bundle is up to date!")
+        print("\n✅ Bundle is up to date!")  # noqa: T201 (print)
         return
 
-    print("\n📦 Updates available!")
+    print("\n📦 Updates available!")  # noqa: T201 (print)
     if info.changes:
-        print("\nChanges:")
+        print("\nChanges:")  # noqa: T201 (print)
         for change in info.changes[:10]:
-            print(f"  - {change}")
+            print(f"  - {change}")  # noqa: T201 (print)
 
     # If check-only, stop here
     if args.check_only:
         return
 
     # Perform update
-    print("\nUpdating bundle...")
+    print("\nUpdating bundle...")  # noqa: T201 (print)
     result = manager.update_bundle(
         bundle_path, preserve_edits=not args.force, backup=not args.no_backup
     )
 
     if result.success:
-        print("\n✅ Update complete!")
-        print(f"   Updated files: {len(result.updated_files)}")
+        print("\n✅ Update complete!")  # noqa: T201 (print)
+        print(f"   Updated files: {len(result.updated_files)}")  # noqa: T201 (print)
         if result.preserved_files:
-            print(f"   Preserved (user-modified): {len(result.preserved_files)}")
+            print(f"   Preserved (user-modified): {len(result.preserved_files)}")  # noqa: T201 (print)
         if result.conflicts:
-            print("\n⚠️  Conflicts (manual review needed):")
+            print("\n⚠️  Conflicts (manual review needed):")  # noqa: T201 (print)
             for conflict in result.conflicts[:5]:
-                print(f"   - {conflict}")
+                print(f"   - {conflict}")  # noqa: T201 (print)
     else:
         logger.error(f"Update failed: {result.error}")
         sys.exit(1)

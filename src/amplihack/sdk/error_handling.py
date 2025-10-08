@@ -85,19 +85,13 @@ class CircuitBreakerState:
 class SecurityViolationError(Exception):
     """Raised when security violations are detected"""
 
-    pass
-
 
 class CircuitBreakerOpenError(Exception):
     """Raised when circuit breaker is open"""
 
-    pass
-
 
 class MaxRetriesExceededError(Exception):
     """Raised when maximum retries are exceeded"""
-
-    pass
 
 
 class CircuitBreaker:
@@ -210,8 +204,7 @@ def with_retry(retry_config: Optional[RetryConfig] = None, exceptions: tuple = (
                 try:
                     if asyncio.iscoroutinefunction(func):
                         return await func(*args, **kwargs)
-                    else:
-                        return func(*args, **kwargs)
+                    return func(*args, **kwargs)
 
                 except exceptions as e:
                     last_exception = e
@@ -294,7 +287,7 @@ class SecurityValidator:
 
         # Check for suspicious keys
         suspicious_keys = ["password", "secret", "token", "key", "auth"]
-        for key in request_data.keys():
+        for key in request_data:
             if any(suspicious in key.lower() for suspicious in suspicious_keys):
                 logger.warning(f"Potentially sensitive key in request: {key}")
 
@@ -463,20 +456,19 @@ class ErrorHandlingManager:
         if pattern.recovery_strategy == RecoveryStrategy.RETRY:
             return await self._handle_retry_strategy(pattern, error_occurrence)
 
-        elif pattern.recovery_strategy == RecoveryStrategy.CIRCUIT_BREAK:
+        if pattern.recovery_strategy == RecoveryStrategy.CIRCUIT_BREAK:
             return await self._handle_circuit_break_strategy(pattern, operation_name)
 
-        elif pattern.recovery_strategy == RecoveryStrategy.FALLBACK:
+        if pattern.recovery_strategy == RecoveryStrategy.FALLBACK:
             return await self._handle_fallback_strategy(pattern, error_occurrence)
 
-        elif pattern.recovery_strategy == RecoveryStrategy.ESCALATE:
+        if pattern.recovery_strategy == RecoveryStrategy.ESCALATE:
             return await self._handle_escalate_strategy(pattern, error_occurrence)
 
-        elif pattern.recovery_strategy == RecoveryStrategy.IGNORE:
+        if pattern.recovery_strategy == RecoveryStrategy.IGNORE:
             return {"success": True, "action": "ignored"}
 
-        else:
-            return {"success": False, "error": "Unknown recovery strategy"}
+        return {"success": False, "error": "Unknown recovery strategy"}
 
     async def _handle_retry_strategy(
         self, pattern: ErrorPattern, error_occurrence: ErrorOccurrence

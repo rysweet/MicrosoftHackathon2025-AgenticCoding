@@ -59,8 +59,6 @@ class MergeResult:
 class SettingsJsonError(Exception):
     """Error in settings.json processing"""
 
-    pass
-
 
 class HookMergeUtility:
     """
@@ -159,7 +157,7 @@ class HookMergeUtility:
             return self._create_default_settings()
 
         try:
-            with open(self.settings_path, "r") as f:
+            with open(self.settings_path) as f:
                 settings = json.load(f)
 
             # Ensure hooks section exists
@@ -168,7 +166,7 @@ class HookMergeUtility:
 
             return settings
 
-        except (json.JSONDecodeError, IOError) as e:
+        except (OSError, json.JSONDecodeError) as e:
             logger.warning(f"Failed to load settings.json: {e}, creating new configuration")
             return self._create_default_settings()
 
@@ -176,7 +174,7 @@ class HookMergeUtility:
         """Create default settings.json with basic structure"""
         return {
             "permissions": {
-                "allow": ["Bash", "TodoWrite", "WebSearch", "WebFetch"],
+                "allow": ["Bash", "TodoWrite", "WebSearch", "WebFetch"],  # noqa
                 "deny": [],
                 "defaultMode": "bypassPermissions",
                 "additionalDirectories": [".claude", "Specs"],
@@ -304,9 +302,9 @@ class HookMergeUtility:
     async def _verify_saved_settings(self) -> None:
         """Verify that saved settings file is valid JSON"""
         try:
-            with open(self.settings_path, "r") as f:
+            with open(self.settings_path) as f:
                 json.load(f)
-        except (json.JSONDecodeError, IOError) as e:
+        except (OSError, json.JSONDecodeError) as e:
             raise SettingsJsonError(f"Saved settings file is invalid: {e}")
 
     async def _restore_settings(self, backup_path: str) -> None:
@@ -386,24 +384,24 @@ async def main():
     xpia_hooks = get_required_xpia_hooks()
 
     if args.dry_run:
-        print("DRY RUN: Would merge the following XPIA hooks:")
+        print("DRY RUN: Would merge the following XPIA hooks:")  # noqa: T201 (print)
         for hook in xpia_hooks:
-            print(f"  - {hook.hook_type}: {hook.command}")
+            print(f"  - {hook.hook_type}: {hook.command}")  # noqa: T201 (print)
         return
 
     # Perform merge
     result = await merger.merge_hooks(xpia_hooks)
 
     if result.success:
-        print("✅ Successfully merged XPIA hooks:")
-        print(f"   Added: {result.hooks_added}")
-        print(f"   Updated: {result.hooks_updated}")
+        print("✅ Successfully merged XPIA hooks:")  # noqa: T201 (print)
+        print(f"   Added: {result.hooks_added}")  # noqa: T201 (print)
+        print(f"   Updated: {result.hooks_updated}")  # noqa: T201 (print)
         if result.backup_path:
-            print(f"   Backup: {result.backup_path}")
+            print(f"   Backup: {result.backup_path}")  # noqa: T201 (print)
     else:
-        print(f"❌ Hook merge failed: {result.error_message}")
+        print(f"❌ Hook merge failed: {result.error_message}")  # noqa: T201 (print)
         if result.rollback_performed:
-            print("   Rollback was performed successfully")
+            print("   Rollback was performed successfully")  # noqa: T201 (print)
         exit(1)
 
 

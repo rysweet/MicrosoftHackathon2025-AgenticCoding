@@ -94,8 +94,7 @@ class MemoryManager:
         # Store in database
         if self.db.store_memory(memory):
             return memory_id
-        else:
-            raise RuntimeError(f"Failed to store memory: {title}")
+        raise RuntimeError(f"Failed to store memory: {title}")
 
     def retrieve(
         self,
@@ -255,7 +254,7 @@ class MemoryManager:
                 memory_id = self.store(**memory_data)
                 memory_ids.append(memory_id)
             except Exception as e:
-                print(f"Failed to store memory '{memory_data.get('title', 'Unknown')}': {e}")
+                print(f"Failed to store memory '{memory_data.get('title', 'Unknown')}': {e}")  # noqa: T201 (print)
                 memory_ids.append(None)
 
         return memory_ids

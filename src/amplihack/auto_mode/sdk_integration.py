@@ -16,11 +16,11 @@ from enum import Enum
 from typing import Any, Callable, Dict, Optional
 
 from .config import (
+    DEFAULT_API_KEY_MIN_LENGTH,
     DEFAULT_CONNECTION_TIMEOUT_SECONDS,
+    DEFAULT_HEARTBEAT_INTERVAL_SECONDS,
     DEFAULT_RETRY_ATTEMPTS,
     DEFAULT_RETRY_DELAY_SECONDS,
-    DEFAULT_HEARTBEAT_INTERVAL_SECONDS,
-    DEFAULT_API_KEY_MIN_LENGTH,
     DEFAULT_SYNTHESIS_SIMULATION_DELAY,
 )
 
@@ -90,7 +90,11 @@ class ClaudeAgentSDKClient:
         self.failed_requests = 0
         self.last_heartbeat = 0.0
 
-    async def initialize(self, timeout: float = DEFAULT_CONNECTION_TIMEOUT_SECONDS, retry_attempts: int = DEFAULT_RETRY_ATTEMPTS) -> bool:
+    async def initialize(
+        self,
+        timeout: float = DEFAULT_CONNECTION_TIMEOUT_SECONDS,
+        retry_attempts: int = DEFAULT_RETRY_ATTEMPTS,
+    ) -> bool:
         """
         Initialize the SDK client and establish connection.
 
@@ -119,9 +123,8 @@ class ClaudeAgentSDKClient:
                 asyncio.create_task(self._heartbeat_loop())
                 logger.info("Claude Agent SDK client initialized successfully")
                 return True
-            else:
-                logger.error("Failed to establish connection to Claude Agent SDK")
-                return False
+            logger.error("Failed to establish connection to Claude Agent SDK")
+            return False
 
         except Exception as e:
             logger.error(f"Failed to initialize Claude Agent SDK client: {e}")
@@ -145,9 +148,8 @@ class ClaudeAgentSDKClient:
                 self.connection_state = SDKConnectionState.AUTHENTICATED
                 self.last_heartbeat = time.time()
                 return True
-            else:
-                self.connection_state = SDKConnectionState.ERROR
-                return False
+            self.connection_state = SDKConnectionState.ERROR
+            return False
 
         except Exception as e:
             logger.error(f"Connection establishment failed: {type(e).__name__}")
