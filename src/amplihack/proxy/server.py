@@ -847,9 +847,20 @@ def convert_anthropic_to_litellm(anthropic_request: MessagesRequest) -> Dict[str
 
     # Add Azure configuration if using azure/ prefix
     if anthropic_request.model.startswith("azure/"):
-        # Get Azure configuration from environment
-        azure_base = os.environ.get("OPENAI_BASE_URL", "")
-        azure_key = os.environ.get("AZURE_OPENAI_API_KEY", "")
+        # Get Azure configuration from environment - check multiple possible variables
+        azure_base = (
+            os.environ.get("OPENAI_BASE_URL", "")
+            or os.environ.get("AZURE_ENDPOINT", "")
+            or os.environ.get("AZURE_OPENAI_ENDPOINT", "")
+            or os.environ.get("AZURE_API_BASE", "")
+        )
+        azure_key = os.environ.get("AZURE_OPENAI_API_KEY", "") or os.environ.get(
+            "AZURE_API_KEY", ""
+        )
+
+        logger.debug(
+            f"Azure config check - base URL found: {bool(azure_base)}, key found: {bool(azure_key)}"
+        )
 
         if azure_base:
             # Extract clean base URL without query parameters
