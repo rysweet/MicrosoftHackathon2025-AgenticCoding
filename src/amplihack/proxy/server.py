@@ -845,6 +845,34 @@ def convert_anthropic_to_litellm(anthropic_request: MessagesRequest) -> Dict[str
             # Default to auto if we can't determine
             litellm_request["tool_choice"] = "auto"
 
+    # Add Azure configuration if using azure/ prefix
+    if anthropic_request.model.startswith("azure/"):
+        # Get Azure configuration from environment
+        azure_base = os.environ.get("OPENAI_BASE_URL", "")
+        azure_key = os.environ.get("AZURE_OPENAI_API_KEY", "")
+
+        if azure_base:
+            # Extract clean base URL without query parameters
+            clean_azure_base = azure_base.split("?")[0] if "?" in azure_base else azure_base
+
+            # Check if this is Responses API
+            is_responses_api = "/openai/responses" in clean_azure_base
+
+            # For regular Chat API, remove the path; for Responses API, keep it
+            if not is_responses_api:
+                # Only strip for regular Chat API endpoints
+                clean_azure_base = clean_azure_base.replace("/openai/deployments", "")
+            # For Responses API, keep the /openai/responses path
+
+            # Add to request for LiteLLM
+            litellm_request["api_base"] = clean_azure_base
+            litellm_request["api_key"] = azure_key
+            litellm_request["api_version"] = os.environ.get(
+                "AZURE_API_VERSION", "2025-04-01-preview"
+            )
+
+            logger.debug(f"Added Azure config to request: api_base={clean_azure_base}")
+
     return litellm_request
 
 
