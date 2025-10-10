@@ -90,6 +90,15 @@ for handler in logger.handlers:
 
 app = FastAPI()
 
+# Load environment variables from .azure.env if it exists
+azure_env_path = os.path.join(os.getcwd(), ".azure.env")
+if os.path.exists(azure_env_path):
+    logger.info(f"Loading Azure environment from: {azure_env_path}")
+    load_dotenv(azure_env_path, override=True)
+    logger.info("Azure environment variables loaded successfully")
+else:
+    logger.debug("No .azure.env file found, using system environment variables")
+
 # Get API keys from environment
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
