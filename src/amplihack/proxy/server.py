@@ -760,7 +760,28 @@ def convert_anthropic_to_litellm(anthropic_request: MessagesRequest) -> Dict[str
         litellm_request["top_k"] = anthropic_request.top_k
 
     # Convert tools to OpenAI format
-    if anthropic_request.tools:
+    # Skip tools for Azure Responses API models (they don't support tools)
+    is_responses_api_model = False
+    if anthropic_request.model.startswith("azure/"):
+        # Check if this is a Responses API model
+        model_name = anthropic_request.model.split("/")[-1]
+        responses_api_models = {
+            "o3-mini",
+            "o3-small",
+            "o3-medium",
+            "o3-large",
+            "o4-mini",
+            "o4-small",
+            "o4-medium",
+            "o4-large",
+            "gpt-5-code",
+            "gpt-5-codex",
+        }
+        if model_name in responses_api_models:
+            is_responses_api_model = True
+            logger.info(f"Skipping tools for Azure Responses API model: {model_name}")
+
+    if anthropic_request.tools and not is_responses_api_model:
         openai_tools = []
         is_gemini_model = anthropic_request.model.startswith("gemini/")
 
@@ -795,8 +816,8 @@ def convert_anthropic_to_litellm(anthropic_request: MessagesRequest) -> Dict[str
 
         litellm_request["tools"] = openai_tools
 
-    # Convert tool_choice to OpenAI format if present
-    if anthropic_request.tool_choice:
+    # Convert tool_choice to OpenAI format if present (skip for Responses API)
+    if anthropic_request.tool_choice and not is_responses_api_model:
         if isinstance(anthropic_request.tool_choice, dict):
             tool_choice_dict = anthropic_request.tool_choice
         elif hasattr(anthropic_request.tool_choice, "model_dump"):
