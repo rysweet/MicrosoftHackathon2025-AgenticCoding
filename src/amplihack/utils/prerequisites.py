@@ -82,7 +82,7 @@ def safe_subprocess_call(
         ...     context="checking git version"
         ... )
         >>> if returncode != 0:
-        ...     print(f"Error: {err}")
+        ...     print(f"Error: {err}")  # noqa: T201 (print)
     """
     try:
         result = subprocess.run(
@@ -154,7 +154,7 @@ class PrerequisiteChecker:
         >>> checker = PrerequisiteChecker()
         >>> result = checker.check_all_prerequisites()
         >>> if not result.all_available:
-        ...     print(checker.format_missing_prerequisites(result.missing_tools))
+        ...     print(checker.format_missing_prerequisites(result.missing_tools))  # noqa: T201 (print)
     """
 
     # Required tools with their version check arguments

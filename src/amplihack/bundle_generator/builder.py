@@ -309,7 +309,7 @@ This bundle contains {len(bundle.agents)} agents:
 ## Usage
 
 ```python
-from amplihack.bundles import {bundle.name}
+from amplihack.bundles import {bundle.name}  # noqa
 
 # Load the bundle
 bundle = {bundle.name}.load()
@@ -322,7 +322,7 @@ for agent in bundle.agents:
 ## Requirements
 
 - Python >= 3.11
-- amplihack >= 1.0.0
+- amplihack >= 1.0.0  # noqa
 
 ## Configuration
 

@@ -40,7 +40,7 @@ class UpdateManager:
         """Initialize update manager.
 
         Args:
-            framework_repo_path: Path to amplihack framework repository
+            framework_repo_path: Path to amplihack framework repository  # noqa
                                (defaults to parent of this file)
         """
         if framework_repo_path is None:

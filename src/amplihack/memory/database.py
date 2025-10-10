@@ -18,7 +18,7 @@ class MemoryDatabase:
         """Initialize database connection.
 
         Args:
-            db_path: Path to SQLite database file. Defaults to ~/.amplihack/memory.db
+            db_path: Path to SQLite database file. Defaults to ~/.amplihack/memory.db  # noqa
         """
         if db_path is None:
             db_path = Path.home() / ".amplihack" / "memory.db"

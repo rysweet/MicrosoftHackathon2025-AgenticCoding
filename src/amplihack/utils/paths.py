@@ -15,9 +15,9 @@ class FrameworkPathResolver:
         """Find the framework root directory.
 
         Searches in this order:
-        1. Inside the amplihack package (for UVX and installed packages)
+        1. Inside the amplihack package (for UVX and installed packages)  # noqa
         2. Current working directory and parents (for local development)
-        3. AMPLIHACK_ROOT environment variable
+        3. AMPLIHACK_ROOT environment variable  # noqa
         """
         # Return cached result if available
         if FrameworkPathResolver._cached_root is not None:

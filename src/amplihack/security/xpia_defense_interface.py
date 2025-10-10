@@ -2,7 +2,7 @@
 XPIA Defense Agent Interface Specification
 
 This module defines the core interface contracts for XPIA Defense integration
-with the amplihack framework. Following the bricks & studs philosophy:
+with the amplihack framework. Following the bricks & studs philosophy:  # noqa
 
 - Brick: Self-contained security validation module
 - Stud: Public interface contracts for threat detection

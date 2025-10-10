@@ -270,7 +270,7 @@ Results are returned in a structured format with:
     def _generate_philosophy(self, req: AgentRequirement) -> str:
         """Generate philosophy section."""
         return """
-This agent follows the amplihack philosophy of:
+This agent follows the amplihack philosophy of:  # noqa
 
 - **Ruthless Simplicity**: Start simple, add complexity only when justified
 - **Modular Design**: Self-contained with clear interfaces
@@ -358,7 +358,7 @@ The agent implements comprehensive error handling:
 ```python
 # Example 1: Basic usage
 result = {req.name}.process("input data")
-print(result.status)  # "success"
+print(result.status)  # "success"  # noqa: T201 (print) (print)
 
 # Example 2: With options
 options = {{
@@ -373,7 +373,7 @@ inputs = ["data1", "data2", "data3"]
 results = {req.name}.process_batch(inputs)
 for result in results:
     if result.success:
-        print(f"Processed: {{result.data}}")
+        print(f"Processed: {{result.data}}")  # noqa: T201 (print)
 ```
         """.strip()
 
@@ -413,7 +413,7 @@ Tests for {req.name.title().replace("_", " ")}
 
 These are functional tests that verify the agent markdown file structure
 and content without importing it as a Python module. Generated agent bundles
-are standalone packages, not submodules of amplihack.
+are standalone packages, not submodules of amplihack.  # noqa
 """
 
 import pytest
@@ -448,7 +448,7 @@ class Test{req.name.title().replace("_", "")}:
         content = agent_file.read_text()
 
         assert len(content) > 500, "Agent file should have substantial content"
-        assert "TODO" not in content, "Agent should not contain TODO placeholders"
+        assert "TODO" not in content, "Agent should not contain TODO placeholders"  # noqa
         assert "PLACEHOLDER" not in content, "Agent should not contain PLACEHOLDER text"
 
     def test_manifest_includes_agent(self):

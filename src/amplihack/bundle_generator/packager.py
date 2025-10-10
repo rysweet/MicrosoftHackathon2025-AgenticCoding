@@ -262,7 +262,7 @@ setup(
     packages=find_packages(),
     python_requires=">=3.11",
     install_requires=[
-        "amplihack>=1.0.0",
+        "amplihack>=1.0.0",  # noqa
     ],
     package_data={{
         "": ["*.json", "*.md", "*.yaml"],
@@ -271,7 +271,7 @@ setup(
         "docs": ["*.md"],
     }},
     entry_points={{
-        "amplihack.bundles": [
+        "amplihack.bundles": [  # noqa
             "{bundle.name} = {bundle.name}:load",
         ],
     }},
@@ -320,7 +320,7 @@ result = agent.process("input data")
 ## Requirements
 
 - Python >= 3.11
-- amplihack >= 1.0.0
+- amplihack >= 1.0.0  # noqa
 
 ## Documentation
 

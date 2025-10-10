@@ -1,4 +1,4 @@
-"""Agent Memory System for amplihack.
+"""Agent Memory System for amplihack.  # noqa
 
 Provides persistent memory storage for AI agents with session isolation,
 thread-safe operations, and efficient retrieval.

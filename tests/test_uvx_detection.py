@@ -122,12 +122,12 @@ class TestUVXDetection:
                 with patch("pathlib.Path.cwd", return_value=Path("/no/claude/here")):
                     detection = detect_uvx_deployment()
 
-                    assert detection.result == UVXDetectionResult.DETECTION_FAILED
-                    assert detection.is_detection_successful is False
-                    assert any(
-                        "No clear deployment indicators" in reason
-                        for reason in detection.detection_reasons
-                    )
+                assert detection.result == UVXDetectionResult.DETECTION_FAILED
+                assert detection.is_detection_successful is False
+                assert any(
+                    "No clear deployment indicators" in reason
+                    for reason in detection.detection_reasons
+                )
 
     def test_detect_with_custom_config(self):
         """Test detection with custom configuration.
