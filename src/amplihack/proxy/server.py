@@ -116,15 +116,24 @@ SMALL_MODEL = os.environ.get("SMALL_MODEL", "gpt-4.1-mini")
 # Configure LiteLLM for Azure if Azure endpoint is present
 AZURE_BASE_URL = os.environ.get("OPENAI_BASE_URL", "")
 if AZURE_BASE_URL:
+    # For Azure Responses API, keep the full path
     # Extract clean base URL without query parameters
     clean_azure_base = AZURE_BASE_URL.split("?")[0] if "?" in AZURE_BASE_URL else AZURE_BASE_URL
-    # Remove /openai/responses if present (for Responses API URLs)
-    clean_azure_base = clean_azure_base.replace("/openai/responses", "")
+
+    # Check if this is Responses API
+    is_responses_api = "/openai/responses" in clean_azure_base
+
+    # For regular Chat API, remove the path; for Responses API, keep it
+    if not is_responses_api:
+        # Only strip for regular Chat API endpoints
+        clean_azure_base = clean_azure_base.replace("/openai/deployments", "")
+    # For Responses API, keep the /openai/responses path
 
     # Set LiteLLM environment variables for Azure
     os.environ["AZURE_API_BASE"] = clean_azure_base
     os.environ["AZURE_API_KEY"] = OPENAI_API_KEY or ""
-    os.environ["AZURE_API_VERSION"] = "2025-01-01-preview"
+    # Use the correct API version from environment or default to user's version
+    os.environ["AZURE_API_VERSION"] = os.environ.get("AZURE_API_VERSION", "2025-04-01-preview")
 
     logger.info(f"Configured LiteLLM for Azure: {clean_azure_base}")
 
