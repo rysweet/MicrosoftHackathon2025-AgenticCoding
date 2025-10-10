@@ -1517,8 +1517,10 @@ async def create_message(request: MessagesRequest, raw_request: Request):
                 logger.info("Falling back to LiteLLM processing")
                 # Continue with normal processing below
 
+        logger.info(f"🔵 REQUEST MODEL AFTER VALIDATION: '{request.model}'")
         # Convert Anthropic request to LiteLLM format
         litellm_request = convert_anthropic_to_litellm(request)
+        logger.info(f"🔵 LITELLM_REQUEST MODEL AFTER CONVERSION: '{litellm_request.get('model')}'")
 
         # Determine which API key to use based on the model
         if request.model.startswith("azure/"):
@@ -1743,6 +1745,10 @@ async def create_message(request: MessagesRequest, raw_request: Request):
             num_tools,
             200,  # Assuming success at this point
         )
+        logger.info(
+            f"🔥 LITELLM REQUEST MODEL: '{litellm_request.get('model')}', api_base: '{litellm_request.get('api_base', 'NOT SET')}'"
+        )
+        logger.info(f"🔥 LITELLM REQUEST KEYS: {list(litellm_request.keys())}")
         start_time = time.time()
         litellm_response = litellm.completion(**litellm_request)
         logger.debug(
