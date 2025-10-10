@@ -858,9 +858,14 @@ def convert_anthropic_to_litellm(anthropic_request: MessagesRequest) -> Dict[str
             "AZURE_API_KEY", ""
         )
 
-        logger.debug(
-            f"Azure config check - base URL found: {bool(azure_base)}, key found: {bool(azure_key)}"
+        logger.info(f"Azure config check for {anthropic_request.model}:")
+        logger.info(f"  OPENAI_BASE_URL: {os.environ.get('OPENAI_BASE_URL', 'NOT SET')}")
+        logger.info(f"  AZURE_ENDPOINT: {os.environ.get('AZURE_ENDPOINT', 'NOT SET')}")
+        logger.info(f"  AZURE_API_BASE: {os.environ.get('AZURE_API_BASE', 'NOT SET')}")
+        logger.info(
+            f"  azure_base result: {azure_base[:50] + '...' if azure_base and len(azure_base) > 50 else azure_base}"
         )
+        logger.info(f"  azure_key found: {bool(azure_key)}")
 
         if azure_base:
             # Extract clean base URL without query parameters
@@ -882,7 +887,10 @@ def convert_anthropic_to_litellm(anthropic_request: MessagesRequest) -> Dict[str
                 "AZURE_API_VERSION", "2025-04-01-preview"
             )
 
-            logger.debug(f"Added Azure config to request: api_base={clean_azure_base}")
+            logger.info("Added Azure config to request:")
+            logger.info(f"  api_base: {clean_azure_base}")
+            logger.info(f"  api_key: {'SET' if azure_key else 'NOT SET'}")
+            logger.info(f"  api_version: {litellm_request['api_version']}")
 
     return litellm_request
 
