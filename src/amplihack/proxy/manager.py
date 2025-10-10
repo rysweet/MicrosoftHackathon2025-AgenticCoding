@@ -414,6 +414,150 @@ class ProxyManager:
 
         return sanitized
 
+    def _is_safe_module_path(self, module_path: str) -> bool:
+        """Validate that a module path is safe for execution.
+
+        Args:
+            module_path: Module path to validate
+
+        Returns:
+            True if the module path is safe, False otherwise.
+        """
+        if not module_path or not isinstance(module_path, str):
+            return False
+
+        # Only allow alphanumeric characters, dots, and underscores
+        # This prevents injection attacks through module names
+        allowed_pattern = re.compile(r"^[a-zA-Z0-9_.]+$")
+        if not allowed_pattern.match(module_path):
+            return False
+
+        # Only allow known safe module prefixes
+        safe_prefixes = [
+            "amplihack.",
+            "src.amplihack.",
+            "amplihack.proxy.server",
+            "src.amplihack.proxy.server",
+        ]
+
+        return any(
+            module_path.startswith(prefix) or module_path == prefix.rstrip(".")
+            for prefix in safe_prefixes
+        )
+
+    def _is_safe_file_path(self, file_path: Path) -> bool:
+        """Validate that a file path is safe and within expected directories.
+
+        Args:
+            file_path: File path to validate
+
+        Returns:
+            True if the file path is safe, False otherwise.
+        """
+        try:
+            # Resolve the path to handle any relative components or symlinks
+            resolved_path = file_path.resolve()
+
+            # Define safe base directories
+            safe_bases = [
+                Path(sys.prefix).resolve(),  # Python installation
+                Path(sys.executable).parent.parent.resolve(),  # Virtual environment
+                Path(__file__).parent.parent.parent.resolve(),  # Source directory
+            ]
+
+            # Check if the resolved path is within any safe base directory
+            for safe_base in safe_bases:
+                try:
+                    resolved_path.relative_to(safe_base)
+                    # If we get here, the path is within the safe base
+                    return True
+                except ValueError:
+                    continue
+
+            return False
+
+        except (OSError, ValueError):
+            # If path resolution fails, consider it unsafe
+            return False
+
+    def _sanitize_path_for_display(self, file_path: Path) -> str:
+        """Sanitize file path for safe display in logs.
+
+        Args:
+            file_path: File path to sanitize
+
+        Returns:
+            Sanitized path string safe for display.
+        """
+        try:
+            # Only show the last few components of the path to avoid leaking
+            # sensitive directory structure information
+            parts = file_path.parts
+            if len(parts) > 3:
+                return ".../" + "/".join(parts[-3:])
+            return str(file_path)
+        except Exception:
+            return "<path unavailable>"
+
+    def _build_safe_subprocess_command(self, command: List[str]) -> Optional[List[str]]:
+        """Build a safe subprocess command with validation.
+
+        Args:
+            command: Command list to validate and secure
+
+        Returns:
+            Safe command list or None if command is unsafe.
+        """
+        if not command or not isinstance(command, list):
+            return None
+
+        # Validate the Python executable path
+        if not command[0] or command[0] != sys.executable:
+            return None
+
+        # Validate command structure and arguments
+        safe_command = []
+        for i, arg in enumerate(command):
+            if not isinstance(arg, str):
+                return None
+
+            # Special validation for -c flag (inline code execution)
+            if arg == "-c" and i + 1 < len(command):
+                next_arg = command[i + 1]
+                # Only allow simple import statements and print
+                if not self._is_safe_inline_code(next_arg):
+                    return None
+
+            # Validate module names for -m flag
+            if arg == "-m" and i + 1 < len(command):
+                next_arg = command[i + 1]
+                if not self._is_safe_module_path(next_arg):
+                    return None
+
+            safe_command.append(arg)
+
+        return safe_command
+
+    def _is_safe_inline_code(self, code: str) -> bool:
+        """Validate that inline code is safe for execution.
+
+        Args:
+            code: Python code string to validate
+
+        Returns:
+            True if code is safe, False otherwise.
+        """
+        if not code or not isinstance(code, str):
+            return False
+
+        # Only allow very specific safe patterns
+        safe_patterns = [
+            r'^import [a-zA-Z0-9_.]+; print\([\'"]OK[\'"]\)$',
+            r"^import [a-zA-Z0-9_.]+$",
+        ]
+
+        return any(re.match(pattern, code.strip()) for pattern in safe_patterns)
+
     def _create_secure_env(self) -> Dict[str, str]:
         """Create a secure environment dictionary.
 
@@ -515,8 +659,8 @@ class ProxyManager:
         ]
 
         for server_path in server_candidates:
-            if server_path.exists():
-                print(f"Found proxy server file at: {server_path}")
+            if self._is_safe_file_path(server_path) and server_path.exists():
+                print(f"Found proxy server file at: {self._sanitize_path_for_display(server_path)}")
                 return [sys.executable, str(server_path)]
 
         # Method 3: Try both module paths with subprocess (last resort)
@@ -530,27 +674,28 @@ class ProxyManager:
         # Also try without the src prefix in case we're in a different context
         # This helps with uvx where the package might be installed differently
         for module_path in module_paths:
-            try:
-                # Test if the module can be executed
-                # Use a more robust test that actually imports and checks the module
-                test_code = f"""
-import sys
-try:
-    import {module_path}
-    # Verify the module has expected content
-    if hasattr({module_path}, '__file__'):
-        print('OK')
-except Exception:
-    sys.exit(1)
-"""
-                test_result = subprocess.run(
-                    [sys.executable, "-c", test_code], capture_output=True, text=True, timeout=5
-                )
-                if test_result.returncode == 0 and "OK" in test_result.stdout:
-                    print(f"Module {module_path} is executable via subprocess")
-                    return [sys.executable, "-m", module_path]
-            except (subprocess.TimeoutExpired, Exception):
-                continue
+            if self._is_safe_module_path(module_path):
+                try:
+                    # Test if the module can be executed safely
+                    # Use secure module validation without dynamic code execution
+                    safe_command = self._build_safe_subprocess_command(
+                        [sys.executable, "-c", "import " + module_path + "; print('OK')"]
+                    )
+                    if not safe_command:
+                        continue
+
+                    test_result = subprocess.run(
+                        safe_command,
+                        capture_output=True,
+                        text=True,
+                        timeout=5,
+                        env=self._create_secure_env(),
+                    )
+                    if test_result.returncode == 0 and "OK" in test_result.stdout:
+                        print(f"Module {module_path} is executable via subprocess")
+                        return [sys.executable, "-m", module_path]
+                except (subprocess.TimeoutExpired, Exception):
+                    continue
 
         # Method 4: Try to determine if we're in a uvx environment and adjust accordingly
         # Check if we're running from a uvx cache directory
@@ -561,14 +706,14 @@ except Exception:
             # In uvx, the package should be available as amplihack
             return [sys.executable, "-m", "amplihack.proxy.server"]
 
-        # If all methods fail, provide helpful error message
+        # If all methods fail, provide helpful error message (sanitized)
         print("ERROR: Unable to locate proxy server module.")
         print("Attempted methods:")
         print("  1. Import 'amplihack.proxy.server' (installed package)")
         print("  2. Import 'src.amplihack.proxy.server' (development)")
-        print(f"  3. File-based execution from: {current_file.parent}")
+        print("  3. File-based execution from package directory")
         print("  4. Subprocess module execution test")
-        print(f"  5. uvx environment detection (executable: {sys.executable})")
+        print("  5. uvx environment detection")
         print("\nPlease ensure the proxy server module is properly installed or available.")
 
         return None
