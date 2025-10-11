@@ -241,6 +241,10 @@ class ClaudeLauncher:
             if self._target_directory and self._cached_uvx_decision:
                 claude_args.extend(["--add-dir", str(self._target_directory)])
 
+            # Add Azure model when using proxy
+            if self.proxy_manager:
+                claude_args.extend(["--model", "azure/gpt-5-codex"])
+
             # Add forwarded Claude arguments
             if self.claude_args:
                 claude_args.extend(self.claude_args)
@@ -261,6 +265,10 @@ class ClaudeLauncher:
         # Use cached decision to avoid re-checking
         if self._target_directory and self._cached_uvx_decision:
             cmd.extend(["--add-dir", str(self._target_directory)])
+
+        # Add Azure model when using proxy
+        if self.proxy_manager:
+            cmd.extend(["--model", "azure/gpt-5-codex"])
 
         # Add forwarded Claude arguments
         if self.claude_args:
