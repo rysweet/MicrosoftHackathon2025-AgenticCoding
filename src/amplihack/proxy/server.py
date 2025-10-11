@@ -274,7 +274,15 @@ class Message(BaseModel):
     content: Union[
         str,
         List[
-            Union[ContentBlockText, ContentBlockImage, ContentBlockToolUse, ContentBlockToolResult]
+            Union[
+                ContentBlockText,
+                ContentBlockImage,
+                ContentBlockToolUse,
+                ContentBlockToolResult,
+                Dict[
+                    str, Any
+                ],  # Allow unknown block types (e.g., "thinking" blocks) to pass validation
+            ]
         ],
     ]
 
@@ -537,6 +545,89 @@ def parse_tool_result_content(content):
         return "Unparseable content"
 
 
+def sanitize_message_content(
+    messages: List[Message], allowed_types: Optional[set] = None
+) -> List[Message]:
+    """
+    Remove unsupported content block types from messages.
+
+    This function defensively filters out content blocks that target
+    LLM providers don't support (e.g., 'thinking' blocks from Anthropic's
+    extended thinking feature).
+
+    Args:
+        messages: List of Message objects in Anthropic format
+        allowed_types: Set of allowed content block types
+                      Default: {"text", "image", "tool_use", "tool_result"}
+
+    Returns:
+        Sanitized list of messages with only allowed content types
+
+    Side Effects:
+        Logs filtered blocks at INFO level
+    """
+    if allowed_types is None:
+        allowed_types = {"text", "image", "tool_use", "tool_result"}
+
+    sanitized_messages = []
+    filtered_count = 0
+
+    for message in messages:
+        # Handle both string content and list content
+        content = message.content
+
+        if isinstance(content, list):
+            original_length = len(content)
+            sanitized_content = []
+
+            for block in content:
+                # Handle both dict and object blocks
+                if isinstance(block, dict):
+                    block_type = block.get("type")
+                elif hasattr(block, "type"):
+                    block_type = block.type
+                else:
+                    # Unknown format - pass through defensively
+                    sanitized_content.append(block)
+                    continue
+
+                if block_type in allowed_types:
+                    sanitized_content.append(block)
+                else:
+                    # Log filtered block type for debugging
+                    filtered_count += 1
+                    logger.info(
+                        f"Filtered unsupported content block type: {block_type} "
+                        f"(role: {message.role})"
+                    )
+
+            # Only update content if we filtered something
+            if len(sanitized_content) < original_length:
+                # Create new message with filtered content
+                from copy import copy
+
+                sanitized_msg = copy(message)
+                sanitized_msg.content = sanitized_content
+                message = sanitized_msg
+
+            # Skip messages that have empty content after filtering
+            if sanitized_content:
+                sanitized_messages.append(message)
+            else:
+                logger.warning(
+                    f"Message with role '{message.role}' has no content "
+                    f"after filtering - skipping entire message"
+                )
+        else:
+            # String content or other formats pass through unchanged
+            sanitized_messages.append(message)
+
+    if filtered_count > 0:
+        logger.info(f"Filtered {filtered_count} unsupported content blocks from messages")
+
+    return sanitized_messages
+
+
 def convert_anthropic_to_litellm(anthropic_request: MessagesRequest) -> Dict[str, Any]:
     """Convert Anthropic API request format to LiteLLM format (which follows OpenAI)."""
     # LiteLLM already handles Anthropic models when using the format model="anthropic/claude-3-opus-20240229"
@@ -586,6 +677,13 @@ def convert_anthropic_to_litellm(anthropic_request: MessagesRequest) -> Dict[str
         else (anthropic_request.temperature if anthropic_request.temperature is not None else 1.0)
     )
 
+    # SANITIZE MESSAGES FIRST - filter out unsupported content blocks like "thinking"
+    # This prevents 422 errors from Azure/OpenAI when extended thinking is enabled
+    sanitized_messages = sanitize_message_content(anthropic_request.messages)
+    logger.debug(
+        f"Message sanitization: {len(anthropic_request.messages)} -> {len(sanitized_messages)} messages"
+    )
+
     # Initialize the LiteLLM request dict first to ensure we always return the right structure
     litellm_request = {
         "model": anthropic_request.model,  # it understands "anthropic/claude-x" format
@@ -616,8 +714,8 @@ def convert_anthropic_to_litellm(anthropic_request: MessagesRequest) -> Dict[str
             if system_text:
                 messages.append({"role": "system", "content": system_text.strip()})
 
-    # Add conversation messages
-    for idx, msg in enumerate(anthropic_request.messages):
+    # Add conversation messages (use sanitized messages)
+    for idx, msg in enumerate(sanitized_messages):
         content = msg.content
         if isinstance(content, str):
             messages.append({"role": msg.role, "content": content})
