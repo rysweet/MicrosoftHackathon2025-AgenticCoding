@@ -1533,8 +1533,15 @@ async def create_message(request: MessagesRequest, raw_request: Request):
             if request.system:
                 request_data["system"] = request.system
 
+            # SANITIZE MESSAGES for passthrough mode too
+            # Anthropic API (like Azure) doesn't accept thinking blocks in conversation history
+            sanitized_messages = sanitize_message_content(request.messages)
+            logger.debug(
+                f"Passthrough mode sanitization: {len(request.messages)} -> {len(sanitized_messages)} messages"
+            )
+
             # Convert messages to the format expected by Anthropic API
-            for msg in request.messages:
+            for msg in sanitized_messages:
                 passthrough_msg = {"role": msg.role, "content": msg.content}
                 request_data["messages"].append(passthrough_msg)
 

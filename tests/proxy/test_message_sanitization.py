@@ -1,4 +1,11 @@
-"""Unit tests for message content sanitization."""
+"""Unit tests for message content sanitization.
+
+NOTE: The sanitize_message_content() function is used by BOTH:
+1. Azure/OpenAI conversion path (convert_anthropic_to_litellm at line 682)
+2. Passthrough mode to Anthropic API (line 1538)
+
+This ensures thinking blocks are filtered in all code paths.
+"""
 
 from amplihack.proxy.server import sanitize_message_content, Message
 
