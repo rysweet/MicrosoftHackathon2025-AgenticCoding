@@ -144,9 +144,7 @@ if AZURE_BASE_URL:
     # Use the correct API version from environment or default to user's version
     os.environ["AZURE_API_VERSION"] = os.environ.get("AZURE_API_VERSION", "2025-04-01-preview")
 
-    logger.info(f"Configured LiteLLM for Azure: {clean_azure_base}")
-
-# List of OpenAI models
+    logger.info(f"Configured LiteLLM for Azure: {clean_azure_base}")  # List of OpenAI models
 OPENAI_MODELS = [
     "o3-mini",
     "o1",
@@ -311,17 +309,10 @@ class MessagesRequest(BaseModel):
 
         # --- Mapping Logic --- START ---
         mapped = False
-        # Check if we're using Azure by looking for Azure endpoint configuration
-        is_azure = bool(os.environ.get("OPENAI_BASE_URL", ""))
-
         # Map Haiku to SMALL_MODEL based on provider preference
         if "haiku" in clean_v.lower():
             if PREFERRED_PROVIDER == "google" and SMALL_MODEL in GEMINI_MODELS:
                 new_model = f"gemini/{SMALL_MODEL}"
-                mapped = True
-            elif is_azure:
-                # Use azure/ prefix for Azure deployments
-                new_model = f"azure/{SMALL_MODEL}"
                 mapped = True
             else:
                 new_model = f"openai/{SMALL_MODEL}"
@@ -331,10 +322,6 @@ class MessagesRequest(BaseModel):
         elif "sonnet" in clean_v.lower():
             if PREFERRED_PROVIDER == "google" and BIG_MODEL in GEMINI_MODELS:
                 new_model = f"gemini/{BIG_MODEL}"
-                mapped = True
-            elif is_azure:
-                # Use azure/ prefix for Azure deployments
-                new_model = f"azure/{BIG_MODEL}"
                 mapped = True
             else:
                 new_model = f"openai/{BIG_MODEL}"
@@ -401,17 +388,10 @@ class TokenCountRequest(BaseModel):
 
         # --- Mapping Logic --- START ---
         mapped = False
-        # Check if we're using Azure by looking for Azure endpoint configuration
-        is_azure = bool(os.environ.get("OPENAI_BASE_URL", ""))
-
         # Map Haiku to SMALL_MODEL based on provider preference
         if "haiku" in clean_v.lower():
             if PREFERRED_PROVIDER == "google" and SMALL_MODEL in GEMINI_MODELS:
                 new_model = f"gemini/{SMALL_MODEL}"
-                mapped = True
-            elif is_azure:
-                # Use azure/ prefix for Azure deployments
-                new_model = f"azure/{SMALL_MODEL}"
                 mapped = True
             else:
                 new_model = f"openai/{SMALL_MODEL}"
@@ -421,10 +401,6 @@ class TokenCountRequest(BaseModel):
         elif "sonnet" in clean_v.lower():
             if PREFERRED_PROVIDER == "google" and BIG_MODEL in GEMINI_MODELS:
                 new_model = f"gemini/{BIG_MODEL}"
-                mapped = True
-            elif is_azure:
-                # Use azure/ prefix for Azure deployments
-                new_model = f"azure/{BIG_MODEL}"
                 mapped = True
             else:
                 new_model = f"openai/{BIG_MODEL}"
@@ -1532,10 +1508,7 @@ async def create_message(request: MessagesRequest, raw_request: Request):
         logger.info(f"🔵 LITELLM_REQUEST MODEL AFTER CONVERSION: '{litellm_request.get('model')}'")
 
         # Determine which API key to use based on the model
-        if request.model.startswith("azure/"):
-            litellm_request["api_key"] = OPENAI_API_KEY  # Azure uses the OpenAI API key
-            logger.debug(f"Using Azure API key for model: {request.model}")
-        elif request.model.startswith("openai/"):
+        if request.model.startswith("openai/"):
             litellm_request["api_key"] = OPENAI_API_KEY
             logger.debug(f"Using OpenAI API key for model: {request.model}")
         elif request.model.startswith("gemini/"):
@@ -1548,10 +1521,8 @@ async def create_message(request: MessagesRequest, raw_request: Request):
             litellm_request["api_key"] = ANTHROPIC_API_KEY
             logger.debug(f"Using Anthropic API key for model: {request.model}")
 
-        # For OpenAI/Azure models - modify request format to work with limitations
-        if (
-            "openai" in litellm_request["model"] or "azure" in litellm_request["model"]
-        ) and "messages" in litellm_request:
+        # For OpenAI models - modify request format to work with limitations
+        if "openai" in litellm_request["model"] and "messages" in litellm_request:
             logger.debug(f"Processing OpenAI model request: {litellm_request['model']}")
 
             # For OpenAI models, we need to convert content blocks to simple strings
@@ -2088,7 +2059,4 @@ def run_server(host: str = "127.0.0.1", port: int = 8082):
 
 
 if __name__ == "__main__":
-    # Read host and port from environment variables
-    host = os.environ.get("HOST", "127.0.0.1")
-    port = int(os.environ.get("PORT", "8082"))
-    run_server(host=host, port=port)
+    run_server()
