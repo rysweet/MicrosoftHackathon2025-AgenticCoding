@@ -156,7 +156,9 @@ if AZURE_BASE_URL:
     # Use the correct API version from environment or default to user's version
     os.environ["AZURE_API_VERSION"] = os.environ.get("AZURE_API_VERSION", "2025-04-01-preview")
 
-    logger.info(f"Configured LiteLLM for Azure: {clean_azure_base}")  # List of OpenAI models
+    logger.info(f"Configured LiteLLM for Azure: {clean_azure_base}")
+
+# List of OpenAI models
 OPENAI_MODELS = [
     "o3-mini",
     "o1",
@@ -557,44 +559,32 @@ def convert_anthropic_to_litellm(anthropic_request: MessagesRequest) -> Dict[str
         # Default to maximum limit for Azure Responses API models when request has low/no max_tokens
         max_tokens_value = max_tokens_limit
 
-    # Determine appropriate temperature based on target model type
-    def map_claude_model_to_azure_local(model: str) -> str:
-        """Map Claude model names to Azure deployment names based on configuration."""
-        # Map Claude models to configured Azure models
-        if "sonnet" in model.lower() or "opus" in model.lower():
-            return BIG_MODEL
-        if "haiku" in model.lower():
-            return SMALL_MODEL
-        # Default to big model for unrecognized patterns
-        return BIG_MODEL
+    # Map the model to Azure model to check if it uses Responses API
+    model_lower = anthropic_request.model.lower()
+    azure_model = (
+        BIG_MODEL
+        if "sonnet" in model_lower or "opus" in model_lower
+        else (SMALL_MODEL if "haiku" in model_lower else BIG_MODEL)
+    )
 
-    def should_use_responses_api_for_azure_model_local(azure_model: str) -> bool:
-        """Check if the Azure model should use Responses API based on model type."""
-        openai_base_url = os.environ.get("OPENAI_BASE_URL", "")
-        if not (openai_base_url and "/responses" in openai_base_url):
-            return False
-
-        # Check if model name matches Responses API patterns
-        if (
+    # Check if this should use Responses API
+    openai_base_url = os.environ.get("OPENAI_BASE_URL", "")
+    use_responses_api = (
+        openai_base_url
+        and "/responses" in openai_base_url
+        and (
             azure_model.startswith(("o3-", "o4-"))
             or azure_model.startswith("gpt-5-code")
             or azure_model == "gpt-5"
-        ):
-            return True
-        return False
-
-    # Map the model to Azure model first to check if it uses Responses API
-    azure_model = map_claude_model_to_azure_local(anthropic_request.model)
+        )
+    )
 
     # Determine temperature based on API type
-    if should_use_responses_api_for_azure_model_local(azure_model):
-        # Azure Responses API models always use temperature=1.0 for high creativity
-        temperature = 1.0
-    else:
-        # Chat API models use the requested temperature or default
-        temperature = (
-            anthropic_request.temperature if anthropic_request.temperature is not None else 1.0
-        )
+    temperature = (
+        1.0
+        if use_responses_api
+        else (anthropic_request.temperature if anthropic_request.temperature is not None else 1.0)
+    )
 
     # Initialize the LiteLLM request dict first to ensure we always return the right structure
     litellm_request = {
@@ -1405,42 +1395,32 @@ async def create_message(request: MessagesRequest, raw_request: Request):
                 # Default to maximum limit for Azure Responses API models
                 max_tokens_value = max_tokens_limit
 
-            # Determine appropriate temperature based on target model type
-            def map_claude_model_to_azure_passthrough(model: str) -> str:
-                """Map Claude model names to Azure deployment names for passthrough."""
-                # Map Claude models to configured Azure models
-                if "sonnet" in model.lower() or "opus" in model.lower():
-                    return BIG_MODEL
-                if "haiku" in model.lower():
-                    return SMALL_MODEL
-                # Default to big model for unrecognized patterns
-                return BIG_MODEL
+            # Map the model to Azure model for passthrough
+            model_lower = clean_model.lower()
+            azure_model = (
+                BIG_MODEL
+                if "sonnet" in model_lower or "opus" in model_lower
+                else (SMALL_MODEL if "haiku" in model_lower else BIG_MODEL)
+            )
 
-            def should_use_responses_api_for_passthrough(azure_model: str) -> bool:
-                """Check if the Azure model should use Responses API for passthrough."""
-                openai_base_url = os.environ.get("OPENAI_BASE_URL", "")
-                if not (openai_base_url and "/responses" in openai_base_url):
-                    return False
-
-                # Check if model name matches Responses API patterns
-                if (
+            # Check if this should use Responses API
+            openai_base_url = os.environ.get("OPENAI_BASE_URL", "")
+            use_responses_api = (
+                openai_base_url
+                and "/responses" in openai_base_url
+                and (
                     azure_model.startswith(("o3-", "o4-"))
                     or azure_model.startswith("gpt-5-code")
                     or azure_model == "gpt-5"
-                ):
-                    return True
-                return False
+                )
+            )
 
-            # Map the model to Azure model first to check if it uses Responses API
-            azure_model = map_claude_model_to_azure_passthrough(clean_model)
-
-            # Determine temperature based on API type
-            if should_use_responses_api_for_passthrough(azure_model):
-                # Azure Responses API models always use temperature=1.0 for high creativity
-                temperature = 1.0
-            else:
-                # Chat API models use the requested temperature or default
-                temperature = request.temperature if request.temperature is not None else 1.0
+            # Determine temperature
+            temperature = (
+                1.0
+                if use_responses_api
+                else (request.temperature if request.temperature is not None else 1.0)
+            )
 
             # Prepare request data for passthrough
             request_data = {
