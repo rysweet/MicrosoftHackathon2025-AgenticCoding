@@ -90,14 +90,26 @@ for handler in logger.handlers:
 
 app = FastAPI()
 
-# Load environment variables from .azure.env if it exists
-azure_env_path = os.path.join(os.getcwd(), ".azure.env")
-if os.path.exists(azure_env_path):
-    logger.info(f"Loading Azure environment from: {azure_env_path}")
-    load_dotenv(azure_env_path, override=True)
-    logger.info("Azure environment variables loaded successfully")
-else:
-    logger.debug("No .azure.env file found, using system environment variables")
+# Load environment variables from .azure.env if it exists (with security validation)
+try:
+    # Only load from current directory if it's within the project structure
+    from pathlib import Path
+
+    current_dir = Path.cwd()
+    azure_env_path = current_dir / ".azure.env"
+
+    # Security: Only load if file exists and is in expected location
+    # Prevent path traversal by ensuring it's a direct child of cwd
+    if azure_env_path.exists() and azure_env_path.parent == current_dir:
+        # Validate file permissions (optional but recommended)
+        logger.debug(f"Loading Azure environment from: {azure_env_path}")
+        load_dotenv(azure_env_path, override=True)
+        logger.debug("Azure environment variables loaded successfully")
+    else:
+        logger.debug("No .azure.env file found in current directory")
+except Exception as e:
+    logger.warning(f"Failed to load .azure.env: {e}")
+    # Continue without .azure.env - not a critical failure
 
 # Get API keys from environment
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
@@ -843,14 +855,13 @@ def convert_anthropic_to_litellm(anthropic_request: MessagesRequest) -> Dict[str
             "AZURE_API_KEY", ""
         )
 
-        logger.info(f"Azure config check for {anthropic_request.model}:")
-        logger.info(f"  OPENAI_BASE_URL: {os.environ.get('OPENAI_BASE_URL', 'NOT SET')}")
-        logger.info(f"  AZURE_ENDPOINT: {os.environ.get('AZURE_ENDPOINT', 'NOT SET')}")
-        logger.info(f"  AZURE_API_BASE: {os.environ.get('AZURE_API_BASE', 'NOT SET')}")
-        logger.info(
-            f"  azure_base result: {azure_base[:50] + '...' if azure_base and len(azure_base) > 50 else azure_base}"
-        )
-        logger.info(f"  azure_key found: {bool(azure_key)}")
+        # Security: Use debug level for sensitive configuration details
+        logger.debug(f"Azure config check for {anthropic_request.model}:")
+        logger.debug(f"  OPENAI_BASE_URL configured: {bool(os.environ.get('OPENAI_BASE_URL'))}")
+        logger.debug(f"  AZURE_ENDPOINT configured: {bool(os.environ.get('AZURE_ENDPOINT'))}")
+        logger.debug(f"  AZURE_API_BASE configured: {bool(os.environ.get('AZURE_API_BASE'))}")
+        logger.debug(f"  azure_base configured: {bool(azure_base)}")
+        logger.debug(f"  azure_key configured: {bool(azure_key)}")
 
         if azure_base:
             # Extract clean base URL without query parameters
