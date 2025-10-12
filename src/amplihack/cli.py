@@ -190,6 +190,19 @@ def create_parser() -> argparse.ArgumentParser:
         help="Run amplihack in Docker container for isolated execution",
     )
 
+    # Auto-mode command (imported dynamically to avoid circular imports)
+    try:
+        from .commands.auto_mode_cli import AutoModeCLI
+
+        auto_cli = AutoModeCLI()
+        auto_cli.create_auto_parser(subparsers)
+    except ImportError:
+        # Auto-mode not available - create placeholder
+        auto_parser = subparsers.add_parser(
+            "auto", help="Auto-mode (requires auto-mode components)"
+        )
+        auto_parser.add_argument("auto_action", nargs="?", help="Auto-mode action")
+
     # UVX helper command
     uvx_parser = subparsers.add_parser("uvx-help", help="Get help with UVX deployment")
     uvx_parser.add_argument("--find-path", action="store_true", help="Find UVX installation path")
@@ -240,6 +253,7 @@ def main(argv: Optional[List[str]] = None) -> int:
 
         # Copy .claude contents to temp .claude directory
         # Note: copytree_manifest copies TO the dst, not INTO dst/.claude
+        #  copytree_manifest now automatically sets execute permissions on hook files
         copied = copytree_manifest(amplihack_src, temp_claude_dir, ".claude")
 
         # Create settings.json with relative paths (Claude will resolve relative to CLAUDE_PROJECT_DIR)
@@ -368,6 +382,19 @@ def main(argv: Optional[List[str]] = None) -> int:
             elif not claude_args:
                 claude_args = ["--add-dir", original_cwd]
         return launch_command(args, claude_args)
+
+    elif args.command == "auto":
+        try:
+            from .commands.auto_mode_cli import auto_command_handler
+
+            return auto_command_handler(args)
+        except ImportError:
+            print("Error: Auto-mode components not available", file=sys.stderr)
+            print("Please ensure auto-mode is properly installed", file=sys.stderr)
+            return 1
+        except Exception as e:
+            print(f"Error running auto-mode: {e}", file=sys.stderr)
+            return 1
 
     elif args.command == "uvx-help":
         from .commands.uvx_helper import find_uvx_installation_path, print_uvx_usage_instructions
