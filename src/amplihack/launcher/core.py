@@ -1,6 +1,7 @@
 """Core launcher functionality for Claude Code."""
 
 import os
+import shlex
 import signal
 import subprocess
 import sys
@@ -249,7 +250,8 @@ class ClaudeLauncher:
 
             # Build the tail command that follows both files
             # Using tail -f to follow files as they grow
-            tail_cmd = f"tail -f {stdout_log} {stderr_log}"
+            # Use shlex.quote() to prevent command injection via log file paths
+            tail_cmd = f"tail -f {shlex.quote(str(stdout_log))} {shlex.quote(str(stderr_log))}"
 
             # AppleScript to open a new Terminal window with the tail command
             # We use 'do script' to execute the command in a new window
