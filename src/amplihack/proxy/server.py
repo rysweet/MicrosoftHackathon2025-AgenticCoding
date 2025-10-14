@@ -1249,6 +1249,33 @@ async def handle_streaming(response_generator, original_request: MessagesRequest
         # Process each chunk
         async for chunk in response_generator:
             try:
+                # DIAGNOSTIC: Log full chunk structure for Azure Responses API debugging
+                if hasattr(chunk, "choices") and len(chunk.choices) > 0:
+                    choice = chunk.choices[0]
+                    if hasattr(choice, "delta") and choice.delta:
+                        delta = choice.delta
+                        if hasattr(delta, "tool_calls") and delta.tool_calls:
+                            logger.warning("🔍 RAW TOOL_CALL CHUNK:")
+                            logger.warning(f"  Chunk type: {type(chunk)}")
+                            logger.warning(f"  Delta tool_calls: {delta.tool_calls}")
+                            for tc in delta.tool_calls:
+                                logger.warning(f"    Tool call ID: {getattr(tc, 'id', 'NO_ID')}")
+                                logger.warning(
+                                    f"    Tool call index: {getattr(tc, 'index', 'NO_INDEX')}"
+                                )
+                                logger.warning(
+                                    f"    Tool call type: {getattr(tc, 'type', 'NO_TYPE')}"
+                                )
+                                func = getattr(tc, "function", None)
+                                if func:
+                                    logger.warning(f"    Function: {func}")
+                                    logger.warning(
+                                        f"      name: {getattr(func, 'name', 'NO_NAME')}"
+                                    )
+                                    logger.warning(
+                                        f"      arguments: {getattr(func, 'arguments', 'NO_ARGS')}"
+                                    )
+
                 # Check if this is the end of the response with usage data
                 if hasattr(chunk, "usage") and chunk.usage is not None:
                     if hasattr(chunk.usage, "completion_tokens"):
@@ -1322,6 +1349,21 @@ async def handle_streaming(response_generator, original_request: MessagesRequest
                             delta_tool_calls = [delta_tool_calls]
 
                         for tool_call in delta_tool_calls:
+                            # DEBUG: Log the raw tool_call structure
+                            logger.warning("🔍 Raw tool_call structure:")
+                            logger.warning(f"  Type: {type(tool_call)}")
+                            if isinstance(tool_call, dict):
+                                logger.warning(f"  Dict keys: {tool_call.keys()}")
+                                logger.warning(f"  Full dict: {tool_call}")
+                            else:
+                                logger.warning(f"  Object attributes: {dir(tool_call)}")
+                                logger.warning(f"  Object repr: {tool_call!r}")
+                                # Log key attributes
+                                for attr in ["id", "index", "function", "type"]:
+                                    if hasattr(tool_call, attr):
+                                        val = getattr(tool_call, attr)
+                                        logger.warning(f"  {attr}: {val} (type: {type(val)})")
+
                             # Get the index of this tool call (for multiple tools)
                             current_index = None
                             if isinstance(tool_call, dict) and "index" in tool_call:
@@ -1382,14 +1424,25 @@ async def handle_streaming(response_generator, original_request: MessagesRequest
                             arguments = None
                             if isinstance(tool_call, dict) and "function" in tool_call:
                                 function = tool_call.get("function", {})
+                                logger.warning("🔍 Extracting arguments from dict function:")
+                                logger.warning(f"  function type: {type(function)}")
+                                logger.warning(f"  function value: {function}")
                                 arguments = (
                                     function.get("arguments", "")
                                     if isinstance(function, dict)
                                     else ""
                                 )
+                                logger.warning(f"  extracted arguments: {arguments}")
                             elif hasattr(tool_call, "function"):
                                 function = getattr(tool_call, "function", None)
+                                logger.warning("🔍 Extracting arguments from object function:")
+                                logger.warning(f"  function type: {type(function)}")
+                                logger.warning(f"  function value: {function}")
+                                if function:
+                                    logger.warning(f"  function attributes: {dir(function)}")
+                                    logger.warning(f"  function repr: {function!r}")
                                 arguments = getattr(function, "arguments", "") if function else ""
+                                logger.warning(f"  extracted arguments: {arguments}")
 
                             # If we have arguments, send them as a delta
                             if arguments:
