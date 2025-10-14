@@ -1243,6 +1243,9 @@ async def handle_streaming(response_generator, original_request: MessagesRequest
         last_tool_index = 0
         anthropic_tool_index = 0  # Initialize to prevent unbound variable error
 
+        # Track tool call ID to name mapping (Azure Responses API workaround)
+        tool_call_names = {}  # Maps tool_call_id -> tool_name
+
         # Process each chunk
         async for chunk in response_generator:
             try:
@@ -1338,18 +1341,38 @@ async def handle_streaming(response_generator, original_request: MessagesRequest
                                 # Extract function info
                                 if isinstance(tool_call, dict):
                                     function = tool_call.get("function", {})
+                                    # Handle None values from Azure Responses API
                                     name = (
-                                        function.get("name", "")
+                                        function.get("name") or ""
                                         if isinstance(function, dict)
                                         else ""
                                     )
                                     tool_id = tool_call.get("id", f"toolu_{uuid.uuid4().hex[:24]}")
                                 else:
                                     function = getattr(tool_call, "function", None)
-                                    name = getattr(function, "name", "") if function else ""
+                                    name = getattr(function, "name", None) or "" if function else ""
                                     tool_id = getattr(
                                         tool_call, "id", f"toolu_{uuid.uuid4().hex[:24]}"
                                     )
+
+                                # Azure Responses API workaround: store tool name if we have it
+                                if name and tool_id:
+                                    tool_call_names[tool_id] = name
+                                elif tool_id in tool_call_names:
+                                    # Use previously stored name if current chunk doesn't have it
+                                    name = tool_call_names[tool_id]
+                                else:
+                                    # Log warning if we can't determine tool name
+                                    logger.warning(
+                                        f"⚠️ Tool call {tool_id} has no name in chunk. "
+                                        f"function: {function}"
+                                    )
+                                    # Try to infer from original request tools
+                                    if original_request.tools and len(original_request.tools) > 0:
+                                        # Use first tool as fallback (better than null)
+                                        name = original_request.tools[0].name
+                                        tool_call_names[tool_id] = name
+                                        logger.warning(f"  Using fallback tool name: {name}")
 
                                 # Start a new tool_use block
                                 yield f"event: content_block_start\ndata: {json.dumps({'type': 'content_block_start', 'index': anthropic_tool_index, 'content_block': {'type': 'tool_use', 'id': tool_id, 'name': name, 'input': {}}})}\n\n"
