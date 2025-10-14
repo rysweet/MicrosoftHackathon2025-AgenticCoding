@@ -1626,21 +1626,32 @@ async def create_message(request: MessagesRequest, raw_request: Request):
             litellm_request["api_key"] = OPENAI_API_KEY
 
             if AZURE_BASE_URL:
-                # Strip query string and /responses path - LiteLLM will add /responses automatically
+                # Strip query string from base URL
                 clean_azure_base = (
                     AZURE_BASE_URL.split("?")[0] if "?" in AZURE_BASE_URL else AZURE_BASE_URL
                 )
-                # Strip /responses from path if present
+
+                # Detect if using Responses API (for o3/o4/gpt-5 models)
+                use_responses_api_endpoint = "/responses" in AZURE_BASE_URL
+
+                # Strip /responses from path if present (we'll add it back explicitly)
                 if clean_azure_base.endswith("/responses"):
                     clean_azure_base = clean_azure_base[: -len("/responses")]
 
-                litellm_request["api_base"] = clean_azure_base
+                # For Responses API models, explicitly include /responses in api_base
+                # This ensures LiteLLM routes to the correct endpoint
+                if use_responses_api_endpoint:
+                    litellm_request["api_base"] = clean_azure_base + "/responses"
+                else:
+                    litellm_request["api_base"] = clean_azure_base
+
                 litellm_request["api_version"] = os.environ.get(
                     "AZURE_API_VERSION", "2025-04-01-preview"
                 )
 
                 logger.warning(f"🔧 Azure config for {request.model}:")
-                logger.warning(f"  api_base: {clean_azure_base}")
+                logger.warning(f"  api_base: {litellm_request['api_base']}")
+                logger.warning(f"  using_responses_api: {use_responses_api_endpoint}")
                 logger.warning(f"  api_version: {litellm_request['api_version']}")
                 logger.warning(f"  api_key: {'SET' if OPENAI_API_KEY else 'NOT SET'}")
         elif request.model.startswith("openai/"):
