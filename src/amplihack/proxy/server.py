@@ -1445,7 +1445,13 @@ async def handle_streaming(response_generator, original_request: MessagesRequest
                                 logger.warning(f"  extracted arguments: {arguments}")
 
                             # If we have arguments, send them as a delta
+                            logger.warning(
+                                f"🔍 Checking if should send arguments: arguments={arguments!r}, truthiness={bool(arguments)}"
+                            )
                             if arguments:
+                                logger.warning(
+                                    f"🔍 SENDING input_json_delta for arguments: {arguments!r}"
+                                )
                                 # Try to detect if arguments are valid JSON or just a fragment
                                 try:
                                     # If it's already a dict, use it
@@ -1462,8 +1468,16 @@ async def handle_streaming(response_generator, original_request: MessagesRequest
                                 # Add to accumulated tool content
                                 tool_content += args_json if isinstance(args_json, str) else ""
 
+                                logger.warning(
+                                    f"🔍 About to yield content_block_delta with args_json={args_json!r}, index={anthropic_tool_index}"
+                                )
                                 # Send the update
                                 yield f"event: content_block_delta\ndata: {json.dumps({'type': 'content_block_delta', 'index': anthropic_tool_index, 'delta': {'type': 'input_json_delta', 'partial_json': args_json}})}\n\n"
+                                logger.warning("✅ Yielded content_block_delta successfully")
+                            else:
+                                logger.warning(
+                                    f"⚠️ NOT sending arguments because they are falsy: {arguments!r}"
+                                )
 
                     # Process finish_reason - end the streaming response
                     if finish_reason and not has_sent_stop_reason:
