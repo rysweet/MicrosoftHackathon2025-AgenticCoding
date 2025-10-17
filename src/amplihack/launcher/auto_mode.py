@@ -54,7 +54,7 @@ class AutoMode:
         else:
             cmd = ["claude", "--dangerously-skip-permissions", "-p", prompt]
 
-        self.log(f'Running: {cmd[0]} ...')
+        self.log(f"Running: {cmd[0]} ...")
 
         # Create a pseudo-terminal for stdin
         # This allows any subprocess (including children) to read from it

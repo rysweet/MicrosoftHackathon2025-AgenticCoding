@@ -48,7 +48,7 @@ def configure_codex() -> bool:
 
         # Read existing config or create new one
         if config_file.exists():
-            with open(config_file, "r", encoding="utf-8") as f:
+            with open(config_file, encoding="utf-8") as f:
                 config = json.load(f)
         else:
             config = {}
