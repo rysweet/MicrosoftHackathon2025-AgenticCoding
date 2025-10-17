@@ -184,30 +184,6 @@ class AutoMode:
             elapsed = time.time() - start_time
             self.log(f"✗ Hook {hook} timed out after {elapsed:.1f}s")
 
-        try:
-            result = subprocess.run(
-                [sys.executable, str(hook_path)],
-                check=False,
-                timeout=120,  # Increased from 30s to 120s for complex hooks
-                cwd=self.working_dir,
-                capture_output=True,
-                text=True,
-            )
-            elapsed = time.time() - start_time
-
-            if result.returncode == 0:
-                self.log(f"✓ Hook {hook} completed in {elapsed:.1f}s")
-            else:
-                self.log(
-                    f"⚠ Hook {hook} returned exit code {result.returncode} after {elapsed:.1f}s"
-                )
-                if result.stderr:
-                    self.log(f"Hook stderr: {result.stderr[:200]}")
-
-        except subprocess.TimeoutExpired:
-            elapsed = time.time() - start_time
-            self.log(f"✗ Hook {hook} timed out after {elapsed:.1f}s")
-
     def run(self) -> int:
         """Execute agentic loop."""
         self.log(f"Starting auto mode (max {self.max_turns} turns)")
