@@ -6,7 +6,7 @@
 
 ## Usage
 
-`/amplihack:auto <prompt>`
+`/amplihack:auto [--max-turns <number>] <prompt>`
 
 ## Purpose
 
@@ -45,15 +45,43 @@ Auto mode uses the same Claude CLI but orchestrates multiple turns automatically
 Use the Bash tool to run the amplihack CLI auto mode command:
 
 ```bash
-amplihack claude --auto --max-turns 10 -- -p "$ARGUMENTS"
+# Parse arguments to extract --max-turns if present
+ARGS="$ARGUMENTS"
+MAX_TURNS=10
+
+# Check for --max-turns flag
+if [[ "$ARGS" =~ --max-turns[[:space:]]+([0-9]+) ]]; then
+  MAX_TURNS="${BASH_REMATCH[1]}"
+  # Remove --max-turns and its value from arguments
+  ARGS=$(echo "$ARGS" | sed -E 's/--max-turns[[:space:]]+[0-9]+//')
+fi
+
+# Trim leading/trailing whitespace
+ARGS=$(echo "$ARGS" | xargs)
+
+# Run amplihack auto mode
+amplihack claude --auto --max-turns "$MAX_TURNS" -- -p "$ARGS"
 ```
 
 This will:
 
+- Parse --max-turns from arguments if provided (defaults to 10)
 - Launch amplihack's auto mode using Claude
-- Run up to 10 turns (default, adjustable with --max-turns)
-- Pass the user's prompt via -p flag
+- Pass the remaining arguments as the prompt via -p flag
 - Execute the full agentic loop until objective is complete
+
+## Examples
+
+```bash
+# Use default 10 turns
+/amplihack:auto implement user authentication
+
+# Specify custom max turns
+/amplihack:auto --max-turns 20 refactor the API module
+
+# Use fewer turns for simple tasks
+/amplihack:auto --max-turns 5 add logging to service
+```
 
 ## Notes
 
