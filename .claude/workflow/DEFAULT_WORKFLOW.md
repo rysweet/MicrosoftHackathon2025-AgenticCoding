@@ -14,18 +14,18 @@ You can customize this workflow by editing this file.
 
 **Execution approach:**
 
-- Start with `/ultrathink` for any non-trivial task
+- Start with @.claude/commands/amplihack/ultrathink.md for any non-trivial task
 - UltraThink reads this workflow and orchestrates agents to execute it
 - Each step leverages specialized agents for maximum effectiveness
 - The workflow defines the process; agents execute the work
 
 ## Default Execution with UltraThink
 
-**For all non-trivial tasks, start with `/ultrathink` to orchestrate the workflow:**
+**For all non-trivial tasks, start with @.claude/commands/amplihack/ultrathink.md to orchestrate the workflow:**
 
-- `/ultrathink` reads this workflow and executes it with multi-agent coordination
+- @.claude/commands/amplihack/ultrathink.md reads this workflow and executes it with multi-agent coordination
 - Each step below leverages specialized agents whenever possible
-- UltraThink orchestrates parallel agent execution for maximum efficiency
+- UltraThink orchestrates parallel subagent execution for maximum efficiency
 - When you customize this workflow, UltraThink adapts automatically
 
 ## When This Workflow Applies
@@ -37,14 +37,14 @@ This workflow should be followed for:
 - Refactoring
 - Any non-trivial code changes
 
-## The 15-Step Workflow
+## The Workflow
 
 ### Step 1: Rewrite and Clarify Requirements
 
 - [ ] **FIRST: Identify explicit user requirements** that CANNOT be optimized away
-- [ ] **Always use** prompt-writer agent to clarify task requirements
-- [ ] **Use** analyzer agent to understand existing codebase context
-- [ ] **Use** ambiguity agent if requirements are unclear
+- [ ] **Always use** prompt-writer subagent to clarify task requirements
+- [ ] **Use** analyzer subagent to understand existing codebase context
+- [ ] **Use** ambiguity subagent if requirements are unclear
 - [ ] Remove ambiguity from the task description
 - [ ] Define clear success criteria
 - [ ] Document acceptance criteria
@@ -61,36 +61,36 @@ This workflow should be followed for:
 
 ### Step 3: Setup Worktree and Branch
 
-- [ ] Create new git worktree for isolated development
+- [ ] Create new git worktree under the current directory for isolated development
 - [ ] Create branch with format: `feat/issue-{number}-{brief-description}`
 - [ ] Push branch to remote with tracking
 - [ ] Switch to new worktree directory
 
 ### Step 4: Research and Design with TDD
 
-- [ ] **Use** architect agent to design solution architecture
-- [ ] **Use** api-designer agent for API contracts (if applicable)
-- [ ] **Use** database agent for data model design (if applicable)
-- [ ] **Use** tester agent to write failing tests (TDD approach)
-- [ ] **Use** security agent to identify security requirements
+- [ ] **Use** architect subagent to design solution architecture
+- [ ] **Use** api-designer subagent for API contracts (if applicable)
+- [ ] **Use** database subagent for data model design (if applicable)
+- [ ] **Use** tester subagent to write failing tests (TDD approach)
+- [ ] **Use** security subagent to identify security requirements
 - [ ] Document module specifications
 - [ ] Create detailed implementation plan
 - [ ] Identify risks and dependencies
 
 ### Step 5: Implement the Solution
 
-- [ ] **Always use** builder agent to implement from specifications
-- [ ] **Use** integration agent for external service connections
-- [ ] Follow the architecture design
+- [ ] **Always use** builder subagent to implement from specifications
+- [ ] **Use** integration subagent for external service connections
+- [ ] Follow the architecture design, AND the PHILOSOPHY.md principles
 - [ ] Make failing tests pass iteratively
 - [ ] Ensure all requirements are met
 - [ ] Add inline documentation
 
 ### Step 6: Refactor and Simplify
 
-- [ ] **CRITICAL: Provide cleanup agent with original user requirements**
-- [ ] **Always use** cleanup agent for ruthless simplification WITHIN user constraints
-- [ ] **Use** optimizer agent for performance improvements
+- [ ] **CRITICAL: Provide cleanup subagent with original user requirements**
+- [ ] **Always use** cleanup subagent for ruthless simplification WITHIN user constraints
+- [ ] **Use** optimizer subagent for performance improvements
 - [ ] Remove unnecessary abstractions (that weren't explicitly requested)
 - [ ] Eliminate dead code (unless user explicitly wanted it)
 - [ ] Simplify complex logic (without violating user specifications)
@@ -100,7 +100,7 @@ This workflow should be followed for:
 
 ### Step 7: Run Tests and Pre-commit Hooks
 
-- [ ] **Use** pre-commit-diagnostic agent if hooks fail
+- [ ] **Use** pre-commit-diagnostic subagent if hooks fail
 - [ ] Run all unit tests
 - [ ] Execute `pre-commit run --all-files`
 - [ ] Fix any linting issues
@@ -141,6 +141,8 @@ This workflow should be followed for:
 - [ ] Describe what changed and why
 - [ ] Push to remote branch
 - [ ] Verify push succeeded
+- [ ] Ensure branch is up to date with main (rebase if needed)
+- [ ] Ensure the local branch is git clean (no uncommitted changes)
 
 ### Step 10: Open Pull Request
 
@@ -153,8 +155,8 @@ This workflow should be followed for:
 
 ### Step 11: Review the PR
 
-- [ ] **Always use** reviewer agent for comprehensive code review
-- [ ] **Use** security agent for security review
+- [ ] **Always use** reviewer subagent for comprehensive code review
+- [ ] **Use** security subagent for security review
 - [ ] Check code quality and standards
 - [ ] Verify philosophy compliance
 - [ ] Ensure adequate test coverage
@@ -166,29 +168,30 @@ This workflow should be followed for:
 ### Step 12: Implement Review Feedback
 
 - [ ] Review all feedback comments, think very carefully about each one and decide how to address it (or if you should disagree, explain why in a comment)
-- [ ] **Always use** builder agent to implement changes
+- [ ] **Always use** builder subagent to implement changes
 - [ ] **Use** relevant specialized agents for specific feedback
 - [ ] Address each review comment
 - [ ] Push updates to PR
 - [ ] Respond to review comments by posting replies
 - [ ] Ensure all tests still pass
-- [ ] Ensure PR is still mergeable
+- [ ] Ensure PR is still mergeable (resolve conflicts if any)
 - [ ] Request re-review if needed
 
 ### Step 13: Philosophy Compliance Check
 
-- [ ] **Always use** reviewer agent for final philosophy check
-- [ ] **Use** patterns agent to verify pattern compliance
+- [ ] **Always use** reviewer subagent for final philosophy check
+- [ ] **Use** patterns subagent to verify pattern compliance
 - [ ] Verify ruthless simplicity achieved
 - [ ] Confirm bricks & studs pattern followed
-- [ ] Ensure zero-BS implementation (no stubs)
+- [ ] Ensure zero-BS implementation (no stubs, no TODOs, no dead code, no swallowed exceptions, no unimplemented functions)
 - [ ] Verify all tests passing
 - [ ] Check documentation completeness
+- [ ] Any violations of Zero-BS or other principles must trigger rework by the builder subagent, and then re-validation by the reviewer subagent until fully compliant.
 
 ### Step 14: Ensure PR is Mergeable
 
 - [ ] Check CI status (all checks passing)
-- [ ] **Always use** ci-diagnostic-workflow agent if CI fails
+- [ ] **Always use** ci-diagnostic-workflow subagent if CI fails
 - [ ] Resolve any merge conflicts
 - [ ] Verify all review comments addressed
 - [ ] Confirm PR is approved
@@ -196,8 +199,8 @@ This workflow should be followed for:
 
 ### Step 15: Final Cleanup and Verification
 
-- [ ] **CRITICAL: Provide cleanup agent with original user requirements AGAIN**
-- [ ] **Always use** cleanup agent for final quality pass
+- [ ] **CRITICAL: Provide cleanup subagent with original user requirements AGAIN**
+- [ ] **Always use** cleanup subagent for final quality pass
 - [ ] Review all changes for philosophy compliance WITHIN user constraints
 - [ ] Remove any temporary artifacts or test files (unless user wanted them)
 - [ ] Eliminate unnecessary complexity (that doesn't violate user requirements)
