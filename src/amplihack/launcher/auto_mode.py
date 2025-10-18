@@ -12,7 +12,7 @@ from typing import Optional, Tuple
 
 
 class AutoMode:
-    """Simple agentic loop orchestrator for Claude or Copilot."""
+    """Simple agentic loop orchestrator for Claude, Copilot, or Codex."""
 
     def __init__(
         self, sdk: str, prompt: str, max_turns: int = 10, working_dir: Optional[Path] = None
@@ -20,7 +20,7 @@ class AutoMode:
         """Initialize auto mode.
 
         Args:
-            sdk: "claude" or "copilot"
+            sdk: "claude", "copilot", or "codex"
             prompt: User's initial prompt
             max_turns: Max iterations (default 10)
             working_dir: Working directory (defaults to current dir)
@@ -49,10 +49,12 @@ class AutoMode:
         """
         if self.sdk == "copilot":
             cmd = ["copilot", "--allow-all-tools", "--add-dir", "/", "-p", prompt]
+        elif self.sdk == "codex":
+            cmd = ["codex", "exec", prompt]
         else:
             cmd = ["claude", "--dangerously-skip-permissions", "-p", prompt]
 
-        self.log(f'Running: {cmd[0]} -p "..."')
+        self.log(f"Running: {cmd[0]} ...")
 
         # Create a pseudo-terminal for stdin
         # This allows any subprocess (including children) to read from it
@@ -136,8 +138,8 @@ class AutoMode:
         return process.returncode, stdout_output
 
     def run_hook(self, hook: str):
-        """Run hook for copilot (Claude does it automatically)."""
-        if self.sdk != "copilot":
+        """Run hook for copilot and codex (Claude does it automatically)."""
+        if self.sdk not in ["copilot", "codex"]:
             return
 
         hook_path = self.working_dir / ".claude" / "tools" / "amplihack" / "hooks" / f"{hook}.py"
@@ -166,30 +168,6 @@ class AutoMode:
                 capture_output=True,
                 text=True,
                 input=json.dumps(hook_input),
-            )
-            elapsed = time.time() - start_time
-
-            if result.returncode == 0:
-                self.log(f"✓ Hook {hook} completed in {elapsed:.1f}s")
-            else:
-                self.log(
-                    f"⚠ Hook {hook} returned exit code {result.returncode} after {elapsed:.1f}s"
-                )
-                if result.stderr:
-                    self.log(f"Hook stderr: {result.stderr[:200]}")
-
-        except subprocess.TimeoutExpired:
-            elapsed = time.time() - start_time
-            self.log(f"✗ Hook {hook} timed out after {elapsed:.1f}s")
-
-        try:
-            result = subprocess.run(
-                [sys.executable, str(hook_path)],
-                check=False,
-                timeout=120,  # Increased from 30s to 120s for complex hooks
-                cwd=self.working_dir,
-                capture_output=True,
-                text=True,
             )
             elapsed = time.time() - start_time
 
