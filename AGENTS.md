@@ -7,7 +7,11 @@ repository through the amplihack framework.
 
 **AMPLIHACK - Agentic Coding Framework**
 
-These instructions are part of an advanced agentic coding framework that leverages AI agents to accelerate software development through intelligent automation, code generation, and collaborative problem-solving.  These instructions might be embedded inside a different project which is NOT the amplihack framework itself.
+These instructions are part of an advanced agentic coding framework that
+leverages AI agents to accelerate software development through intelligent
+automation, code generation, and collaborative problem-solving. These
+instructions might be embedded inside a different project which is NOT the
+amplihack framework itself.
 
 ## Important Context Files
 
@@ -24,8 +28,10 @@ When starting a session, reference these files for context:
 
 ## USER PREFERENCES - MANDATORY across all sessions
 
-User preferences in @.claude/context/USER_PREFERENCES.md are MANDATORY and MUST be strictly followed by all agents and operations. These are NOT advisory suggestions - they are REQUIRED behaviors that CANNOT be optimized away or ignored.
-USER PREFERENCES must apply to every response.
+User preferences in @.claude/context/USER_PREFERENCES.md are MANDATORY and MUST
+be strictly followed by all agents and operations. These are NOT advisory
+suggestions - they are REQUIRED behaviors that CANNOT be optimized away or
+ignored. USER PREFERENCES must apply to every response.
 
 ## Core Philosophy
 
@@ -50,21 +56,24 @@ Software is built from small, clear modules ("bricks") with defined interfaces
 ### Zero-BS Implementation
 
 - Always choose Quality over Speed of implementation
-- No stubs or placeholders - no TODOs in code, no fake implementations or unimplemented functions
+- No stubs or placeholders - no TODOs in code, no fake implementations or
+  unimplemented functions
 - No dead code - remove unused code
 - Every function must work or not exist
 - No swalloed exceptions
 
 ## The Workflow
 
-Follow the workflow defined in `@.claude/workflow/DEFAULT_WORKFLOW.md`. This workflow defines:
+Follow the workflow defined in `@.claude/workflow/DEFAULT_WORKFLOW.md`. This
+workflow defines:
 
 - Order of operations (sequential steps)
 - Git workflow (branch, commit, push, PR)
 - CI/CD integration points
 - Review and merge requirements
 
-For non-trivial tasks, use the UltraThink approach to orchestrate multi-agent execution with parallel execution by default.
+For non-trivial tasks, use the UltraThink approach to orchestrate multi-agent
+execution with parallel execution by default.
 
 ## Some things you must NEVER do
 
@@ -77,7 +86,10 @@ For non-trivial tasks, use the UltraThink approach to orchestrate multi-agent ex
 
 ### What are Subagents?
 
-Subagents are specialized AI assistants defined in `.claude/agents/**/*.md` files. Each subagent has expertise in a specific domain (architecture, testing, security, etc.). These subagents help manage context and focus on specific tasks.
+Subagents are specialized AI assistants defined in `.claude/agents/**/*.md`
+files. Each subagent has expertise in a specific domain (architecture, testing,
+security, etc.). These subagents help manage context and focus on specific
+tasks.
 
 ### How to Invoke Subagents
 
@@ -124,13 +136,15 @@ copilot --allow-all-tools -p "Include @.claude/agents/amplihack/core/prompt-writ
 
 ### When to Use Subagents
 
-**IMPORTANT GOLDEN RULE**: You are an orchestrator, not an implementer. ALWAYS delegate to specialized subagents when possible.
+**IMPORTANT GOLDEN RULE**: You are an orchestrator, not an implementer. ALWAYS
+delegate to specialized subagents when possible.
 
 **Default to parallel execution** unless dependencies require sequential order.
 
 **Immediate Delegation Triggers:**
 
-- **System Design**: Use `architect.md` for specifications and problem decomposition
+- **System Design**: Use `architect.md` for specifications and problem
+  decomposition
 - **Implementation**: Use `builder.md` for code generation from specs
 - **Code Review**: Use `reviewer.md` for philosophy compliance checks
 - **Testing**: Use `tester.md` for test generation and validation
@@ -143,9 +157,17 @@ copilot --allow-all-tools -p "Include @.claude/agents/amplihack/core/prompt-writ
 - **Pattern Recognition**: Use `patterns.md` to identify reusable solutions
 - **Analysis**: Use `analyzer.md` for deep code understanding
 - **Ambiguity**: Use `ambiguity.md` when requirements are unclear
-- **Pre-Commit Workflow**: Use `pre-commit-diagnostic.md` when pre-commit hooks fail locally. Handles formatting, linting, type checking, and ensures code is committable BEFORE pushing.
-- **CI Workflow**: Use `ci-diagnostic-workflow.md` after pushing when CI checks fail. Monitors CI status, diagnoses failures, fixes issues, and iterates until PR is mergeable (but never auto-merges). **Trigger**: "CI failing", "Fix CI", "Make PR mergeable"
-- **Fix Workflow**: Use `fix-agent.md` for rapid resolution of the most common fix patterns identified in usage analysis. Provides QUICK (template-based), DIAGNOSTIC (root cause), and COMPREHENSIVE (full workflow) modes. **Trigger**: "Fix this", "Something's broken", "Error in", specific error patterns
+- **Pre-Commit Workflow**: Use `pre-commit-diagnostic.md` when pre-commit hooks
+  fail locally. Handles formatting, linting, type checking, and ensures code is
+  committable BEFORE pushing.
+- **CI Workflow**: Use `ci-diagnostic-workflow.md` after pushing when CI checks
+  fail. Monitors CI status, diagnoses failures, fixes issues, and iterates until
+  PR is mergeable (but never auto-merges). **Trigger**: "CI failing", "Fix CI",
+  "Make PR mergeable"
+- **Fix Workflow**: Use `fix-agent.md` for rapid resolution of the most common
+  fix patterns identified in usage analysis. Provides QUICK (template-based),
+  DIAGNOSTIC (root cause), and COMPREHENSIVE (full workflow) modes. **Trigger**:
+  "Fix this", "Something's broken", "Error in", specific error patterns
 
 ## Using Commands with Copilot CLI
 
@@ -176,9 +198,13 @@ include test execution, documentation generation, and code analysis.
 ## Decision Recording
 
 **IMPORTANT**: Record significant decisions in session logs:
-- **Decision records**: All Agents MUST log their decisions and reasoning in .claude/runtime/logs/<session_id>/DECISIONS.md
-- **When to record decisions**: Document significant architectural choices, trade-offs between approaches, or decisions that affect system design
-- **Simple format for decisions**: What was decided | Why | Alternatives considered
+
+- **Decision records**: All Agents MUST log their decisions and reasoning in
+  .claude/runtime/logs/<session_id>/DECISIONS.md
+- **When to record decisions**: Document significant architectural choices,
+  trade-offs between approaches, or decisions that affect system design
+- **Simple format for decisions**: What was decided | Why | Alternatives
+  considered
 
 ## User Requirement Priority
 
@@ -236,7 +262,8 @@ When using Copilot CLI vs Claude Code:
 
 1. **Keep it simple** - Favor simplicity over complexity
 2. **Delegate aggressively** - Use subagents for specialized work
-3. **Parallel execution by default** - Execute operations in parallel whenever possible, unless dependencies require sequential order
+3. **Parallel execution by default** - Execute operations in parallel whenever
+   possible, unless dependencies require sequential order
 4. **Document decisions** - Record significant choices
 5. **Test locally** - Always test changes before committing
 6. **Follow the workflow** - Respect the workflow process
