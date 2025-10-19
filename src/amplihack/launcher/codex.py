@@ -124,7 +124,22 @@ def launch_codex(args: Optional[List[str]] = None, interactive: bool = True) -> 
     # Build command
     cmd = ["codex"]
     if args:
-        cmd.extend(args)
+        # Codex uses "exec" command for prompts
+        # Convert: codex -p "prompt" → codex exec "prompt"
+        if "-p" in args:
+            idx = args.index("-p")
+            if idx + 1 < len(args):
+                prompt = args[idx + 1]
+                cmd.extend(["exec", prompt])
+                # Add any remaining args after the prompt
+                if idx + 2 < len(args):
+                    cmd.extend(args[idx + 2 :])
+            else:
+                # No prompt after -p, just pass args as-is
+                cmd.extend(args)
+        else:
+            # No -p flag, pass args as-is
+            cmd.extend(args)
 
     # Launch
     if interactive and not args:

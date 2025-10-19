@@ -97,6 +97,10 @@ dependencies require sequential order.
 - **Ambiguity**: Use `ambiguity.md` when requirements are unclear
 - **Fix Workflows**: Use `fix-agent.md` for rapid resolution of common error
   patterns (imports, CI, tests, config, quality, logic)
+- **Socratic Questioning**: Use `/socratic` command or pattern for challenging
+  vague requirements, exploring design trade-offs, and forcing precision in
+  architectural claims (see `.claude/context/DISCOVERIES.md` and
+  `.claude/runtime/logs/20251018_socratic_questioning/`)
 
 ### Development Workflow Agents
 
