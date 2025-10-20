@@ -231,7 +231,7 @@ Document your decisions and reasoning in comments/logs."""
             options = ClaudeAgentOptions(
                 cwd=str(self.working_dir),
                 permission_mode="bypassPermissions",  # Auto mode needs non-interactive permissions
-                extra_args={"--verbose"},
+                extra_args={"--verbose": True},  # Dict mapping flags to values, not a set
             )
 
             # Stream response
