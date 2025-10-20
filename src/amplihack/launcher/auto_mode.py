@@ -231,7 +231,7 @@ Document your decisions and reasoning in comments/logs."""
             options = ClaudeAgentOptions(
                 cwd=str(self.working_dir),
                 permission_mode="bypassPermissions",  # Auto mode needs non-interactive permissions
-                extra_args={"verbose": True},  # SDK adds -- prefix automatically
+                # Note: verbose flag can be added via extra_args if needed
             )
 
             # Stream response - messages are typed objects, not dicts
