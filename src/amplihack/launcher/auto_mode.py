@@ -230,7 +230,7 @@ Document your decisions and reasoning in comments/logs."""
             # Configure SDK options
             options = ClaudeAgentOptions(
                 cwd=str(self.working_dir),
-                dangerously_allow_permissions=True,
+                permission_mode="bypassPermissions",  # Auto mode needs non-interactive permissions
                 extra_args={"--verbose"},
             )
 
