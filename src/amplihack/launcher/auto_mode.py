@@ -45,6 +45,13 @@ class AutoMode:
         )
         self.log_dir.mkdir(parents=True, exist_ok=True)
 
+        # Security: Session-level limits to prevent resource exhaustion
+        self.total_api_calls = 0
+        self.max_total_api_calls = 50  # Max API calls per session
+        self.max_session_duration = 3600  # 1 hour max
+        self.session_output_size = 0
+        self.max_session_output = 50 * 1024 * 1024  # 50MB total session output
+
     def log(self, msg: str, level: str = "INFO"):
         """Log message with optional level."""
         print(f"[AUTO {self.sdk.upper()}] {msg}")
@@ -226,6 +233,8 @@ Document your decisions and reasoning in comments/logs."""
         try:
             self.log("Using Claude SDK (streaming mode)")
             output_lines = []
+            turn_output_size = 0
+            MAX_TURN_OUTPUT = 10 * 1024 * 1024  # 10MB per turn limit
 
             # Configure SDK options
             options = ClaudeAgentOptions(
@@ -245,6 +254,20 @@ Document your decisions and reasoning in comments/logs."""
                         for block in getattr(message, "content", []):
                             if hasattr(block, "text"):
                                 text = block.text
+
+                                # Security: Check output size limits
+                                text_size = len(text.encode("utf-8"))
+                                turn_output_size += text_size
+                                self.session_output_size += text_size
+
+                                if turn_output_size > MAX_TURN_OUTPUT:
+                                    self.log(f"Turn output size limit exceeded ({turn_output_size} bytes)", level="ERROR")
+                                    return (1, "Turn output too large")
+
+                                if self.session_output_size > self.max_session_output:
+                                    self.log(f"Session output limit exceeded ({self.session_output_size} bytes)", level="ERROR")
+                                    return (1, "Session output too large")
+
                                 print(text, end="", flush=True)
                                 output_lines.append(text)
 
@@ -321,7 +344,18 @@ Document your decisions and reasoning in comments/logs."""
         Returns:
             (exit_code, output_text)
         """
+        # Security: Check session limits before attempting turn
+        if self.total_api_calls >= self.max_total_api_calls:
+            self.log(f"Session limit reached ({self.max_total_api_calls} API calls)", level="ERROR")
+            return (1, "Session limit exceeded - too many API calls")
+
+        elapsed = time.time() - self.start_time
+        if elapsed > self.max_session_duration:
+            self.log(f"Session duration limit reached ({elapsed:.0f}s)", level="ERROR")
+            return (1, "Session timeout - maximum duration exceeded")
+
         for attempt in range(max_retries + 1):
+            self.total_api_calls += 1  # Track API call count
             code, output = await self._run_turn_with_sdk(prompt)
 
             if code == 0:
