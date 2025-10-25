@@ -380,7 +380,6 @@ To deepen your understanding and improve your tool-creation skills, make sure to
 - **DISCOVERIES.md** - Non-obvious problems and solutions from real development
 - **PHILOSOPHY.md** - Core principles including the Brick Philosophy and zero-BS implementation
 - **DEFAULT_WORKFLOW.md** - The 15-step workflow for development tasks
-- **WORKSPACE_PATTERN.md** - Multi-project organization patterns
 - **Existing Agents** - Browse `.claude/agents/` for examples of specialized agents
 
 ### Tool Creation Checklist
