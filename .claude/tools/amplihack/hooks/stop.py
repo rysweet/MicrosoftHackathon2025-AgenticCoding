@@ -37,10 +37,15 @@ class StopHook(HookProcessor):
         Returns:
             Dict with decision to block or allow stop
         """
+        # LOG START - Always log entry for debugging
+        self.log("=== STOP HOOK STARTED ===")
+        self.log(f"Input keys: {list(input_data.keys())}")
+
         try:
             lock_exists = self.lock_flag.exists()
         except (PermissionError, OSError) as e:
             self.log(f"Cannot access lock file: {e}", "WARNING")
+            self.log("=== STOP HOOK ENDED (fail-safe: approve) ===")
             # Fail-safe: allow stop if we can't read lock
             return {"decision": "approve"}
 
@@ -48,6 +53,7 @@ class StopHook(HookProcessor):
             # Lock is active - block stop and continue working
             self.log("Lock is active - blocking stop to continue working")
             self.save_metric("lock_blocks", 1)
+            self.log("=== STOP HOOK ENDED (decision: block - lock active) ===")
             return {
                 "decision": "block",
                 "reason": "we must keep pursuing the user's objective and must not stop the turn - look for any additional TODOs, next steps, or unfinished work and pursue it diligently in as many parallel tasks as you can",
@@ -56,6 +62,7 @@ class StopHook(HookProcessor):
         # Check if reflection should run
         if not self._should_run_reflection():
             self.log("Reflection not enabled or skipped - allowing stop")
+            self.log("=== STOP HOOK ENDED (decision: approve - no reflection) ===")
             return {"decision": "approve"}
 
         # RUN REFLECTION SYNCHRONOUSLY (blocks here)
@@ -65,15 +72,20 @@ class StopHook(HookProcessor):
             # If no patterns, allow stop immediately
             if not findings.get("patterns"):
                 self.log("No patterns found - allowing stop")
+                self.log("=== STOP HOOK ENDED (decision: approve - no patterns) ===")
                 return {"decision": "approve"}
 
             # Block stop and tell Claude to read findings
-            return self._block_for_reflection(findings)
+            self.log("Patterns found - blocking for reflection")
+            result = self._block_for_reflection(findings)
+            self.log("=== STOP HOOK ENDED (decision: block - reflection findings) ===")
+            return result
 
         except Exception as e:
             # FAIL-SAFE: Always allow stop on errors
             self.log(f"Reflection error: {e}", "ERROR")
             self.save_metric("reflection_errors", 1)
+            self.log("=== STOP HOOK ENDED (decision: approve - error occurred) ===")
             return {"decision": "approve"}
 
     def _should_run_reflection(self) -> bool:
