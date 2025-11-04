@@ -67,18 +67,21 @@ class StopHook(HookProcessor):
 
         # RUN REFLECTION SYNCHRONOUSLY (blocks here)
         try:
-            findings = self._run_reflection_sync()
+            filled_template = self._run_reflection_sync()
 
-            # If no patterns, allow stop immediately
-            if not findings.get("patterns"):
-                self.log("No patterns found - allowing stop")
-                self.log("=== STOP HOOK ENDED (decision: approve - no patterns) ===")
+            # If reflection failed or returned nothing, allow stop
+            if not filled_template or not filled_template.strip():
+                self.log("No reflection result - allowing stop")
+                self.log("=== STOP HOOK ENDED (decision: approve - no reflection) ===")
                 return {"decision": "approve"}
 
-            # Block stop and tell Claude to read findings
-            self.log("Patterns found - blocking for reflection")
-            result = self._block_for_reflection(findings)
-            self.log("=== STOP HOOK ENDED (decision: block - reflection findings) ===")
+            # Emit reflection to stderr
+            self._emit_reflection_output(filled_template)
+
+            # Block stop and tell Claude to read the reflection
+            self.log("Reflection complete - blocking for user review")
+            result = self._block_for_reflection(filled_template)
+            self.log("=== STOP HOOK ENDED (decision: block - reflection complete) ===")
             return result
 
         except Exception as e:
@@ -160,125 +163,84 @@ class StopHook(HookProcessor):
         # Generate timestamp-based ID
         return datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    def _run_reflection_sync(self) -> Dict:
-        """Run reflection synchronously with timeout.
+    def _run_reflection_sync(self) -> Optional[str]:
+        """Run Claude SDK-based reflection synchronously.
 
         Returns:
-            Findings dict with patterns, or error dict with empty patterns
-
-        Raises:
-            Exception: Any unexpected error during reflection
+            Filled FEEDBACK_SUMMARY template as string, or None if failed
         """
         try:
-            from session_reflection import ReflectionOrchestrator
+            from claude_reflection import run_claude_reflection
         except ImportError:
-            self.log("Cannot import ReflectionOrchestrator - skipping reflection", "WARNING")
-            return {"patterns": []}
-
-        # Load config for timeout setting
-        config_path = (
-            self.project_root / ".claude" / "tools" / "amplihack" / ".reflection_config"
-        )
-        try:
-            with open(config_path) as f:
-                config = json.load(f)
-        except Exception:
-            config = {}
-
-        # Create orchestrator
-        orchestrator = ReflectionOrchestrator(self.project_root)
+            self.log("Cannot import claude_reflection - skipping reflection", "WARNING")
+            return None
 
         # Get session ID
         session_id = self._get_current_session_id()
-        self.log(f"Running reflection for session: {session_id}")
+        self.log(f"Running Claude-powered reflection for session: {session_id}")
 
-        # Run analysis (with basic timeout protection)
+        # Find session directory
+        session_dir = self.project_root / ".claude" / "runtime" / "logs" / session_id
+
+        if not session_dir.exists():
+            self.log(f"Session directory not found: {session_dir}", "WARNING")
+            return None
+
+        # Run Claude reflection (uses SDK)
         try:
-            findings = orchestrator.analyze_session(session_id)
+            filled_template = run_claude_reflection(session_dir, self.project_root)
+
+            if not filled_template:
+                self.log("Claude reflection returned empty result", "WARNING")
+                return None
+
+            # Save the filled template
+            output_path = session_dir / "FEEDBACK_SUMMARY.md"
+            output_path.write_text(filled_template)
+            self.log(f"Feedback summary saved to: {output_path}")
+
+            # Also save to current_findings for backward compatibility
+            findings_path = (
+                self.project_root / ".claude" / "runtime" / "reflection" / "current_findings.md"
+            )
+            findings_path.parent.mkdir(parents=True, exist_ok=True)
+            findings_path.write_text(filled_template)
+
+            # Save metrics
+            self.save_metric("reflection_success", 1)
+
+            return filled_template
+
         except Exception as e:
-            self.log(f"Reflection analysis failed: {e}", "WARNING")
-            return {"patterns": []}
+            self.log(f"Claude reflection failed: {e}", "ERROR")
+            return None
 
-        # Write findings file
-        findings_path = (
-            self.project_root / ".claude" / "runtime" / "reflection" / "current_findings.md"
-        )
-        self._write_findings_file(findings, findings_path)
-
-        # Emit to stderr
-        self._emit_reflection_summary(findings)
-
-        # Save metrics
-        self.save_metric("reflection_success", 1)
-        self.save_metric("patterns_detected", len(findings.get("patterns", [])))
-
-        return findings
-
-    def _write_findings_file(self, findings: Dict, output_path: Path) -> None:
-        """Write findings to markdown file.
+    def _emit_reflection_output(self, filled_template: str) -> None:
+        """Emit reflection output to stderr for immediate visibility.
 
         Args:
-            findings: Analysis results dict
-            output_path: Where to write the file
+            filled_template: Filled FEEDBACK_SUMMARY template
         """
-        output_path.parent.mkdir(parents=True, exist_ok=True)
+        print(f"\n{'=' * 70}", file=sys.stderr)
+        print("CLAUDE-POWERED SESSION REFLECTION COMPLETE", file=sys.stderr)
+        print(f"{'=' * 70}\n", file=sys.stderr)
 
-        content = ["# Session Reflection Findings\n"]
-        content.append(f"**Generated:** {datetime.now().isoformat()}\n")
+        # Show first 500 chars as preview
+        preview = filled_template[:500]
+        if len(filled_template) > 500:
+            preview += "\n\n[... content truncated ...]"
 
-        # Patterns
-        patterns = findings.get("patterns", [])
-        content.append(f"\n## Patterns Detected: {len(patterns)}\n")
+        print(preview, file=sys.stderr)
+        print(f"\n{'=' * 70}", file=sys.stderr)
+        print("Full reflection saved to:", file=sys.stderr)
+        print("  .claude/runtime/reflection/current_findings.md", file=sys.stderr)
+        print(f"{'=' * 70}\n", file=sys.stderr)
 
-        for i, pattern in enumerate(patterns, 1):
-            content.append(f"\n### {i}. {pattern['type'].upper()}\n")
-            content.append(f"\n**Suggestion:** {pattern.get('suggestion', 'N/A')}\n")
-
-            # Add pattern-specific details
-            for key, value in pattern.items():
-                if key not in ['type', 'suggestion']:
-                    content.append(f"- **{key}:** {value}\n")
-
-        # Suggestions
-        suggestions = findings.get("suggestions", [])
-        if suggestions:
-            content.append("\n## Recommended Actions\n")
-            for i, suggestion in enumerate(suggestions, 1):
-                content.append(f"{i}. {suggestion}\n")
-
-        output_path.write_text("".join(content))
-        self.log(f"Findings written to: {output_path}")
-
-    def _emit_reflection_summary(self, findings: Dict) -> None:
-        """Emit concise summary to stderr for visibility.
+    def _block_for_reflection(self, filled_template: str) -> Dict:
+        """Block stop and instruct Claude to present reflection to user.
 
         Args:
-            findings: Analysis results dict
-        """
-        pattern_count = len(findings.get("patterns", []))
-
-        print(f"\n{'=' * 60}", file=sys.stderr)
-        print("REFLECTION ANALYSIS COMPLETE", file=sys.stderr)
-        print(f"{'=' * 60}", file=sys.stderr)
-        print(f"Patterns detected: {pattern_count}", file=sys.stderr)
-
-        for i, pattern in enumerate(findings.get("patterns", [])[:3], 1):
-            suggestion = pattern.get("suggestion", "N/A")
-            if len(suggestion) > 60:
-                suggestion = suggestion[:57] + "..."
-            print(f"{i}. {pattern['type']}: {suggestion}", file=sys.stderr)
-
-        print(
-            f"\nFull findings: .claude/runtime/reflection/current_findings.md",
-            file=sys.stderr,
-        )
-        print(f"{'=' * 60}\n", file=sys.stderr)
-
-    def _block_for_reflection(self, findings: Dict) -> Dict:
-        """Block stop and instruct Claude to read findings.
-
-        Args:
-            findings: Analysis results dict
+            filled_template: Filled FEEDBACK_SUMMARY template from Claude
 
         Returns:
             Block decision dict with reason
@@ -286,19 +248,24 @@ class StopHook(HookProcessor):
         session_id = self._get_current_session_id()
         findings_path = ".claude/runtime/reflection/current_findings.md"
 
-        reason = f"""Session reflection analysis has completed. Before stopping, please:
+        reason = f"""Session reflection has been completed by Claude analyzing the conversation.
 
-1. Read the findings file: {findings_path}
-2. Review the patterns detected and suggested actions
-3. Ask the user if they want to create GitHub issues for any patterns
-4. If user approves, use the gh CLI to create issues for each approved pattern
-5. Save feedback summary to .claude/runtime/logs/{session_id}/FEEDBACK_SUMMARY.md using the template
+**Reflection saved to:** {findings_path}
 
-After completing these steps, you may stop the session normally.
-The user can also skip this step by saying "skip reflection"."""
+Before stopping, please:
+
+1. Read the reflection file: {findings_path}
+2. Present the key findings and recommendations to the user
+3. Ask the user if they want to:
+   - Create GitHub issues for any improvement opportunities
+   - Save this reflection for future reference
+   - Or skip and stop normally
+
+After the user reviews the reflection, you may stop the session.
+
+The user can also say "skip reflection" to stop immediately."""
 
         self.save_metric("reflection_blocked", 1)
-        self.save_metric("patterns_detected", len(findings.get("patterns", [])))
 
         return {"decision": "block", "reason": reason}
 
