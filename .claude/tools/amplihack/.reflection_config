@@ -1,11 +1,6 @@
 {
-  "enabled": false,
-  "depth": "comprehensive",
-  "auto_file_issues": false,
-  "min_patterns_for_notification": 1,
-  "issue_labels": [
-    "reflection",
-    "improvement"
-  ],
-  "description": "Reflection system configuration - controls automatic session analysis and GitHub issue creation"
+  "enabled": true,
+  "timeout_seconds": 60,
+  "triggers": ["session_end"],
+  "min_turns": 5
 }
