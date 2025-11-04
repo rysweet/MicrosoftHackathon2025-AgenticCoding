@@ -13,7 +13,7 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 # Clean import structure
 sys.path.insert(0, str(Path(__file__).parent))
@@ -245,7 +245,6 @@ class StopHook(HookProcessor):
         Returns:
             Block decision dict with reason
         """
-        session_id = self._get_current_session_id()
         findings_path = ".claude/runtime/reflection/current_findings.md"
 
         reason = f"""Session reflection has been completed by Claude analyzing the conversation.
