@@ -46,7 +46,7 @@ def load_session_conversation(session_dir: Path) -> Optional[List[Dict]]:
                 # Handle different data structures
                 if isinstance(data, list):
                     return data
-                elif isinstance(data, dict) and "messages" in data:
+                if isinstance(data, dict) and "messages" in data:
                     return data["messages"]
             except (OSError, json.JSONDecodeError):
                 continue
@@ -104,6 +104,7 @@ async def analyze_session_with_claude(
         try:
             sys.path.insert(0, str(project_root / ".claude" / "tools" / "amplihack"))
             from amplihack.utils.paths import FrameworkPathResolver
+
             preferences_file = FrameworkPathResolver.resolve_preferences_file()
         except ImportError:
             # Fallback to default location
@@ -125,9 +126,37 @@ The following preferences are REQUIRED and CANNOT be ignored:
         print(f"Warning: Could not load USER_PREFERENCES: {e}", file=sys.stderr)
         # Continue without preferences
 
+    # Load TRUST.md for anti-sycophancy context (Issue #111)
+    trust_context = ""
+    try:
+        trust_file = project_root / ".claude" / "context" / "TRUST.md"
+        if trust_file.exists():
+            with open(trust_file) as f:
+                trust_content = f.read()
+            trust_context = f"""
+## Anti-Sycophancy Guidelines (MANDATORY)
+
+The following anti-sycophancy rules are REQUIRED and must be checked during reflection:
+
+{trust_content}
+
+**IMPORTANT FOR REFLECTION**: Analyze whether Claude exhibited sycophantic behavior during this session, such as:
+- Excessive validation phrases ("Great idea!", "Excellent point!", "That makes sense!")
+- Always agreeing without challenging assumptions
+- Implementing flawed designs without pushback
+- Hedging or avoiding direct feedback
+- Prioritizing user feelings over problem-solving
+
+Count and report any instances of sycophantic behavior found.
+"""
+    except Exception as e:
+        print(f"Warning: Could not load TRUST.md: {e}", file=sys.stderr)
+        # Continue without TRUST.md context
+
     # Build reflection prompt
     prompt = f"""You are analyzing a completed Claude Code session to provide feedback and identify learning opportunities.
 {user_preferences_context}
+{trust_context}
 
 ## Session Conversation
 
@@ -148,6 +177,7 @@ Please analyze this session and fill out the following feedback template:
 3. **Track workflow adherence** - Did Claude follow the DEFAULT_WORKFLOW.md steps?
 4. **Note subagent usage** - Which specialized agents were used (architect, builder, reviewer, etc.)?
 5. **Suggest improvements** - What would make future similar sessions better?
+6. **CHECK ANTI-SYCOPHANCY COMPLIANCE** - Did Claude follow TRUST.md guidelines? Count any sycophantic phrases or behaviors.
 
 Please provide the filled-out template now.
 """
@@ -197,7 +227,7 @@ def _format_conversation_summary(conversation: List[Dict], max_length: int = 500
         if len(content) > 500:
             content = content[:497] + "..."
 
-        msg_summary = f"\n**Message {i+1} ({role}):** {content}\n"
+        msg_summary = f"\n**Message {i + 1} ({role}):** {content}\n"
 
         # Check if adding this would exceed limit
         if current_length + len(msg_summary) > max_length:
@@ -235,9 +265,7 @@ def run_claude_reflection(
 
     # Run async analysis
     try:
-        result = asyncio.run(
-            analyze_session_with_claude(conversation, template, project_root)
-        )
+        result = asyncio.run(analyze_session_with_claude(conversation, template, project_root))
         return result
     except Exception as e:
         print(f"Claude reflection failed: {e}", file=sys.stderr)
