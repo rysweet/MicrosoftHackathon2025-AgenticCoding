@@ -97,8 +97,37 @@ async def analyze_session_with_claude(
         print("Claude SDK not available - cannot run AI-powered reflection", file=sys.stderr)
         return None
 
+    # Load USER_PREFERENCES for context (same as session_start does)
+    user_preferences_context = ""
+    try:
+        # Try to use FrameworkPathResolver if available
+        try:
+            sys.path.insert(0, str(project_root / ".claude" / "tools" / "amplihack"))
+            from amplihack.utils.paths import FrameworkPathResolver
+            preferences_file = FrameworkPathResolver.resolve_preferences_file()
+        except ImportError:
+            # Fallback to default location
+            preferences_file = project_root / ".claude" / "context" / "USER_PREFERENCES.md"
+
+        if preferences_file and preferences_file.exists():
+            with open(preferences_file) as f:
+                prefs_content = f.read()
+            user_preferences_context = f"""
+## User Preferences (MANDATORY - MUST FOLLOW)
+
+The following preferences are REQUIRED and CANNOT be ignored:
+
+{prefs_content}
+
+**IMPORTANT**: When analyzing this session, consider whether Claude followed these user preferences. Do NOT criticize behavior that aligns with configured preferences.
+"""
+    except Exception as e:
+        print(f"Warning: Could not load USER_PREFERENCES: {e}", file=sys.stderr)
+        # Continue without preferences
+
     # Build reflection prompt
     prompt = f"""You are analyzing a completed Claude Code session to provide feedback and identify learning opportunities.
+{user_preferences_context}
 
 ## Session Conversation
 

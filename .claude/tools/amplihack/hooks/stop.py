@@ -65,9 +65,30 @@ class StopHook(HookProcessor):
             self.log("=== STOP HOOK ENDED (decision: approve - no reflection) ===")
             return {"decision": "approve"}
 
+        # FIX #2: Check for reflection semaphore (prevents infinite loop)
+        session_id = self._get_current_session_id()
+        semaphore_file = (
+            self.project_root / ".claude" / "runtime" / "reflection" / f".reflection_presented_{session_id}"
+        )
+
+        if semaphore_file.exists():
+            # Reflection already presented - remove semaphore and allow stop
+            self.log(f"Reflection already presented for session {session_id} - removing semaphore and allowing stop")
+            try:
+                semaphore_file.unlink()
+            except OSError:
+                pass
+            self.log("=== STOP HOOK ENDED (decision: approve - reflection already shown) ===")
+            return {"decision": "approve"}
+
         # RUN REFLECTION SYNCHRONOUSLY (blocks here)
         try:
-            filled_template = self._run_reflection_sync()
+            # FIX #4: Announce reflection start (STAGE 1)
+            self._announce_reflection_start()
+
+            # FIX #6: Pass transcript_path from input_data
+            transcript_path = input_data.get("transcript_path")
+            filled_template = self._run_reflection_sync(transcript_path)
 
             # If reflection failed or returned nothing, allow stop
             if not filled_template or not filled_template.strip():
@@ -75,12 +96,18 @@ class StopHook(HookProcessor):
                 self.log("=== STOP HOOK ENDED (decision: approve - no reflection) ===")
                 return {"decision": "approve"}
 
-            # Emit reflection to stderr
-            self._emit_reflection_output(filled_template)
+            # FIX #5: Block with findings directly (STAGE 2 - structured presentation)
+            self.log("Reflection complete - blocking with structured findings")
+            result = self._block_with_findings(filled_template)
 
-            # Block stop and tell Claude to read the reflection
-            self.log("Reflection complete - blocking for user review")
-            result = self._block_for_reflection(filled_template)
+            # FIX #7: Create semaphore after presenting
+            try:
+                semaphore_file.parent.mkdir(parents=True, exist_ok=True)
+                semaphore_file.touch()
+                self.log(f"Created reflection semaphore: {semaphore_file}")
+            except OSError as e:
+                self.log(f"Warning: Could not create semaphore file: {e}", "WARNING")
+
             self.log("=== STOP HOOK ENDED (decision: block - reflection complete) ===")
             return result
 
@@ -148,13 +175,13 @@ class StopHook(HookProcessor):
         if session_id:
             return session_id
 
-        # Try finding most recent session
+        # FIX #1: Try finding most recent session directory (not files!)
         logs_dir = self.project_root / ".claude" / "runtime" / "logs"
         if logs_dir.exists():
             try:
-                sessions = sorted(
-                    logs_dir.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True
-                )
+                # Filter to directories only - don't pick up log files like "stop.log"
+                sessions = [p for p in logs_dir.iterdir() if p.is_dir()]
+                sessions = sorted(sessions, key=lambda p: p.stat().st_mtime, reverse=True)
                 if sessions:
                     return sessions[0].name
             except (OSError, PermissionError) as e:
@@ -163,8 +190,11 @@ class StopHook(HookProcessor):
         # Generate timestamp-based ID
         return datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    def _run_reflection_sync(self) -> Optional[str]:
+    def _run_reflection_sync(self, transcript_path: Optional[str] = None) -> Optional[str]:
         """Run Claude SDK-based reflection synchronously.
+
+        Args:
+            transcript_path: Optional path to JSONL transcript file from Claude Code
 
         Returns:
             Filled FEEDBACK_SUMMARY template as string, or None if failed
@@ -179,6 +209,40 @@ class StopHook(HookProcessor):
         session_id = self._get_current_session_id()
         self.log(f"Running Claude-powered reflection for session: {session_id}")
 
+        # FIX #3: Load JSONL transcript if provided by Claude Code
+        conversation = None
+        if transcript_path:
+            transcript_file = Path(transcript_path)
+            self.log(f"Using transcript from Claude Code: {transcript_file}")
+
+            try:
+                # Load JSONL format (one JSON per line)
+                conversation = []
+                with open(transcript_file) as f:
+                    for line in f:
+                        line = line.strip()
+                        if not line:
+                            continue
+                        entry = json.loads(line)
+                        if entry.get("type") in ["user", "assistant"] and "message" in entry:
+                            msg = entry["message"]
+                            content = msg.get("content", "")
+                            if isinstance(content, list):
+                                text_parts = []
+                                for block in content:
+                                    if isinstance(block, dict) and block.get("type") == "text":
+                                        text_parts.append(block.get("text", ""))
+                                content = "\n".join(text_parts)
+
+                            conversation.append({
+                                "role": msg.get("role", entry.get("type", "user")),
+                                "content": content
+                            })
+                self.log(f"Loaded {len(conversation)} conversation turns from transcript")
+            except Exception as e:
+                self.log(f"Failed to load transcript: {e}", "WARNING")
+                conversation = None
+
         # Find session directory
         session_dir = self.project_root / ".claude" / "runtime" / "logs" / session_id
 
@@ -188,7 +252,7 @@ class StopHook(HookProcessor):
 
         # Run Claude reflection (uses SDK)
         try:
-            filled_template = run_claude_reflection(session_dir, self.project_root)
+            filled_template = run_claude_reflection(session_dir, self.project_root, conversation)
 
             if not filled_template:
                 self.log("Claude reflection returned empty result", "WARNING")
@@ -215,54 +279,54 @@ class StopHook(HookProcessor):
             self.log(f"Claude reflection failed: {e}", "ERROR")
             return None
 
-    def _emit_reflection_output(self, filled_template: str) -> None:
-        """Emit reflection output to stderr for immediate visibility.
-
-        Args:
-            filled_template: Filled FEEDBACK_SUMMARY template
-        """
+    def _announce_reflection_start(self) -> None:
+        """Announce that reflection is starting (STAGE 1 - FIX #4)."""
         print(f"\n{'=' * 70}", file=sys.stderr)
-        print("CLAUDE-POWERED SESSION REFLECTION COMPLETE", file=sys.stderr)
+        print("🔍 BEGINNING SELF-REFLECTION ON SESSION", file=sys.stderr)
         print(f"{'=' * 70}\n", file=sys.stderr)
+        print("Analyzing the conversation using Claude SDK...", file=sys.stderr)
+        print("This will take 10-60 seconds.", file=sys.stderr)
+        print("\nWhat reflection analyzes:", file=sys.stderr)
+        print("  • Task complexity and workflow adherence", file=sys.stderr)
+        print("  • User interactions and satisfaction", file=sys.stderr)
+        print("  • Subagent usage and efficiency", file=sys.stderr)
+        print("  • Learning opportunities and improvements", file=sys.stderr)
+        print(f"\n{'=' * 70}\n", file=sys.stderr)
 
-        # Show first 500 chars as preview
-        preview = filled_template[:500]
-        if len(filled_template) > 500:
-            preview += "\n\n[... content truncated ...]"
-
-        print(preview, file=sys.stderr)
-        print(f"\n{'=' * 70}", file=sys.stderr)
-        print("Full reflection saved to:", file=sys.stderr)
-        print("  .claude/runtime/reflection/current_findings.md", file=sys.stderr)
-        print(f"{'=' * 70}\n", file=sys.stderr)
-
-    def _block_for_reflection(self, filled_template: str) -> Dict:
-        """Block stop and instruct Claude to present reflection to user.
+    def _block_with_findings(self, filled_template: str) -> Dict:
+        """Block stop and present reflection findings directly (STAGE 2 - FIX #5).
 
         Args:
             filled_template: Filled FEEDBACK_SUMMARY template from Claude
 
         Returns:
-            Block decision dict with reason
+            Block decision dict with reason containing structured presentation instructions
         """
-        findings_path = ".claude/runtime/reflection/current_findings.md"
+        reason = f"""📋 SESSION REFLECTION COMPLETE
 
-        reason = f"""Session reflection has been completed by Claude analyzing the conversation.
+The reflection system has analyzed this session. The full analysis is below.
 
-**Reflection saved to:** {findings_path}
+**YOUR TASK:**
 
-Before stopping, please:
+Parse the reflection findings below and present them to the user following this structure:
 
-1. Read the reflection file: {findings_path}
-2. Present the key findings and recommendations to the user
-3. Ask the user if they want to:
-   - Create GitHub issues for any improvement opportunities
-   - Save this reflection for future reference
-   - Or skip and stop normally
+1. **Executive Summary** (2-3 sentences)
+2. **Key Findings** (Be verbose!)
+   - What Worked Well: 2-3 top successes
+   - Areas for Improvement: 2-3 main issues
+3. **Top Recommendations** (Be verbose!)
+   - 3-5 recommendations with Problem → Solution → Impact
+4. **Action Options:**
+   a) Create GitHub Issues (now/later)
+   b) Start Auto Mode
+   c) Discuss Specific Improvements
+   d) Just Stop
 
-After the user reviews the reflection, you may stop the session.
+**REFLECTION FINDINGS:**
 
-The user can also say "skip reflection" to stop immediately."""
+{filled_template}
+
+**Reflection saved to:** .claude/runtime/reflection/current_findings.md"""
 
         self.save_metric("reflection_blocked", 1)
 
