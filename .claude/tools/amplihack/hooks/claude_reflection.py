@@ -210,21 +210,25 @@ def _format_conversation_summary(conversation: List[Dict], max_length: int = 500
     return "".join(summary_parts)
 
 
-def run_claude_reflection(session_dir: Path, project_root: Path) -> Optional[str]:
+def run_claude_reflection(
+    session_dir: Path, project_root: Path, conversation: Optional[List[Dict]] = None
+) -> Optional[str]:
     """Run Claude SDK-based reflection on a session.
 
     Args:
         session_dir: Session log directory
         project_root: Project root directory
+        conversation: Optional pre-loaded conversation (if None, loads from session_dir)
 
     Returns:
         Filled FEEDBACK_SUMMARY template, or None if failed
     """
-    # Load conversation
-    conversation = load_session_conversation(session_dir)
-    if not conversation:
-        print(f"No conversation found in {session_dir}", file=sys.stderr)
-        return None
+    # Load conversation if not provided
+    if conversation is None:
+        conversation = load_session_conversation(session_dir)
+        if not conversation:
+            print(f"No conversation found in {session_dir}", file=sys.stderr)
+            return None
 
     # Load template
     template = load_feedback_template(project_root)
