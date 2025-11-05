@@ -96,9 +96,32 @@ class StopHook(HookProcessor):
                 self.log("=== STOP HOOK ENDED (decision: approve - no reflection) ===")
                 return {"decision": "approve"}
 
-            # FIX #5: Block with findings directly (STAGE 2 - structured presentation)
-            self.log("Reflection complete - blocking with structured findings")
-            result = self._block_with_findings(filled_template)
+            # Generate unique filename for this reflection
+            reflection_filename = self._generate_reflection_filename(filled_template)
+            reflection_path = (
+                self.project_root / ".claude" / "runtime" / "reflection" / reflection_filename
+            )
+
+            # Save reflection to uniquely named file
+            try:
+                reflection_path.parent.mkdir(parents=True, exist_ok=True)
+                reflection_path.write_text(filled_template)
+                self.log(f"Reflection saved to: {reflection_path}")
+            except Exception as e:
+                self.log(f"Warning: Could not save reflection file: {e}", "WARNING")
+
+            # Also save to current_findings.md for backward compatibility
+            try:
+                current_findings = (
+                    self.project_root / ".claude" / "runtime" / "reflection" / "current_findings.md"
+                )
+                current_findings.write_text(filled_template)
+            except Exception:
+                pass  # Non-critical
+
+            # FIX #5: Block with instructions to read and present (STAGE 2)
+            self.log("Reflection complete - blocking with presentation instructions")
+            result = self._block_with_findings(filled_template, str(reflection_path))
 
             # FIX #7: Create semaphore after presenting
             try:
@@ -293,40 +316,77 @@ class StopHook(HookProcessor):
         print("  • Learning opportunities and improvements", file=sys.stderr)
         print(f"\n{'=' * 70}\n", file=sys.stderr)
 
-    def _block_with_findings(self, filled_template: str) -> Dict:
-        """Block stop and present reflection findings directly (STAGE 2 - FIX #5).
+    def _generate_reflection_filename(self, filled_template: str) -> str:
+        """Generate descriptive filename for this session's reflection.
+
+        Args:
+            filled_template: The reflection content (used to extract task summary)
+
+        Returns:
+            Filename like: reflection-system-investigation-20251104_165432.md
+        """
+        # Extract task summary from template if possible
+        task_slug = "session"
+        try:
+            # Try to extract from "## Task Summary" section
+            if "## Task Summary" in filled_template:
+                summary_section = filled_template.split("## Task Summary")[1].split("\n\n")[1]
+                # Get first sentence, clean it up
+                first_sentence = summary_section.split(".")[0][:100]
+                # Convert to slug
+                import re
+                task_slug = re.sub(r'[^a-z0-9]+', '-', first_sentence.lower()).strip('-')
+                # Limit length
+                task_slug = task_slug[:50]
+        except Exception:
+            # Fallback to generic
+            task_slug = "session"
+
+        # Generate timestamp
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+        return f"reflection-{task_slug}-{timestamp}.md"
+
+    def _block_with_findings(self, filled_template: str, reflection_file_path: str) -> Dict:
+        """Block stop with instructions to read and present reflection (STAGE 2 - FIX #5).
 
         Args:
             filled_template: Filled FEEDBACK_SUMMARY template from Claude
+            reflection_file_path: Path where reflection was saved
 
         Returns:
-            Block decision dict with reason containing structured presentation instructions
+            Block decision dict with presentation instructions
         """
         reason = f"""📋 SESSION REFLECTION COMPLETE
 
-The reflection system has analyzed this session. The full analysis is below.
+The reflection system has analyzed this session and saved the findings to:
+
+**{reflection_file_path}**
 
 **YOUR TASK:**
 
-Parse the reflection findings below and present them to the user following this structure:
+1. Read the reflection file using the Read tool
+2. Parse the findings and present them to the user following this structure:
 
-1. **Executive Summary** (2-3 sentences)
-2. **Key Findings** (Be verbose!)
-   - What Worked Well: 2-3 top successes
-   - Areas for Improvement: 2-3 main issues
-3. **Top Recommendations** (Be verbose!)
-   - 3-5 recommendations with Problem → Solution → Impact
-4. **Action Options:**
-   a) Create GitHub Issues (now/later)
-   b) Start Auto Mode
-   c) Discuss Specific Improvements
-   d) Just Stop
+   a) **Executive Summary** (2-3 sentences)
+      - What was accomplished
+      - Key insight from reflection
 
-**REFLECTION FINDINGS:**
+   b) **Key Findings** (Be verbose!)
+      - What Worked Well: Highlight 2-3 top successes with specific examples
+      - Areas for Improvement: Highlight 2-3 main issues with context
 
-{filled_template}
+   c) **Top Recommendations** (Be verbose!)
+      - Present 3-5 recommendations in priority order
+      - For each: Problem → Solution → Impact → Why it matters
 
-**Reflection saved to:** .claude/runtime/reflection/current_findings.md"""
+   d) **Action Options** - Give the user these choices:
+      • Create GitHub Issues (work on NOW or save for LATER)
+      • Start Auto Mode (if concrete improvements can be implemented)
+      • Discuss Specific Improvements (explore recommendations in detail)
+      • Just Stop (next stop will succeed - semaphore prevents re-run)
+
+After presenting the findings and getting the user's decision, you may proceed accordingly."""
 
         self.save_metric("reflection_blocked", 1)
 
