@@ -65,6 +65,12 @@ class StopHook(HookProcessor):
             self.log("=== STOP HOOK ENDED (decision: approve - no reflection) ===")
             return {"decision": "approve"}
 
+        # Check if session is substantial enough to warrant reflection
+        if not self._is_session_substantial(input_data.get("transcript_path")):
+            self.log("Session not substantial enough for reflection - allowing stop")
+            self.log("=== STOP HOOK ENDED (decision: approve - trivial session) ===")
+            return {"decision": "approve"}
+
         # FIX #2: Check for reflection semaphore (prevents infinite loop)
         session_id = self._get_current_session_id()
         semaphore_file = (
@@ -140,6 +146,111 @@ class StopHook(HookProcessor):
             self.save_metric("reflection_errors", 1)
             self.log("=== STOP HOOK ENDED (decision: approve - error occurred) ===")
             return {"decision": "approve"}
+
+    def _is_session_substantial(self, transcript_path: Optional[str]) -> bool:
+        """Check if current session is substantial enough to warrant reflection.
+
+        Prevents reflection chains by checking:
+        1. Minimum message count (30+ messages total)
+        2. New messages since last reflection (50+ new messages)
+
+        Args:
+            transcript_path: Path to JSONL transcript from Claude Code
+
+        Returns:
+            True if session warrants reflection, False if too trivial
+        """
+        MIN_TOTAL_MESSAGES = 30  # Minimum messages for any reflection
+        MIN_NEW_MESSAGES = 50    # Minimum new messages since last reflection
+
+        # If no transcript, can't determine - err on side of allowing reflection
+        if not transcript_path:
+            self.log("No transcript path - allowing reflection by default", "DEBUG")
+            return True
+
+        # Count messages in current transcript
+        try:
+            transcript_file = Path(transcript_path)
+            if not transcript_file.exists():
+                self.log(f"Transcript file not found: {transcript_file}", "WARNING")
+                return True
+
+            message_count = 0
+            with open(transcript_file) as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        entry = json.loads(line)
+                        # Count user and assistant messages only
+                        if entry.get("type") in ["user", "assistant"]:
+                            message_count += 1
+                    except json.JSONDecodeError:
+                        continue
+
+            self.log(f"Current transcript has {message_count} messages")
+
+            # Check 1: Minimum total messages
+            if message_count < MIN_TOTAL_MESSAGES:
+                self.log(f"Session too short ({message_count} < {MIN_TOTAL_MESSAGES}) - skipping reflection")
+                return False
+
+            # Check 2: Messages since last reflection
+            # Find most recent reflection file
+            reflection_dir = self.project_root / ".claude" / "runtime" / "reflection"
+            if reflection_dir.exists():
+                try:
+                    reflection_files = sorted(
+                        [f for f in reflection_dir.glob("reflection-*.md")],
+                        key=lambda p: p.stat().st_mtime,
+                        reverse=True
+                    )
+
+                    if reflection_files:
+                        # Get the most recent reflection
+                        last_reflection = reflection_files[0]
+                        last_reflection_time = last_reflection.stat().st_mtime
+
+                        # Check if this reflection is recent (within last 5 minutes)
+                        import time
+                        time_since_reflection = time.time() - last_reflection_time
+
+                        if time_since_reflection < 300:  # 5 minutes
+                            # Recent reflection exists - check message growth
+                            # Parse the reflection to see how many messages it analyzed
+                            try:
+                                reflection_content = last_reflection.read_text()
+                                # Look for message count mention (e.g., "51 messages", "165 messages")
+                                import re
+                                message_counts = re.findall(r'(\d+)\s+messages', reflection_content, re.IGNORECASE)
+                                if message_counts:
+                                    # Get the highest number (likely the total)
+                                    last_analyzed_count = max(int(m) for m in message_counts)
+                                    new_messages = message_count - last_analyzed_count
+
+                                    self.log(f"Last reflection analyzed {last_analyzed_count} messages")
+                                    self.log(f"Current session has {message_count} messages")
+                                    self.log(f"New messages since last reflection: {new_messages}")
+
+                                    if new_messages < MIN_NEW_MESSAGES:
+                                        self.log(f"Not enough new messages ({new_messages} < {MIN_NEW_MESSAGES}) - skipping reflection")
+                                        return False
+                            except Exception as e:
+                                self.log(f"Could not parse last reflection: {e}", "DEBUG")
+                                # If we can't parse, allow reflection
+
+                except Exception as e:
+                    self.log(f"Error checking last reflection: {e}", "DEBUG")
+
+            # Passed all checks - session is substantial
+            self.log(f"Session is substantial ({message_count} messages) - allowing reflection")
+            return True
+
+        except Exception as e:
+            self.log(f"Error checking session substantiality: {e}", "WARNING")
+            # On error, allow reflection (fail-safe)
+            return True
 
     def _should_run_reflection(self) -> bool:
         """Check if reflection should run based on config and environment.
