@@ -15,8 +15,6 @@ This repository uses automatic version bumping on every commit to the `main` bra
    - Bumps version in `pyproject.toml`
    - Commits the change
    - Creates a git tag (e.g., `v2025.11.1`)
-   - Builds the package
-   - Publishes to PyPI
 
 ## Version Examples
 
@@ -34,37 +32,6 @@ This repository uses automatic version bumping on every commit to the `main` bra
 - **Clear Temporal Context**: Easy to see when a version was released
 - **No Semantic Debates**: No need to classify changes as major/minor/patch
 
-## For Users
-
-### Getting the Latest Version with uvx
-
-Since `uvx` caches package versions, use one of these approaches to get the latest:
-
-**Option 1: Use @latest suffix**
-
-```bash
-uvx amplihack@latest
-```
-
-**Option 2: Clear cache**
-
-```bash
-uv cache clean
-uvx amplihack
-```
-
-**Option 3: Use --refresh flag**
-
-```bash
-uvx --refresh amplihack
-```
-
-### Checking Your Current Version
-
-```bash
-amplihack --version
-```
-
 ## For Developers
 
 ### How Version Bumping Works
@@ -72,7 +39,7 @@ amplihack --version
 The system uses:
 
 - **Script**: `.github/scripts/bump_version.py` - Bumps version in `pyproject.toml`
-- **Workflow**: `.github/workflows/auto-version-and-publish.yml` - Automates the process
+- **Workflow**: `.github/workflows/auto-version-bump.yml` - Automates the process
 - **Protection**: Skips version bump commits to avoid infinite loops
 
 ### Testing Version Bump Locally
@@ -97,33 +64,11 @@ The workflow SKIPS commits that only modify:
 - GitHub workflows (`.github/**`)
 - Tests only (`tests/**`)
 
-### PyPI Trusted Publishing Setup
-
-The workflow uses PyPI's trusted publishing (no API tokens needed).
-
-**One-time setup required on PyPI**:
-
-1. Visit: https://pypi.org/manage/account/publishing/
-2. Add new publisher with these settings:
-   - **PyPI Project Name**: `microsofthackathon2025-agenticcoding`
-   - **Owner**: `rysweet`
-   - **Repository**: `MicrosoftHackathon2025-AgenticCoding`
-   - **Workflow**: `auto-version-and-publish.yml`
-   - **Environment**: (leave blank)
-
-Once configured, the GitHub Action will automatically publish to PyPI.
-
 ## Troubleshooting
 
 ### Version Bump Loop Detected
 
 If you see "Version bump commit detected - skipping", this is normal. The workflow detected its own commit and skipped to avoid an infinite loop.
-
-### PyPI Publish Fails
-
-1. Verify trusted publishing is configured on PyPI (see setup above)
-2. Check workflow has `id-token: write` permission (already configured)
-3. Ensure PyPI project name matches exactly
 
 ### Version Not Incrementing
 

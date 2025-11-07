@@ -1,4 +1,4 @@
-name: Auto Version Bump and Publish
+name: Auto Version Bump
 
 on:
   push:
@@ -16,10 +16,9 @@ concurrency:
 
 permissions:
   contents: write # Required to push version bump commits and tags to repository
-  id-token: write # For PyPI trusted publishing (OIDC token)
 
 jobs:
-  version-and-publish:
+  version-bump:
     runs-on: ubuntu-latest
 
     steps:
@@ -84,17 +83,3 @@ jobs:
           git tag "$TAG"
           git push origin "$TAG"
           echo "Created and pushed tag: $TAG"
-
-      - name: Build package
-        if: steps.check.outputs.skip == 'false'
-        run: |
-          pip install build
-          python -m build
-          echo "Package built successfully"
-
-      - name: Publish to PyPI
-        if: steps.check.outputs.skip == 'false'
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          skip-existing: true
-          verbose: true
