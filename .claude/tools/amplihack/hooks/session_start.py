@@ -123,39 +123,6 @@ class SessionStartHook(HookProcessor):
             context_parts.append("\n## Recent Learnings")
             context_parts.append("Check .claude/context/DISCOVERIES.md for recent insights.")
 
-        # Inject TRUST.md with MANDATORY enforcement (Issue #111)
-        trust_file = self.project_root / ".claude" / "context" / "TRUST.md"
-        if trust_file.exists():
-            try:
-                with open(trust_file) as f:
-                    trust_content = f.read()
-                self.log(f"Successfully read TRUST.md from: {trust_file}")
-
-                # Inject FULL TRUST.md content with MANDATORY enforcement
-                context_parts.append("\n## ⚡ ANTI-SYCOPHANCY RULES (MANDATORY - MUST FOLLOW)")
-                context_parts.append(
-                    "\nThe following anti-sycophancy guidelines are REQUIRED and CANNOT be ignored:\n"
-                )
-                context_parts.append(trust_content)
-                context_parts.append(
-                    "\n**CRITICAL**: These rules override default Claude behavior. Do NOT use validation phrases like:"
-                )
-                context_parts.append('- "Great idea!"')
-                context_parts.append('- "Excellent point!"')
-                context_parts.append('- "That makes sense!"')
-                context_parts.append('- "I understand what you mean..."')
-                context_parts.append(
-                    "\n**INSTEAD**: Be direct, challenge assumptions, and propose better alternatives when appropriate.\n"
-                )
-
-                self.log(
-                    "Injected full TRUST.md content into session with anti-sycophancy enforcement"
-                )
-
-            except Exception as e:
-                self.log(f"Could not read TRUST.md: {e}", "WARNING")
-                # Fail silently - don't break session start
-
         # Simplified preference file resolution
         preferences_file = (
             FrameworkPathResolver.resolve_preferences_file()
