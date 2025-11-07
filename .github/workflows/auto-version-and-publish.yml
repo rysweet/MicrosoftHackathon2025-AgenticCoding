@@ -1,0 +1,100 @@
+name: Auto Version Bump and Publish
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - ".github/**"
+      - "docs/**"
+      - "**.md"
+      - "tests/**"
+
+# Serialize version bumps to prevent race conditions when multiple commits are pushed simultaneously
+concurrency:
+  group: version-bump
+  cancel-in-progress: false # Queue instead of cancel to ensure all bumps complete
+
+permissions:
+  contents: write # Required to push version bump commits and tags to repository
+  id-token: write # For PyPI trusted publishing (OIDC token)
+
+jobs:
+  version-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Check if version bump needed
+        id: check
+        run: |
+          # Skip if commit is already a version bump (exact match required below)
+          # IMPORTANT: This string must match exactly in the commit message step
+          if git log -1 --pretty=%B | grep -q "chore: bump version"; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "Version bump commit detected - skipping to avoid loop"
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+            echo "Regular commit detected - proceeding with version bump"
+          fi
+
+      - name: Bump version
+        if: steps.check.outputs.skip == 'false'
+        id: bump
+        run: |
+          if ! NEW_VERSION=$(python .github/scripts/bump_version.py); then
+            echo "ERROR: Version bump script failed"
+            exit 1
+          fi
+          if [ -z "$NEW_VERSION" ]; then
+            echo "ERROR: Version bump script returned empty version"
+            exit 1
+          fi
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "Bumped version to: $NEW_VERSION"
+
+      - name: Commit version bump
+        if: steps.check.outputs.skip == 'false'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add pyproject.toml
+          # [skip ci] prevents CI from running on version bump commits
+          git commit -m "chore: bump version to ${{ steps.bump.outputs.new_version }} [skip ci]"
+          git push
+
+      - name: Create and push tag
+        if: steps.check.outputs.skip == 'false'
+        run: |
+          TAG="v${{ steps.bump.outputs.new_version }}"
+          # Check if tag already exists (shouldn't happen with concurrency control, but fail fast if it does)
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "ERROR: Tag $TAG already exists - possible race condition"
+            exit 1
+          fi
+          git tag "$TAG"
+          git push origin "$TAG"
+          echo "Created and pushed tag: $TAG"
+
+      - name: Build package
+        if: steps.check.outputs.skip == 'false'
+        run: |
+          pip install build
+          python -m build
+          echo "Package built successfully"
+
+      - name: Publish to PyPI
+        if: steps.check.outputs.skip == 'false'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          skip-existing: true
+          verbose: true
