@@ -5,7 +5,10 @@ import tempfile
 from pathlib import Path
 from unittest.mock import patch
 
-import pytest
+try:
+    import pytest
+except ImportError:
+    raise ImportError("pytest is required for running tests")
 
 
 class TestLockUnlockCommands:
