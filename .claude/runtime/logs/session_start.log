@@ -1,0 +1,286 @@
+[2025-11-07T12:20:22.762612] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-07T12:20:22.762925] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-07T12:20:22.763373] INFO: Event type: SessionStart
+[2025-11-07T12:20:22.763595] INFO: Prompt length: 0
+[2025-11-07T12:20:22.764912] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-07T12:20:22.766072] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/3qImsDAwUOx8wyH0kJ3Pg/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-07T12:20:22.766264] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-07T12:20:22.766950] INFO: Session initialized - Original request: ❌
+[2025-11-07T12:20:22.767294] INFO: Injected 5300 characters of context
+[2025-11-07T12:20:22.767842] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-07T12:20:22.768183] INFO: session_start hook completed successfully
+[2025-11-07T12:20:23.026683] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-07T12:20:23.027426] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-07T12:20:23.027827] INFO: Event type: SessionStart
+[2025-11-07T12:20:23.028237] INFO: Prompt length: 0
+[2025-11-07T12:20:23.028960] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-07T12:20:23.030750] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/3qImsDAwUOx8wyH0kJ3Pg/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-07T12:20:23.031128] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-07T12:20:23.031489] INFO: Session initialized - Original request: ❌
+[2025-11-07T12:20:23.031855] INFO: Injected 5300 characters of context
+[2025-11-07T12:20:23.032141] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-07T12:20:23.032421] INFO: session_start hook completed successfully
+[2025-11-07T15:48:55.525581] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-07T15:48:55.526558] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-07T15:48:55.527024] INFO: Event type: SessionStart
+[2025-11-07T15:48:55.527423] INFO: Prompt length: 0
+[2025-11-07T15:48:55.528800] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-07T15:48:55.530048] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/Xfu1MxuHR7LgLFYZruw5v/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-07T15:48:55.530344] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-07T15:48:55.530771] INFO: Session initialized - Original request: ❌
+[2025-11-07T15:48:55.530924] INFO: Injected 7171 characters of context
+[2025-11-07T15:48:55.531351] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-07T15:48:55.531691] INFO: session_start hook completed successfully
+[2025-11-07T15:48:55.568823] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-07T15:48:55.569446] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-07T15:48:55.569940] INFO: Event type: SessionStart
+[2025-11-07T15:48:55.570651] INFO: Prompt length: 0
+[2025-11-07T15:48:55.573239] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-07T15:48:55.575689] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/Xfu1MxuHR7LgLFYZruw5v/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-07T15:48:55.575871] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-07T15:48:55.576244] INFO: Session initialized - Original request: ❌
+[2025-11-07T15:48:55.576442] INFO: Injected 7171 characters of context
+[2025-11-07T15:48:55.576933] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-07T15:48:55.577323] INFO: session_start hook completed successfully
+[2025-11-07T16:25:51.898785] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-07T16:25:51.898781] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-07T16:25:51.899484] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-07T16:25:51.899546] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-07T16:25:51.900137] INFO: Event type: SessionStart
+[2025-11-07T16:25:51.900403] INFO: Event type: SessionStart
+[2025-11-07T16:25:51.900505] INFO: Prompt length: 0
+[2025-11-07T16:25:51.900753] INFO: Prompt length: 0
+[2025-11-07T16:25:51.901529] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-07T16:25:51.901689] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-07T16:25:51.903544] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/Xfu1MxuHR7LgLFYZruw5v/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-07T16:25:51.903575] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/Xfu1MxuHR7LgLFYZruw5v/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-07T16:25:51.903770] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-07T16:25:51.904060] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-07T16:25:51.904646] INFO: Session initialized - Original request: ❌
+[2025-11-07T16:25:51.904672] INFO: Session initialized - Original request: ❌
+[2025-11-07T16:25:51.904852] INFO: Injected 7171 characters of context
+[2025-11-07T16:25:51.905087] INFO: Injected 7171 characters of context
+[2025-11-07T16:25:51.905178] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-07T16:25:51.905439] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-07T16:25:51.905578] INFO: session_start hook completed successfully
+[2025-11-07T16:25:51.905737] INFO: session_start hook completed successfully
+[2025-11-07T16:39:59.296609] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-07T16:39:59.296607] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-07T16:39:59.298289] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-07T16:39:59.298642] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-07T16:39:59.299061] INFO: Event type: SessionStart
+[2025-11-07T16:39:59.299460] INFO: Event type: SessionStart
+[2025-11-07T16:39:59.299755] INFO: Prompt length: 0
+[2025-11-07T16:39:59.300376] INFO: Prompt length: 0
+[2025-11-07T16:39:59.302746] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-07T16:39:59.303185] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-07T16:39:59.306173] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/Xfu1MxuHR7LgLFYZruw5v/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-07T16:39:59.306289] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/Xfu1MxuHR7LgLFYZruw5v/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-07T16:39:59.307298] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-07T16:39:59.307727] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-07T16:39:59.308789] INFO: Session initialized - Original request: ❌
+[2025-11-07T16:39:59.309606] INFO: Session initialized - Original request: ❌
+[2025-11-07T16:39:59.310182] INFO: Injected 7171 characters of context
+[2025-11-07T16:39:59.310228] INFO: Injected 7171 characters of context
+[2025-11-07T16:39:59.310512] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-07T16:39:59.310839] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-07T16:39:59.311024] INFO: session_start hook completed successfully
+[2025-11-07T16:39:59.311226] INFO: session_start hook completed successfully
+[2025-11-07T19:04:18.696811] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-07T19:04:18.696795] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-07T19:04:18.697582] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-07T19:04:18.697674] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-07T19:04:18.697902] INFO: Event type: SessionStart
+[2025-11-07T19:04:18.698123] INFO: Event type: SessionStart
+[2025-11-07T19:04:18.698281] INFO: Prompt length: 0
+[2025-11-07T19:04:18.698582] INFO: Prompt length: 0
+[2025-11-07T19:04:18.700021] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-07T19:04:18.700096] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-07T19:04:18.701802] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/Xfu1MxuHR7LgLFYZruw5v/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-07T19:04:18.701842] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/Xfu1MxuHR7LgLFYZruw5v/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-07T19:04:18.702059] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-07T19:04:18.702245] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-07T19:04:18.702835] INFO: Session initialized - Original request: ❌
+[2025-11-07T19:04:18.702904] INFO: Session initialized - Original request: ❌
+[2025-11-07T19:04:18.703092] INFO: Injected 7171 characters of context
+[2025-11-07T19:04:18.703412] INFO: Injected 7171 characters of context
+[2025-11-07T19:04:18.704034] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-07T19:04:18.704574] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-07T19:04:18.704820] INFO: session_start hook completed successfully
+[2025-11-07T19:04:18.705137] INFO: session_start hook completed successfully
+[2025-11-07T19:41:22.758276] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-07T19:41:22.758918] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-07T19:41:22.759164] INFO: Event type: SessionStart
+[2025-11-07T19:41:22.759622] INFO: Prompt length: 0
+[2025-11-07T19:41:22.760580] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-07T19:41:22.761944] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/F0vK3mDuf7bB68XdQJw1H/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-07T19:41:22.762727] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-07T19:41:22.763231] INFO: Session initialized - Original request: ❌
+[2025-11-07T19:41:22.763659] INFO: Injected 7171 characters of context
+[2025-11-07T19:41:22.764845] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-07T19:41:22.765385] INFO: session_start hook completed successfully
+[2025-11-07T19:41:23.009018] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-07T19:41:23.009469] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-07T19:41:23.012876] INFO: Event type: SessionStart
+[2025-11-07T19:41:23.013273] INFO: Prompt length: 0
+[2025-11-07T19:41:23.014313] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-07T19:41:23.016023] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/F0vK3mDuf7bB68XdQJw1H/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-07T19:41:23.016362] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-07T19:41:23.016780] INFO: Session initialized - Original request: ❌
+[2025-11-07T19:41:23.017149] INFO: Injected 7171 characters of context
+[2025-11-07T19:41:23.017408] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-07T19:41:23.017677] INFO: session_start hook completed successfully
+[2025-11-08T09:50:01.419934] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-08T09:50:01.419937] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-08T09:50:01.424644] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-08T09:50:01.424589] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-08T09:50:01.426942] INFO: Event type: SessionStart
+[2025-11-08T09:50:01.426966] INFO: Event type: SessionStart
+[2025-11-08T09:50:01.428999] INFO: Prompt length: 0
+[2025-11-08T09:50:01.429020] INFO: Prompt length: 0
+[2025-11-08T09:50:01.433458] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-08T09:50:01.433464] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-08T09:50:01.442687] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/F0vK3mDuf7bB68XdQJw1H/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-08T09:50:01.442690] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/F0vK3mDuf7bB68XdQJw1H/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-08T09:50:01.446452] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-08T09:50:01.446519] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-08T09:50:01.450589] INFO: Session initialized - Original request: ❌
+[2025-11-08T09:50:01.450584] INFO: Session initialized - Original request: ❌
+[2025-11-08T09:50:01.454510] INFO: Injected 7171 characters of context
+[2025-11-08T09:50:01.454559] INFO: Injected 7171 characters of context
+[2025-11-08T09:50:01.457526] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-08T09:50:01.457562] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-08T09:50:01.460262] INFO: session_start hook completed successfully
+[2025-11-08T09:50:01.460314] INFO: session_start hook completed successfully
+[2025-11-08T18:01:43.354182] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-08T18:01:43.354192] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-08T18:01:43.354930] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-08T18:01:43.354988] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-08T18:01:43.355449] INFO: Event type: SessionStart
+[2025-11-08T18:01:43.355703] INFO: Event type: SessionStart
+[2025-11-08T18:01:43.355814] INFO: Prompt length: 0
+[2025-11-08T18:01:43.356082] INFO: Prompt length: 0
+[2025-11-08T18:01:43.357126] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-08T18:01:43.357483] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-08T18:01:43.359558] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/F0vK3mDuf7bB68XdQJw1H/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-08T18:01:43.361118] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/F0vK3mDuf7bB68XdQJw1H/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-08T18:01:43.361765] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-08T18:01:43.362078] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-08T18:01:43.362776] INFO: Session initialized - Original request: ❌
+[2025-11-08T18:01:43.363049] INFO: Session initialized - Original request: ❌
+[2025-11-08T18:01:43.363123] INFO: Injected 7171 characters of context
+[2025-11-08T18:01:43.363338] INFO: Injected 7171 characters of context
+[2025-11-08T18:01:43.363615] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-08T18:01:43.363779] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-08T18:01:43.364480] INFO: session_start hook completed successfully
+[2025-11-08T18:01:43.364652] INFO: session_start hook completed successfully
+[2025-11-09T10:23:43.215969] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-09T10:23:43.215970] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-09T10:23:43.219861] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-09T10:23:43.219786] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-09T10:23:43.222692] INFO: Event type: SessionStart
+[2025-11-09T10:23:43.222611] INFO: Event type: SessionStart
+[2025-11-09T10:23:43.225192] INFO: Prompt length: 0
+[2025-11-09T10:23:43.225171] INFO: Prompt length: 0
+[2025-11-09T10:23:43.231520] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-09T10:23:43.231481] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-09T10:23:43.239560] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/BkiJ5s1R2QhFRiTCrOqjr/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-09T10:23:43.239565] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/BkiJ5s1R2QhFRiTCrOqjr/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-09T10:23:43.242228] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-09T10:23:43.242197] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-09T10:23:43.244993] INFO: Session initialized - Original request: ❌
+[2025-11-09T10:23:43.244980] INFO: Session initialized - Original request: ❌
+[2025-11-09T10:23:43.247933] INFO: Injected 7649 characters of context
+[2025-11-09T10:23:43.247870] INFO: Injected 7649 characters of context
+[2025-11-09T10:23:43.251616] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-09T10:23:43.251710] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-09T10:23:43.254320] INFO: session_start hook completed successfully
+[2025-11-09T10:23:43.254298] INFO: session_start hook completed successfully
+[2025-11-09T10:26:12.827314] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-09T10:26:12.827043] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-09T10:26:12.853468] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-09T10:26:12.853609] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-09T10:26:12.863876] INFO: Event type: SessionStart
+[2025-11-09T10:26:12.863777] INFO: Event type: SessionStart
+[2025-11-09T10:26:12.867385] INFO: Prompt length: 0
+[2025-11-09T10:26:12.867279] INFO: Prompt length: 0
+[2025-11-09T10:26:12.875527] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-09T10:26:12.875559] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-09T10:26:12.883404] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/BkiJ5s1R2QhFRiTCrOqjr/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-09T10:26:12.883399] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/BkiJ5s1R2QhFRiTCrOqjr/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-09T10:26:12.889449] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-09T10:26:12.889529] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-09T10:26:12.894587] INFO: Session initialized - Original request: ❌
+[2025-11-09T10:26:12.894617] INFO: Session initialized - Original request: ❌
+[2025-11-09T10:26:12.901478] INFO: Injected 7649 characters of context
+[2025-11-09T10:26:12.901374] INFO: Injected 7649 characters of context
+[2025-11-09T10:26:12.905522] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-09T10:26:12.905524] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-09T10:26:12.909576] INFO: session_start hook completed successfully
+[2025-11-09T10:26:12.909601] INFO: session_start hook completed successfully
+[2025-11-09T12:18:57.778148] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-09T12:18:57.778144] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-09T12:18:57.781223] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-09T12:18:57.781239] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-09T12:18:57.783470] INFO: Event type: SessionStart
+[2025-11-09T12:18:57.783523] INFO: Event type: SessionStart
+[2025-11-09T12:18:57.785801] INFO: Prompt length: 0
+[2025-11-09T12:18:57.785775] INFO: Prompt length: 0
+[2025-11-09T12:18:57.793818] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-09T12:18:57.793832] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-09T12:18:57.802036] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/VycVYxRm97Y11FybeIZUQ/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-09T12:18:57.802031] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/VycVYxRm97Y11FybeIZUQ/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-09T12:18:57.804946] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-09T12:18:57.804947] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-09T12:18:57.808210] INFO: Session initialized - Original request: ❌
+[2025-11-09T12:18:57.808210] INFO: Session initialized - Original request: ❌
+[2025-11-09T12:18:57.811130] INFO: Injected 7649 characters of context
+[2025-11-09T12:18:57.811158] INFO: Injected 7649 characters of context
+[2025-11-09T12:18:57.814002] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-09T12:18:57.813970] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-09T12:18:57.817213] INFO: session_start hook completed successfully
+[2025-11-09T12:18:57.817223] INFO: session_start hook completed successfully
+[2025-11-09T12:19:02.758282] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-09T12:19:02.758379] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-09T12:19:02.764342] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-09T12:19:02.764378] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-09T12:19:02.766867] INFO: Event type: SessionStart
+[2025-11-09T12:19:02.766893] INFO: Event type: SessionStart
+[2025-11-09T12:19:02.769131] INFO: Prompt length: 0
+[2025-11-09T12:19:02.769149] INFO: Prompt length: 0
+[2025-11-09T12:19:02.774356] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-09T12:19:02.774381] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-09T12:19:02.784564] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/VycVYxRm97Y11FybeIZUQ/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-09T12:19:02.784551] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/VycVYxRm97Y11FybeIZUQ/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-09T12:19:02.787439] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-09T12:19:02.787439] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-09T12:19:02.790387] INFO: Session initialized - Original request: ❌
+[2025-11-09T12:19:02.790397] INFO: Session initialized - Original request: ❌
+[2025-11-09T12:19:02.793820] INFO: Injected 7649 characters of context
+[2025-11-09T12:19:02.793776] INFO: Injected 7649 characters of context
+[2025-11-09T12:19:02.796647] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-09T12:19:02.796607] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-09T12:19:02.799160] INFO: session_start hook completed successfully
+[2025-11-09T12:19:02.799197] INFO: session_start hook completed successfully
+[2025-11-10T09:21:42.072820] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-10T09:21:42.072904] INFO: session_start hook starting (Python 3.13.7)
+[2025-11-10T09:21:42.077693] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-10T09:21:42.077693] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'hook_event_name', 'source']
+[2025-11-10T09:21:42.080156] INFO: Event type: SessionStart
+[2025-11-10T09:21:42.080229] INFO: Event type: SessionStart
+[2025-11-10T09:21:42.082928] INFO: Prompt length: 0
+[2025-11-10T09:21:42.082890] INFO: Prompt length: 0
+[2025-11-10T09:21:42.088393] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-10T09:21:42.088346] INFO: Neo4j not enabled (use --use-graph-mem to enable)
+[2025-11-10T09:21:42.099248] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/VycVYxRm97Y11FybeIZUQ/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-10T09:21:42.099266] INFO: Successfully read preferences from: /Users/ryan/.cache/uv/archive-v0/VycVYxRm97Y11FybeIZUQ/lib/python3.13/site-packages/amplihack/.claude/context/USER_PREFERENCES.md
+[2025-11-10T09:21:42.102580] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-10T09:21:42.102534] INFO: Injected full USER_PREFERENCES.md content into session
+[2025-11-10T09:21:42.106046] INFO: Session initialized - Original request: ❌
+[2025-11-10T09:21:42.106020] INFO: Session initialized - Original request: ❌
+[2025-11-10T09:21:42.108897] INFO: Injected 7649 characters of context
+[2025-11-10T09:21:42.108933] INFO: Injected 7649 characters of context
+[2025-11-10T09:21:42.114513] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-10T09:21:42.114469] INFO: Returning output with keys: ['hookSpecificOutput']
+[2025-11-10T09:21:42.117132] INFO: session_start hook completed successfully
+[2025-11-10T09:21:42.117174] INFO: session_start hook completed successfully

@@ -1,0 +1,98 @@
+[2025-11-07T12:43:50.229291] INFO: stop hook starting (Python 3.13.7)
+[2025-11-07T12:43:50.229778] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'permission_mode', 'hook_event_name', 'stop_hook_active']
+[2025-11-07T12:43:50.230235] INFO: Event type: Stop
+[2025-11-07T12:43:50.230610] INFO: === STOP HOOK STARTED ===
+[2025-11-07T12:43:50.231265] INFO: Input keys: ['session_id', 'transcript_path', 'cwd', 'permission_mode', 'hook_event_name', 'stop_hook_active']
+[2025-11-07T12:43:50.326785] INFO: stop hook starting (Python 3.13.7)
+[2025-11-07T12:43:50.327034] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'permission_mode', 'hook_event_name', 'stop_hook_active']
+[2025-11-07T12:43:50.327206] INFO: Event type: Stop
+[2025-11-07T12:43:50.327403] INFO: === STOP HOOK STARTED ===
+[2025-11-07T12:43:50.327589] INFO: Input keys: ['session_id', 'transcript_path', 'cwd', 'permission_mode', 'hook_event_name', 'stop_hook_active']
+[2025-11-07T12:43:51.743073] INFO: Running Claude-powered reflection for session: 20251107_124351
+[2025-11-07T12:43:51.743674] INFO: Using transcript from Claude Code: /Users/ryan/.claude/projects/-Users-ryan-src-amplihack/6bbdfcda-63a2-4296-b96e-282e5e0b3e09.jsonl
+[2025-11-07T12:43:51.751213] INFO: Loaded 127 conversation turns from transcript
+[2025-11-07T12:43:51.753310] WARNING: Session directory not found: /Users/ryan/src/amplihack/.claude/runtime/logs/20251107_124351
+[2025-11-07T12:43:51.754525] INFO: No reflection result - allowing stop
+[2025-11-07T12:43:51.755694] INFO: === STOP HOOK ENDED (decision: approve - no reflection) ===
+[2025-11-07T12:43:51.756557] INFO: Returning output with keys: ['decision']
+[2025-11-07T12:43:51.758235] INFO: stop hook completed successfully
+[2025-11-07T12:43:51.759810] INFO: Running Claude-powered reflection for session: 20251107_124351
+[2025-11-07T12:43:51.760258] INFO: Using transcript from Claude Code: /Users/ryan/.claude/projects/-Users-ryan-src-amplihack/6bbdfcda-63a2-4296-b96e-282e5e0b3e09.jsonl
+[2025-11-07T12:43:51.763332] INFO: Loaded 127 conversation turns from transcript
+[2025-11-07T12:43:51.763901] WARNING: Session directory not found: /Users/ryan/src/amplihack/.claude/runtime/logs/20251107_124351
+[2025-11-07T12:43:51.764518] INFO: No reflection result - allowing stop
+[2025-11-07T12:43:51.765122] INFO: === STOP HOOK ENDED (decision: approve - no reflection) ===
+[2025-11-07T12:43:51.765665] INFO: Returning output with keys: ['decision']
+[2025-11-07T12:43:51.766289] INFO: stop hook completed successfully
+[2025-11-09T21:00:59.514015] INFO: stop hook starting (Python 3.13.7)
+[2025-11-09T21:00:59.514008] INFO: stop hook starting (Python 3.13.7)
+[2025-11-09T21:00:59.523064] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'permission_mode', 'hook_event_name', 'stop_hook_active']
+[2025-11-09T21:00:59.523023] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'permission_mode', 'hook_event_name', 'stop_hook_active']
+[2025-11-09T21:00:59.534531] INFO: Event type: Stop
+[2025-11-09T21:00:59.534445] INFO: Event type: Stop
+[2025-11-09T21:00:59.537457] INFO: === STOP HOOK STARTED ===
+[2025-11-09T21:00:59.537583] INFO: === STOP HOOK STARTED ===
+[2025-11-09T21:00:59.540369] INFO: Input keys: ['session_id', 'transcript_path', 'cwd', 'permission_mode', 'hook_event_name', 'stop_hook_active']
+[2025-11-09T21:00:59.540446] INFO: Input keys: ['session_id', 'transcript_path', 'cwd', 'permission_mode', 'hook_event_name', 'stop_hook_active']
+[2025-11-09T21:01:00.160581] INFO: Neo4j cleanup handler started (auto_mode=False)
+[2025-11-09T21:01:00.160569] INFO: Neo4j cleanup handler started (auto_mode=False)
+[2025-11-09T21:01:00.744436] INFO: Neo4j cleanup handler completed
+[2025-11-09T21:01:00.744419] INFO: Neo4j cleanup handler completed
+[2025-11-09T21:01:00.768123] DEBUG: Reflection is disabled - skipping
+[2025-11-09T21:01:00.768139] DEBUG: Reflection is disabled - skipping
+[2025-11-09T21:01:00.781618] INFO: Reflection not enabled or skipped - allowing stop
+[2025-11-09T21:01:00.781699] INFO: Reflection not enabled or skipped - allowing stop
+[2025-11-09T21:01:00.801803] INFO: === STOP HOOK ENDED (decision: approve - no reflection) ===
+[2025-11-09T21:01:00.801711] INFO: === STOP HOOK ENDED (decision: approve - no reflection) ===
+[2025-11-09T21:01:00.806523] INFO: Returning output with keys: ['decision']
+[2025-11-09T21:01:00.806483] INFO: Returning output with keys: ['decision']
+[2025-11-09T21:01:00.809088] INFO: stop hook completed successfully
+[2025-11-09T21:01:00.809128] INFO: stop hook completed successfully
+[2025-11-10T12:33:15.973096] INFO: stop hook starting (Python 3.13.7)
+[2025-11-10T12:33:15.973154] INFO: stop hook starting (Python 3.13.7)
+[2025-11-10T12:33:15.996206] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'permission_mode', 'hook_event_name', 'stop_hook_active']
+[2025-11-10T12:33:15.996068] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'permission_mode', 'hook_event_name', 'stop_hook_active']
+[2025-11-10T12:33:15.998867] INFO: Event type: Stop
+[2025-11-10T12:33:15.998907] INFO: Event type: Stop
+[2025-11-10T12:33:16.001291] INFO: === STOP HOOK STARTED ===
+[2025-11-10T12:33:16.001344] INFO: === STOP HOOK STARTED ===
+[2025-11-10T12:33:16.004666] INFO: Input keys: ['session_id', 'transcript_path', 'cwd', 'permission_mode', 'hook_event_name', 'stop_hook_active']
+[2025-11-10T12:33:16.004715] INFO: Input keys: ['session_id', 'transcript_path', 'cwd', 'permission_mode', 'hook_event_name', 'stop_hook_active']
+[2025-11-10T12:33:16.530931] INFO: Neo4j cleanup handler started (auto_mode=False)
+[2025-11-10T12:33:16.530931] INFO: Neo4j cleanup handler started (auto_mode=False)
+[2025-11-10T12:33:16.949633] INFO: Neo4j cleanup handler completed
+[2025-11-10T12:33:16.949638] INFO: Neo4j cleanup handler completed
+[2025-11-10T12:33:16.953139] DEBUG: Reflection is disabled - skipping
+[2025-11-10T12:33:16.953137] DEBUG: Reflection is disabled - skipping
+[2025-11-10T12:33:16.955519] INFO: Reflection not enabled or skipped - allowing stop
+[2025-11-10T12:33:16.955481] INFO: Reflection not enabled or skipped - allowing stop
+[2025-11-10T12:33:16.957994] INFO: === STOP HOOK ENDED (decision: approve - no reflection) ===
+[2025-11-10T12:33:16.957922] INFO: === STOP HOOK ENDED (decision: approve - no reflection) ===
+[2025-11-10T12:33:16.960569] INFO: Returning output with keys: ['decision']
+[2025-11-10T12:33:16.960536] INFO: Returning output with keys: ['decision']
+[2025-11-10T12:33:16.963360] INFO: stop hook completed successfully
+[2025-11-10T12:33:16.963407] INFO: stop hook completed successfully
+[2025-11-10T12:52:39.294445] INFO: stop hook starting (Python 3.13.7)
+[2025-11-10T12:52:39.294443] INFO: stop hook starting (Python 3.13.7)
+[2025-11-10T12:52:39.328957] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'permission_mode', 'hook_event_name', 'stop_hook_active']
+[2025-11-10T12:52:39.328946] INFO: Received input with keys: ['session_id', 'transcript_path', 'cwd', 'permission_mode', 'hook_event_name', 'stop_hook_active']
+[2025-11-10T12:52:39.342702] INFO: Event type: Stop
+[2025-11-10T12:52:39.342730] INFO: Event type: Stop
+[2025-11-10T12:52:39.351138] INFO: === STOP HOOK STARTED ===
+[2025-11-10T12:52:39.351165] INFO: === STOP HOOK STARTED ===
+[2025-11-10T12:52:39.353898] INFO: Input keys: ['session_id', 'transcript_path', 'cwd', 'permission_mode', 'hook_event_name', 'stop_hook_active']
+[2025-11-10T12:52:39.353930] INFO: Input keys: ['session_id', 'transcript_path', 'cwd', 'permission_mode', 'hook_event_name', 'stop_hook_active']
+[2025-11-10T12:52:39.732726] INFO: Neo4j cleanup handler started (auto_mode=False)
+[2025-11-10T12:52:39.732739] INFO: Neo4j cleanup handler started (auto_mode=False)
+[2025-11-10T12:52:40.173120] INFO: Neo4j cleanup handler completed
+[2025-11-10T12:52:40.173134] INFO: Neo4j cleanup handler completed
+[2025-11-10T12:52:40.187833] DEBUG: Reflection is disabled - skipping
+[2025-11-10T12:52:40.187859] DEBUG: Reflection is disabled - skipping
+[2025-11-10T12:52:40.195714] INFO: Reflection not enabled or skipped - allowing stop
+[2025-11-10T12:52:40.195754] INFO: Reflection not enabled or skipped - allowing stop
+[2025-11-10T12:52:40.204618] INFO: === STOP HOOK ENDED (decision: approve - no reflection) ===
+[2025-11-10T12:52:40.204710] INFO: === STOP HOOK ENDED (decision: approve - no reflection) ===
+[2025-11-10T12:52:40.213363] INFO: Returning output with keys: ['decision']
+[2025-11-10T12:52:40.213401] INFO: Returning output with keys: ['decision']
+[2025-11-10T12:52:40.220047] INFO: stop hook completed successfully
+[2025-11-10T12:52:40.220132] INFO: stop hook completed successfully
