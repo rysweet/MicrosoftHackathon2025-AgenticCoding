@@ -1,4 +1,4 @@
-# Logs - NEVER commit!
+# Runtime logs and traces - NEVER commit (can be 100MB+)
 .claude-trace/
 .claude/runtime/logs/
 .claude/runtime/metrics/
@@ -7,12 +7,18 @@
 
 # Python
 __pycache__/
-*.pyc
+*.py[cod]
+.pytest_cache/
 
 # Environment
 .env
 .venv/
+venv/
 
 # IDE
 .vscode/
 .idea/
+*.swp
+
+# OS
+.DS_Store
