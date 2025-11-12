@@ -1,0 +1,18 @@
+# Logs - NEVER commit!
+.claude-trace/
+.claude/runtime/logs/
+.claude/runtime/metrics/
+*.log
+*.jsonl
+
+# Python
+__pycache__/
+*.pyc
+
+# Environment
+.env
+.venv/
+
+# IDE
+.vscode/
+.idea/
