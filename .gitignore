@@ -1,0 +1,24 @@
+# Logs - NEVER commit (can be huge!)
+.claude-trace/
+.claude/runtime/logs/
+.claude/runtime/metrics/
+*.log
+*.jsonl
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Environment
+.env
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
