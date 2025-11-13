@@ -51,6 +51,7 @@ class Neo4jContainerManager:
         Behavior:
             - If already running: Do nothing, return True
             - If stopped: Start existing container
+            - If unhealthy: Restart existing container
             - If not found: Create and start new container
         """
         logger.info("Starting Neo4j container: %s", self.config.container_name)
@@ -66,6 +67,10 @@ class Neo4jContainerManager:
 
         if status == ContainerStatus.STOPPED:
             logger.info("Restarting stopped container")
+            return self._restart_container(wait_for_ready)
+
+        if status == ContainerStatus.UNHEALTHY:
+            logger.info("Container exists but unhealthy, attempting restart")
             return self._restart_container(wait_for_ready)
 
         # Container doesn't exist - create it
