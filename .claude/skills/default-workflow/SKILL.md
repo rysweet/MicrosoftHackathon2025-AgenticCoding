@@ -1,9 +1,22 @@
+---
+name: default-workflow
+version: 1.0.0
+description: 15-step development workflow for features, bugs, refactoring. Auto-activates for multi-file implementations.
+auto_activates:
+  - "implement feature spanning multiple files"
+  - "complex integration across components"
+  - "refactor affecting 5+ files"
+explicit_triggers:
+  - /ultrathink
+  - /amplihack:default-workflow
+confirmation_required: true
+skip_confirmation_if_explicit: true
+token_budget: 4500
+---
+
 # Default Coding Workflow
 
-This file defines the default workflow for all non-trivial code changes.
-
-> **DEPRECATION WARNING**: Markdown workflows deprecated. See `docs/WORKFLOW_TO_SKILLS_MIGRATION.md`
-
+This skill defines the default workflow for all non-trivial code changes.
 You can customize this workflow by editing this file.
 
 ## How This Workflow Works
@@ -96,7 +109,9 @@ This step-based structure helps users understand:
 - How many steps remain (e.g., Step 5 of 15 means 10 steps left)
 - What comes next in the workflow
 
-## The 15-Step Workflow
+## The 15-Step Workflow (Part 1: Implementation)
+
+This file contains **Steps 1-8** (Requirements through Testing). For the review and merge phases, see [reference/REVIEW_PHASES.md](reference/REVIEW_PHASES.md).
 
 ### Step 1: Rewrite and Clarify Requirements
 
@@ -205,87 +220,19 @@ After investigation completes, continue with these tasks:
 - Faster feedback loop than waiting for CI
 - Prevents embarrassing failures after merge
 
-### Step 9: Commit and Push
+---
 
-- [ ] Stage all changes
-- [ ] Write detailed commit message
-- [ ] Reference issue number in commit
-- [ ] Describe what changed and why
-- [ ] Push to remote branch
-- [ ] Verify push succeeded
+## Next Steps: Review and Merge Phases
 
-### Step 10: Open Pull Request
+After completing Steps 1-8, continue with **Steps 9-15** in [reference/REVIEW_PHASES.md](reference/REVIEW_PHASES.md):
 
-- [ ] Create PR using `gh pr create` (pipe through `| cat` for reliable output)
-- [ ] Link to the GitHub issue
-- [ ] Write comprehensive description
-- [ ] Include test plan
-- [ ] Add screenshots if UI changes
-- [ ] Request appropriate reviewers
-
-**Important**: When using `gh` commands, always pipe through `cat` to ensure output is displayed:
-
-```bash
-gh pr create --title "..." --body "..." 2>&1 | cat
-```
-
-This ensures you see success messages, error details, and PR URLs.
-
-### Step 11: Review the PR
-
-- [ ] **Always use** reviewer agent for comprehensive code review
-- [ ] **Use** security agent for security review
-- [ ] Check code quality and standards
-- [ ] Verify philosophy compliance
-- [ ] Ensure adequate test coverage
-- [ ] Post review comments on PR
-- [ ] Identify potential improvements
-- [ ] Ensure there are no TODOs, stubs, or swallowed exceptions, no unimplemented functions - follow the zero-BS principle.
-- [ ] Post the review as a comment on the PR
-
-### Step 12: Implement Review Feedback
-
-- [ ] Review all feedback comments, think very carefully about each one and decide how to address it (or if you should disagree, explain why in a comment)
-- [ ] **Always use** builder agent to implement changes
-- [ ] **Use** relevant specialized agents for specific feedback
-- [ ] Address each review comment
-- [ ] Push updates to PR
-- [ ] Respond to review comments by posting replies
-- [ ] Ensure all tests still pass
-- [ ] Ensure PR is still mergeable
-- [ ] Request re-review if needed
-
-### Step 13: Philosophy Compliance Check
-
-- [ ] **Always use** reviewer agent for final philosophy check
-- [ ] **Use** patterns agent to verify pattern compliance
-- [ ] Verify ruthless simplicity achieved
-- [ ] Confirm bricks & studs pattern followed
-- [ ] Ensure zero-BS implementation (no stubs)
-- [ ] Verify all tests passing
-- [ ] Check documentation completeness
-
-### Step 14: Ensure PR is Mergeable
-
-- [ ] Check CI status (all checks passing)
-- [ ] **Always use** ci-diagnostic-workflow agent if CI fails
-- [ ] **💡 TIP**: When investigating CI failures, use [parallel agent investigation](.claude/CLAUDE.md#parallel-agent-investigation-strategy) to explore logs and code simultaneously
-- [ ] Resolve any merge conflicts
-- [ ] Verify all review comments addressed
-- [ ] Confirm PR is approved
-- [ ] Notify that PR is ready to merge
-
-### Step 15: Final Cleanup and Verification
-
-- [ ] **CRITICAL: Provide cleanup agent with original user requirements AGAIN**
-- [ ] **Always use** cleanup agent for final quality pass
-- [ ] Review all changes for philosophy compliance WITHIN user constraints
-- [ ] Remove any temporary artifacts or test files (unless user wanted them)
-- [ ] Eliminate unnecessary complexity (that doesn't violate user requirements)
-- [ ] Verify module boundaries remain clean
-- [ ] Ensure zero dead code or stub implementations (unless explicitly requested)
-- [ ] **FINAL CHECK: All explicit user requirements preserved**
-- [ ] Confirm PR remains mergeable after cleanup
+- Step 9: Commit and Push
+- Step 10: Open Pull Request
+- Step 11: Review the PR
+- Step 12: Implement Review Feedback
+- Step 13: Philosophy Compliance Check
+- Step 14: Ensure PR is Mergeable
+- Step 15: Final Cleanup and Verification
 
 ## Customization
 
