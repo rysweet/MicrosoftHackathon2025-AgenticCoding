@@ -1978,6 +1978,1131 @@ tests/
 
 From PR #457: Prerequisites module can be used by any part of the system without worrying about internal implementation details. Clear **all** makes public API obvious.
 
+## Pattern: API Validation Before Implementation
+
+### Challenge
+
+Amplihack agents frequently call invalid APIs during implementation, causing immediate tool failures and wasted development time. Common issues include:
+
+- Invalid model names (`claude-3-5-sonnet-20241022` with wrong separators instead of `claude-3-sonnet-20241022`)
+- Non-existent imports (`from eval_recipes.claim_verification import verify_claims` where module doesn't exist)
+- Wrong parameter types (passing string `"1024"` instead of integer `1024` for `max_tokens`)
+- Missing required parameters (forgetting required `messages` array in API calls)
+- Unhandled error conditions (no retry logic for rate limits)
+
+These failures cause:
+
+- 20-30 minute debug cycles after implementation already started
+- Lost test execution time
+- Frustration for users seeing tool crash with cryptic errors
+- Preventable failures that could be caught in design phase
+
+**Root Cause**: No explicit guidance on validating external APIs before writing code. Agents make assumptions about API structure without verification.
+
+**Cost Comparison**:
+- Validation in design phase: 5-10 minutes to verify, catches error immediately
+- Debug after implementation: 20-30 minutes to identify, debug, rewrite, test again
+- Prevention value: 3-6x time savings when done upfront
+
+### Solution
+
+Implement systematic API validation **before implementation begins**, covering four critical categories:
+
+1. **Model/LLM API Validation** - Verify model names, parameters, endpoints
+2. **Import/Library Validation** - Verify imports exist and have correct signatures
+3. **Service/Configuration Validation** - Verify endpoints, credentials, schemas
+4. **Error Handling Validation** - Verify all failure paths are handled
+
+**Validation Approach**:
+
+The pattern requires builders to complete a validation checklist for each external API call **before writing any implementation code**. Validation uses evidence from official documentation, working examples, and test verification rather than assumptions.
+
+**Key Principle**: Catch errors in design phase (2 min fix), not implementation phase (20 min debug cycle).
+
+---
+
+## Category 1: Model/LLM API Validation
+
+### What Needs Validation
+
+- Model name format and existence
+- Parameter names, types, and requirements
+- API endpoint version and path
+- Authentication/credential format
+- Rate limiting assumptions
+
+### Validation Checklist
+
+**Step 1: Verify Model Name Format**
+```
+□ Check official Anthropic documentation for valid model names
+□ List all valid formats (e.g., claude-3-{family}-{version})
+□ Verify model name spelling character-by-character
+□ Confirm model is publicly available (not alpha-only)
+□ Document model version date for tracking
+□ Check model hasn't been sunset/deprecated
+
+Examples of VALID models:
+  ✓ claude-3-opus-20240229
+  ✓ claude-3-sonnet-20241022
+  ✓ claude-3-haiku-20240307
+
+Examples of INVALID models:
+  ✗ claude-3-5-sonnet-20241022 (extra "-5", wrong separators)
+  ✗ claude-4-ultra (doesn't exist)
+  ✗ gpt-4 (wrong provider)
+```
+
+**Step 2: Validate Model Parameters**
+```
+□ Get complete parameter list from API documentation
+□ For each parameter being used:
+  □ Verify parameter name matches exactly
+  □ Check parameter type (int, string, list, dict, etc.)
+  □ Verify parameter is required or optional
+  □ Check if parameter has default value
+  □ Verify parameter constraints (ranges, enum values, etc.)
+
+Example: max_tokens parameter
+  - Required: No (optional)
+  - Type: integer
+  - Constraint: Must be > 0
+  - Default: Determined by model
+  - INVALID: max_tokens="1024" (string, should be int)
+  - VALID: max_tokens=1024 (integer)
+```
+
+**Step 3: Verify API Endpoint**
+```
+□ Confirm endpoint path from documentation
+□ Check API version (v1, v2, etc.)
+□ Verify authentication method
+□ Confirm base URL is correct
+□ Check for regional endpoints if applicable
+
+Standard Anthropic endpoints:
+  - Base URL: https://api.anthropic.com
+  - Messages: POST /v1/messages
+  - Auth: Bearer {API_KEY}
+```
+
+**Step 4: Test Accessibility (When Possible)**
+```
+□ Verify API credentials are in correct format
+□ Attempt minimal test request if safe
+□ Check response structure matches expectations
+□ Verify error response format
+□ Document test results
+```
+
+### Code Example: Model Validation
+
+```python
+# BEFORE: Assumptions without verification
+async def call_model(prompt: str) -> str:
+    """Call Claude model - no validation."""
+    client = Anthropic()
+    message = await client.messages.create(
+        model="claude-3-5-sonnet-20241022",  # ❌ NOT VERIFIED
+        max_tokens=1024,
+        messages=[{"role": "user", "content": prompt}]
+    )
+    return message.content[0].text
+
+# AFTER: Validated approach
+from anthropic import Anthropic
+
+# Step 1: Define valid models from documentation
+VALID_MODELS = {
+    "claude-3-opus-20240229": {
+        "max_tokens": 200000,
+        "context_window": 200000
+    },
+    "claude-3-sonnet-20241022": {
+        "max_tokens": 200000,
+        "context_window": 200000
+    },
+    "claude-3-haiku-20240307": {
+        "max_tokens": 200000,
+        "context_window": 200000
+    }
+}
+
+async def call_model_validated(prompt: str, model: str) -> str:
+    """Call Claude model with validation."""
+
+    # Step 2: Validate model name
+    if model not in VALID_MODELS:
+        raise ValueError(
+            f"Invalid model: {model}\n"
+            f"Valid models: {list(VALID_MODELS.keys())}"
+        )
+
+    # Step 3: Validate parameters
+    max_tokens = 1024
+    model_config = VALID_MODELS[model]
+
+    if not isinstance(max_tokens, int):
+        raise TypeError(f"max_tokens must be integer, got {type(max_tokens)}")
+
+    if max_tokens > model_config["max_tokens"]:
+        raise ValueError(
+            f"max_tokens {max_tokens} exceeds limit "
+            f"{model_config['max_tokens']} for {model}"
+        )
+
+    if max_tokens <= 0:
+        raise ValueError("max_tokens must be positive integer")
+
+    # Step 4: Make validated API call
+    client = Anthropic()
+    try:
+        message = await client.messages.create(
+            model=model,
+            max_tokens=max_tokens,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return message.content[0].text
+
+    except Exception as e:
+        # Error handling (see Error Handling category)
+        raise RuntimeError(f"Model call failed: {e}")
+```
+
+### Real Failure Examples
+
+**Failure 1: Wrong Model Name Separators**
+```python
+# Agent code (not validated)
+model = "claude-3-5-sonnet-20241022"  # ❌ Has "-5" separator
+
+# Result
+Error: 404 Client Error: Not Found
+Message: Model 'claude-3-5-sonnet-20241022' not found
+
+# Validation would catch
+Format check: claude-3-{family}-{version}
+Actual: claude-3-5-sonnet-20241022
+Issue: Extra "-5" in middle
+Fix: Use claude-3-sonnet-20241022 instead
+```
+
+**Failure 2: Non-existent Model**
+```python
+# Agent code
+model = "claude-4-ultra"  # ❌ Doesn't exist yet
+
+# Result
+Error: 404 Client Error: Not Found
+
+# Validation would catch
+Check against VALID_MODELS list
+Result: Model not in list
+Action: Skip this implementation or request clarification
+```
+
+**Failure 3: Wrong Parameter Type**
+```python
+# Agent code
+response = client.messages.create(
+    model="claude-3-sonnet-20241022",
+    max_tokens="1024",  # ❌ String instead of int
+    messages=[...]
+)
+
+# Result
+Error: ValueError: max_tokens must be integer
+
+# Validation would catch
+Parameter type check: max_tokens should be int
+Actual: "1024" (str)
+Fix: Use 1024 not "1024"
+```
+
+---
+
+## Category 2: Import/Library Validation
+
+### What Needs Validation
+
+- Import path exists in the package
+- Function/class is exported (in `__all__` or publicly available)
+- Function signature matches expected usage
+- Version compatibility with installed package
+- Package is actively maintained
+
+### Validation Checklist
+
+**Step 1: Verify Package Exists**
+```
+□ Check package name on PyPI (https://pypi.org)
+□ Verify package is actively maintained
+□ Check installation status:
+  $ pip show {package_name}
+□ Verify current version number
+□ Check for known security issues
+□ Review package documentation
+```
+
+**Step 2: Verify Import Path**
+```
+□ Get correct import from official documentation
+□ Try import in Python interpreter first:
+  $ python -c "from {module} import {name}"
+□ Check if module exports via __all__
+□ Verify import succeeds without errors
+□ Document the correct import statement
+□ Check for any deprecation warnings
+```
+
+**Step 3: Verify Function/Class Contract**
+```
+□ Get function signature from official docs
+□ Note all required parameters
+□ Note all optional parameters with defaults
+□ Check return type documentation
+□ List exceptions that can be raised
+□ Find working examples in documentation
+□ Compare your planned usage to examples
+```
+
+**Step 4: Check Version Compatibility**
+```
+□ Identify minimum required package version
+□ Check current installed version
+□ Verify function exists in minimum version
+□ Check release notes for breaking changes
+□ Test with minimum version if critical
+□ Document version assumptions in code
+```
+
+**Step 5: Verify Usage is Correct**
+```
+□ Find working code example in package docs
+□ Compare your usage to documentation
+□ Test import in minimal script
+□ Verify parameter names match exactly
+□ Check for any special initialization needed
+```
+
+### Code Example: Import Validation
+
+```python
+# BEFORE: Assumptions without verification
+from eval_recipes.claim_verification import verify_claims  # ❌ NOT VERIFIED
+
+def verify_text_claims(text: str):
+    """Verify claims in text."""
+    result = verify_claims(text)
+    return result
+
+# AFTER: Validated approach
+import importlib.util
+import inspect
+from typing import Optional
+
+def validate_claims_module() -> bool:
+    """Validate that claims module is available and correct."""
+
+    # Step 1: Verify package exists
+    try:
+        import eval_recipes
+        print(f"Package found: eval_recipes")
+    except ImportError as e:
+        print(f"Package not found: {e}")
+        print("Install with: pip install eval-recipes")
+        return False
+
+    # Step 2: Verify module path exists
+    try:
+        spec = importlib.util.find_spec("eval_recipes.claim_verification")
+        if spec is None:
+            print("Module not found: eval_recipes.claim_verification")
+            return False
+    except ImportError as e:
+        print(f"Module not found: {e}")
+        return False
+
+    # Step 3: Try import and verify function
+    try:
+        from eval_recipes.claim_verification import verify_claims
+        print("Import successful")
+    except ImportError as e:
+        print(f"Import failed: {e}")
+        return False
+
+    # Step 4: Verify function signature
+    try:
+        sig = inspect.signature(verify_claims)
+        params = list(sig.parameters.keys())
+        print(f"Function signature: verify_claims{sig}")
+
+        # Check expected parameters
+        if 'text' not in params and 'input' not in params:
+            print(f"Warning: Expected 'text' or 'input' parameter")
+            print(f"Actual parameters: {params}")
+            return False
+
+    except Exception as e:
+        print(f"Cannot inspect function: {e}")
+        return False
+
+    # Step 5: Test basic usage
+    try:
+        test_result = verify_claims("Test claim")
+        print(f"Basic test successful: {type(test_result)}")
+    except Exception as e:
+        print(f"Test call failed: {e}")
+        return False
+
+    return True
+
+# Usage
+if validate_claims_module():
+    from eval_recipes.claim_verification import verify_claims
+    result = verify_claims("Some text with claims")
+else:
+    print("Validation failed - cannot use this module")
+```
+
+### Real Failure Examples
+
+**Failure 1: Module Doesn't Exist**
+```python
+# Agent code
+from eval_recipes.claim_verification import verify_claims  # ❌ NOT IN PACKAGE
+
+# Result
+Error: ModuleNotFoundError: No module named 'eval_recipes.claim_verification'
+
+# Validation would catch
+$ python -c "from eval_recipes.claim_verification import verify_claims"
+ModuleNotFoundError
+Action: Check package structure, find alternative or request clarification
+```
+
+**Failure 2: Function Doesn't Exist**
+```python
+# Agent code
+from anthropic import complete_text  # ❌ FUNCTION DOESN'T EXIST
+
+# Result
+Error: ImportError: cannot import name 'complete_text'
+
+# Validation would catch
+Check docs for available functions
+Correct: from anthropic import Anthropic
+Fix: Use Anthropic client instead of non-existent function
+```
+
+**Failure 3: Wrong Import Path**
+```python
+# Agent code (wrong)
+from anthropic.client import Anthropic
+
+# Correct
+from anthropic import Anthropic
+
+# Validation would catch
+Try both paths in interpreter
+Only correct one succeeds
+Use successful import
+```
+
+**Failure 4: Signature Mismatch**
+```python
+# Documentation shows
+def process(data, version=1):  # version parameter exists
+
+# Agent code
+result = process(my_data)  # version parameter not provided
+# This works - version has default
+
+# Agent code (assuming old signature)
+result = process(my_data, extra_param=True)  # parameter doesn't exist
+# This fails - extra_param not recognized
+
+# Validation would catch
+Inspect signature: process(data, version=1)
+Check all your parameters match exactly
+```
+
+**Failure 5: Version Incompatibility**
+```python
+# Old version (1.0)
+from anthropic import complete_text
+
+# New version (2.0) - BREAKING CHANGE
+from anthropic import Anthropic
+client = Anthropic()
+message = client.messages.create(...)
+
+# Validation would catch
+Check installed version: pip show anthropic
+Check if function exists in this version
+Review release notes for breaking changes
+```
+
+---
+
+## Category 3: Service/Configuration Validation
+
+### What Needs Validation
+
+- External service endpoint URLs are valid
+- Authentication credentials are properly formatted
+- Configuration schema matches service requirements
+- Response format matches expectations
+- Rate limits and quotas are understood
+
+### Validation Checklist
+
+**Step 1: Verify Service Availability**
+```
+□ Check official service documentation
+□ Verify endpoint URL is correct and not deprecated
+□ Confirm service is available in your region
+□ Check for known outages or maintenance windows
+□ Verify HTTPS certificate is valid
+□ Test connectivity if safe to do
+```
+
+**Step 2: Validate Configuration Schema**
+```
+□ List all required configuration fields
+□ Define type for each field (string, int, bool, etc.)
+□ Mark as required or optional
+□ Document default values if optional
+□ Document any constraints (ranges, patterns, enums)
+□ Create schema or dataclass representation
+```
+
+**Step 3: Verify Credentials Format**
+```
+□ Check credential requirements (API key, token, password)
+□ Verify format matches (length, characters, encoding)
+□ Check expiration requirements
+□ Verify credentials are properly escaped
+□ Confirm credentials won't be logged/exposed
+□ Document credential acquisition
+```
+
+**Step 4: Test Endpoint Connectivity (When Safe)**
+```
+□ Make simple test request to verify access
+□ Check response format matches documentation
+□ Verify error response format
+□ Check timeout settings are reasonable
+□ Document any required headers
+```
+
+**Step 5: Verify Rate Limits and Quotas**
+```
+□ Check documented rate limits
+□ Estimate request volume needed
+□ Plan for rate limit handling (backoff, retry)
+□ Verify quota limits for your use case
+□ Document rate limit assumptions
+```
+
+### Code Example: Configuration Validation
+
+```python
+# BEFORE: Configuration without validation
+import requests
+
+config = {
+    "api_url": "https://api.example.com",
+    "api_key": os.getenv("API_KEY"),
+    "timeout": 30
+}
+
+response = requests.get(
+    config["api_url"],
+    headers={"Authorization": f"Bearer {config['api_key']}"},
+    timeout=config["timeout"]
+)
+# ❌ No validation of configuration
+
+# AFTER: Validated configuration approach
+from dataclasses import dataclass
+from urllib.parse import urlparse
+import os
+import requests
+
+@dataclass
+class ServiceConfig:
+    """External service configuration with validation."""
+    api_url: str
+    api_key: str
+    timeout: int = 30
+    max_retries: int = 3
+
+    def validate(self) -> tuple[bool, str]:
+        """Validate configuration before use.
+
+        Returns:
+            (is_valid, error_message) tuple
+        """
+
+        # Step 1: Validate URL format
+        try:
+            parsed = urlparse(self.api_url)
+            if not parsed.scheme in ('http', 'https'):
+                return False, f"Invalid URL scheme: {parsed.scheme}"
+            if not parsed.netloc:
+                return False, "Invalid URL: missing domain"
+            if not self.api_url.startswith('https'):
+                return False, "URL must use HTTPS for security"
+        except Exception as e:
+            return False, f"Invalid URL format: {e}"
+
+        # Step 2: Validate API key
+        if not self.api_key:
+            return False, "API key is required"
+        if len(self.api_key) < 10:
+            return False, "API key too short"
+        if ' ' in self.api_key:
+            return False, "API key contains spaces"
+
+        # Step 3: Validate timeout
+        if not isinstance(self.timeout, int):
+            return False, f"Timeout must be integer, got {type(self.timeout)}"
+        if self.timeout <= 0 or self.timeout > 300:
+            return False, f"Timeout {self.timeout} out of range (1-300)"
+
+        # Step 4: Validate max_retries
+        if not isinstance(self.max_retries, int) or self.max_retries < 0:
+            return False, "max_retries must be non-negative integer"
+        if self.max_retries > 5:
+            return False, "max_retries should not exceed 5"
+
+        return True, ""
+
+    def test_connectivity(self) -> tuple[bool, str]:
+        """Test that service is reachable.
+
+        Returns:
+            (is_reachable, error_message) tuple
+        """
+        try:
+            response = requests.head(
+                self.api_url,
+                headers={"Authorization": f"Bearer {self.api_key}"},
+                timeout=self.timeout
+            )
+
+            # Check for expected status codes
+            if response.status_code in [200, 204]:
+                return True, "Service reachable and authenticated"
+            elif response.status_code == 401:
+                return False, "Authentication failed: Invalid API key"
+            elif response.status_code == 403:
+                return False, "Access denied: Insufficient permissions"
+            elif response.status_code >= 500:
+                return False, f"Server error {response.status_code}"
+            else:
+                return True, f"Service responded: {response.status_code}"
+
+        except requests.Timeout:
+            return False, f"Timeout after {self.timeout}s"
+        except requests.ConnectionError as e:
+            return False, f"Cannot connect: {e}"
+        except Exception as e:
+            return False, f"Connectivity test failed: {e}"
+
+# Usage: Validate before implementation
+def setup_service() -> requests.Session:
+    """Set up and validate service connection."""
+
+    # Load configuration from environment
+    config = ServiceConfig(
+        api_url=os.getenv("SERVICE_URL", "https://api.example.com"),
+        api_key=os.getenv("SERVICE_API_KEY"),
+        timeout=int(os.getenv("SERVICE_TIMEOUT", "30"))
+    )
+
+    # Validate configuration
+    is_valid, error = config.validate()
+    if not is_valid:
+        raise ValueError(f"Configuration invalid: {error}")
+
+    # Test connectivity
+    is_reachable, message = config.test_connectivity()
+    if not is_reachable:
+        raise RuntimeError(f"Cannot reach service: {message}")
+
+    # Set up session
+    session = requests.Session()
+    session.headers.update({
+        "Authorization": f"Bearer {config.api_key}"
+    })
+
+    return session
+
+# Call with validation
+try:
+    session = setup_service()
+    response = session.get(config.api_url, timeout=config.timeout)
+except ValueError as e:
+    print(f"Configuration error: {e}")
+except RuntimeError as e:
+    print(f"Service error: {e}")
+```
+
+### Real Failure Examples
+
+**Failure 1: Malformed URL**
+```python
+# Agent code
+api_url = "http://api..com"  # ❌ Missing domain parts
+
+# Validation would catch
+Parse URL: api..com
+Result: Invalid domain
+Fix: Use correct URL like "https://api.example.com"
+```
+
+**Failure 2: Empty API Key**
+```python
+# Agent code
+api_key = ""  # ❌ Empty string
+headers = {"Authorization": f"Bearer {api_key}"}
+
+# Validation would catch
+Check: len(api_key) > 0
+Result: API key empty
+Fix: Provide valid API key from environment
+```
+
+**Failure 3: Unreasonable Timeout**
+```python
+# Agent code
+timeout = 0.001  # ❌ Too short
+
+# Result
+Timeout immediately on all requests
+
+# Validation would catch
+Check: 0 < timeout <= 300
+Result: timeout too short
+Fix: Use reasonable timeout like 30 seconds
+```
+
+---
+
+## Category 4: Error Handling & Recovery Validation
+
+### What Needs Validation
+
+- All failure points are identified
+- Error conditions are caught
+- Error messages are user-friendly
+- Recovery strategies are planned
+- Logging is adequate for debugging
+
+### Validation Checklist
+
+**Step 1: Identify All Failure Points**
+```
+□ List all external API calls
+□ List all network operations
+□ List all file operations
+□ List all parsing operations
+□ Identify invalid response scenarios
+□ Identify authentication failures
+□ Identify rate limiting scenarios
+□ Identify timeout scenarios
+```
+
+**Step 2: Plan Error Handling Strategy**
+```
+□ For each failure point, decide:
+  - Should we retry? (transient failures)
+  - Should we fall back? (fallback options)
+  - Should we fail? (unrecoverable errors)
+□ Define retry logic:
+  - How many retries?
+  - What backoff strategy?
+  - Which errors are retryable?
+□ Define fallback strategies:
+  - What data can we use instead?
+  - How do we notify user?
+```
+
+**Step 3: Implement Clear Error Messages**
+```
+□ Error message is user-friendly (not technical jargon)
+□ Error explains what went wrong
+□ Error provides next steps
+□ Error distinguishes user error vs system error
+□ Error logs include technical details for debugging
+□ Error doesn't expose sensitive data
+□ Error message is actionable
+```
+
+**Step 4: Plan Recovery and Notifications**
+```
+□ Define retry logic with exponential backoff
+□ Plan fallback strategies
+□ Document unrecoverable scenarios
+□ Plan notification to user
+□ Design failure state that's clear
+□ Plan logging strategy
+```
+
+**Step 5: Test Error Paths**
+```
+□ Test each error condition (if safe)
+□ Verify error message clarity
+□ Verify recovery works correctly
+□ Check error logging is complete
+□ Ensure error doesn't leak sensitive data
+□ Verify timeout handling works
+```
+
+### Code Example: Error Handling
+
+```python
+# BEFORE: Insufficient error handling
+def call_api(url: str, api_key: str) -> dict:
+    """Call API - no error handling."""
+    response = requests.get(
+        url,
+        headers={"Authorization": api_key}
+    )
+    return response.json()  # ❌ NO ERROR HANDLING
+
+# AFTER: Comprehensive error handling
+import logging
+import time
+from enum import Enum
+
+logger = logging.getLogger(__name__)
+
+class APIError(Exception):
+    """Custom exception for API errors."""
+    pass
+
+class RetryableError(APIError):
+    """Error that should be retried."""
+    pass
+
+class UnretryableError(APIError):
+    """Error that should not be retried."""
+    pass
+
+def call_api_safe(
+    url: str,
+    api_key: str,
+    max_retries: int = 3,
+    initial_backoff: float = 1.0
+) -> dict:
+    """Call API with comprehensive error handling.
+
+    Args:
+        url: API endpoint URL
+        api_key: API authentication key
+        max_retries: Maximum retry attempts
+        initial_backoff: Initial backoff in seconds
+
+    Returns:
+        Response JSON dict
+
+    Raises:
+        ValueError: Configuration validation failed
+        UnretryableError: Permanent failure (auth, not found)
+        RetryableError: Temporary failure (timeout, server error)
+    """
+
+    # Step 1: Validate inputs before attempting
+    if not url or not url.startswith('https://'):
+        raise ValueError(f"Invalid URL: {url}")
+    if not api_key:
+        raise ValueError("API key required")
+
+    logger.info(f"Calling API: {url}")
+
+    # Step 2: Retry loop with exponential backoff
+    backoff = initial_backoff
+    last_error = None
+
+    for attempt in range(max_retries):
+        try:
+            logger.debug(f"API call attempt {attempt + 1}/{max_retries}")
+
+            # Make request
+            response = requests.get(
+                url,
+                headers={"Authorization": f"Bearer {api_key}"},
+                timeout=30
+            )
+
+            # Step 3: Handle response status
+            if response.status_code == 200:
+                logger.info("API call successful")
+                return response.json()
+
+            # Handle specific error codes
+            elif response.status_code == 401:
+                error = "Authentication failed: Invalid API key"
+                logger.error(error)
+                raise UnretryableError(error)
+
+            elif response.status_code == 403:
+                error = "Access denied: Insufficient permissions"
+                logger.error(error)
+                raise UnretryableError(error)
+
+            elif response.status_code == 404:
+                error = "Endpoint not found"
+                logger.error(error)
+                raise UnretryableError(error)
+
+            elif response.status_code == 429:
+                # Rate limited - should retry
+                error = "Rate limited by service"
+                logger.warning(error)
+                if attempt < max_retries - 1:
+                    logger.info(f"Retrying after {backoff}s")
+                    time.sleep(backoff)
+                    backoff *= 2
+                    continue
+                raise RetryableError(f"{error} - retries exhausted")
+
+            elif response.status_code >= 500:
+                # Server error - should retry
+                error = f"Server error: {response.status_code}"
+                logger.warning(error)
+                if attempt < max_retries - 1:
+                    logger.info(f"Retrying after {backoff}s")
+                    time.sleep(backoff)
+                    backoff *= 2
+                    continue
+                raise RetryableError(f"{error} - retries exhausted")
+
+            else:
+                error = f"Unexpected status {response.status_code}"
+                logger.error(error)
+                raise RetryableError(error)
+
+        except requests.Timeout as e:
+            last_error = f"Request timeout: {e}"
+            logger.warning(last_error)
+            if attempt < max_retries - 1:
+                logger.info(f"Retrying after {backoff}s")
+                time.sleep(backoff)
+                backoff *= 2
+                continue
+            raise RetryableError(f"Timeout after retries: {last_error}")
+
+        except requests.ConnectionError as e:
+            last_error = f"Connection failed: {e}"
+            logger.warning(last_error)
+            if attempt < max_retries - 1:
+                logger.info(f"Retrying after {backoff}s")
+                time.sleep(backoff)
+                backoff *= 2
+                continue
+            raise RetryableError(f"Connection error after retries: {last_error}")
+
+        except requests.RequestException as e:
+            # Unexpected request error
+            error = f"Request error: {e}"
+            logger.error(error)
+            raise UnretryableError(error)
+
+        except ValueError as e:
+            # JSON parse error
+            error = f"Invalid response format: {e}"
+            logger.error(error)
+            raise UnretryableError(error)
+
+    # Should not reach here, but just in case
+    error = f"All retries exhausted: {last_error}"
+    logger.error(error)
+    raise RetryableError(error)
+```
+
+### Real Failure Examples
+
+**Failure 1: No Error Handling**
+```python
+# Agent code
+response = requests.get(url)
+data = response.json()  # ❌ Crashes if network fails
+
+# Validation would catch
+Identify failure points: network request, JSON parse
+Plan error handling: catch exceptions, retry, log
+Add try/except blocks
+```
+
+**Failure 2: Cryptic Error Messages**
+```python
+# Agent code
+try:
+    response = requests.get(url)
+except Exception as e:
+    print("Error")  # ❌ User doesn't know what happened
+
+# Validation would catch
+Error message should explain:
+- What failed (network request, auth, etc)
+- Why it failed (timeout, 404, etc)
+- What to do next (retry, check credentials, etc)
+```
+
+**Failure 3: No Retry Logic**
+```python
+# Agent code
+response = requests.get(url, timeout=0.1)  # ❌ Very short timeout, no retry
+# Will timeout frequently on slow connections
+
+# Validation would catch
+Design retry strategy:
+- Timeout is too short
+- Add exponential backoff
+- Retry up to 3 times
+```
+
+---
+
+## Implementation Guide
+
+### How to Apply This Pattern
+
+**Before Writing Implementation Code**:
+
+1. **Identify External APIs**: List all external services, models, or imports
+2. **Categorize**: Place each in one of 4 categories (Model/Import/Service/Error)
+3. **Complete Checklist**: For each API, complete the relevant validation checklist
+4. **Gather Evidence**: Document findings from official documentation
+5. **Implement Validation**: Include validation code in implementation (not just comments)
+6. **Plan Errors**: Design error handling before writing code
+7. **Proceed to Code**: Only after validation is complete and documented
+
+### When Builder Applies This
+
+- **During Design Phase**: Before any code is written
+- **When Choosing Libraries**: Before committing to import
+- **When Selecting Models**: Before API call is made
+- **When Planning Integration**: Before service connection code
+
+---
+
+## Integration with Workflow
+
+### Builder Agent: Apply During Implementation
+
+Builders should reference this pattern when:
+- Choosing which models to use
+- Deciding which libraries to import
+- Calling external services
+- Designing error handling
+
+**Builder Checklist**:
+```
+Before writing code that calls external APIs:
+□ Category identified (Model/Import/Service/Error)
+□ Validation checklist for this category completed
+□ All checklist items verified (documentation, examples)
+□ Evidence gathered (docs screenshot, working example)
+□ Validation code included (not assumed)
+□ Error handling designed (not added later)
+```
+
+### Reviewer Agent: Verify Compliance
+
+Reviewers should check:
+- Does code validate APIs before use?
+- Are assumptions documented?
+- Is error handling comprehensive?
+- Are error messages user-friendly?
+- Was checklist completed before implementation?
+
+**Reviewer Checklist**:
+```
+For each external API call:
+□ Validation code present (not just assumptions)
+□ Error handling implemented (try/catch, retry)
+□ Error messages are user-friendly
+□ API assumptions documented in comments
+□ Evidence from documentation referenced
+
+If missing:
+→ Request validation evidence
+→ Ask for error handling justification
+→ Require documentation of assumptions
+```
+
+---
+
+## When to Use This Pattern
+
+### Always Apply When
+
+- Calling LLM models (Claude, GPT, etc.)
+- Importing from external packages
+- Calling REST APIs or services
+- Using external tools or CLIs
+- Accepting user configuration
+
+### Optional When
+
+- Using internal functions (same module)
+- Using standard library functions
+- Type-checked code (verification by type system)
+- Already-tested utility functions
+- Simple string/math operations
+
+### Key Points
+
+- **Always validate external APIs** - The 5-10 minute investment saves 20-30 minutes later
+- **Catch errors in design phase** - Before implementation even starts
+- **Use evidence** - Always verify with documentation, never assume
+- **Plan error handling** - Design recovery before code
+- **Be comprehensive** - All 4 categories deserve equal scrutiny
+- **Document assumptions** - Make them clear in code comments
+
+### Real Impact
+
+**Success Story**:
+- Agent validates model name format
+- Checks documentation: `claude-3-sonnet-20241022` ✓ valid
+- Writes correct code first try
+- No debug cycle needed
+- Tool works immediately
+
+**Failure Averted**:
+- Agent would have used: `claude-3-5-sonnet-20241022` (wrong)
+- Would fail with 404 error
+- 20-30 minute debug cycle
+- **Prevention time saved**: 25 minutes
+
+---
+
+## Related Patterns
+
+- **Zero-BS Implementation** - All code must work, no stubs or assumptions
+- **Ruthless Simplicity** - Validation approach is straightforward
+- **Decision-Making Framework** - Always verify assumptions before proceeding
+- **Safe Subprocess Wrapper** - Handles external tool calls with error recovery
+
+---
+
+## Remember
+
+These validation steps take 5-10 minutes. Skipping them costs 20-30 minutes in debugging later. The pattern is not meant to be bureaucratic - it's meant to save massive amounts of time by catching preventable errors before implementation starts.
+
+When you see an API call being planned, before any code is written:
+1. Ask: "Is this API verified?"
+2. Check: "Where's the evidence?"
+3. Verify: "Against official documentation?"
+4. Plan: "What errors might happen?"
+
+That's the pattern. Use it ruthlessly.
+
 ## Remember
 
 These patterns represent hard-won knowledge from real development challenges. When facing similar problems:
