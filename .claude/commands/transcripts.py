@@ -220,8 +220,7 @@ def get_current_session_id() -> str:
     logs_dir = project_root / ".claude" / "runtime" / "logs"
     if logs_dir.exists():
         session_dirs = [
-            d for d in logs_dir.iterdir()
-            if d.is_dir() and len(d.name) == 15 and "_" in d.name
+            d for d in logs_dir.iterdir() if d.is_dir() and len(d.name) == 15 and "_" in d.name
         ]
         if session_dirs:
             # Return most recent session
@@ -232,11 +231,20 @@ def get_current_session_id() -> str:
     return datetime.now().strftime("%Y%m%d_%H%M%S")
 
 
-def save_conversation() -> None:
-    """Save current conversation to transcript file.
+def save_session_marker() -> None:
+    """Create a session checkpoint marker.
 
-    Reads conversation data from stdin (if provided by Claude Code)
-    or attempts to capture current conversation state from available sources.
+    IMPORTANT: This command creates a session checkpoint/marker, NOT a full
+    conversation transcript. Full transcripts are automatically created by
+    the PreCompact hook before context compaction.
+
+    Use this command to:
+    - Mark important points in your development session
+    - Create a named checkpoint for later reference
+    - Trigger a manual session save point
+
+    Full conversation history is preserved automatically and is available
+    through the PreCompact hook integration.
     """
     try:
         # Get current session ID
@@ -244,65 +252,50 @@ def save_conversation() -> None:
         session_dir = project_root / ".claude" / "runtime" / "logs" / session_id
         session_dir.mkdir(parents=True, exist_ok=True)
 
-        # Try to read conversation data from stdin
-        conversation_data = []
-        if not sys.stdin.isatty():
-            try:
-                input_text = sys.stdin.read().strip()
-                if input_text:
-                    input_data = json.loads(input_text)
-                    # Extract conversation or messages
-                    conversation_data = input_data.get("conversation", input_data.get("messages", []))
-            except (json.JSONDecodeError, KeyError):
-                pass
+        # Create a checkpoint marker file
+        checkpoint_file = session_dir / "CHECKPOINTS.jsonl"
+        checkpoint_data = {
+            "timestamp": datetime.now().isoformat(),
+            "type": "manual_checkpoint",
+            "session_id": session_id,
+            "created_via": "/transcripts save command",
+        }
 
-        # If no stdin data, create a manual save marker
-        if not conversation_data:
-            conversation_data = [{
-                "role": "system",
-                "content": f"Manual transcript save requested at {datetime.now().isoformat()}",
-                "timestamp": datetime.now().isoformat()
-            }]
+        # Append to checkpoints file (JSONL format)
+        with open(checkpoint_file, "a") as f:
+            f.write(json.dumps(checkpoint_data) + "\n")
 
-        # Import ContextPreserver
-        try:
-            from context_preservation import ContextPreserver
-        except ImportError:
-            print("❌ Error: Could not import ContextPreserver")
-            print("   Ensure context_preservation.py is available in .claude/tools/amplihack/")
-            return
-
-        # Create ContextPreserver instance
-        preserver = ContextPreserver(session_id=session_id)
-        preserver.session_dir = session_dir
-
-        # Export conversation transcript
-        transcript_path = preserver.export_conversation_transcript(conversation_data)
+        # Count existing checkpoints
+        checkpoint_count = 0
+        if checkpoint_file.exists():
+            with open(checkpoint_file) as f:
+                checkpoint_count = sum(1 for _ in f)
 
         # Display success message
-        print("✅ Conversation transcript saved!")
+        print("✅ Session checkpoint created!")
         print("━" * 80)
         print(f"📄 Session ID: {session_id}")
-        print(f"📂 Location: {transcript_path}")
-        print(f"💬 Messages: {len(conversation_data)}")
+        print(f"📂 Location: {checkpoint_file}")
+        print(f"🔖 Checkpoint #{checkpoint_count}")
+        print(f"⏰ Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print()
+        print("ℹ️  About Transcripts:")
+        print("   • Manual checkpoints mark important points in your session")
+        print("   • Full conversation transcripts are saved automatically")
+        print("   • PreCompact hook preserves complete history before compaction")
+        print("   • Use /transcripts list to see all saved sessions")
         print()
         print("💡 Restore this session later with:")
         print(f"   /transcripts {session_id}")
-        print()
-
-        if len(conversation_data) == 1 and conversation_data[0].get("role") == "system":
-            print("ℹ️  Note: No conversation data provided on stdin.")
-            print("   A manual save marker was created.")
-            print("   Full conversation transcripts are saved automatically")
-            print("   by the PreCompact hook before context compaction.")
 
     except PermissionError as e:
-        print(f"❌ Permission Error: Could not save transcript")
-        print(f"   {str(e)}")
+        print("❌ Permission Error: Could not create checkpoint")
+        print(f"   {e!s}")
         print("   Check file permissions for .claude/runtime/logs/")
     except Exception as e:
-        print(f"❌ Error saving conversation transcript: {str(e)}")
+        print(f"❌ Error creating session checkpoint: {e!s}")
         import traceback
+
         traceback.print_exc()
 
 
@@ -320,7 +313,7 @@ def main():
             print("   /transcripts <session_id>  - Restore context from specific session")
             print("   /transcripts latest        - Restore context from most recent session")
             print("   /transcripts list          - Show this list again")
-            print("   /transcripts save          - Save current conversation to transcript")
+            print("   /transcripts save          - Create session checkpoint marker")
 
     elif args[0] == "list":
         # Explicit list command
@@ -336,8 +329,8 @@ def main():
             print("❌ No sessions found")
 
     elif args[0] == "save":
-        # Save current conversation
-        save_conversation()
+        # Create session checkpoint marker
+        save_session_marker()
 
     else:
         # Restore specific session
