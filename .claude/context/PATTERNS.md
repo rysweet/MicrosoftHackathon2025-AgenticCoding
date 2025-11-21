@@ -2000,7 +2000,8 @@ These failures cause:
 **Root Cause**: No explicit guidance on validating external APIs before writing code. Agents make assumptions about API structure without verification.
 
 **Cost Comparison**:
-- Validation in design phase: 5-10 minutes to verify, catches error immediately
+
+- Validation in design phase: 5-15 minutes to verify (depending on API complexity), catches error immediately
 - Debug after implementation: 20-30 minutes to identify, debug, rewrite, test again
 - Prevention value: 3-6x time savings when done upfront
 
@@ -2008,10 +2009,10 @@ These failures cause:
 
 Implement systematic API validation **before implementation begins**, covering four critical categories:
 
-1. **Model/LLM API Validation** - Verify model names, parameters, endpoints
-2. **Import/Library Validation** - Verify imports exist and have correct signatures
-3. **Service/Configuration Validation** - Verify endpoints, credentials, schemas
-4. **Error Handling Validation** - Verify all failure paths are handled
+1. **Model/LLM API Validation** - Verify model names, parameters, endpoints (5-7 minutes)
+2. **Import/Library Validation** - Verify imports exist and have correct signatures (5-8 minutes)
+3. **Service/Configuration Validation** - Verify endpoints, credentials, schemas (7-10 minutes)
+4. **Error Handling Validation** - Verify all failure paths are handled (3-5 minutes)
 
 **Validation Approach**:
 
@@ -2034,6 +2035,7 @@ The pattern requires builders to complete a validation checklist for each extern
 ### Validation Checklist
 
 **Step 1: Verify Model Name Format**
+
 ```
 □ Check official Anthropic documentation for valid model names
 □ List all valid formats (e.g., claude-3-{family}-{version})
@@ -2054,6 +2056,7 @@ Examples of INVALID models:
 ```
 
 **Step 2: Validate Model Parameters**
+
 ```
 □ Get complete parameter list from API documentation
 □ For each parameter being used:
@@ -2073,6 +2076,7 @@ Example: max_tokens parameter
 ```
 
 **Step 3: Verify API Endpoint**
+
 ```
 □ Confirm endpoint path from documentation
 □ Check API version (v1, v2, etc.)
@@ -2087,6 +2091,7 @@ Standard Anthropic endpoints:
 ```
 
 **Step 4: Test Accessibility (When Possible)**
+
 ```
 □ Verify API credentials are in correct format
 □ Attempt minimal test request if safe
@@ -2172,6 +2177,7 @@ async def call_model_validated(prompt: str, model: str) -> str:
 ### Real Failure Examples
 
 **Failure 1: Wrong Model Name Separators**
+
 ```python
 # Agent code (not validated)
 model = "claude-3-5-sonnet-20241022"  # ❌ Has "-5" separator
@@ -2188,6 +2194,7 @@ Fix: Use claude-3-sonnet-20241022 instead
 ```
 
 **Failure 2: Non-existent Model**
+
 ```python
 # Agent code
 model = "claude-4-ultra"  # ❌ Doesn't exist yet
@@ -2202,6 +2209,7 @@ Action: Skip this implementation or request clarification
 ```
 
 **Failure 3: Wrong Parameter Type**
+
 ```python
 # Agent code
 response = client.messages.create(
@@ -2234,6 +2242,7 @@ Fix: Use 1024 not "1024"
 ### Validation Checklist
 
 **Step 1: Verify Package Exists**
+
 ```
 □ Check package name on PyPI (https://pypi.org)
 □ Verify package is actively maintained
@@ -2245,6 +2254,7 @@ Fix: Use 1024 not "1024"
 ```
 
 **Step 2: Verify Import Path**
+
 ```
 □ Get correct import from official documentation
 □ Try import in Python interpreter first:
@@ -2256,6 +2266,7 @@ Fix: Use 1024 not "1024"
 ```
 
 **Step 3: Verify Function/Class Contract**
+
 ```
 □ Get function signature from official docs
 □ Note all required parameters
@@ -2267,16 +2278,20 @@ Fix: Use 1024 not "1024"
 ```
 
 **Step 4: Check Version Compatibility**
+
 ```
 □ Identify minimum required package version
+□ Check for maximum version constraints (breaking changes in newer versions)
 □ Check current installed version
 □ Verify function exists in minimum version
-□ Check release notes for breaking changes
+□ Check release notes for breaking changes between min and current
+□ Review major version upgrades for API changes
 □ Test with minimum version if critical
-□ Document version assumptions in code
+□ Document version assumptions and constraints in code
 ```
 
 **Step 5: Verify Usage is Correct**
+
 ```
 □ Find working code example in package docs
 □ Compare your usage to documentation
@@ -2368,6 +2383,7 @@ else:
 ### Real Failure Examples
 
 **Failure 1: Module Doesn't Exist**
+
 ```python
 # Agent code
 from eval_recipes.claim_verification import verify_claims  # ❌ NOT IN PACKAGE
@@ -2382,6 +2398,7 @@ Action: Check package structure, find alternative or request clarification
 ```
 
 **Failure 2: Function Doesn't Exist**
+
 ```python
 # Agent code
 from anthropic import complete_text  # ❌ FUNCTION DOESN'T EXIST
@@ -2396,6 +2413,7 @@ Fix: Use Anthropic client instead of non-existent function
 ```
 
 **Failure 3: Wrong Import Path**
+
 ```python
 # Agent code (wrong)
 from anthropic.client import Anthropic
@@ -2410,6 +2428,7 @@ Use successful import
 ```
 
 **Failure 4: Signature Mismatch**
+
 ```python
 # Documentation shows
 def process(data, version=1):  # version parameter exists
@@ -2428,6 +2447,7 @@ Check all your parameters match exactly
 ```
 
 **Failure 5: Version Incompatibility**
+
 ```python
 # Old version (1.0)
 from anthropic import complete_text
@@ -2458,6 +2478,7 @@ Review release notes for breaking changes
 ### Validation Checklist
 
 **Step 1: Verify Service Availability**
+
 ```
 □ Check official service documentation
 □ Verify endpoint URL is correct and not deprecated
@@ -2468,6 +2489,7 @@ Review release notes for breaking changes
 ```
 
 **Step 2: Validate Configuration Schema**
+
 ```
 □ List all required configuration fields
 □ Define type for each field (string, int, bool, etc.)
@@ -2478,6 +2500,7 @@ Review release notes for breaking changes
 ```
 
 **Step 3: Verify Credentials Format**
+
 ```
 □ Check credential requirements (API key, token, password)
 □ Verify format matches (length, characters, encoding)
@@ -2488,6 +2511,7 @@ Review release notes for breaking changes
 ```
 
 **Step 4: Test Endpoint Connectivity (When Safe)**
+
 ```
 □ Make simple test request to verify access
 □ Check response format matches documentation
@@ -2497,6 +2521,7 @@ Review release notes for breaking changes
 ```
 
 **Step 5: Verify Rate Limits and Quotas**
+
 ```
 □ Check documented rate limits
 □ Estimate request volume needed
@@ -2653,6 +2678,7 @@ except RuntimeError as e:
 ### Real Failure Examples
 
 **Failure 1: Malformed URL**
+
 ```python
 # Agent code
 api_url = "http://api..com"  # ❌ Missing domain parts
@@ -2664,6 +2690,7 @@ Fix: Use correct URL like "https://api.example.com"
 ```
 
 **Failure 2: Empty API Key**
+
 ```python
 # Agent code
 api_key = ""  # ❌ Empty string
@@ -2676,6 +2703,7 @@ Fix: Provide valid API key from environment
 ```
 
 **Failure 3: Unreasonable Timeout**
+
 ```python
 # Agent code
 timeout = 0.001  # ❌ Too short
@@ -2704,6 +2732,7 @@ Fix: Use reasonable timeout like 30 seconds
 ### Validation Checklist
 
 **Step 1: Identify All Failure Points**
+
 ```
 □ List all external API calls
 □ List all network operations
@@ -2716,6 +2745,7 @@ Fix: Use reasonable timeout like 30 seconds
 ```
 
 **Step 2: Plan Error Handling Strategy**
+
 ```
 □ For each failure point, decide:
   - Should we retry? (transient failures)
@@ -2731,6 +2761,7 @@ Fix: Use reasonable timeout like 30 seconds
 ```
 
 **Step 3: Implement Clear Error Messages**
+
 ```
 □ Error message is user-friendly (not technical jargon)
 □ Error explains what went wrong
@@ -2742,6 +2773,7 @@ Fix: Use reasonable timeout like 30 seconds
 ```
 
 **Step 4: Plan Recovery and Notifications**
+
 ```
 □ Define retry logic with exponential backoff
 □ Plan fallback strategies
@@ -2752,6 +2784,7 @@ Fix: Use reasonable timeout like 30 seconds
 ```
 
 **Step 5: Test Error Paths**
+
 ```
 □ Test each error condition (if safe)
 □ Verify error message clarity
@@ -2759,6 +2792,76 @@ Fix: Use reasonable timeout like 30 seconds
 □ Check error logging is complete
 □ Ensure error doesn't leak sensitive data
 □ Verify timeout handling works
+```
+
+**Step 6: Test Error Paths Safely**
+
+```
+□ Use mocks for external API errors (avoid triggering real errors)
+□ Create test stubs for error scenarios:
+  - Network failures (connection refused, timeout)
+  - Authentication failures (401, 403)
+  - Rate limiting (429)
+  - Server errors (500, 503)
+□ Test retry logic with mock delays
+□ Verify error messages in controlled environment
+□ Test recovery strategies with simulated failures
+□ Use pytest fixtures or unittest.mock for isolation
+□ Document which errors can be safely tested in production vs require mocks
+□ Ensure tests don't leave side effects or consume API quota
+```
+
+**Example: Safe Error Testing with Mocks**
+
+```python
+# Testing error paths safely with pytest and unittest.mock
+import pytest
+from unittest.mock import Mock, patch
+import requests
+
+def test_api_timeout_retry():
+    """Test that timeout triggers retry logic."""
+    with patch('requests.get') as mock_get:
+        # Simulate timeout on first two attempts, success on third
+        mock_get.side_effect = [
+            requests.Timeout("Connection timeout"),
+            requests.Timeout("Connection timeout"),
+            Mock(status_code=200, json=lambda: {"result": "success"})
+        ]
+
+        result = call_api_safe("https://api.example.com", "test-key")
+
+        # Verify retry happened
+        assert mock_get.call_count == 3
+        assert result == {"result": "success"}
+
+def test_api_authentication_error():
+    """Test that 401 raises UnretryableError without retry."""
+    with patch('requests.get') as mock_get:
+        mock_get.return_value = Mock(status_code=401, text="Unauthorized")
+
+        with pytest.raises(UnretryableError, match="Authentication failed"):
+            call_api_safe("https://api.example.com", "bad-key")
+
+        # Should not retry auth errors
+        assert mock_get.call_count == 1
+
+def test_api_rate_limit_backoff():
+    """Test that rate limit triggers exponential backoff."""
+    with patch('requests.get') as mock_get, patch('time.sleep') as mock_sleep:
+        # Simulate rate limit twice, then success
+        mock_get.side_effect = [
+            Mock(status_code=429, text="Rate limited"),
+            Mock(status_code=429, text="Rate limited"),
+            Mock(status_code=200, json=lambda: {"result": "success"})
+        ]
+
+        result = call_api_safe("https://api.example.com", "test-key")
+
+        # Verify backoff delays: 1s, then 2s
+        assert mock_sleep.call_count == 2
+        assert mock_sleep.call_args_list[0][0][0] == 1.0
+        assert mock_sleep.call_args_list[1][0][0] == 2.0
 ```
 
 ### Code Example: Error Handling
@@ -2927,6 +3030,7 @@ def call_api_safe(
 ### Real Failure Examples
 
 **Failure 1: No Error Handling**
+
 ```python
 # Agent code
 response = requests.get(url)
@@ -2939,6 +3043,7 @@ Add try/except blocks
 ```
 
 **Failure 2: Cryptic Error Messages**
+
 ```python
 # Agent code
 try:
@@ -2954,6 +3059,7 @@ Error message should explain:
 ```
 
 **Failure 3: No Retry Logic**
+
 ```python
 # Agent code
 response = requests.get(url, timeout=0.1)  # ❌ Very short timeout, no retry
@@ -2993,15 +3099,78 @@ Design retry strategy:
 
 ## Integration with Workflow
 
+This pattern integrates into the DEFAULT_WORKFLOW.md at **Step 3: Architecture & Design** and **Step 4: API Design**, before any code is written in Step 5 (Implementation).
+
+### Workflow Integration Points
+
+**Step 3: Architecture & Design**
+
+- Architect identifies which external APIs will be used
+- Documents assumptions about API structure and behavior
+- **TRIGGERS API VALIDATION**: Before proceeding to implementation
+
+**Step 4: API Design**
+
+- API designer defines contracts for external integrations
+- **APPLIES THIS PATTERN**: Validates all external API assumptions
+- Documents validation evidence in design specs
+
+**Step 5: Implementation** (Builder Phase)
+
+- Builder receives validated API contracts from architect/designer
+- References validation evidence during implementation
+- Does NOT make new API assumptions without validation
+
+**Step 7: Code Review**
+
+- Reviewer verifies validation was performed
+- Checks that validation evidence is documented
+- Ensures error handling matches design
+
+### Should Validation Be a Distinct Workflow Step?
+
+**Recommendation**: NO - Validation should be embedded within existing steps rather than a separate step.
+
+**Rationale**:
+
+- Validation is a quality check, not a deliverable
+- Adds cognitive overhead if treated as separate step
+- Naturally fits within design and review phases
+- Keeps workflow focused on deliverables (specs, code, tests)
+
+**How to Apply**:
+
+- **Within Step 3/4**: Architects/designers validate APIs during design
+- **Within Step 5**: Builders reference validation evidence
+- **Within Step 7**: Reviewers verify validation occurred
+
 ### Builder Agent: Apply During Implementation
 
 Builders should reference this pattern when:
+
 - Choosing which models to use
 - Deciding which libraries to import
 - Calling external services
 - Designing error handling
 
+**When Builder Invokes This Pattern**:
+
+1. **During Step 4 (API Design)**: If builder is also doing API design
+   - Before committing to any external API
+   - Document validation evidence in design specs
+
+2. **During Step 5 (Implementation)**: If validation wasn't done in design
+   - Stop implementation immediately
+   - Complete validation before continuing
+   - Document findings for reviewer
+
+3. **Never Skip**: Even if time-pressured
+   - 5-15 minute validation saves 20-30 minutes later
+   - Prevents complete tool failure
+   - Catches issues before CI/CD
+
 **Builder Checklist**:
+
 ```
 Before writing code that calls external APIs:
 □ Category identified (Model/Import/Service/Error)
@@ -3015,13 +3184,27 @@ Before writing code that calls external APIs:
 ### Reviewer Agent: Verify Compliance
 
 Reviewers should check:
+
 - Does code validate APIs before use?
 - Are assumptions documented?
 - Is error handling comprehensive?
 - Are error messages user-friendly?
 - Was checklist completed before implementation?
 
+**When Reviewer Applies This Pattern**:
+
+1. **During Step 7 (Code Review)**: Always check for validation
+   - Verify validation evidence exists in commit/PR
+   - Check that API usage matches documentation
+   - Ensure error handling covers identified failure points
+
+2. **If Validation Missing**: Request validation before approval
+   - Builder must complete validation checklist
+   - Evidence must be documented
+   - May require architecture review
+
 **Reviewer Checklist**:
+
 ```
 For each external API call:
 □ Validation code present (not just assumptions)
@@ -3034,6 +3217,32 @@ If missing:
 → Request validation evidence
 → Ask for error handling justification
 → Require documentation of assumptions
+```
+
+### Tester Agent: Verify Error Handling
+
+**When Tester Applies This Pattern**:
+
+1. **During Step 8 (Testing)**: Verify error paths work correctly
+   - Check that all identified error scenarios have tests
+   - Verify mock-based testing for unsafe error conditions
+   - Ensure error messages are clear and actionable
+
+2. **Test Validation Coverage**:
+   - Tests should cover each validation checklist item
+   - Mock testing for external API failures
+   - Integration tests verify happy path works
+
+**Tester Checklist**:
+
+```
+For each external API in code:
+□ Tests verify model/API exists and works
+□ Tests cover authentication failure scenarios (mocked)
+□ Tests cover rate limiting and retry logic (mocked)
+□ Tests cover timeout and network errors (mocked)
+□ Tests verify error messages are user-friendly
+□ Integration tests verify real API calls (if safe)
 ```
 
 ---
@@ -3068,6 +3277,7 @@ If missing:
 ### Real Impact
 
 **Success Story**:
+
 - Agent validates model name format
 - Checks documentation: `claude-3-sonnet-20241022` ✓ valid
 - Writes correct code first try
@@ -3075,6 +3285,7 @@ If missing:
 - Tool works immediately
 
 **Failure Averted**:
+
 - Agent would have used: `claude-3-5-sonnet-20241022` (wrong)
 - Would fail with 404 error
 - 20-30 minute debug cycle
@@ -3096,6 +3307,7 @@ If missing:
 These validation steps take 5-10 minutes. Skipping them costs 20-30 minutes in debugging later. The pattern is not meant to be bureaucratic - it's meant to save massive amounts of time by catching preventable errors before implementation starts.
 
 When you see an API call being planned, before any code is written:
+
 1. Ask: "Is this API verified?"
 2. Check: "Where's the evidence?"
 3. Verify: "Against official documentation?"
