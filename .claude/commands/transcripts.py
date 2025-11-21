@@ -232,94 +232,42 @@ def get_current_session_id() -> str:
     return datetime.now().strftime("%Y%m%d_%H%M%S")
 
 
-def get_conversation_from_context() -> List[Dict[str, str]]:
-    """Extract conversation data from current context.
-
-    Since we don't have direct access to Claude Code's conversation history,
-    this creates a minimal conversation structure with available information.
-
-    Returns:
-        List of conversation message dictionaries with timestamp, role, and content
-    """
-    # Create a simple conversation entry documenting the save action
-    # In a full implementation, this would integrate with Claude Code's conversation API
-    conversation_data = [
-        {
-            "timestamp": datetime.now().isoformat(),
-            "role": "system",
-            "content": "Conversation transcript saved via /transcripts save command."
-        }
-    ]
-
-    return conversation_data
-
-
-def print_save_result(transcript_path: str, session_id: str) -> None:
-    """Display save confirmation with file path.
-
-    Args:
-        transcript_path: Full path to saved transcript file
-        session_id: Session ID used for saving
-    """
-    print("✅ Conversation transcript saved!")
-    print("━" * 80)
-    print(f"📄 Session ID: {session_id}")
-    print(f"📂 Location: {transcript_path}")
-    print()
-    print("💡 Restore this session later with:")
-    print(f"   /transcripts {session_id}")
-
-
 def save_conversation() -> None:
-    """Save current conversation to transcript file.
+    """Inform user that manual save is not yet implemented.
 
-    Implements the /transcripts save command by:
-    1. Getting current session ID
-    2. Extracting conversation data from context
-    3. Using ContextPreserver to export transcript
-    4. Displaying confirmation with file path
+    The `/transcripts save` command requires integration with Claude Code's
+    internal conversation API to access actual conversation history. Implementing
+    this feature with stub/fake data would violate the Zero-BS Implementation
+    philosophy (no stubs or placeholders).
 
-    Handles edge cases:
-    - Missing session ID (generates new one)
-    - Empty conversation (creates minimal transcript)
-    - Permission errors (reports to user)
+    Users can access automatically saved transcripts via:
+    - `/transcripts list` - Show all available sessions
+    - `/transcripts latest` - Restore most recent session
+    - `/transcripts <session-id>` - Restore specific session
+
+    Automatic transcript saving happens via the PreCompact hook.
     """
-    try:
-        # Get current session ID
-        session_id = get_current_session_id()
-
-        # Import ContextPreserver (lazy import to avoid circular dependencies)
-        try:
-            from context_preservation import ContextPreserver
-        except ImportError:
-            print("❌ Error: Could not import ContextPreserver")
-            print("   Ensure context_preservation.py is available in .claude/tools/amplihack/")
-            return
-
-        # Get conversation data
-        conversation_data = get_conversation_from_context()
-
-        if not conversation_data:
-            print("⚠️  Warning: No conversation data found to save")
-            print("   This may occur if the conversation context is empty")
-            return
-
-        # Create ContextPreserver instance with current session ID
-        preserver = ContextPreserver(session_id=session_id)
-
-        # Export conversation transcript
-        transcript_path = preserver.export_conversation_transcript(conversation_data)
-
-        # Display success message
-        print_save_result(transcript_path, session_id)
-
-    except PermissionError as e:
-        print(f"❌ Permission Error: Could not save transcript")
-        print(f"   {str(e)}")
-        print("   Check file permissions for .claude/runtime/logs/")
-    except Exception as e:
-        print(f"❌ Error saving conversation transcript: {str(e)}")
-        print("   Please check logs for details")
+    print("⚠️  Manual `/transcripts save` Not Yet Implemented")
+    print("━" * 80)
+    print()
+    print("This command requires access to Claude Code's internal conversation")
+    print("API, which is not currently available in the command context.")
+    print()
+    print("✅ Good News: Your conversations are still being saved automatically!")
+    print()
+    print("📝 Available Transcript Commands:")
+    print("   /transcripts list          - Show all available transcripts")
+    print("   /transcripts latest        - Restore most recent session")
+    print("   /transcripts <session-id>  - Restore specific session by ID")
+    print()
+    print("💡 Automatic Saving:")
+    print("   Transcripts are automatically saved before context compaction")
+    print("   by the PreCompact hook, preserving your full conversation history.")
+    print()
+    print("🔧 Why Not Implemented?")
+    print("   Per Zero-BS Implementation philosophy, we don't ship stub")
+    print("   implementations or fake functionality. This feature needs proper")
+    print("   integration with Claude Code's conversation API first.")
 
 
 def main():
