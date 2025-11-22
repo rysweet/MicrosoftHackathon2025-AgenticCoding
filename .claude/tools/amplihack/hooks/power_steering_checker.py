@@ -324,14 +324,23 @@ class PowerSteeringChecker:
             List of consideration dictionaries (from YAML or Phase 1 fallback)
         """
         try:
-            # Check if YAML file exists
+            # Check if YAML file exists in project root
             if not self.considerations_path.exists():
-                self._log("Considerations YAML not found, using Phase 1 fallback", "WARNING")
-                return self.PHASE1_CONSIDERATIONS
+                # Try fallback: Look in the same directory as this script (for testing)
+                script_dir = Path(__file__).parent.parent
+                fallback_yaml = script_dir / "considerations.yaml"
 
-            # Load YAML
-            with open(self.considerations_path) as f:
-                yaml_data = yaml.safe_load(f)
+                if fallback_yaml.exists():
+                    self._log(f"Using fallback considerations from {fallback_yaml}", "INFO")
+                    with open(fallback_yaml) as f:
+                        yaml_data = yaml.safe_load(f)
+                else:
+                    self._log("Considerations YAML not found, using Phase 1 fallback", "WARNING")
+                    return self.PHASE1_CONSIDERATIONS
+            else:
+                # Load YAML from project root
+                with open(self.considerations_path) as f:
+                    yaml_data = yaml.safe_load(f)
 
             # Validate YAML structure
             if not isinstance(yaml_data, list):
@@ -383,6 +392,11 @@ class PowerSteeringChecker:
         # Validate enabled
         if not isinstance(consideration["enabled"], bool):
             return False
+
+        # Validate applicable_session_types if present (optional field for backward compatibility)
+        if "applicable_session_types" in consideration:
+            if not isinstance(consideration["applicable_session_types"], list):
+                return False
 
         return True
 
@@ -749,62 +763,6 @@ class PowerSteeringChecker:
 
         return messages
 
-    def _is_qa_session(self, transcript: List[Dict]) -> bool:
-        """Detect if session is interactive Q&A (skip power-steering).
-
-        Heuristics:
-        1. No tool calls (no file operations)
-        2. High question count in user messages
-        3. Short session (< 5 turns)
-
-        Args:
-            transcript: List of message dictionaries
-
-        Returns:
-            True if Q&A session, False otherwise
-        """
-        # Count tool uses - check for tool_use blocks in assistant messages
-        # Note: We check both 'type' field and 'name' field because transcript
-        # format can vary between direct tool_use blocks and nested formats
-        tool_uses = 0
-        for msg in transcript:
-            if msg.get("type") == "assistant" and "message" in msg:
-                content = msg["message"].get("content", [])
-                if not isinstance(content, list):
-                    content = [content]
-                for block in content:
-                    if isinstance(block, dict):
-                        # Check for tool_use type OR presence of name field (tool indicator)
-                        if block.get("type") == "tool_use" or (
-                            "name" in block and block.get("name")
-                        ):
-                            tool_uses += 1
-
-        # If we have substantial tool usage, not Q&A
-        if tool_uses >= 2:
-            return False
-
-        # If no tool uses, check for Q&A pattern
-        if tool_uses == 0:
-            # Count user messages with questions
-            user_messages = [m for m in transcript if m.get("type") == "user"]
-            if len(user_messages) == 0:
-                return True  # No user messages = skip
-
-            questions = sum(
-                1 for m in user_messages if "?" in str(m.get("message", {}).get("content", ""))
-            )
-
-            # If >50% of user messages are questions, likely Q&A
-            if questions / len(user_messages) > 0.5:
-                return True
-
-        # Short sessions with few tools = likely Q&A
-        if len(transcript) < 5 and tool_uses < 2:
-            return True
-
-        return False
-
     def detect_session_type(self, transcript: List[Dict]) -> str:
         """Detect session type for selective consideration application.
 
@@ -864,19 +822,7 @@ class PowerSteeringChecker:
                             file_path = tool_input.get("file_path", "")
 
                             # Check if code file
-                            code_extensions = [
-                                ".py",
-                                ".js",
-                                ".ts",
-                                ".tsx",
-                                ".jsx",
-                                ".java",
-                                ".go",
-                                ".rs",
-                                ".c",
-                                ".cpp",
-                                ".h",
-                            ]
+                            code_extensions = [".py", ".js", ".ts", ".tsx", ".jsx", ".java", ".go", ".rs", ".c", ".cpp", ".h"]
                             if any(ext in file_path for ext in code_extensions):
                                 code_files_modified = True
                                 doc_files_only = False
@@ -884,11 +830,7 @@ class PowerSteeringChecker:
                             # Check if doc file
                             doc_extensions = [".md", ".txt", ".rst", "README", "CHANGELOG"]
                             if not any(ext in file_path for ext in doc_extensions):
-                                if (
-                                    ".yml" not in file_path
-                                    and ".yaml" not in file_path
-                                    and ".json" not in file_path
-                                ):
+                                if ".yml" not in file_path and ".yaml" not in file_path and ".json" not in file_path:
                                     doc_files_only = False
 
                         # Read/Grep operations (investigation indicators)
@@ -899,14 +841,7 @@ class PowerSteeringChecker:
                         elif tool_name == "Bash":
                             command = tool_input.get("command", "")
                             # Test patterns
-                            test_patterns = [
-                                "pytest",
-                                "npm test",
-                                "cargo test",
-                                "go test",
-                                "python -m pytest",
-                                "python -m unittest",
-                            ]
+                            test_patterns = ["pytest", "npm test", "cargo test", "go test", "python -m pytest", "python -m unittest"]
                             if any(pattern in command for pattern in test_patterns):
                                 test_executions += 1
 
@@ -965,9 +900,10 @@ class PowerSteeringChecker:
             # Check if consideration has applicable_session_types field
             applicable_types = consideration.get("applicable_session_types", [])
 
-            # If no field or empty, this is Phase 1 fallback (backward compatibility)
-            # Phase 1 considerations only apply to DEVELOPMENT by default (strict backward compat)
+            # If no field or empty, check if this is Phase 1 fallback
             if not applicable_types:
+                # Phase 1 considerations (no applicable_session_types field)
+                # Only apply to DEVELOPMENT sessions by default
                 if session_type == "DEVELOPMENT":
                     applicable.append(consideration)
                 continue
@@ -977,6 +913,62 @@ class PowerSteeringChecker:
                 applicable.append(consideration)
 
         return applicable
+
+    def _is_qa_session(self, transcript: List[Dict]) -> bool:
+        """Detect if session is interactive Q&A (skip power-steering).
+
+        Heuristics:
+        1. No tool calls (no file operations)
+        2. High question count in user messages
+        3. Short session (< 5 turns)
+
+        Args:
+            transcript: List of message dictionaries
+
+        Returns:
+            True if Q&A session, False otherwise
+        """
+        # Count tool uses - check for tool_use blocks in assistant messages
+        # Note: We check both 'type' field and 'name' field because transcript
+        # format can vary between direct tool_use blocks and nested formats
+        tool_uses = 0
+        for msg in transcript:
+            if msg.get("type") == "assistant" and "message" in msg:
+                content = msg["message"].get("content", [])
+                if not isinstance(content, list):
+                    content = [content]
+                for block in content:
+                    if isinstance(block, dict):
+                        # Check for tool_use type OR presence of name field (tool indicator)
+                        if block.get("type") == "tool_use" or (
+                            "name" in block and block.get("name")
+                        ):
+                            tool_uses += 1
+
+        # If we have substantial tool usage, not Q&A
+        if tool_uses >= 2:
+            return False
+
+        # If no tool uses, check for Q&A pattern
+        if tool_uses == 0:
+            # Count user messages with questions
+            user_messages = [m for m in transcript if m.get("type") == "user"]
+            if len(user_messages) == 0:
+                return True  # No user messages = skip
+
+            questions = sum(
+                1 for m in user_messages if "?" in str(m.get("message", {}).get("content", ""))
+            )
+
+            # If >50% of user messages are questions, likely Q&A
+            if questions / len(user_messages) > 0.5:
+                return True
+
+        # Short sessions with few tools = likely Q&A
+        if len(transcript) < 5 and tool_uses < 2:
+            return True
+
+        return False
 
     def _analyze_considerations(
         self, transcript: List[Dict], session_id: str, session_type: str = None

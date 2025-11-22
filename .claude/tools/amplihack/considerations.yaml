@@ -12,12 +12,15 @@
 #   severity: "blocker" (blocks session end) or "warning" (advisory only)
 #   checker: Method name in PowerSteeringChecker, or "generic" for keyword matching
 #   enabled: true/false to enable/disable this check
-#   applicable_session_types: List of session types where this applies
-#     - "DEVELOPMENT": Code changes, tests, PR operations
-#     - "INFORMATIONAL": Q&A, help queries, capability questions
-#     - "MAINTENANCE": Documentation and configuration updates only
-#     - "INVESTIGATION": Read-only exploration and analysis
-#     - "*": Applies to all session types
+#   applicable_session_types: List of session types this consideration applies to
+#                             ["DEVELOPMENT", "INFORMATIONAL", "MAINTENANCE", "INVESTIGATION"]
+#                             or ["*"] for all types
+#
+# Session Types:
+#   - DEVELOPMENT: Full workflow with code changes, tests, PR operations
+#   - INFORMATIONAL: Q&A, help queries, capability questions (minimal checks)
+#   - MAINTENANCE: Documentation and configuration updates only
+#   - INVESTIGATION: Read-only exploration and analysis
 #
 # Categories:
 #   1. Session Completion & Progress
