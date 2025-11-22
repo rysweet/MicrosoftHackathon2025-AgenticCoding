@@ -494,6 +494,19 @@ Should I create delegation packages for this sequence?
 - **REFERENCE.md**: Detailed algorithms, scoring formulas, autopilot logic
 - **EXAMPLES.md**: Complete usage scenarios with dialogue
 - **scripts/**: Utility scripts for backlog analysis, delegation, coordination
+- **Claude Code Skill Best Practices**: https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
+
+### Important: Claude Code Skill Best Practices
+
+For THIS PROJECT, the PM Architect should consult the Claude Code Skill Best Practices when:
+
+- Designing delegation packages for agents
+- Creating or updating skill definitions
+- Coordinating work that involves skill development
+- Reviewing agent performance and improving agent coordination
+- Making architectural decisions about agent orchestration
+
+The best practices guide provides authoritative guidance on skill design, agent coordination patterns, and effective delegation strategies that align with Claude Code's philosophy.
 
 ## Philosophy Alignment
 
