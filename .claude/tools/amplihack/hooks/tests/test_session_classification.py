@@ -915,5 +915,136 @@ class TestConsiderationMapping(unittest.TestCase):
         self.assertNotIn("ci_status", consideration_ids)
 
 
+class TestPerformance(unittest.TestCase):
+    """Performance tests for session classification."""
+
+    def setUp(self):
+        """Set up test fixtures."""
+        self.temp_dir = tempfile.mkdtemp()
+        self.project_root = Path(self.temp_dir)
+
+        (self.project_root / ".claude" / "tools" / "amplihack").mkdir(parents=True, exist_ok=True)
+        (self.project_root / ".claude" / "runtime" / "power-steering").mkdir(
+            parents=True, exist_ok=True
+        )
+
+        config_path = (
+            self.project_root / ".claude" / "tools" / "amplihack" / ".power_steering_config"
+        )
+        config = {"enabled": True, "version": "2.1.0", "phase": 2}
+        config_path.write_text(json.dumps(config, indent=2))
+
+        self.checker = PowerSteeringChecker(self.project_root)
+
+    def tearDown(self):
+        """Clean up test fixtures."""
+        import shutil
+
+        shutil.rmtree(self.temp_dir)
+
+    def test_classification_performance_under_500ms(self):
+        """Session type classification should complete in under 500ms."""
+        import time
+
+        # Create a realistic transcript with mixed operations
+        transcript = []
+
+        # Add 50 messages (realistic session size)
+        for i in range(50):
+            # User messages
+            transcript.append(
+                {
+                    "type": "user",
+                    "message": {"content": f"Please implement feature {i}"},
+                }
+            )
+
+            # Assistant responses with tool usage
+            transcript.append(
+                {
+                    "type": "assistant",
+                    "message": {
+                        "content": [
+                            {
+                                "type": "tool_use",
+                                "name": "Write",
+                                "input": {"file_path": f"src/module{i}.py"},
+                            },
+                        ]
+                    },
+                }
+            )
+
+            transcript.append(
+                {
+                    "type": "assistant",
+                    "message": {
+                        "content": [
+                            {
+                                "type": "tool_use",
+                                "name": "Read",
+                                "input": {"file_path": f"src/other{i}.py"},
+                            },
+                        ]
+                    },
+                }
+            )
+
+        # Measure classification time
+        start_time = time.time()
+        session_type = self.checker.detect_session_type(transcript)
+        elapsed_ms = (time.time() - start_time) * 1000
+
+        # Verify it completed in under 500ms
+        self.assertLess(
+            elapsed_ms, 500, f"Classification took {elapsed_ms:.2f}ms, should be < 500ms"
+        )
+
+        # Verify correct classification
+        self.assertEqual(session_type, "DEVELOPMENT")
+
+    def test_classification_performance_large_transcript(self):
+        """Classification should handle large transcripts efficiently."""
+        import time
+
+        # Create a large transcript (200 messages)
+        transcript = []
+        for i in range(200):
+            transcript.append(
+                {
+                    "type": "user",
+                    "message": {"content": f"Request {i}"},
+                }
+            )
+            transcript.append(
+                {
+                    "type": "assistant",
+                    "message": {
+                        "content": [
+                            {
+                                "type": "tool_use",
+                                "name": "Read",
+                                "input": {"file_path": f"file{i}.py"},
+                            },
+                        ]
+                    },
+                }
+            )
+
+        # Measure classification time
+        start_time = time.time()
+        _ = self.checker.detect_session_type(
+            transcript
+        )  # Result not used, just measuring performance
+        elapsed_ms = (time.time() - start_time) * 1000
+
+        # Should still complete in reasonable time (under 1 second for large transcript)
+        self.assertLess(
+            elapsed_ms,
+            1000,
+            f"Large transcript classification took {elapsed_ms:.2f}ms, should be < 1000ms",
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -158,6 +158,31 @@ class PowerSteeringChecker:
     - Fail-open error handling
     """
 
+    # File extension constants for session type detection
+    CODE_FILE_EXTENSIONS = [
+        ".py",
+        ".js",
+        ".ts",
+        ".tsx",
+        ".jsx",
+        ".java",
+        ".go",
+        ".rs",
+        ".c",
+        ".cpp",
+        ".h",
+    ]
+    DOC_FILE_EXTENSIONS = [".md", ".txt", ".rst", "README", "CHANGELOG"]
+    CONFIG_FILE_EXTENSIONS = [".yml", ".yaml", ".json"]
+    TEST_COMMAND_PATTERNS = [
+        "pytest",
+        "npm test",
+        "cargo test",
+        "go test",
+        "python -m pytest",
+        "python -m unittest",
+    ]
+
     # Phase 1 fallback: Hardcoded considerations (top 5 critical)
     # Used when YAML file is missing or invalid
     PHASE1_CONSIDERATIONS = [
@@ -763,6 +788,95 @@ class PowerSteeringChecker:
 
         return messages
 
+    def _has_development_indicators(
+        self,
+        code_files_modified: bool,
+        test_executions: int,
+        pr_operations: bool,
+    ) -> bool:
+        """Check if transcript shows development indicators.
+
+        Args:
+            code_files_modified: Whether code files were modified
+            test_executions: Number of test executions
+            pr_operations: Whether PR operations were performed
+
+        Returns:
+            True if development indicators present
+        """
+        return code_files_modified or test_executions > 0 or pr_operations
+
+    def _has_informational_indicators(
+        self,
+        write_edit_operations: int,
+        read_grep_operations: int,
+        question_count: int,
+        user_messages: List[Dict],
+    ) -> bool:
+        """Check if transcript shows informational session indicators.
+
+        Args:
+            write_edit_operations: Number of Write/Edit operations
+            read_grep_operations: Number of Read/Grep operations
+            question_count: Number of questions in user messages
+            user_messages: List of user message dicts
+
+        Returns:
+            True if informational indicators present
+        """
+        # No tool usage or only Read tools with high question density
+        if write_edit_operations == 0:
+            if read_grep_operations <= 1 and question_count > 0:
+                # High question density indicates INFORMATIONAL
+                if user_messages and question_count / len(user_messages) > 0.5:
+                    return True
+        return False
+
+    def _has_maintenance_indicators(
+        self,
+        write_edit_operations: int,
+        doc_files_only: bool,
+        git_operations: bool,
+        code_files_modified: bool,
+    ) -> bool:
+        """Check if transcript shows maintenance indicators.
+
+        Args:
+            write_edit_operations: Number of Write/Edit operations
+            doc_files_only: Whether only doc files were modified
+            git_operations: Whether git operations were performed
+            code_files_modified: Whether code files were modified
+
+        Returns:
+            True if maintenance indicators present
+        """
+        # Only doc/config files modified
+        if write_edit_operations > 0 and doc_files_only:
+            return True
+
+        # Git operations without code changes
+        if git_operations and not code_files_modified and write_edit_operations == 0:
+            return True
+
+        return False
+
+    def _has_investigation_indicators(
+        self,
+        read_grep_operations: int,
+        write_edit_operations: int,
+    ) -> bool:
+        """Check if transcript shows investigation indicators.
+
+        Args:
+            read_grep_operations: Number of Read/Grep operations
+            write_edit_operations: Number of Write/Edit operations
+
+        Returns:
+            True if investigation indicators present
+        """
+        # Multiple Read/Grep without modifications
+        return read_grep_operations >= 2 and write_edit_operations == 0
+
     def detect_session_type(self, transcript: List[Dict]) -> str:
         """Detect session type for selective consideration application.
 
@@ -821,16 +935,14 @@ class PowerSteeringChecker:
                             write_edit_operations += 1
                             file_path = tool_input.get("file_path", "")
 
-                            # Check if code file
-                            code_extensions = [".py", ".js", ".ts", ".tsx", ".jsx", ".java", ".go", ".rs", ".c", ".cpp", ".h"]
-                            if any(ext in file_path for ext in code_extensions):
+                            # Check if code file using class constant
+                            if any(ext in file_path for ext in self.CODE_FILE_EXTENSIONS):
                                 code_files_modified = True
                                 doc_files_only = False
 
-                            # Check if doc file
-                            doc_extensions = [".md", ".txt", ".rst", "README", "CHANGELOG"]
-                            if not any(ext in file_path for ext in doc_extensions):
-                                if ".yml" not in file_path and ".yaml" not in file_path and ".json" not in file_path:
+                            # Check if doc file using class constants
+                            if not any(ext in file_path for ext in self.DOC_FILE_EXTENSIONS):
+                                if not any(ext in file_path for ext in self.CONFIG_FILE_EXTENSIONS):
                                     doc_files_only = False
 
                         # Read/Grep operations (investigation indicators)
@@ -840,9 +952,8 @@ class PowerSteeringChecker:
                         # Test execution
                         elif tool_name == "Bash":
                             command = tool_input.get("command", "")
-                            # Test patterns
-                            test_patterns = ["pytest", "npm test", "cargo test", "go test", "python -m pytest", "python -m unittest"]
-                            if any(pattern in command for pattern in test_patterns):
+                            # Test patterns using class constant
+                            if any(pattern in command for pattern in self.TEST_COMMAND_PATTERNS):
                                 test_executions += 1
 
                             # PR operations
@@ -853,33 +964,27 @@ class PowerSteeringChecker:
                             if "git commit" in command or "git push" in command:
                                 git_operations = True
 
-        # Decision logic (priority order)
+        # Decision logic (priority order) using helper methods
 
         # DEVELOPMENT: Highest priority if code changes detected
-        if code_files_modified or test_executions > 0 or pr_operations:
+        if self._has_development_indicators(code_files_modified, test_executions, pr_operations):
             return "DEVELOPMENT"
 
         # INFORMATIONAL: No tool usage or only Read tools with high question density
-        if write_edit_operations == 0:
-            if read_grep_operations <= 1 and question_count > 0:
-                # High question density indicates INFORMATIONAL
-                if user_messages and question_count / len(user_messages) > 0.5:
-                    return "INFORMATIONAL"
-            # Multiple Read/Grep without modifications = INVESTIGATION
-            if read_grep_operations >= 2:
-                return "INVESTIGATION"
+        if self._has_informational_indicators(
+            write_edit_operations, read_grep_operations, question_count, user_messages
+        ):
+            return "INFORMATIONAL"
+
+        # Multiple Read/Grep without modifications = INVESTIGATION
+        if self._has_investigation_indicators(read_grep_operations, write_edit_operations):
+            return "INVESTIGATION"
 
         # MAINTENANCE: Only doc/config files modified OR git operations without code changes
-        if write_edit_operations > 0 and doc_files_only:
+        if self._has_maintenance_indicators(
+            write_edit_operations, doc_files_only, git_operations, code_files_modified
+        ):
             return "MAINTENANCE"
-
-        # Git operations without code changes = MAINTENANCE
-        if git_operations and not code_files_modified and write_edit_operations == 0:
-            return "MAINTENANCE"
-
-        # INVESTIGATION: Read-only operations with analysis
-        if read_grep_operations >= 2 and write_edit_operations == 0:
-            return "INVESTIGATION"
 
         # Default to INFORMATIONAL if unclear (fail-open, conservative)
         return "INFORMATIONAL"
@@ -1276,18 +1381,10 @@ class PowerSteeringChecker:
                                             tool_name = block.get("name", "")
                                             if tool_name == "Bash":
                                                 command = block.get("input", {}).get("command", "")
-                                                # Look for test commands
-                                                test_patterns = [
-                                                    "pytest",
-                                                    "npm test",
-                                                    "npm run test",
-                                                    "cargo test",
-                                                    "go test",
-                                                    "python -m pytest",
-                                                    "python -m unittest",
-                                                ]
+                                                # Look for test commands using class constant
                                                 if any(
-                                                    pattern in command for pattern in test_patterns
+                                                    pattern in command
+                                                    for pattern in self.TEST_COMMAND_PATTERNS
                                                 ):
                                                     # Check result
                                                     result_content = msg_data.get("content", [])
@@ -1531,18 +1628,12 @@ class PowerSteeringChecker:
                                 tool_input = block.get("input", {})
                                 file_path = tool_input.get("file_path", "")
 
-                                # Check for code files
-                                if any(
-                                    ext in file_path
-                                    for ext in [".py", ".js", ".ts", ".java", ".go", ".rs"]
-                                ):
+                                # Check for code files using class constant
+                                if any(ext in file_path for ext in self.CODE_FILE_EXTENSIONS):
                                     code_files_modified = True
 
-                                # Check for doc files
-                                if any(
-                                    ext in file_path
-                                    for ext in [".md", ".rst", ".txt", "README", "CHANGELOG"]
-                                ):
+                                # Check for doc files using class constant
+                                if any(ext in file_path for ext in self.DOC_FILE_EXTENSIONS):
                                     doc_files_modified = True
 
         # If code was modified but no docs updated, flag as issue
