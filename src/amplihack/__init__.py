@@ -123,13 +123,14 @@ def ensure_dirs() -> None:
     os.makedirs(CLAUDE_DIR, exist_ok=True)
 
 
-def copytree_manifest(repo_root: str, dst: str, rel_top: str = ".claude") -> list[str]:
+def copytree_manifest(repo_root: str, dst: str, rel_top: str = ".claude", use_namespace: bool = True) -> list[str]:
     """Copy all essential directories from repo to destination.
 
     Args:
         repo_root: Path to the repository root or package directory
         dst: Destination directory (usually ~/.claude)
         rel_top: Relative path to .claude directory
+        use_namespace: If True, install to .claude/amplihack/ namespace (default)
 
     Returns:
         List of copied directory paths relative to dst
@@ -151,6 +152,13 @@ def copytree_manifest(repo_root: str, dst: str, rel_top: str = ".claude") -> lis
 
     copied = []
 
+    # Determine installation target
+    if use_namespace:
+        namespace_dst = os.path.join(dst, "amplihack")
+        print(f"  📦 Installing to namespace: {namespace_dst}")
+    else:
+        namespace_dst = dst
+
     for dir_path in ESSENTIAL_DIRS:
         source_dir = os.path.join(base, dir_path)
 
@@ -159,7 +167,11 @@ def copytree_manifest(repo_root: str, dst: str, rel_top: str = ".claude") -> lis
             print(f"  ⚠️  Warning: {dir_path} not found in source, skipping")
             continue
 
-        target_dir = os.path.join(dst, dir_path)
+        # Install to namespace if enabled
+        if use_namespace:
+            target_dir = os.path.join(namespace_dst, dir_path)
+        else:
+            target_dir = os.path.join(dst, dir_path)
 
         # Create parent directories if needed
         os.makedirs(os.path.dirname(target_dir), exist_ok=True)
