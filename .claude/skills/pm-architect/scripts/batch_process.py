@@ -4,11 +4,22 @@
 Pattern: Amplifier P2 - Iterative Status Tracking for Batch Operations
 Handles 100+ items with state persistence and resume capability.
 
-Usage:
-    python batch_process.py [--project-root PATH] [--processor SCRIPT] [--batch-size N]
+This is a library module providing the BatchProcessor class.
+Import and use in your own scripts with a real processor function.
 
-Example:
-    python batch_process.py --processor analyze_backlog.py --batch-size 10
+Library Usage:
+    from batch_process import BatchProcessor
+
+    def my_processor(item):
+        # Your actual processing logic here
+        return {"result": process(item)}
+
+    processor = BatchProcessor(Path.cwd(), "my_processor")
+    results = processor.process_items(items, my_processor, batch_size=10)
+
+CLI Usage (status/reset only):
+    python batch_process.py --status [--processor NAME]
+    python batch_process.py --reset --processor NAME
 """
 
 import argparse
@@ -219,26 +230,20 @@ def main():
             print(json.dumps(progress, indent=2))
             return 0
 
-        # Load backlog items
-        pm_dir = args.project_root / ".pm"
-        backlog_data = load_yaml(pm_dir / "backlog" / "items.yaml")
-        items = backlog_data.get("items", [])
-
-        if not items:
-            print(json.dumps({"error": "No items to process"}), file=sys.stderr)
-            return 1
-
-        # Example processor function (would be customized per use case)
-        def example_processor(item: Dict) -> Dict:
-            """Example processor - analyze single backlog item."""
-            # This would call actual processing logic
-            return {"processed": True, "item_id": item["id"]}
-
-        # Process all items
-        result = processor.process_items(items, example_processor, args.batch_size)
-        print(json.dumps(result, indent=2))
-
-        return 0
+        # This script provides the BatchProcessor class for use by other scripts
+        # It is not meant to be run directly - import BatchProcessor and provide
+        # your own processor function that implements real business logic
+        print(
+            json.dumps(
+                {
+                    "error": "batch_process.py is a library module, not a standalone script",
+                    "usage": "Import BatchProcessor class and provide your own processor function",
+                    "example": "from batch_process import BatchProcessor; processor = BatchProcessor(...)",
+                }
+            ),
+            file=sys.stderr,
+        )
+        return 1
 
     except Exception as e:
         print(json.dumps({"error": str(e)}), file=sys.stderr)
