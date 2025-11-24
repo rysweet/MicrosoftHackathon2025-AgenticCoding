@@ -213,9 +213,9 @@ cat .claude/runtime/power-steering/power_steering.log
 
 **Disable Methods** (in priority order):
 
-1. Semaphore file: `.claude/runtime/power-steering/.disabled` (runtime, immediate effect)
-2. Environment: `export AMPLIHACK_SKIP_POWER_STEERING=1` (session-level, next session)
-3. Config: Set `"enabled": false` in `.claude/tools/amplihack/.power_steering_config` (startup default)
+1. Semaphore file: `.claude/runtime/power-steering/.disabled` (runtime, immediate effect in current session)
+2. Environment: `export AMPLIHACK_SKIP_POWER_STEERING=1` (affects sessions started after setting this variable)
+3. Config: Set `"enabled": false` in `.claude/tools/amplihack/.power_steering_config` (default behavior at startup)
 
 ### Solution
 

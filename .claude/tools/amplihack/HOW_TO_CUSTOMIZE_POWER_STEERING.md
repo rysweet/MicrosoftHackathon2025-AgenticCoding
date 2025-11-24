@@ -532,7 +532,7 @@ Power-steering can be disabled using three control mechanisms (in priority order
 mkdir -p .claude/runtime/power-steering && touch .claude/runtime/power-steering/.disabled
 
 # Method 2: Session disable (medium priority)
-# Disables for current session only
+# Affects sessions started after setting this variable
 export AMPLIHACK_SKIP_POWER_STEERING=1
 
 # Method 3: Startup disable (lowest priority)
