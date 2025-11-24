@@ -1,0 +1,2377 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI-powered development framework for Claude Code">
+      
+      
+      
+        <link rel="canonical" href="https://rysweet.github.io/MicrosoftHackathon2025-AgenticCoding/testing/AUTO_MODE_UI_TEST_SUITE/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Auto Mode Interactive UI - Comprehensive TDD Test Suite - amplihack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#auto-mode-interactive-ui-comprehensive-tdd-test-suite" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="amplihack" class="md-header__button md-logo" aria-label="amplihack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            amplihack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Auto Mode Interactive UI - Comprehensive TDD Test Suite
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amplihack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../PREREQUISITES/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../PHILOSOPHY/" class="md-tabs__link">
+          
+  
+  
+  Core Concepts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../AUTO_MODE/" class="md-tabs__link">
+          
+  
+  
+  Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../DEVELOPING_AMPLIHACK/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../BENCHMARKING/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="amplihack" class="md-nav__button md-logo" aria-label="amplihack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    amplihack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amplihack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PREREQUISITES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AUTO_MODE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PROXY_CONFIG_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PHILOSOPHY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../WORKFLOW_COMPLETION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Features
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AUTO_MODE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agent-bundle-generator-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Bundles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../document_driven_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Document-Driven Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/power-steering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Power-Steering Mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/power-steering/customization-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Power-Steering Customization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DEVELOPING_AMPLIHACK/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../IMPLEMENTATION_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CREATE_YOUR_OWN_TOOLS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BENCHMARKING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DISCOVERIES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discoveries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executive Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-suite-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Suite Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Test Suite Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#files-created" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files Created
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-pyramid-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Pyramid Distribution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing Pyramid Distribution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#coverage-by-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coverage by Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#feature-requirements-tested" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature Requirements Tested
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Feature Requirements Tested">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-interactive-ui-with-5-areas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Interactive UI with 5 Areas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-keyboard-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Keyboard Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-claude-agent-sdk-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Claude Agent SDK Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-rich-cli-library-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Rich CLI Library Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-thread-based-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Thread-Based Execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Organization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Test Organization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-ui-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: UI Foundation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-threading-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Threading Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-sdk-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3: SDK Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-user-interactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4: User Interactions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-5-end-to-end-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5: End-to-End Workflows
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#critical-paths-tested" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Critical Paths Tested
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Critical Paths Tested">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#startup-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Startup Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#injection-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Injection Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pauseresume-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pause/Resume Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#boundary-conditions-tested" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boundary Conditions Tested
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Boundary Conditions Tested">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#emptyzero-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Empty/Zero Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#large-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Large Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edge-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Edge Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thread-safety-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Thread Safety Verification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Thread Safety Verification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#protected-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protected State
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#signals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Signals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#race-condition-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Race Condition Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deadlock-prevention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deadlock Prevention
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Targets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Targets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ui-responsiveness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI Responsiveness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#throughput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Throughput
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Roadmap
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Roadmap">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#week-1-ui-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 1: UI Foundation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-2-threading-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 2: Threading Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-3-sdk-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 3: SDK Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-4-user-interactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 4: User Interactions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-5-e2e-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 5: E2E Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-6-polish-bug-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 6: Polish &amp; Bug Fixes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-the-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Running the Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#all-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        All Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#by-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        By Phase
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With Coverage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expected-initial-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Initial State
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success Criteria
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Success Criteria">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Complete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-targets-met" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Targets Met
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quality-gates-passed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quality Gates Passed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-acceptance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Acceptance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contact-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contact &amp; Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="auto-mode-interactive-ui-comprehensive-tdd-test-suite">Auto Mode Interactive UI - Comprehensive TDD Test Suite<a class="headerlink" href="#auto-mode-interactive-ui-comprehensive-tdd-test-suite" title="Permanent link">&para;</a></h1>
+<h2 id="executive-summary">Executive Summary<a class="headerlink" href="#executive-summary" title="Permanent link">&para;</a></h2>
+<p>This comprehensive test-driven development (TDD) test suite provides complete specifications for implementing the Auto Mode Interactive UI feature. All tests are designed to <strong>FAIL initially</strong> and serve as living documentation guiding implementation.</p>
+<h2 id="test-suite-overview">Test Suite Overview<a class="headerlink" href="#test-suite-overview" title="Permanent link">&para;</a></h2>
+<h3 id="files-created">Files Created<a class="headerlink" href="#files-created" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>tests/unit/test_auto_mode_ui.py</strong> (380 lines)</li>
+<li>UI component tests</li>
+<li>10 test classes, 40+ tests</li>
+<li>
+<p>Coverage: Initialization, title generation, session details, todos, logs, input, keyboard commands, edge cases</p>
+</li>
+<li>
+<p><strong>tests/unit/test_ui_threading.py</strong> (300 lines)</p>
+</li>
+<li>Threading and concurrency tests</li>
+<li>6 test classes, 25+ tests</li>
+<li>
+<p>Coverage: Background threads, thread safety, communication, shutdown, synchronization, error handling</p>
+</li>
+<li>
+<p><strong>tests/unit/test_ui_sdk_integration.py</strong> (280 lines)</p>
+</li>
+<li>Claude SDK integration tests</li>
+<li>6 test classes, 30+ tests</li>
+<li>
+<p>Coverage: Title generation, cost tracking, todo updates, streaming, error handling, performance</p>
+</li>
+<li>
+<p><strong>tests/integration/test_auto_mode_ui_integration.py</strong> (320 lines)</p>
+</li>
+<li>End-to-end integration tests</li>
+<li>5 test classes, 20+ tests</li>
+<li>
+<p>Coverage: Full workflows, prompt injection, pause/resume, exit behavior, error recovery</p>
+</li>
+<li>
+<p><strong>tests/unit/README_AUTO_MODE_UI_TESTS.md</strong> (Complete documentation)</p>
+</li>
+<li>Test structure and organization</li>
+<li>Implementation guide by phase</li>
+<li>Common issues and solutions</li>
+<li>Success criteria</li>
+</ol>
+<p><strong>Total</strong>: 1,280+ lines of comprehensive tests, 115+ test cases</p>
+<h2 id="testing-pyramid-distribution">Testing Pyramid Distribution<a class="headerlink" href="#testing-pyramid-distribution" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>         /\
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>        /  \      E2E Tests (10%)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>       /____\     - Full workflows
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>      /      \    Integration Tests (30%)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>     /        \   - Component interaction
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    /__________\  Unit Tests (60%)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                  - Individual components
+</code></pre></div>
+<h3 id="coverage-by-type">Coverage by Type<a class="headerlink" href="#coverage-by-type" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Unit Tests</strong>: 60% (~70 tests) - Component isolation, edge cases, boundaries</li>
+<li><strong>Integration Tests</strong>: 30% (~35 tests) - SDK integration, thread communication</li>
+<li><strong>E2E Tests</strong>: 10% (~20 tests) - Complete user journeys</li>
+</ul>
+<h2 id="feature-requirements-tested">Feature Requirements Tested<a class="headerlink" href="#feature-requirements-tested" title="Permanent link">&para;</a></h2>
+<h3 id="1-interactive-ui-with-5-areas">1. Interactive UI with 5 Areas<a class="headerlink" href="#1-interactive-ui-with-5-areas" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✓ Title panel (generated from prompt via Claude SDK)</li>
+<li>✓ Session details panel (turn counter, elapsed time, cost tracking)</li>
+<li>✓ Todo list panel (status indicators, current task highlighting)</li>
+<li>✓ Log area panel (streaming output, timestamps, buffer management)</li>
+<li>✓ Prompt input panel (multiline support, instruction queueing)</li>
+</ul>
+<h3 id="2-keyboard-commands">2. Keyboard Commands<a class="headerlink" href="#2-keyboard-commands" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✓ 'x' - Exit UI, continue auto mode in background</li>
+<li>✓ 'p' - Pause/resume execution</li>
+<li>✓ 'k' - Kill auto mode completely</li>
+<li>✓ 'h' - Show help overlay (bonus)</li>
+</ul>
+<h3 id="3-claude-agent-sdk-integration">3. Claude Agent SDK Integration<a class="headerlink" href="#3-claude-agent-sdk-integration" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✓ Title generation via SDK query()</li>
+<li>✓ Cost tracking (input/output tokens, estimated cost)</li>
+<li>✓ Message streaming (AssistantMessage, ToolUseMessage, ResultMessage)</li>
+<li>✓ Error handling (connection errors, rate limits, timeouts)</li>
+<li>✓ Performance metrics (latency, throughput)</li>
+</ul>
+<h3 id="4-rich-cli-library-implementation">4. Rich CLI Library Implementation<a class="headerlink" href="#4-rich-cli-library-implementation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✓ Layout structure (5 panels with proper sizing)</li>
+<li>✓ Live updates (panel content refresh)</li>
+<li>✓ Styling (colors, highlighting, status indicators)</li>
+<li>✓ Unicode support (emoji, CJK characters)</li>
+</ul>
+<h3 id="5-thread-based-execution">5. Thread-Based Execution<a class="headerlink" href="#5-thread-based-execution" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✓ Background thread for auto mode</li>
+<li>✓ Main thread for UI rendering</li>
+<li>✓ Thread-safe state sharing (Locks, Events, Queue)</li>
+<li>✓ Graceful shutdown and cleanup</li>
+<li>✓ No deadlocks or race conditions</li>
+</ul>
+<h2 id="test-organization">Test Organization<a class="headerlink" href="#test-organization" title="Permanent link">&para;</a></h2>
+<h3 id="phase-1-ui-foundation">Phase 1: UI Foundation<a class="headerlink" href="#phase-1-ui-foundation" title="Permanent link">&para;</a></h3>
+<p><strong>File</strong>: test_auto_mode_ui.py
+<strong>Classes</strong>: TestAutoModeUIInitialization, TestUITitleGeneration, TestSessionDetailsDisplay</p>
+<p><strong>Focus</strong>:</p>
+<ul>
+<li>UI instance creation with ui_mode=True</li>
+<li>Rich layout with 5 panels</li>
+<li>Title generation (SDK + fallback)</li>
+<li>Session panel (turn, time, cost)</li>
+</ul>
+<p><strong>Key Tests</strong>:</p>
+<ul>
+<li>test_ui_mode_creates_ui_instance()</li>
+<li>test_ui_has_required_components()</li>
+<li>test_title_generation_uses_claude_sdk()</li>
+<li>test_session_panel_shows_turn_counter()</li>
+</ul>
+<h3 id="phase-2-threading-infrastructure">Phase 2: Threading Infrastructure<a class="headerlink" href="#phase-2-threading-infrastructure" title="Permanent link">&para;</a></h3>
+<p><strong>File</strong>: test_ui_threading.py
+<strong>Classes</strong>: TestAutoModeBackgroundThread, TestThreadSafeStateSharing, TestGracefulShutdown</p>
+<p><strong>Focus</strong>:</p>
+<ul>
+<li>Background thread creation</li>
+<li>Thread-safe state (turn, logs, todos, cost)</li>
+<li>UI-to-AutoMode communication</li>
+<li>Shutdown and cleanup</li>
+</ul>
+<p><strong>Key Tests</strong>:</p>
+<ul>
+<li>test_auto_mode_creates_background_thread()</li>
+<li>test_turn_counter_is_thread_safe()</li>
+<li>test_log_queue_is_thread_safe()</li>
+<li>test_shutdown_cleans_up_resources()</li>
+</ul>
+<h3 id="phase-3-sdk-integration">Phase 3: SDK Integration<a class="headerlink" href="#phase-3-sdk-integration" title="Permanent link">&para;</a></h3>
+<p><strong>File</strong>: test_ui_sdk_integration.py
+<strong>Classes</strong>: TestTitleGenerationViaSDK, TestCostTrackingDisplay, TestSDKStreamingToUI</p>
+<p><strong>Focus</strong>:</p>
+<ul>
+<li>Claude SDK query() calls</li>
+<li>Token counting and cost calculation</li>
+<li>Message streaming to logs</li>
+<li>Error handling and retries</li>
+</ul>
+<p><strong>Key Tests</strong>:</p>
+<ul>
+<li>test_title_generation_calls_claude_sdk()</li>
+<li>test_cost_accumulates_across_turns()</li>
+<li>test_assistant_messages_stream_to_logs()</li>
+<li>test_sdk_connection_error_shown_in_ui()</li>
+</ul>
+<h3 id="phase-4-user-interactions">Phase 4: User Interactions<a class="headerlink" href="#phase-4-user-interactions" title="Permanent link">&para;</a></h3>
+<p><strong>File</strong>: test_auto_mode_ui.py
+<strong>Classes</strong>: TestPromptInputHandling, TestKeyboardCommands, TestTodoListIntegration</p>
+<p><strong>Focus</strong>:</p>
+<ul>
+<li>Keyboard command handling</li>
+<li>Prompt input and injection</li>
+<li>Todo list updates</li>
+<li>Log area updates</li>
+</ul>
+<p><strong>Key Tests</strong>:</p>
+<ul>
+<li>test_keyboard_command_x_exits_ui()</li>
+<li>test_keyboard_command_p_pauses_execution()</li>
+<li>test_input_creates_instruction_file()</li>
+<li>test_todo_panel_displays_current_todos()</li>
+</ul>
+<h3 id="phase-5-end-to-end-workflows">Phase 5: End-to-End Workflows<a class="headerlink" href="#phase-5-end-to-end-workflows" title="Permanent link">&para;</a></h3>
+<p><strong>File</strong>: test_auto_mode_ui_integration.py
+<strong>Classes</strong>: TestFullUIWorkflow, TestPromptInjectionViaUI, TestPauseAndResume</p>
+<p><strong>Focus</strong>:</p>
+<ul>
+<li>Complete startup to completion</li>
+<li>Live instruction injection</li>
+<li>Pause/resume flow</li>
+<li>Exit to terminal mode</li>
+</ul>
+<p><strong>Key Tests</strong>:</p>
+<ul>
+<li>test_ui_starts_and_displays_initial_state()</li>
+<li>test_inject_instruction_during_execution()</li>
+<li>test_pause_stops_new_turns()</li>
+<li>test_exit_ui_keeps_automode_running()</li>
+</ul>
+<h2 id="critical-paths-tested">Critical Paths Tested<a class="headerlink" href="#critical-paths-tested" title="Permanent link">&para;</a></h2>
+<h3 id="startup-flow">Startup Flow<a class="headerlink" href="#startup-flow" title="Permanent link">&para;</a></h3>
+<ol>
+<li>AutoMode(ui_mode=True) → Creates UI instance</li>
+<li>UI.<strong>init</strong>() → Creates 5 panels with Rich layout</li>
+<li>generate_title() → Claude SDK query for concise title</li>
+<li>start_background() → Creates execution thread</li>
+<li>UI render loop → Display initial state</li>
+</ol>
+<h3 id="execution-flow">Execution Flow<a class="headerlink" href="#execution-flow" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Auto mode runs in background thread</li>
+<li>Logs queued via Queue → UI consumes and displays</li>
+<li>Turn counter updated → Session panel refreshes</li>
+<li>Todos updated → Todo panel refreshes</li>
+<li>Cost info updated → Session panel shows tokens/cost</li>
+</ol>
+<h3 id="injection-flow">Injection Flow<a class="headerlink" href="#injection-flow" title="Permanent link">&para;</a></h3>
+<ol>
+<li>User types in input panel → Text queued</li>
+<li>User submits → Write to append/TIMESTAMP.md</li>
+<li>Auto mode checks before turn → Detects new file</li>
+<li>Read and sanitize content → Append to execute prompt</li>
+<li>Move to appended/ → Process instruction</li>
+</ol>
+<h3 id="pauseresume-flow">Pause/Resume Flow<a class="headerlink" href="#pauseresume-flow" title="Permanent link">&para;</a></h3>
+<ol>
+<li>User presses 'p' → Set pause_event</li>
+<li>Auto mode checks event → Complete current turn</li>
+<li>Auto mode waits on event → No new turns start</li>
+<li>User presses 'p' again → Clear pause_event</li>
+<li>Auto mode continues → Normal execution resumes</li>
+</ol>
+<h3 id="exit-flow">Exit Flow<a class="headerlink" href="#exit-flow" title="Permanent link">&para;</a></h3>
+<ol>
+<li>User presses 'x' → Set ui.should_exit()</li>
+<li>UI render loop exits → Close UI</li>
+<li>Switch to terminal mode → Continue logging to stdout</li>
+<li>Auto mode continues → Background thread alive</li>
+<li>Eventually completes → Cleanup and exit</li>
+</ol>
+<h2 id="boundary-conditions-tested">Boundary Conditions Tested<a class="headerlink" href="#boundary-conditions-tested" title="Permanent link">&para;</a></h2>
+<h3 id="emptyzero-cases">Empty/Zero Cases<a class="headerlink" href="#emptyzero-cases" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Empty prompt → Default title "Auto Mode Session"</li>
+<li>max_turns=0 → Graceful handling</li>
+<li>Empty todo list → "No tasks yet" message</li>
+<li>No cost info → Display "N/A"</li>
+</ul>
+<h3 id="large-values">Large Values<a class="headerlink" href="#large-values" title="Permanent link">&para;</a></h3>
+<ul>
+<li>500+ char prompts → Truncate to 50 chars</li>
+<li>1M+ tokens → Comma formatting (1,000,000)</li>
+<li>100+ rapid log messages → Batch updates (30/sec)</li>
+<li>1000+ log lines → Buffer truncation</li>
+</ul>
+<h3 id="edge-cases">Edge Cases<a class="headerlink" href="#edge-cases" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Negative elapsed time → Clamp to 0s (clock skew)</li>
+<li>Unicode in logs → Emoji, CJK display correctly</li>
+<li>Concurrent reads/writes → No race conditions</li>
+<li>Thread timeout → Max 5s wait on shutdown</li>
+</ul>
+<h3 id="error-cases">Error Cases<a class="headerlink" href="#error-cases" title="Permanent link">&para;</a></h3>
+<ul>
+<li>SDK connection error → Display error, continue</li>
+<li>Rate limit (429) → Show retry countdown, backoff</li>
+<li>UI thread crash → Auto mode isolated, continues</li>
+<li>Missing Rich library → Fall back to terminal</li>
+<li>Disk full → Skip log write, continue</li>
+</ul>
+<h2 id="thread-safety-verification">Thread Safety Verification<a class="headerlink" href="#thread-safety-verification" title="Permanent link">&para;</a></h2>
+<h3 id="protected-state">Protected State<a class="headerlink" href="#protected-state" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>turn_counter</strong>: threading.Lock</li>
+<li><strong>todos_list</strong>: threading.Lock</li>
+<li><strong>cost_info</strong>: threading.Lock</li>
+<li><strong>log_messages</strong>: Queue (thread-safe by default)</li>
+</ul>
+<h3 id="signals">Signals<a class="headerlink" href="#signals" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>pause_event</strong>: threading.Event</li>
+<li><strong>stop_event</strong>: threading.Event</li>
+</ul>
+<h3 id="race-condition-tests">Race Condition Tests<a class="headerlink" href="#race-condition-tests" title="Permanent link">&para;</a></h3>
+<ul>
+<li>100 concurrent turn increments → Final value correct</li>
+<li>Concurrent todo reads/writes → No corruption</li>
+<li>Log queue overflow → Oldest dropped, no block</li>
+</ul>
+<h3 id="deadlock-prevention">Deadlock Prevention<a class="headerlink" href="#deadlock-prevention" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Timeout on all Queue.get() calls (1-5 seconds)</li>
+<li>Timeout on Thread.join() calls (5 seconds)</li>
+<li>Lock acquisition order documented</li>
+<li>Test completes in &lt;5 seconds</li>
+</ul>
+<h2 id="performance-targets">Performance Targets<a class="headerlink" href="#performance-targets" title="Permanent link">&para;</a></h2>
+<h3 id="ui-responsiveness">UI Responsiveness<a class="headerlink" href="#ui-responsiveness" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Frame Rate</strong>: 30 FPS target (33ms per frame)</li>
+<li><strong>Input Latency</strong>: &lt;100ms from keypress to UI update</li>
+<li><strong>Log Batching</strong>: Max 30 updates/sec (reduce flickering)</li>
+</ul>
+<h3 id="memory-usage">Memory Usage<a class="headerlink" href="#memory-usage" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Log Buffer</strong>: 1000 lines max (~100KB)</li>
+<li><strong>Queue Size</strong>: 500 items max (~50KB)</li>
+<li><strong>No Leaks</strong>: Memory stable over 1000 turns</li>
+</ul>
+<h3 id="throughput">Throughput<a class="headerlink" href="#throughput" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Streaming</strong>: Handle 100+ messages/sec</li>
+<li><strong>Tokens/sec</strong>: Display output rate</li>
+<li><strong>Turn Latency</strong>: Track and display per-turn time</li>
+</ul>
+<h2 id="implementation-roadmap">Implementation Roadmap<a class="headerlink" href="#implementation-roadmap" title="Permanent link">&para;</a></h2>
+<h3 id="week-1-ui-foundation">Week 1: UI Foundation<a class="headerlink" href="#week-1-ui-foundation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Add ui_mode parameter to AutoMode</li>
+<li>[ ] Create UIManager class with Rich layout</li>
+<li>[ ] Implement 5 panel structure</li>
+<li>[ ] Basic title generation (truncate prompt)</li>
+<li><strong>Tests to Pass</strong>: TestAutoModeUIInitialization (10 tests)</li>
+</ul>
+<h3 id="week-2-threading-infrastructure">Week 2: Threading Infrastructure<a class="headerlink" href="#week-2-threading-infrastructure" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Add background thread for execution</li>
+<li>[ ] Implement thread-safe state (Locks)</li>
+<li>[ ] Add log queue (Queue)</li>
+<li>[ ] Implement pause/stop events (Event)</li>
+<li><strong>Tests to Pass</strong>: TestAutoModeBackgroundThread, TestThreadSafeStateSharing (15 tests)</li>
+</ul>
+<h3 id="week-3-sdk-integration">Week 3: SDK Integration<a class="headerlink" href="#week-3-sdk-integration" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Async title generation via SDK</li>
+<li>[ ] Cost tracking from ResultMessage.usage</li>
+<li>[ ] Message streaming to log queue</li>
+<li>[ ] Error handling with retry</li>
+<li><strong>Tests to Pass</strong>: TestTitleGenerationViaSDK, TestCostTrackingDisplay (20 tests)</li>
+</ul>
+<h3 id="week-4-user-interactions">Week 4: User Interactions<a class="headerlink" href="#week-4-user-interactions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Keyboard input handling (x, p, k)</li>
+<li>[ ] Prompt input panel with submit</li>
+<li>[ ] Instruction file creation</li>
+<li>[ ] Todo list updates</li>
+<li><strong>Tests to Pass</strong>: TestKeyboardCommands, TestPromptInputHandling (15 tests)</li>
+</ul>
+<h3 id="week-5-e2e-integration">Week 5: E2E Integration<a class="headerlink" href="#week-5-e2e-integration" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Complete startup workflow</li>
+<li>[ ] Live injection during execution</li>
+<li>[ ] Pause/resume functionality</li>
+<li>[ ] Exit to terminal mode</li>
+<li><strong>Tests to Pass</strong>: TestFullUIWorkflow, TestPromptInjectionViaUI (20 tests)</li>
+</ul>
+<h3 id="week-6-polish-bug-fixes">Week 6: Polish &amp; Bug Fixes<a class="headerlink" href="#week-6-polish-bug-fixes" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Fix remaining edge cases</li>
+<li>[ ] Performance optimization</li>
+<li>[ ] UI styling and colors</li>
+<li>[ ] Help overlay ('h' command)</li>
+<li><strong>Tests to Pass</strong>: All remaining tests (~35 tests)</li>
+</ul>
+<p><strong>Total</strong>: ~115 tests to pass over 6 weeks</p>
+<h2 id="running-the-tests">Running the Tests<a class="headerlink" href="#running-the-tests" title="Permanent link">&para;</a></h2>
+<h3 id="all-tests">All Tests<a class="headerlink" href="#all-tests" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Run all unit tests</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pytest<span class="w"> </span>tests/unit/test_auto_mode_ui.py<span class="w"> </span>-v
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>pytest<span class="w"> </span>tests/unit/test_ui_threading.py<span class="w"> </span>-v
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>pytest<span class="w"> </span>tests/unit/test_ui_sdk_integration.py<span class="w"> </span>-v
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Run all integration tests</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>pytest<span class="w"> </span>tests/integration/test_auto_mode_ui_integration.py<span class="w"> </span>-v
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Run everything</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>pytest<span class="w"> </span>tests/unit/test_auto_mode_ui.py<span class="w"> </span>tests/unit/test_ui_threading.py<span class="w"> </span>tests/unit/test_ui_sdk_integration.py<span class="w"> </span>tests/integration/test_auto_mode_ui_integration.py<span class="w"> </span>-v
+</code></pre></div>
+<h3 id="by-phase">By Phase<a class="headerlink" href="#by-phase" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Phase 1: UI Foundation</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pytest<span class="w"> </span>tests/unit/test_auto_mode_ui.py::TestAutoModeUIInitialization<span class="w"> </span>-v
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>pytest<span class="w"> </span>tests/unit/test_auto_mode_ui.py::TestUITitleGeneration<span class="w"> </span>-v
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Phase 2: Threading</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>pytest<span class="w"> </span>tests/unit/test_ui_threading.py::TestAutoModeBackgroundThread<span class="w"> </span>-v
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>pytest<span class="w"> </span>tests/unit/test_ui_threading.py::TestThreadSafeStateSharing<span class="w"> </span>-v
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Phase 3: SDK Integration</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>pytest<span class="w"> </span>tests/unit/test_ui_sdk_integration.py::TestTitleGenerationViaSDK<span class="w"> </span>-v
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>pytest<span class="w"> </span>tests/unit/test_ui_sdk_integration.py::TestSDKStreamingToUI<span class="w"> </span>-v
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Phase 4: User Interactions</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>pytest<span class="w"> </span>tests/unit/test_auto_mode_ui.py::TestKeyboardCommands<span class="w"> </span>-v
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>pytest<span class="w"> </span>tests/unit/test_auto_mode_ui.py::TestPromptInputHandling<span class="w"> </span>-v
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Phase 5: E2E</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>pytest<span class="w"> </span>tests/integration/test_auto_mode_ui_integration.py::TestFullUIWorkflow<span class="w"> </span>-v
+</code></pre></div>
+<h3 id="with-coverage">With Coverage<a class="headerlink" href="#with-coverage" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pytest<span class="w"> </span>tests/unit/test_auto_mode_ui.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">       </span>tests/unit/test_ui_threading.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">       </span>tests/unit/test_ui_sdk_integration.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">       </span>tests/integration/test_auto_mode_ui_integration.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">       </span>--cov<span class="o">=</span>amplihack.launcher.auto_mode<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">       </span>--cov-report<span class="o">=</span>html<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">       </span>--cov-report<span class="o">=</span>term-missing
+</code></pre></div>
+<h2 id="expected-initial-state">Expected Initial State<a class="headerlink" href="#expected-initial-state" title="Permanent link">&para;</a></h2>
+<p><strong>All tests should FAIL</strong> with AttributeError until implementation begins:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>FAILED test_auto_mode_ui.py::TestAutoModeUIInitialization::test_ui_mode_creates_ui_instance
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    AttributeError: &#39;AutoMode&#39; object has no attribute &#39;ui_enabled&#39;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>FAILED test_ui_threading.py::TestAutoModeBackgroundThread::test_auto_mode_creates_background_thread
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    AttributeError: &#39;AutoMode&#39; object has no attribute &#39;start_background&#39;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>FAILED test_ui_sdk_integration.py::TestTitleGenerationViaSDK::test_title_generation_calls_claude_sdk
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    AttributeError: &#39;NoneType&#39; object has no attribute &#39;generate_title_async&#39;
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>FAILED test_auto_mode_ui_integration.py::TestFullUIWorkflow::test_ui_starts_and_displays_initial_state
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    AttributeError: &#39;AutoMode&#39; object has no attribute &#39;start_ui&#39;
+</code></pre></div>
+<p>This is <strong>expected and correct</strong> - tests drive implementation!</p>
+<h2 id="success-criteria">Success Criteria<a class="headerlink" href="#success-criteria" title="Permanent link">&para;</a></h2>
+<h3 id="code-complete">Code Complete<a class="headerlink" href="#code-complete" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] All 115+ tests passing</li>
+<li>[ ] Code coverage &gt;85%</li>
+<li>[ ] No race conditions detected</li>
+<li>[ ] Memory usage stable</li>
+</ul>
+<h3 id="performance-targets-met">Performance Targets Met<a class="headerlink" href="#performance-targets-met" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] UI renders at 30 FPS</li>
+<li>[ ] Input latency &lt;100ms</li>
+<li>[ ] No blocking operations</li>
+<li>[ ] Graceful degradation on errors</li>
+</ul>
+<h3 id="quality-gates-passed">Quality Gates Passed<a class="headerlink" href="#quality-gates-passed" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Manual testing confirms usability</li>
+<li>[ ] No crashes on edge cases</li>
+<li>[ ] Clean shutdown on all paths</li>
+<li>[ ] Documentation complete</li>
+</ul>
+<h3 id="user-acceptance">User Acceptance<a class="headerlink" href="#user-acceptance" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] UI is intuitive and responsive</li>
+<li>[ ] Commands work as expected</li>
+<li>[ ] Error messages are helpful</li>
+<li>[ ] Performance is acceptable</li>
+</ul>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Start Implementation</strong>: Begin with Phase 1 (UI Foundation)</li>
+<li><strong>TDD Cycle</strong>: Red (test fails) → Green (minimal code to pass) → Refactor</li>
+<li><strong>Incremental Progress</strong>: Pass tests in order, phase by phase</li>
+<li><strong>Review &amp; Iterate</strong>: Code review after each phase</li>
+<li><strong>Manual Testing</strong>: Real usage testing throughout</li>
+<li><strong>Performance Profiling</strong>: Optimize hotspots as needed</li>
+</ol>
+<h2 id="documentation-references">Documentation References<a class="headerlink" href="#documentation-references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Main README</strong>: tests/unit/README_AUTO_MODE_UI_TESTS.md</li>
+<li><strong>Test Files</strong>:</li>
+<li>tests/unit/test_auto_mode_ui.py</li>
+<li>tests/unit/test_ui_threading.py</li>
+<li>tests/unit/test_ui_sdk_integration.py</li>
+<li>tests/integration/test_auto_mode_ui_integration.py</li>
+<li><strong>Existing Code</strong>: src/amplihack/launcher/auto_mode.py</li>
+</ul>
+<h2 id="contact-support">Contact &amp; Support<a class="headerlink" href="#contact-support" title="Permanent link">&para;</a></h2>
+<p>For questions about this test suite:</p>
+<ol>
+<li>Read the detailed README in tests/unit/</li>
+<li>Review test code for specifications</li>
+<li>Check existing auto_mode.py for current implementation</li>
+<li>Refer to Rich library docs for UI patterns</li>
+</ol>
+<hr />
+<p><strong>Generated</strong>: 2025-01-28
+<strong>Test Files</strong>: 4
+<strong>Test Classes</strong>: 27
+<strong>Test Cases</strong>: 115+
+<strong>Lines of Test Code</strong>: 1,280+
+<strong>Coverage Target</strong>: &gt;85%
+<strong>Implementation Time</strong>: 6 weeks estimated</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>

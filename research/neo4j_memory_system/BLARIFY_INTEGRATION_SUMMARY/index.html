@@ -1,0 +1,1981 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI-powered development framework for Claude Code">
+      
+      
+      
+        <link rel="canonical" href="https://rysweet.github.io/MicrosoftHackathon2025-AgenticCoding/research/neo4j_memory_system/BLARIFY_INTEGRATION_SUMMARY/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Blarify + Agent Memory Integration - Executive Summary - amplihack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#blarify-agent-memory-integration-executive-summary" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="amplihack" class="md-header__button md-logo" aria-label="amplihack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            amplihack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Blarify + Agent Memory Integration - Executive Summary
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amplihack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../PREREQUISITES/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../PHILOSOPHY/" class="md-tabs__link">
+          
+  
+  
+  Core Concepts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../AUTO_MODE/" class="md-tabs__link">
+          
+  
+  
+  Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../DEVELOPING_AMPLIHACK/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../BENCHMARKING/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="amplihack" class="md-nav__button md-logo" aria-label="amplihack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    amplihack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amplihack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PREREQUISITES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../AUTO_MODE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PROXY_CONFIG_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PHILOSOPHY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../WORKFLOW_COMPLETION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Features
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../AUTO_MODE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../agent-bundle-generator-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Bundles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../document_driven_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Document-Driven Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../features/power-steering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Power-Steering Mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../features/power-steering/customization-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Power-Steering Customization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../DEVELOPING_AMPLIHACK/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../IMPLEMENTATION_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CREATE_YOUR_OWN_TOOLS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BENCHMARKING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../DISCOVERIES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discoveries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Design Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Design Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-single-database-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Single Database Architecture ✅
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-schema-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Schema Design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Schema Design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#node-types-15-total" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Types (15 total)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#critical-relationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Critical Relationships
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-agent-type-memory-sharing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Agent Type Memory Sharing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Agent Type Memory Sharing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-cross-project-pattern-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Cross-Project Pattern Learning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-incremental-update-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Incremental Update Strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Incremental Update Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario-function-refactored" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario: Function Refactored
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-query-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Query Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Query Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-agent-asks-what-do-other-agents-know-about-this" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Agent Asks: "What do other agents know about this?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-code-traversal-with-memory-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Code Traversal with Memory Context
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-temporal-query-what-did-we-know-last-month" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Temporal Query: "What did we know last month?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-performance-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Performance Strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Performance Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#index-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Index Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Targets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Sizing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-example-complete-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Example Complete Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-implementation-phases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Implementation Phases
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Success Criteria
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Success Criteria">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#functional-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functional Requirements ✅
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Requirements ✅
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scale-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scale Requirements ✅
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-comparison-to-current-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Comparison to Current System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Comparison to Current System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-sqlite-memory-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current (SQLite Memory System)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proposed-neo4j-unified-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed (Neo4j Unified Graph)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-key-innovations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Key Innovations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Documents
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="blarify-agent-memory-integration-executive-summary">Blarify + Agent Memory Integration - Executive Summary<a class="headerlink" href="#blarify-agent-memory-integration-executive-summary" title="Permanent link">&para;</a></h1>
+<p><strong>Date</strong>: 2025-11-02
+<strong>Author</strong>: Database Agent
+<strong>Full Design</strong>: See <code>BLARIFY_AGENT_MEMORY_INTEGRATION_DESIGN.md</code></p>
+<hr />
+<h2 id="key-design-decisions">Key Design Decisions<a class="headerlink" href="#key-design-decisions" title="Permanent link">&para;</a></h2>
+<h3 id="1-single-database-architecture">1. Single Database Architecture ✅<a class="headerlink" href="#1-single-database-architecture" title="Permanent link">&para;</a></h3>
+<p><strong>Decision</strong>: Code graph and memory graph coexist in ONE Neo4j database.</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Code-memory queries are frequent (need bridge relationships)</li>
+<li>Cross-database joins are expensive in Neo4j</li>
+<li>Project isolation via <code>project_id</code> property is sufficient</li>
+<li>Simplified operations (one backup, one connection)</li>
+</ul>
+<p><strong>Alternative Rejected</strong>: Separate databases for code and memory</p>
+<ul>
+<li>Would require expensive cross-database joins</li>
+<li>Only needed if individual graphs exceed 10 GB</li>
+</ul>
+<hr />
+<h2 id="2-schema-design">2. Schema Design<a class="headerlink" href="#2-schema-design" title="Permanent link">&para;</a></h2>
+<h3 id="node-types-15-total">Node Types (15 total)<a class="headerlink" href="#node-types-15-total" title="Permanent link">&para;</a></h3>
+<p><strong>Code Nodes</strong> (from blarify):</p>
+<ul>
+<li><code>CodeModule</code>, <code>CodeClass</code>, <code>CodeFunction</code>, <code>CodeVariable</code>, <code>CodePattern</code></li>
+</ul>
+<p><strong>Memory Nodes</strong> (agent experiences):</p>
+<ul>
+<li><code>Episode</code>, <code>MemoryEntity</code>, <code>Procedure</code>, <code>AgentType</code>, <code>Community</code></li>
+</ul>
+<h3 id="critical-relationships">Critical Relationships<a class="headerlink" href="#critical-relationships" title="Permanent link">&para;</a></h3>
+<p><strong>Code Structure</strong>:</p>
+<ul>
+<li><code>(CodeModule)-[:CONTAINS]-&gt;(CodeClass)</code></li>
+<li><code>(CodeFunction)-[:CALLS]-&gt;(CodeFunction)</code></li>
+<li><code>(CodeFunction)-[:EXHIBITS]-&gt;(CodePattern)</code></li>
+</ul>
+<p><strong>Memory Hierarchy</strong>:</p>
+<ul>
+<li><code>(Episode)-[:MENTIONS]-&gt;(MemoryEntity)</code></li>
+<li><code>(Episode)-[:PERFORMED_BY]-&gt;(AgentType)</code></li>
+<li><code>(Procedure)-[:LEARNED_BY]-&gt;(AgentType)</code></li>
+</ul>
+<p><strong>Bridge (Code ↔ Memory)</strong> - THE KEY INNOVATION:</p>
+<ul>
+<li><code>(Episode)-[:WORKED_ON]-&gt;(CodeFunction|CodeClass|CodeModule)</code></li>
+<li><code>(Episode)-[:DECIDED_ABOUT]-&gt;(CodeFunction|CodeClass|CodeModule)</code></li>
+<li><code>(MemoryEntity)-[:REFERS_TO]-&gt;(CodeFunction|CodeClass)</code></li>
+<li><code>(Procedure)-[:APPLIES_TO]-&gt;(CodePattern)</code></li>
+</ul>
+<hr />
+<h2 id="3-agent-type-memory-sharing">3. Agent Type Memory Sharing<a class="headerlink" href="#3-agent-type-memory-sharing" title="Permanent link">&para;</a></h2>
+<p><strong>The Core Innovation</strong>: Agents of the same type share learned experiences.</p>
+<h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// Agent type node (singleton per type)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p">(:</span><span class="n">AgentType</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="n">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;architect&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="n">total_instances</span><span class="p">:</span><span class="w"> </span><span class="m">50</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="n">total_experiences</span><span class="p">:</span><span class="w"> </span><span class="m">2500</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">})</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1">// Individual agent episodes link to type</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">(</span><span class="n">ep</span><span class="p">:</span><span class="n">Episode</span><span class="w"> </span><span class="p">{</span><span class="n">agent_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;architect&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">agent_id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;arch_instance_23&quot;</span><span class="p">})</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="o">-[</span><span class="p">:</span><span class="n">PERFORMED_BY</span><span class="o">]-&gt;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">(</span><span class="n">AgentType</span><span class="w"> </span><span class="p">{</span><span class="n">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;architect&quot;</span><span class="p">})</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1">// Procedures are shared across all agents of this type</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="p">(</span><span class="n">proc</span><span class="p">:</span><span class="n">Procedure</span><span class="w"> </span><span class="p">{</span><span class="n">created_by_agent_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;architect&quot;</span><span class="p">})</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="o">-[</span><span class="p">:</span><span class="n">LEARNED_BY</span><span class="o">]-&gt;</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="p">(</span><span class="n">AgentType</span><span class="w"> </span><span class="p">{</span><span class="n">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;architect&quot;</span><span class="p">})</span>
+</code></pre></div>
+<h3 id="example-queries">Example Queries<a class="headerlink" href="#example-queries" title="Permanent link">&para;</a></h3>
+<p><strong>Q1: What have other architect agents learned about authentication?</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">at</span><span class="p">:</span><span class="n">AgentType</span><span class="w"> </span><span class="p">{</span><span class="n">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;architect&quot;</span><span class="p">})</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="o">&lt;-[</span><span class="p">:</span><span class="n">PERFORMED_BY</span><span class="o">]-</span><span class="p">(</span><span class="n">ep</span><span class="p">:</span><span class="n">Episode</span><span class="p">)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="o">-[</span><span class="p">:</span><span class="n">WORKED_ON</span><span class="p">|</span><span class="n">DECIDED_ABOUT</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">code</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="n">CONTAINS</span><span class="w"> </span><span class="s">&quot;auth&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">RETURN</span><span class="w"> </span><span class="n">ep</span><span class="p">.</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="n">ep</span><span class="p">.</span><span class="n">timestamp</span><span class="p">,</span><span class="w"> </span><span class="n">code</span><span class="p">.</span><span class="n">name</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ep</span><span class="p">.</span><span class="n">timestamp</span><span class="w"> </span><span class="k">DESC</span>
+</code></pre></div>
+<p><strong>Q2: What procedures do builder agents use for ImportError?</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">at</span><span class="p">:</span><span class="n">AgentType</span><span class="w"> </span><span class="p">{</span><span class="n">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;builder&quot;</span><span class="p">})</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="o">&lt;-[</span><span class="p">:</span><span class="n">LEARNED_BY</span><span class="o">]-</span><span class="p">(</span><span class="n">proc</span><span class="p">:</span><span class="n">Procedure</span><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">proc</span><span class="p">.</span><span class="n">trigger_pattern</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;ImportError&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">RETURN</span><span class="w"> </span><span class="n">proc</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">proc</span><span class="p">.</span><span class="n">steps</span><span class="p">,</span><span class="w"> </span><span class="n">proc</span><span class="p">.</span><span class="n">success_rate</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">proc</span><span class="p">.</span><span class="n">success_rate</span><span class="w"> </span><span class="k">DESC</span>
+</code></pre></div>
+<hr />
+<h2 id="4-cross-project-pattern-learning">4. Cross-Project Pattern Learning<a class="headerlink" href="#4-cross-project-pattern-learning" title="Permanent link">&para;</a></h2>
+<p><strong>Problem</strong>: Same error pattern appears in multiple projects. Can agents learn?</p>
+<p><strong>Solution</strong>: Pattern deduplication using signature hashing.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">(:</span><span class="n">CodePattern</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pattern_error_handling_v1&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="n">signature_hash</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;md5_of_ast_structure&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// Deduplicate across projects</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="n">projects_seen</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="s">&quot;amplihack&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;project_b&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;project_c&quot;</span><span class="o">]</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="n">times_seen</span><span class="p">:</span><span class="w"> </span><span class="m">45</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">})</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1">// Procedures learned in one project apply to others</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">(:</span><span class="n">Procedure</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Fix ImportError&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="n">project_agnostic</span><span class="p">:</span><span class="w"> </span><span class="k">true</span><span class="p">,</span><span class="w">  </span><span class="c1">// Can apply anywhere</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="n">success_rate</span><span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="p">.</span><span class="m">92</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="p">})</span>
+</code></pre></div>
+<p><strong>Query: Where else have we seen this error?</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">ep</span><span class="p">:</span><span class="n">Episode</span><span class="p">:</span><span class="n">Error</span><span class="w"> </span><span class="p">{</span><span class="n">error_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ImportError&quot;</span><span class="p">})</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="o">-[</span><span class="p">:</span><span class="n">WORKED_ON</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">RETURN</span><span class="w"> </span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ep</span><span class="p">.</span><span class="n">project_id</span><span class="p">,</span><span class="w"> </span><span class="n">code</span><span class="p">.</span><span class="n">path</span><span class="p">,</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">       </span><span class="n">count</span><span class="p">(</span><span class="n">ep</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">occurrence_count</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">occurrence_count</span><span class="w"> </span><span class="k">DESC</span>
+</code></pre></div>
+<hr />
+<h2 id="5-incremental-update-strategy">5. Incremental Update Strategy<a class="headerlink" href="#5-incremental-update-strategy" title="Permanent link">&para;</a></h2>
+<p><strong>Problem</strong>: When blarify updates code graph, what happens to existing memory links?</p>
+<p><strong>Solution</strong>: Preserve memory links, use soft deletes, maintain history.</p>
+<h3 id="scenario-function-refactored">Scenario: Function Refactored<a class="headerlink" href="#scenario-function-refactored" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// 1. Update function node (don&#39;t delete)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="n">CodeFunction</span><span class="w"> </span><span class="p">{</span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="err">$</span><span class="n">func_id</span><span class="p">})</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">SET</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">signature</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">$</span><span class="n">new_signature</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="n">f</span><span class="p">.</span><span class="n">last_modified</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">datetime</span><span class="p">()</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1">// 2. Invalidate old memories (but keep them!)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">entity</span><span class="p">:</span><span class="n">MemoryEntity</span><span class="p">)</span><span class="o">-[</span><span class="n">r</span><span class="p">:</span><span class="n">REFERS_TO</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">SET</span><span class="w"> </span><span class="n">entity</span><span class="p">.</span><span class="n">t_invalid</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">datetime</span><span class="p">(),</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="n">entity</span><span class="p">.</span><span class="n">invalidation_reason</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;Function refactored&quot;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1">// 3. Create refactor episode</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="k">CREATE</span><span class="w"> </span><span class="p">(</span><span class="n">ep</span><span class="p">:</span><span class="n">Episode</span><span class="p">:</span><span class="n">Refactor</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span><span class="n">content</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Function signature changed&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span><span class="n">old_signature</span><span class="p">:</span><span class="w"> </span><span class="err">$</span><span class="n">old_signature</span><span class="p">,</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span><span class="n">new_signature</span><span class="p">:</span><span class="w"> </span><span class="err">$</span><span class="n">new_signature</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="p">})</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="k">CREATE</span><span class="w"> </span><span class="p">(</span><span class="n">ep</span><span class="p">)</span><span class="o">-[</span><span class="p">:</span><span class="n">WORKED_ON</span><span class="w"> </span><span class="p">{</span><span class="n">action</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;refactored&quot;</span><span class="p">}</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Key Principle</strong>: NEVER delete memory links. Preserve history for debugging.</p>
+<p><strong>Performance Target</strong>: &lt; 1 second per file update</p>
+<hr />
+<h2 id="6-query-patterns">6. Query Patterns<a class="headerlink" href="#6-query-patterns" title="Permanent link">&para;</a></h2>
+<h3 id="61-agent-asks-what-do-other-agents-know-about-this">6.1 Agent Asks: "What do other agents know about this?"<a class="headerlink" href="#61-agent-asks-what-do-other-agents-know-about-this" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">at</span><span class="p">:</span><span class="n">AgentType</span><span class="w"> </span><span class="p">{</span><span class="n">type</span><span class="p">:</span><span class="w"> </span><span class="err">$</span><span class="n">agent_type</span><span class="p">})</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="o">&lt;-[</span><span class="p">:</span><span class="n">PERFORMED_BY</span><span class="o">]-</span><span class="p">(</span><span class="n">ep</span><span class="p">:</span><span class="n">Episode</span><span class="p">)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="o">-[</span><span class="n">r</span><span class="p">:</span><span class="n">WORKED_ON</span><span class="p">|</span><span class="n">DECIDED_ABOUT</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">code</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">$</span><span class="n">code_element_id</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="k">OPTIONAL</span><span class="w"> </span><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">ep</span><span class="p">)</span><span class="o">-[</span><span class="p">:</span><span class="n">MENTIONS</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">entity</span><span class="p">:</span><span class="n">MemoryEntity</span><span class="p">)</span><span class="o">-[</span><span class="p">:</span><span class="n">REFERS_TO</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">OPTIONAL</span><span class="w"> </span><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">proc</span><span class="p">:</span><span class="n">Procedure</span><span class="p">)</span><span class="o">-[</span><span class="p">:</span><span class="n">LEARNED_BY</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">at</span><span class="p">)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="k">OPTIONAL</span><span class="w"> </span><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">proc</span><span class="p">)</span><span class="o">-[</span><span class="p">:</span><span class="n">APPLIES_TO</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span><span class="o">&lt;-[</span><span class="p">:</span><span class="n">EXHIBITS</span><span class="o">]-</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="k">RETURN</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="n">episodes</span><span class="p">:</span><span class="w"> </span><span class="k">collect</span><span class="p">({</span><span class="n">content</span><span class="p">:</span><span class="w"> </span><span class="n">ep</span><span class="p">.</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="n">timestamp</span><span class="p">:</span><span class="w"> </span><span class="n">ep</span><span class="p">.</span><span class="n">timestamp</span><span class="p">}),</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="n">entities</span><span class="p">:</span><span class="w"> </span><span class="k">collect</span><span class="p">({</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="n">entity</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">summary</span><span class="p">:</span><span class="w"> </span><span class="n">entity</span><span class="p">.</span><span class="n">summary</span><span class="p">}),</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span><span class="n">procedures</span><span class="p">:</span><span class="w"> </span><span class="k">collect</span><span class="p">({</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="n">proc</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">steps</span><span class="p">:</span><span class="w"> </span><span class="n">proc</span><span class="p">.</span><span class="n">steps</span><span class="p">})</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="62-code-traversal-with-memory-context">6.2 Code Traversal with Memory Context<a class="headerlink" href="#62-code-traversal-with-memory-context" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// Trace call chain with agent decisions</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">MATCH</span><span class="w"> </span><span class="n">path</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">(</span><span class="k">start</span><span class="p">:</span><span class="n">CodeFunction</span><span class="w"> </span><span class="p">{</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="err">$</span><span class="n">function_name</span><span class="p">})</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="o">-[</span><span class="p">:</span><span class="n">CALLS</span><span class="p">*</span><span class="m">1</span><span class="p">..</span><span class="m">5</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">called</span><span class="p">:</span><span class="n">CodeFunction</span><span class="p">)</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">OPTIONAL</span><span class="w"> </span><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">called</span><span class="p">)</span><span class="o">&lt;-[</span><span class="n">r</span><span class="p">:</span><span class="n">DECIDED_ABOUT</span><span class="o">]-</span><span class="p">(</span><span class="n">ep</span><span class="p">:</span><span class="n">Episode</span><span class="w"> </span><span class="p">{</span><span class="n">agent_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;architect&quot;</span><span class="p">})</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="k">RETURN</span><span class="w"> </span><span class="o">[</span><span class="n">f</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="n">nodes</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">name</span><span class="o">]</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">call_chain</span><span class="p">,</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">       </span><span class="o">[</span><span class="n">f</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="n">nodes</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">         </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">name</span><span class="p">,</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">         </span><span class="n">decisions</span><span class="p">:</span><span class="w"> </span><span class="k">collect</span><span class="p">({</span><span class="n">content</span><span class="p">:</span><span class="w"> </span><span class="n">ep</span><span class="p">.</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="n">rationale</span><span class="p">:</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">rationale</span><span class="p">})</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">       </span><span class="p">}</span><span class="o">]</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">contexts</span>
+</code></pre></div>
+<h3 id="63-temporal-query-what-did-we-know-last-month">6.3 Temporal Query: "What did we know last month?"<a class="headerlink" href="#63-temporal-query-what-did-we-know-last-month" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">func</span><span class="p">:</span><span class="n">CodeFunction</span><span class="w"> </span><span class="p">{</span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="err">$</span><span class="n">function_id</span><span class="p">})</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">entity</span><span class="p">:</span><span class="n">MemoryEntity</span><span class="p">)</span><span class="o">-[</span><span class="p">:</span><span class="n">REFERS_TO</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">entity</span><span class="p">.</span><span class="n">t_valid</span><span class="w"> </span><span class="p">&lt;=</span><span class="w"> </span><span class="n">datetime</span><span class="p">()</span><span class="w"> </span><span class="err">-</span><span class="w"> </span><span class="n">duration</span><span class="p">({</span><span class="n">months</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="p">})</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="n">AND</span><span class="w"> </span><span class="p">(</span><span class="n">entity</span><span class="p">.</span><span class="n">t_invalid</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="n">OR</span><span class="w"> </span><span class="n">entity</span><span class="p">.</span><span class="n">t_invalid</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="n">datetime</span><span class="p">()</span><span class="w"> </span><span class="err">-</span><span class="w"> </span><span class="n">duration</span><span class="p">({</span><span class="n">months</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="p">}))</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">RETURN</span><span class="w"> </span><span class="n">entity</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">entity</span><span class="p">.</span><span class="n">summary</span><span class="p">,</span><span class="w"> </span><span class="n">entity</span><span class="p">.</span><span class="n">t_valid</span>
+</code></pre></div>
+<hr />
+<h2 id="7-performance-strategy">7. Performance Strategy<a class="headerlink" href="#7-performance-strategy" title="Permanent link">&para;</a></h2>
+<h3 id="index-strategy">Index Strategy<a class="headerlink" href="#index-strategy" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">// Code graph (fast code lookups)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">code_function_name</span><span class="w"> </span><span class="n">FOR</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="n">CodeFunction</span><span class="p">)</span><span class="w"> </span><span class="n">ON</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">name</span><span class="p">);</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">code_pattern_hash</span><span class="w"> </span><span class="n">FOR</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="p">:</span><span class="n">CodePattern</span><span class="p">)</span><span class="w"> </span><span class="n">ON</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">signature_hash</span><span class="p">);</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1">// Memory graph (fast agent queries)</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">episode_agent_type</span><span class="w"> </span><span class="n">FOR</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">Episode</span><span class="p">)</span><span class="w"> </span><span class="n">ON</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">agent_type</span><span class="p">);</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">episode_timestamp</span><span class="w"> </span><span class="n">FOR</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">Episode</span><span class="p">)</span><span class="w"> </span><span class="n">ON</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">timestamp</span><span class="p">);</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1">// Bridge (fast code-memory queries)</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">episode_agent_type_timestamp</span><span class="w"> </span><span class="n">FOR</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">Episode</span><span class="p">)</span><span class="w"> </span><span class="n">ON</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">agent_type</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">timestamp</span><span class="p">);</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1">// Unique constraints</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">CONSTRAINT</span><span class="w"> </span><span class="n">code_function_id</span><span class="w"> </span><span class="n">FOR</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="n">CodeFunction</span><span class="p">)</span><span class="w"> </span><span class="n">REQUIRE</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">UNIQUE</span><span class="p">;</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">CONSTRAINT</span><span class="w"> </span><span class="n">episode_id</span><span class="w"> </span><span class="n">FOR</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">Episode</span><span class="p">)</span><span class="w"> </span><span class="n">REQUIRE</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">UNIQUE</span><span class="p">;</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">CONSTRAINT</span><span class="w"> </span><span class="n">agent_type</span><span class="w"> </span><span class="n">FOR</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="n">AgentType</span><span class="p">)</span><span class="w"> </span><span class="n">REQUIRE</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">type</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">UNIQUE</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="performance-targets">Performance Targets<a class="headerlink" href="#performance-targets" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Query Type</th>
+<th>Target</th>
+<th>Index</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Agent type memory lookup</td>
+<td>&lt; 50ms</td>
+<td>agent_type + timestamp</td>
+</tr>
+<tr>
+<td>Code-memory bridge query</td>
+<td>&lt; 100ms</td>
+<td>composite indexes</td>
+</tr>
+<tr>
+<td>Cross-project pattern search</td>
+<td>&lt; 200ms</td>
+<td>signature_hash</td>
+</tr>
+<tr>
+<td>Incremental update</td>
+<td>&lt; 1s/file</td>
+<td>batch UNWIND</td>
+</tr>
+</tbody>
+</table>
+<h3 id="database-sizing">Database Sizing<a class="headerlink" href="#database-sizing" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Scale</th>
+<th>Code Nodes</th>
+<th>Memory Nodes</th>
+<th>Storage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small project (10k LOC)</td>
+<td>1k</td>
+<td>5k</td>
+<td>50-100 MB</td>
+</tr>
+<tr>
+<td>Large project (100k LOC)</td>
+<td>10k</td>
+<td>50k</td>
+<td>500 MB - 1 GB</td>
+</tr>
+<tr>
+<td>Multi-project (10 projects)</td>
+<td>100k</td>
+<td>500k</td>
+<td>5-10 GB</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8-example-complete-workflow">8. Example Complete Workflow<a class="headerlink" href="#8-example-complete-workflow" title="Permanent link">&para;</a></h2>
+<p><strong>Scenario</strong>: Builder agent fixes import error</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">// 1. Record error episode</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="p">(</span><span class="n">ep</span><span class="p">:</span><span class="n">Episode</span><span class="p">:</span><span class="n">Error</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ep_001&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="n">agent_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;builder&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="n">error_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ImportError&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="n">content</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Module &#39;neo4j&#39; not found&quot;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="p">})</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1">// 2. Link to code</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">module</span><span class="p">:</span><span class="n">CodeModule</span><span class="w"> </span><span class="p">{</span><span class="n">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/amplihack/memory.py&quot;</span><span class="p">})</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="k">CREATE</span><span class="w"> </span><span class="p">(</span><span class="n">ep</span><span class="p">)</span><span class="o">-[</span><span class="p">:</span><span class="n">WORKED_ON</span><span class="w"> </span><span class="p">{</span><span class="n">action</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;debugged&quot;</span><span class="p">}</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1">// 3. Find existing procedure (from other builder agents)</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">at</span><span class="p">:</span><span class="n">AgentType</span><span class="w"> </span><span class="p">{</span><span class="n">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;builder&quot;</span><span class="p">})</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">  </span><span class="o">&lt;-[</span><span class="p">:</span><span class="n">LEARNED_BY</span><span class="o">]-</span><span class="p">(</span><span class="n">proc</span><span class="p">:</span><span class="n">Procedure</span><span class="w"> </span><span class="p">{</span><span class="n">trigger_pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ImportError&quot;</span><span class="p">})</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">proc</span><span class="p">.</span><span class="n">success_rate</span><span class="w"> </span><span class="k">DESC</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="k">LIMIT</span><span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="c1">// 4. Apply procedure</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="k">CREATE</span><span class="w"> </span><span class="p">(</span><span class="n">ep</span><span class="p">)</span><span class="o">-[</span><span class="p">:</span><span class="n">RESOLVED_BY</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">proc</span><span class="p">)</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="k">SET</span><span class="w"> </span><span class="n">ep</span><span class="p">.</span><span class="n">resolution_steps</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">proc</span><span class="p">.</span><span class="n">steps</span><span class="p">,</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="w">    </span><span class="n">ep</span><span class="p">.</span><span class="n">outcome</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;success&quot;</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="c1">// 5. Update procedure statistics</span>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="k">SET</span><span class="w"> </span><span class="n">proc</span><span class="p">.</span><span class="n">times_used</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">proc</span><span class="p">.</span><span class="n">times_used</span><span class="w"> </span><span class="err">+</span><span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="c1">// 6. Link to agent type (for memory sharing)</span>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">at</span><span class="p">:</span><span class="n">AgentType</span><span class="w"> </span><span class="p">{</span><span class="n">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;builder&quot;</span><span class="p">})</span>
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a><span class="k">CREATE</span><span class="w"> </span><span class="p">(</span><span class="n">ep</span><span class="p">)</span><span class="o">-[</span><span class="p">:</span><span class="n">PERFORMED_BY</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">at</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Later, another builder agent encounters the same error</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">// Query: &quot;What do other builder agents know about this error?&quot;</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">at</span><span class="p">:</span><span class="n">AgentType</span><span class="w"> </span><span class="p">{</span><span class="n">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;builder&quot;</span><span class="p">})</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="o">&lt;-[</span><span class="p">:</span><span class="n">LEARNED_BY</span><span class="o">]-</span><span class="p">(</span><span class="n">proc</span><span class="p">:</span><span class="n">Procedure</span><span class="w"> </span><span class="p">{</span><span class="n">trigger_pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ImportError&quot;</span><span class="p">})</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="k">RETURN</span><span class="w"> </span><span class="n">proc</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">proc</span><span class="p">.</span><span class="n">steps</span><span class="p">,</span><span class="w"> </span><span class="n">proc</span><span class="p">.</span><span class="n">success_rate</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1">// Returns: {&quot;name&quot;: &quot;Fix ImportError&quot;, &quot;steps&quot;: [...], &quot;success_rate&quot;: 0.92}</span>
+</code></pre></div>
+<hr />
+<h2 id="9-implementation-phases">9. Implementation Phases<a class="headerlink" href="#9-implementation-phases" title="Permanent link">&para;</a></h2>
+<p><strong>Phase 1</strong> (Week 1): Schema setup, indexes, constraints
+<strong>Phase 2</strong> (Week 2): Code graph integration (blarify parser)
+<strong>Phase 3</strong> (Week 3): Memory graph integration (migrate SQLite)
+<strong>Phase 4</strong> (Week 4): Bridge relationships (WORKED_ON, DECIDED_ABOUT)
+<strong>Phase 5</strong> (Week 5): Agent type sharing (AgentType nodes, queries)
+<strong>Phase 6</strong> (Week 6): Cross-project features (pattern deduplication)
+<strong>Phase 7</strong> (Week 7-8): Production readiness (testing, optimization)</p>
+<hr />
+<h2 id="10-success-criteria">10. Success Criteria<a class="headerlink" href="#10-success-criteria" title="Permanent link">&para;</a></h2>
+<h3 id="functional-requirements">Functional Requirements ✅<a class="headerlink" href="#functional-requirements" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Agents of same type can retrieve shared experiences</li>
+<li>Cross-project pattern learning works</li>
+<li>Incremental updates preserve memory links</li>
+<li>Temporal queries return historical knowledge</li>
+</ul>
+<h3 id="performance-requirements">Performance Requirements ✅<a class="headerlink" href="#performance-requirements" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Agent memory lookup: &lt; 50ms</li>
+<li>Code-memory queries: &lt; 100ms</li>
+<li>Cross-project search: &lt; 200ms</li>
+<li>Incremental updates: &lt; 1s per file</li>
+</ul>
+<h3 id="scale-requirements">Scale Requirements ✅<a class="headerlink" href="#scale-requirements" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Single project: 10k code + 50k memory nodes</li>
+<li>10 projects: 100k code + 500k memory nodes</li>
+<li>Database size: &lt; 10 GB typical workload</li>
+</ul>
+<hr />
+<h2 id="11-comparison-to-current-system">11. Comparison to Current System<a class="headerlink" href="#11-comparison-to-current-system" title="Permanent link">&para;</a></h2>
+<h3 id="current-sqlite-memory-system">Current (SQLite Memory System)<a class="headerlink" href="#current-sqlite-memory-system" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>✓ Session-based isolation
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>✓ Fast operations (&lt; 50ms)
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>✗ No code graph integration
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>✗ No agent type memory sharing
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>✗ No cross-project learning
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>✗ Limited relationship queries
+</code></pre></div>
+<h3 id="proposed-neo4j-unified-graph">Proposed (Neo4j Unified Graph)<a class="headerlink" href="#proposed-neo4j-unified-graph" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>✓ Session-based isolation (via session_id)
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>✓ Fast operations (&lt; 100ms for complex queries)
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>✓ Code graph integrated
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>✓ Agent type memory sharing
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>✓ Cross-project pattern learning
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>✓ Rich relationship traversal
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>✓ Temporal queries
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>✓ Incremental updates
+</code></pre></div>
+<hr />
+<h2 id="12-key-innovations">12. Key Innovations<a class="headerlink" href="#12-key-innovations" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Agent Type Memory Sharing</strong>: First-class support for agents learning from each other</li>
+<li><strong>Code-Memory Bridge</strong>: Direct relationships between agent experiences and code elements</li>
+<li><strong>Cross-Project Learning</strong>: Patterns and procedures apply across projects</li>
+<li><strong>Temporal Validity</strong>: Preserve history of what agents knew when</li>
+<li><strong>Incremental Updates</strong>: blarify changes don't break memory links</li>
+<li><strong>Hybrid Queries</strong>: Single query traverses code structure + agent knowledge</li>
+</ol>
+<hr />
+<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>This design enables a quantum leap in agent capabilities:</p>
+<ul>
+<li><strong>Before</strong>: Agents work in isolation, no code context, no shared learning</li>
+<li><strong>After</strong>: Agents share experiences, learn from code, apply knowledge across projects</li>
+</ul>
+<p>The unified graph enables questions like:</p>
+<ul>
+<li>"What have other architect agents learned about authentication modules?"</li>
+<li>"Where else have we seen this error pattern across all projects?"</li>
+<li>"What procedures do builder agents recommend for this code structure?"</li>
+<li>"What did we know about this function last month?"</li>
+</ul>
+<p><strong>Next Step</strong>: Begin Phase 1 implementation - schema setup and basic queries.</p>
+<hr />
+<h2 id="related-documents">Related Documents<a class="headerlink" href="#related-documents" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Full Design</strong>: <code>BLARIFY_AGENT_MEMORY_INTEGRATION_DESIGN.md</code> (this directory)</li>
+<li><strong>Memory Patterns</strong>: <code>02-design-patterns/NEO4J_MEMORY_DESIGN_PATTERNS.md</code></li>
+<li><strong>Current System</strong>: <code>../../src/amplihack/memory/README.md</code></li>
+<li><strong>blarify</strong>: https://github.com/blarApp/blarify</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>

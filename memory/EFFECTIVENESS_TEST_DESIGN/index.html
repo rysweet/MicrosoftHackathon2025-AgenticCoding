@@ -1,0 +1,3072 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI-powered development framework for Claude Code">
+      
+      
+      
+        <link rel="canonical" href="https://rysweet.github.io/MicrosoftHackathon2025-AgenticCoding/memory/EFFECTIVENESS_TEST_DESIGN/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Memory System A/B Test Design - amplihack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#memory-system-ab-test-design" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="amplihack" class="md-header__button md-logo" aria-label="amplihack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            amplihack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Memory System A/B Test Design
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amplihack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../PREREQUISITES/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../PHILOSOPHY/" class="md-tabs__link">
+          
+  
+  
+  Core Concepts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../AUTO_MODE/" class="md-tabs__link">
+          
+  
+  
+  Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../DEVELOPING_AMPLIHACK/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../BENCHMARKING/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="amplihack" class="md-nav__button md-logo" aria-label="amplihack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    amplihack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amplihack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PREREQUISITES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AUTO_MODE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PROXY_CONFIG_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PHILOSOPHY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../WORKFLOW_COMPLETION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Features
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AUTO_MODE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agent-bundle-generator-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Bundles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../document_driven_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Document-Driven Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/power-steering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Power-Steering Mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/power-steering/customization-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Power-Steering Customization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DEVELOPING_AMPLIHACK/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../IMPLEMENTATION_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CREATE_YOUR_OWN_TOOLS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BENCHMARKING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DISCOVERIES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discoveries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executive Summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Executive Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#test-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Design Principles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expected-outcomes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Outcomes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-test-methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Test Methodology
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Test Methodology">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-three-way-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Three-Way Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-test-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Test Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-fair-comparison-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Fair Comparison Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-test-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Test Scenarios
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Test Scenarios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-scenario-selection-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Scenario Selection Criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-scenario-catalog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Scenario Catalog
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-scenario-memory-pre-seeding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Scenario Memory Pre-Seeding
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-metrics-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Metrics Collection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Metrics Collection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-primary-metrics-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Primary Metrics (Objective)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-secondary-metrics-qualitative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Secondary Metrics (Qualitative)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-metric-collection-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Metric Collection Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-statistical-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Statistical Analysis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Statistical Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-sample-size-calculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Sample Size Calculation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-statistical-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Statistical Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-confidence-intervals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Confidence Intervals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Visualization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-baseline-establishment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Baseline Establishment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Baseline Establishment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-control-configuration-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Control Configuration Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-baseline-data-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Baseline Data Collection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-baseline-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Baseline Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-test-harness-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Test Harness Implementation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Test Harness Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-core-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Core Interface
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-scenario-definition-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Scenario Definition Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-reporting-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Reporting Format
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Reporting Format">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-comparison-report-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Comparison Report Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-visualization-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Visualization Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-decision-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Decision Criteria
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Decision Criteria">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-gono-go-decision-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Go/No-Go Decision Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-decision-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Decision Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-limitations-and-threats-to-validity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Limitations and Threats to Validity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Limitations and Threats to Validity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-internal-validity-threats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 Internal Validity Threats
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-external-validity-threats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 External Validity Threats
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-construct-validity-threats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 Construct Validity Threats
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-implementation-timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Implementation Timeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Implementation Timeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#week-1-test-harness-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 1: Test Harness Development
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-2-scenario-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 2: Scenario Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-3-baseline-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 3: Baseline Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-4-sqlite-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 4: SQLite Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-5-neo4j-testing-if-phase-2-successful" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 5: Neo4j Testing (if Phase 2 successful)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-6-analysis-and-reporting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 6: Analysis and Reporting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Success Criteria
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Success Criteria">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minimum-success-criteria-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimum Success Criteria (Required)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stretch-success-criteria-desired" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stretch Success Criteria (Desired)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-risk-mitigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Risk Mitigation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Risk Mitigation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#risk-1-insufficient-sample-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risk 1: Insufficient Sample Size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#risk-2-confounding-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risk 2: Confounding Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#risk-3-test-harness-bugs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risk 3: Test Harness Bugs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#risk-4-long-test-duration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risk 4: Long Test Duration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="memory-system-ab-test-design">Memory System A/B Test Design<a class="headerlink" href="#memory-system-ab-test-design" title="Permanent link">&para;</a></h1>
+<p><strong>Version</strong>: 1.0.0
+<strong>Date</strong>: 2025-11-03
+<strong>Status</strong>: Design Complete
+<strong>Goal</strong>: Prove (or disprove) that Neo4j memory provides measurable value vs SQLite memory</p>
+<hr />
+<h2 id="executive-summary">Executive Summary<a class="headerlink" href="#executive-summary" title="Permanent link">&para;</a></h2>
+<h3 id="test-objective">Test Objective<a class="headerlink" href="#test-objective" title="Permanent link">&para;</a></h3>
+<p>Quantitatively compare <strong>Neo4j-based memory system</strong> vs <strong>SQLite-based memory system</strong> to determine:</p>
+<ol>
+<li>Does memory provide measurable benefit? (vs no memory baseline)</li>
+<li>Does Neo4j provide measurable benefit over SQLite? (if memory proves valuable)</li>
+<li>What are the specific improvements? (time, quality, error prevention)</li>
+</ol>
+<h3 id="key-design-principles">Key Design Principles<a class="headerlink" href="#key-design-principles" title="Permanent link">&para;</a></h3>
+<p>Following project philosophy:</p>
+<ul>
+<li><strong>Ruthless Simplicity</strong>: Measure what matters, ignore vanity metrics</li>
+<li><strong>Measurement First</strong>: Establish baseline before optimization</li>
+<li><strong>Statistical Rigor</strong>: Proper sample sizes, confidence intervals, p-values</li>
+<li><strong>Fair Comparison</strong>: Control for confounding variables</li>
+<li><strong>Transparent Reporting</strong>: Show raw data and statistical analysis</li>
+</ul>
+<h3 id="expected-outcomes">Expected Outcomes<a class="headerlink" href="#expected-outcomes" title="Permanent link">&para;</a></h3>
+<p>Based on research findings, we hypothesize:</p>
+<ul>
+<li><strong>Memory vs No Memory</strong>: 20-35% improvement in repeat task efficiency</li>
+<li><strong>Neo4j vs SQLite</strong>: Minimal difference at &lt;100k records, 10-30% improvement at scale</li>
+<li><strong>Break-even Point</strong>: 4-6 weeks after implementation</li>
+</ul>
+<hr />
+<h2 id="1-test-methodology">1. Test Methodology<a class="headerlink" href="#1-test-methodology" title="Permanent link">&para;</a></h2>
+<h3 id="11-three-way-comparison">1.1 Three-Way Comparison<a class="headerlink" href="#11-three-way-comparison" title="Permanent link">&para;</a></h3>
+<p>We will test <strong>three configurations</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th>Description</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Control</strong></td>
+<td>No memory system (current baseline)</td>
+<td>Establish if memory provides value</td>
+</tr>
+<tr>
+<td><strong>SQLite</strong></td>
+<td>SQLite-based memory (Phase 1 implementation)</td>
+<td>Measure basic memory effectiveness</td>
+</tr>
+<tr>
+<td><strong>Neo4j</strong></td>
+<td>Neo4j-based memory (Phase 3 implementation)</td>
+<td>Measure graph capabilities value</td>
+</tr>
+</tbody>
+</table>
+<h3 id="12-test-structure">1.2 Test Structure<a class="headerlink" href="#12-test-structure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│ Phase 1: Baseline Establishment (No Memory)                 │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│ - Run 10 scenarios × 5 iterations = 50 baseline runs        │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│ - Collect: time, errors, quality scores                     │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│ - Establish statistical baseline                            │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>└─────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                           ↓
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>┌─────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│ Phase 2: SQLite Memory Testing                              │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│ - Run same 10 scenarios × 5 iterations = 50 SQLite runs     │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│ - Collect same metrics                                      │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│ - Compare to baseline with statistical tests                │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>└─────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                           ↓
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>┌─────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│ Phase 3: Neo4j Memory Testing (ONLY if Phase 2 succeeds)    │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│ - Run same 10 scenarios × 5 iterations = 50 Neo4j runs      │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│ - Collect same metrics                                      │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│ - Compare to SQLite with statistical tests                  │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>└─────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>                           ↓
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>┌─────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│ Phase 4: Analysis &amp; Decision                                │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│ - Statistical significance testing                          │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│ - Effect size calculations                                  │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│ - Cost-benefit analysis                                     │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│ - Final recommendation                                      │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>└─────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="13-fair-comparison-requirements">1.3 Fair Comparison Requirements<a class="headerlink" href="#13-fair-comparison-requirements" title="Permanent link">&para;</a></h3>
+<p>To ensure valid comparison:</p>
+<ol>
+<li><strong>Same Agent Prompts</strong>: Identical agent definitions across all configurations</li>
+<li><strong>Same Scenarios</strong>: Identical task definitions and inputs</li>
+<li><strong>Same Environment</strong>: Same machine, same Claude model, same dependencies</li>
+<li><strong>Isolated Runs</strong>: Clear memory/state between test runs</li>
+<li><strong>Randomization</strong>: Scenario order randomized to prevent ordering effects</li>
+<li><strong>Blinding</strong>: Automated test harness (no human bias in execution)</li>
+</ol>
+<hr />
+<h2 id="2-test-scenarios">2. Test Scenarios<a class="headerlink" href="#2-test-scenarios" title="Permanent link">&para;</a></h2>
+<h3 id="21-scenario-selection-criteria">2.1 Scenario Selection Criteria<a class="headerlink" href="#21-scenario-selection-criteria" title="Permanent link">&para;</a></h3>
+<p>Each scenario must:</p>
+<ol>
+<li><strong>Representative</strong>: Common real-world coding task</li>
+<li><strong>Repeatable</strong>: Can be run multiple times with consistent setup</li>
+<li><strong>Memory-Relevant</strong>: Benefits from learning/context</li>
+<li><strong>Measurable</strong>: Clear success/failure criteria</li>
+<li><strong>Time-Bounded</strong>: Completes in 2-10 minutes</li>
+</ol>
+<h3 id="22-scenario-catalog">2.2 Scenario Catalog<a class="headerlink" href="#22-scenario-catalog" title="Permanent link">&para;</a></h3>
+<h4 id="scenario-1-repeat-authentication-implementation">Scenario 1: Repeat Authentication Implementation<a class="headerlink" href="#scenario-1-repeat-authentication-implementation" title="Permanent link">&para;</a></h4>
+<p><strong>Type</strong>: Learning from repetition
+<strong>Expected Memory Benefit</strong>: HIGH (50-70% time reduction on second attempt)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Task: Implement JWT authentication for REST API
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>First Iteration:
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- No memory available
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- Agent explores options, makes decisions
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- Records: implementation pattern, common pitfalls
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Second Iteration (different project):
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- Memory available from first iteration
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>- Should reuse proven pattern
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>- Should avoid previous pitfalls
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Metrics:
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>- Time to complete (seconds)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>- Number of errors encountered
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>- Code quality score (automated analysis)
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>- Pattern reuse (did agent reference previous solution?)
+</code></pre></div>
+<h4 id="scenario-2-cross-project-validation-pattern">Scenario 2: Cross-Project Validation Pattern<a class="headerlink" href="#scenario-2-cross-project-validation-pattern" title="Permanent link">&para;</a></h4>
+<p><strong>Type</strong>: Pattern transfer
+<strong>Expected Memory Benefit</strong>: MEDIUM (25-40% improvement)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Task: Implement input validation for user registration endpoint
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Context:
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>- Project A: Implement email validation
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>- Project B: Implement similar validation (different field)
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>With Memory:
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>- Should recognize similar validation pattern
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>- Should reuse regex/logic approach
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>- Should avoid repeated edge case bugs
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>Metrics:
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>- Code similarity to proven pattern
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>- Edge cases covered
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>- Time to implementation
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>- Test coverage
+</code></pre></div>
+<h4 id="scenario-3-error-resolution-learning">Scenario 3: Error Resolution Learning<a class="headerlink" href="#scenario-3-error-resolution-learning" title="Permanent link">&para;</a></h4>
+<p><strong>Type</strong>: Error pattern recognition
+<strong>Expected Memory Benefit</strong>: HIGH (60-80% faster resolution)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Task: Debug &quot;TypeError: &#39;NoneType&#39; object is not subscriptable&quot;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>First Occurrence:
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>- Agent investigates multiple possibilities
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>- Eventually finds: missing null check
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>- Records: error signature → solution pattern
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Second Occurrence:
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>- Same error signature in different context
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>- Should quickly identify null check issue
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>- Should apply proven solution
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Metrics:
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>- Time to identify root cause
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>- Time to resolution
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>- Solution quality
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>- Memory pattern match accuracy
+</code></pre></div>
+<h4 id="scenario-4-api-design-with-past-examples">Scenario 4: API Design with Past Examples<a class="headerlink" href="#scenario-4-api-design-with-past-examples" title="Permanent link">&para;</a></h4>
+<p><strong>Type</strong>: Design pattern application
+<strong>Expected Memory Benefit</strong>: MEDIUM (30-45% quality improvement)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Task: Design REST API for new domain entity
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>With Memory:
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>- Access to previous API designs
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>- See patterns that worked well
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>- Avoid anti-patterns from past
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Without Memory:
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>- Make decisions from scratch
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>- May repeat previous mistakes
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>Metrics:
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>- API design consistency score
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>- Adherence to REST principles
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>- Error handling completeness
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>- Documentation quality
+</code></pre></div>
+<h4 id="scenario-5-code-review-with-historical-context">Scenario 5: Code Review with Historical Context<a class="headerlink" href="#scenario-5-code-review-with-historical-context" title="Permanent link">&para;</a></h4>
+<p><strong>Type</strong>: Quality improvement
+<strong>Expected Memory Benefit</strong>: MEDIUM (40-55% more issues found)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Task: Review PR for security vulnerabilities
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>With Memory:
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>- Recall previous vulnerabilities found
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>- Check for similar patterns
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>- Apply learned security principles
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Without Memory:
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>- Generic security checklist
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>- May miss patterns seen before
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Metrics:
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>- Number of valid issues found
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>- False positive rate
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>- Critical issues caught
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>- Review thoroughness score
+</code></pre></div>
+<h4 id="scenario-6-test-generation-pattern">Scenario 6: Test Generation Pattern<a class="headerlink" href="#scenario-6-test-generation-pattern" title="Permanent link">&para;</a></h4>
+<p><strong>Type</strong>: Procedural memory
+<strong>Expected Memory Benefit</strong>: MEDIUM (35-50% better coverage)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Task: Generate unit tests for authentication module
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>With Memory:
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>- Recall test patterns for auth
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>- Include edge cases from past
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>- Cover previously-missed scenarios
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>Metrics:
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>- Test coverage percentage
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>- Edge cases covered
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>- Test quality score
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>- Time to generate complete test suite
+</code></pre></div>
+<h4 id="scenario-7-performance-optimization">Scenario 7: Performance Optimization<a class="headerlink" href="#scenario-7-performance-optimization" title="Permanent link">&para;</a></h4>
+<p><strong>Type</strong>: Optimization pattern recognition
+<strong>Expected Memory Benefit</strong>: LOW-MEDIUM (20-35% improvement)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Task: Optimize slow database query
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>With Memory:
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>- Recall previous optimization strategies
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>- Apply proven indexing patterns
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>- Avoid ineffective optimizations tried before
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Metrics:
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>- Query performance improvement (%)
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>- Time to identify bottleneck
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>- Optimization approach quality
+</code></pre></div>
+<h4 id="scenario-8-refactoring-legacy-code">Scenario 8: Refactoring Legacy Code<a class="headerlink" href="#scenario-8-refactoring-legacy-code" title="Permanent link">&para;</a></h4>
+<p><strong>Type</strong>: Refactoring strategy
+<strong>Expected Memory Benefit</strong>: MEDIUM (30-45% improvement)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Task: Refactor monolithic function into modular components
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>With Memory:
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>- Apply previous refactoring patterns
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>- Use proven module boundaries
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>- Avoid previous refactoring mistakes
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>Metrics:
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>- Cyclomatic complexity reduction
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>- Number of modules created
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>- Test coverage maintained
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>- Refactoring time
+</code></pre></div>
+<h4 id="scenario-9-integration-error-resolution">Scenario 9: Integration Error Resolution<a class="headerlink" href="#scenario-9-integration-error-resolution" title="Permanent link">&para;</a></h4>
+<p><strong>Type</strong>: Integration debugging
+<strong>Expected Memory Benefit</strong>: HIGH (50-70% faster resolution)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Task: Debug failing integration test (external API timeout)
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>First Time:
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>- Investigate multiple hypotheses
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>- Check API docs, network, code
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>- Find: retry logic missing
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>With Memory:
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>- Recognize timeout pattern
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>- Quickly check retry logic
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>- Apply proven solution
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>Metrics:
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>- Debugging time
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>- Hypotheses explored
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>- Correct solution speed
+</code></pre></div>
+<h4 id="scenario-10-multi-file-feature-implementation">Scenario 10: Multi-File Feature Implementation<a class="headerlink" href="#scenario-10-multi-file-feature-implementation" title="Permanent link">&para;</a></h4>
+<p><strong>Type</strong>: Complex feature with dependencies
+<strong>Expected Memory Benefit</strong>: MEDIUM (25-40% improvement)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Task: Implement user authentication feature (controller, service, tests, docs)
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>With Memory:
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>- Recall feature implementation patterns
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>- Use proven file organization
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>- Apply consistent naming conventions
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>- Include all necessary components from start
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>Metrics:
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>- Implementation completeness
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>- Code consistency score
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>- Number of revision cycles
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>- Total implementation time
+</code></pre></div>
+<h3 id="23-scenario-memory-pre-seeding">2.3 Scenario Memory Pre-Seeding<a class="headerlink" href="#23-scenario-memory-pre-seeding" title="Permanent link">&para;</a></h3>
+<p><strong>Critical Decision</strong>: How to handle memory state for fair testing?</p>
+<h4 id="option-a-clean-slate-recommended-for-phase-1">Option A: Clean Slate (Recommended for Phase 1)<a class="headerlink" href="#option-a-clean-slate-recommended-for-phase-1" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Approach</strong>: Each test run starts with empty memory</li>
+<li><strong>Pro</strong>: Fair comparison, no confounding variables</li>
+<li><strong>Con</strong>: Doesn't test long-term memory accumulation</li>
+<li><strong>Use Case</strong>: Baseline establishment, initial memory validation</li>
+</ul>
+<h4 id="option-b-pre-seeded-memory-for-phase-2">Option B: Pre-Seeded Memory (For Phase 2)<a class="headerlink" href="#option-b-pre-seeded-memory-for-phase-2" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Approach</strong>: Seed memory with N representative entries before test</li>
+<li><strong>Pro</strong>: Tests realistic memory state</li>
+<li><strong>Con</strong>: Requires careful seed data curation</li>
+<li><strong>Use Case</strong>: Testing memory retrieval effectiveness</li>
+</ul>
+<h4 id="option-c-progressive-memory-building-for-phase-3">Option C: Progressive Memory Building (For Phase 3)<a class="headerlink" href="#option-c-progressive-memory-building-for-phase-3" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Approach</strong>: Run scenarios sequentially, building memory over time</li>
+<li><strong>Pro</strong>: Tests real-world accumulation</li>
+<li><strong>Con</strong>: Later scenarios affected by earlier ones</li>
+<li><strong>Use Case</strong>: Long-term effectiveness testing</li>
+</ul>
+<p><strong>Decision</strong>: Use <strong>Option A</strong> for baseline comparison, then <strong>Option B</strong> for retrieval testing.</p>
+<hr />
+<h2 id="3-metrics-collection">3. Metrics Collection<a class="headerlink" href="#3-metrics-collection" title="Permanent link">&para;</a></h2>
+<h3 id="31-primary-metrics-objective">3.1 Primary Metrics (Objective)<a class="headerlink" href="#31-primary-metrics-objective" title="Permanent link">&para;</a></h3>
+<p>These metrics are <strong>automatically collected</strong> by test harness:</p>
+<h4 id="311-time-metrics">3.1.1 Time Metrics<a class="headerlink" href="#311-time-metrics" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">TimeMetrics</span><span class="p">:</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="n">execution_time</span><span class="p">:</span> <span class="nb">float</span>          <span class="c1"># Total task execution time (seconds)</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">time_to_first_action</span><span class="p">:</span> <span class="nb">float</span>   <span class="c1"># Time until agent takes first action</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">decision_time</span><span class="p">:</span> <span class="nb">float</span>          <span class="c1"># Time spent in decision-making</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">implementation_time</span><span class="p">:</span> <span class="nb">float</span>    <span class="c1"># Time spent writing code</span>
+</code></pre></div>
+<p><strong>Collection Method</strong>: Timestamp at task start, action points, and completion.</p>
+<h4 id="312-quality-metrics">3.1.2 Quality Metrics<a class="headerlink" href="#312-quality-metrics" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">QualityMetrics</span><span class="p">:</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="n">test_pass_rate</span><span class="p">:</span> <span class="nb">float</span>         <span class="c1"># Percentage of tests passing (0-1)</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="n">code_complexity</span><span class="p">:</span> <span class="nb">int</span>          <span class="c1"># Cyclomatic complexity</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">error_count</span><span class="p">:</span> <span class="nb">int</span>              <span class="c1"># Number of errors during execution</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="n">revision_cycles</span><span class="p">:</span> <span class="nb">int</span>          <span class="c1"># Number of code revision iterations</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="n">pylint_score</span><span class="p">:</span> <span class="nb">float</span>           <span class="c1"># Automated code quality score (0-10)</span>
+</code></pre></div>
+<p><strong>Collection Method</strong>: Run automated analysis tools on generated code.</p>
+<h4 id="313-memory-usage-metrics">3.1.3 Memory Usage Metrics<a class="headerlink" href="#313-memory-usage-metrics" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">MemoryMetrics</span><span class="p">:</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="n">memory_retrievals</span><span class="p">:</span> <span class="nb">int</span>        <span class="c1"># Number of memory queries</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">memory_hits</span><span class="p">:</span> <span class="nb">int</span>              <span class="c1"># Number of relevant memories found</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="n">memory_applied</span><span class="p">:</span> <span class="nb">int</span>           <span class="c1"># Number of memories actually used</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="n">retrieval_time</span><span class="p">:</span> <span class="nb">float</span>         <span class="c1"># Time spent retrieving memories (ms)</span>
+</code></pre></div>
+<p><strong>Collection Method</strong>: Instrument memory system with logging.</p>
+<h4 id="314-output-metrics">3.1.4 Output Metrics<a class="headerlink" href="#314-output-metrics" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">OutputMetrics</span><span class="p">:</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="n">lines_of_code</span><span class="p">:</span> <span class="nb">int</span>            <span class="c1"># LOC generated</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="n">files_modified</span><span class="p">:</span> <span class="nb">int</span>           <span class="c1"># Number of files changed</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="n">test_coverage</span><span class="p">:</span> <span class="nb">float</span>          <span class="c1"># Test coverage percentage (0-100)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="n">documentation_completeness</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Doc completeness score (0-1)</span>
+</code></pre></div>
+<p><strong>Collection Method</strong>: Analyze generated artifacts.</p>
+<h3 id="32-secondary-metrics-qualitative">3.2 Secondary Metrics (Qualitative)<a class="headerlink" href="#32-secondary-metrics-qualitative" title="Permanent link">&para;</a></h3>
+<p>These metrics require <strong>manual assessment</strong> (sample subset):</p>
+<h4 id="321-decision-quality">3.2.1 Decision Quality<a class="headerlink" href="#321-decision-quality" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">DecisionQuality</span><span class="p">:</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="n">architecture_appropriateness</span><span class="p">:</span> <span class="nb">int</span>    <span class="c1"># 1-5 scale</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="n">pattern_selection_quality</span><span class="p">:</span> <span class="nb">int</span>       <span class="c1"># 1-5 scale</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="n">error_handling_completeness</span><span class="p">:</span> <span class="nb">int</span>     <span class="c1"># 1-5 scale</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    <span class="n">edge_case_coverage</span><span class="p">:</span> <span class="nb">int</span>              <span class="c1"># 1-5 scale</span>
+</code></pre></div>
+<p><strong>Assessment Method</strong>: Expert review of 20% sample (10 runs), scoring rubric.</p>
+<h4 id="322-pattern-recognition">3.2.2 Pattern Recognition<a class="headerlink" href="#322-pattern-recognition" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">PatternRecognition</span><span class="p">:</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="n">recognized_previous_solution</span><span class="p">:</span> <span class="nb">bool</span>   <span class="c1"># Did agent reference past work?</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="n">adapted_pattern_appropriately</span><span class="p">:</span> <span class="nb">bool</span>  <span class="c1"># Was adaptation correct?</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="n">avoided_previous_errors</span><span class="p">:</span> <span class="nb">bool</span>        <span class="c1"># Prevented repeated mistakes?</span>
+</code></pre></div>
+<p><strong>Assessment Method</strong>: Manual analysis of agent reasoning and decision logs.</p>
+<h3 id="33-metric-collection-implementation">3.3 Metric Collection Implementation<a class="headerlink" href="#33-metric-collection-implementation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Test harness will collect metrics automatically</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">MetricsCollector</span><span class="p">:</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scenario_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">scenario_id</span> <span class="o">=</span> <span class="n">scenario_id</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>  <span class="c1"># &quot;control&quot;, &quot;sqlite&quot;, or &quot;neo4j&quot;</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span> <span class="o">=</span> <span class="p">{}</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Begin metric collection for a test run.&quot;&quot;&quot;</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>            <span class="s2">&quot;scenario_id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario_id</span><span class="p">,</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>            <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>            <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>            <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="p">{},</span>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>            <span class="s2">&quot;quality&quot;</span><span class="p">:</span> <span class="p">{},</span>
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>            <span class="s2">&quot;memory&quot;</span><span class="p">:</span> <span class="p">{},</span>
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>            <span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="p">{}</span>
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>        <span class="p">}</span>
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">record_time_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Record a time-based metric.&quot;&quot;&quot;</span>
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">record_quality_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]):</span>
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Record a quality metric.&quot;&quot;&quot;</span>
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;quality&quot;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">record_memory_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]):</span>
+<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Record a memory usage metric.&quot;&quot;&quot;</span>
+<a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;memory&quot;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+<a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a>
+<a id="__codelineno-17-34" name="__codelineno-17-34" href="#__codelineno-17-34"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">record_output_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]):</span>
+<a id="__codelineno-17-35" name="__codelineno-17-35" href="#__codelineno-17-35"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Record an output metric.&quot;&quot;&quot;</span>
+<a id="__codelineno-17-36" name="__codelineno-17-36" href="#__codelineno-17-36"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+<a id="__codelineno-17-37" name="__codelineno-17-37" href="#__codelineno-17-37"></a>
+<a id="__codelineno-17-38" name="__codelineno-17-38" href="#__codelineno-17-38"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<a id="__codelineno-17-39" name="__codelineno-17-39" href="#__codelineno-17-39"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Finalize and return collected metrics.&quot;&quot;&quot;</span>
+<a id="__codelineno-17-40" name="__codelineno-17-40" href="#__codelineno-17-40"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">][</span><span class="s2">&quot;total_execution&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span>
+<a id="__codelineno-17-41" name="__codelineno-17-41" href="#__codelineno-17-41"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span>
+</code></pre></div>
+<hr />
+<h2 id="4-statistical-analysis">4. Statistical Analysis<a class="headerlink" href="#4-statistical-analysis" title="Permanent link">&para;</a></h2>
+<h3 id="41-sample-size-calculation">4.1 Sample Size Calculation<a class="headerlink" href="#41-sample-size-calculation" title="Permanent link">&para;</a></h3>
+<p><strong>Goal</strong>: Detect 20% improvement with 80% power at α=0.05</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Using standard power analysis</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">power</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.power</span><span class="w"> </span><span class="kn">import</span> <span class="n">tt_ind_solve_power</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># Expected effect size: 20% improvement</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="c1"># Cohen&#39;s d ≈ 0.5 (medium effect)</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Power = 0.80</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="c1"># Alpha = 0.05</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="n">sample_size</span> <span class="o">=</span> <span class="n">tt_ind_solve_power</span><span class="p">(</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>    <span class="n">effect_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>    <span class="n">power</span><span class="o">=</span><span class="mf">0.80</span><span class="p">,</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>    <span class="n">ratio</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>    <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;two-sided&#39;</span>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="p">)</span>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a><span class="c1"># Result: ~64 observations per group</span>
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a><span class="c1"># We&#39;ll use: 10 scenarios × 5 iterations = 50 per group</span>
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a><span class="c1"># This gives ~75% power (acceptable for initial testing)</span>
+</code></pre></div>
+<p><strong>Decision</strong>: <strong>5 iterations per scenario = 50 total runs per configuration</strong></p>
+<p>This provides:</p>
+<ul>
+<li>75% power to detect 20% improvement</li>
+<li>95% confidence intervals</li>
+<li>Reasonable time investment (~8-10 hours per configuration)</li>
+</ul>
+<h3 id="42-statistical-tests">4.2 Statistical Tests<a class="headerlink" href="#42-statistical-tests" title="Permanent link">&para;</a></h3>
+<h4 id="421-primary-comparison-paired-t-test">4.2.1 Primary Comparison: Paired T-Test<a class="headerlink" href="#421-primary-comparison-paired-t-test" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">ttest_rel</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">compare_configurations</span><span class="p">(</span><span class="n">baseline_times</span><span class="p">,</span> <span class="n">treatment_times</span><span class="p">):</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="sd">    Compare execution times between configurations.</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="sd">    Uses paired t-test because same scenarios run with different configs.</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>    <span class="c1"># Paired t-test (same scenarios, different conditions)</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>    <span class="n">t_statistic</span><span class="p">,</span> <span class="n">p_value</span> <span class="o">=</span> <span class="n">ttest_rel</span><span class="p">(</span><span class="n">baseline_times</span><span class="p">,</span> <span class="n">treatment_times</span><span class="p">)</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>    <span class="c1"># Calculate effect size (Cohen&#39;s d for paired data)</span>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>    <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">treatment_times</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">baseline_times</span><span class="p">)</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>    <span class="n">effect_size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>    <span class="c1"># Calculate confidence interval</span>
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>    <span class="n">conf_interval</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">interval</span><span class="p">(</span>
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>        <span class="mf">0.95</span><span class="p">,</span>
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>        <span class="nb">len</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>        <span class="n">loc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">diff</span><span class="p">),</span>
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>        <span class="n">scale</span><span class="o">=</span><span class="n">stats</span><span class="o">.</span><span class="n">sem</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span>
+<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>    <span class="p">)</span>
+<a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a>
+<a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a>    <span class="k">return</span> <span class="p">{</span>
+<a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a>        <span class="s2">&quot;t_statistic&quot;</span><span class="p">:</span> <span class="n">t_statistic</span><span class="p">,</span>
+<a id="__codelineno-19-26" name="__codelineno-19-26" href="#__codelineno-19-26"></a>        <span class="s2">&quot;p_value&quot;</span><span class="p">:</span> <span class="n">p_value</span><span class="p">,</span>
+<a id="__codelineno-19-27" name="__codelineno-19-27" href="#__codelineno-19-27"></a>        <span class="s2">&quot;effect_size&quot;</span><span class="p">:</span> <span class="n">effect_size</span><span class="p">,</span>
+<a id="__codelineno-19-28" name="__codelineno-19-28" href="#__codelineno-19-28"></a>        <span class="s2">&quot;mean_diff&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">diff</span><span class="p">),</span>
+<a id="__codelineno-19-29" name="__codelineno-19-29" href="#__codelineno-19-29"></a>        <span class="s2">&quot;conf_interval_95&quot;</span><span class="p">:</span> <span class="n">conf_interval</span><span class="p">,</span>
+<a id="__codelineno-19-30" name="__codelineno-19-30" href="#__codelineno-19-30"></a>        <span class="s2">&quot;significant&quot;</span><span class="p">:</span> <span class="n">p_value</span> <span class="o">&lt;</span> <span class="mf">0.05</span>
+<a id="__codelineno-19-31" name="__codelineno-19-31" href="#__codelineno-19-31"></a>    <span class="p">}</span>
+</code></pre></div>
+<h4 id="422-multiple-comparisons-correction">4.2.2 Multiple Comparisons Correction<a class="headerlink" href="#422-multiple-comparisons-correction" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.multitest</span><span class="w"> </span><span class="kn">import</span> <span class="n">multipletests</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">analyze_all_metrics</span><span class="p">(</span><span class="n">baseline_data</span><span class="p">,</span> <span class="n">treatment_data</span><span class="p">,</span> <span class="n">metrics</span><span class="p">):</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="sd">    Analyze multiple metrics with Bonferroni correction.</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="sd">    Prevents false positives from multiple testing.</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>    <span class="n">p_values</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>    <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>        <span class="n">baseline_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">run</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">baseline_data</span><span class="p">]</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>        <span class="n">treatment_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">run</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">treatment_data</span><span class="p">]</span>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">compare_configurations</span><span class="p">(</span><span class="n">baseline_values</span><span class="p">,</span> <span class="n">treatment_values</span><span class="p">)</span>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>        <span class="n">results</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>        <span class="n">p_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;p_value&quot;</span><span class="p">])</span>
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>    <span class="c1"># Apply Bonferroni correction</span>
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>    <span class="n">corrected</span> <span class="o">=</span> <span class="n">multipletests</span><span class="p">(</span><span class="n">p_values</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bonferroni&#39;</span><span class="p">)</span>
+<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a>
+<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">metric</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">metrics</span><span class="p">):</span>
+<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a>        <span class="n">results</span><span class="p">[</span><span class="n">metric</span><span class="p">][</span><span class="s2">&quot;corrected_p_value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">corrected</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+<a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a>        <span class="n">results</span><span class="p">[</span><span class="n">metric</span><span class="p">][</span><span class="s2">&quot;significant_corrected&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">corrected</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+<a id="__codelineno-20-26" name="__codelineno-20-26" href="#__codelineno-20-26"></a>
+<a id="__codelineno-20-27" name="__codelineno-20-27" href="#__codelineno-20-27"></a>    <span class="k">return</span> <span class="n">results</span>
+</code></pre></div>
+<h4 id="423-effect-size-interpretation">4.2.3 Effect Size Interpretation<a class="headerlink" href="#423-effect-size-interpretation" title="Permanent link">&para;</a></h4>
+<p>Following Cohen's guidelines:</p>
+<table>
+<thead>
+<tr>
+<th>Effect Size (</th>
+<th>d</th>
+<th>)</th>
+<th>Interpretation</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt; 0.2</td>
+<td>Negligible</td>
+<td>Not practically significant</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>0.2 - 0.5</td>
+<td>Small</td>
+<td>Noticeable but minor improvement</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>0.5 - 0.8</td>
+<td>Medium</td>
+<td>Substantial improvement</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>&gt; 0.8</td>
+<td>Large</td>
+<td>Major improvement</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Decision Criteria</strong>:</p>
+<ul>
+<li><strong>Proceed with SQLite</strong>: Medium effect (d &gt; 0.5) AND p &lt; 0.05</li>
+<li><strong>Proceed with Neo4j</strong>: Medium effect (d &gt; 0.5) AND p &lt; 0.05 AND practical benefit &gt; complexity cost</li>
+</ul>
+<h3 id="43-confidence-intervals">4.3 Confidence Intervals<a class="headerlink" href="#43-confidence-intervals" title="Permanent link">&para;</a></h3>
+<p>Report 95% confidence intervals for all metrics:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_confidence_intervals</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="mf">0.95</span><span class="p">):</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate confidence intervals for metrics.&quot;&quot;&quot;</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>    <span class="k">for</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>        <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>        <span class="n">sem</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">sem</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>        <span class="n">ci</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">interval</span><span class="p">(</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>            <span class="n">confidence</span><span class="p">,</span>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>            <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>            <span class="n">loc</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span>
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>            <span class="n">scale</span><span class="o">=</span><span class="n">sem</span>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>        <span class="p">)</span>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>        <span class="n">results</span><span class="p">[</span><span class="n">metric_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>            <span class="s2">&quot;mean&quot;</span><span class="p">:</span> <span class="n">mean</span><span class="p">,</span>
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>            <span class="s2">&quot;std&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">values</span><span class="p">),</span>
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>            <span class="s2">&quot;ci_lower&quot;</span><span class="p">:</span> <span class="n">ci</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>            <span class="s2">&quot;ci_upper&quot;</span><span class="p">:</span> <span class="n">ci</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>            <span class="s2">&quot;ci_width&quot;</span><span class="p">:</span> <span class="n">ci</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ci</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>        <span class="p">}</span>
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>    <span class="k">return</span> <span class="n">results</span>
+</code></pre></div>
+<h3 id="44-visualization">4.4 Visualization<a class="headerlink" href="#44-visualization" title="Permanent link">&para;</a></h3>
+<p>Generate comparison visualizations:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">plot_comparison</span><span class="p">(</span><span class="n">baseline</span><span class="p">,</span> <span class="n">sqlite</span><span class="p">,</span> <span class="n">neo4j</span><span class="p">,</span> <span class="n">metric_name</span><span class="p">):</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate box plot comparison.&quot;&quot;&quot;</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>        <span class="s1">&#39;Control (No Memory)&#39;</span><span class="p">:</span> <span class="n">baseline</span><span class="p">,</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>        <span class="s1">&#39;SQLite Memory&#39;</span><span class="p">:</span> <span class="n">sqlite</span><span class="p">,</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>        <span class="s1">&#39;Neo4j Memory&#39;</span><span class="p">:</span> <span class="n">neo4j</span>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>    <span class="p">})</span>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a>    <span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">metric_name</span><span class="p">)</span>
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">metric_name</span><span class="si">}</span><span class="s1"> Comparison Across Configurations&#39;</span><span class="p">)</span>
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;comparison_</span><span class="si">{</span><span class="n">metric_name</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">)</span>
+<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div>
+<hr />
+<h2 id="5-baseline-establishment">5. Baseline Establishment<a class="headerlink" href="#5-baseline-establishment" title="Permanent link">&para;</a></h2>
+<h3 id="51-control-configuration-setup">5.1 Control Configuration Setup<a class="headerlink" href="#51-control-configuration-setup" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">ControlConfiguration</span><span class="p">:</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration with no memory system.&quot;&quot;&quot;</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">memory_enabled</span> <span class="o">=</span> <span class="kc">False</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span> <span class="o">=</span> <span class="n">load_agent_definitions</span><span class="p">()</span>  <span class="c1"># Standard agents</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">run_scenario</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scenario</span><span class="p">):</span>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Run scenario without memory.&quot;&quot;&quot;</span>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>        <span class="c1"># No memory retrieval</span>
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>        <span class="c1"># No memory storage</span>
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>        <span class="c1"># Pure agent execution</span>
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>        <span class="k">return</span> <span class="n">run_agent_task</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="52-baseline-data-collection">5.2 Baseline Data Collection<a class="headerlink" href="#52-baseline-data-collection" title="Permanent link">&para;</a></h3>
+<p><strong>Process</strong>:</p>
+<ol>
+<li>Run all 10 scenarios × 5 iterations = 50 baseline runs</li>
+<li>Collect all metrics for each run</li>
+<li>Calculate baseline statistics (mean, std, CI)</li>
+<li>Save baseline data for comparison</li>
+</ol>
+<p><strong>Expected Results</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="p">{</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">  </span><span class="nt">&quot;baseline_statistics&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">    </span><span class="nt">&quot;execution_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">      </span><span class="nt">&quot;mean&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">180.5</span><span class="p">,</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">      </span><span class="nt">&quot;std&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">25.3</span><span class="p">,</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="w">      </span><span class="nt">&quot;ci_95&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">175.2</span><span class="p">,</span><span class="w"> </span><span class="mf">185.8</span><span class="p">]</span>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="w">    </span><span class="nt">&quot;error_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="w">      </span><span class="nt">&quot;mean&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">3.2</span><span class="p">,</span>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="w">      </span><span class="nt">&quot;std&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.5</span><span class="p">,</span>
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="w">      </span><span class="nt">&quot;ci_95&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">2.8</span><span class="p">,</span><span class="w"> </span><span class="mf">3.6</span><span class="p">]</span>
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a><span class="w">    </span><span class="nt">&quot;quality_score&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a><span class="w">      </span><span class="nt">&quot;mean&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">7.5</span><span class="p">,</span>
+<a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a><span class="w">      </span><span class="nt">&quot;std&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8</span><span class="p">,</span>
+<a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a><span class="w">      </span><span class="nt">&quot;ci_95&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">7.3</span><span class="p">,</span><span class="w"> </span><span class="mf">7.7</span><span class="p">]</span>
+<a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="53-baseline-documentation">5.3 Baseline Documentation<a class="headerlink" href="#53-baseline-documentation" title="Permanent link">&para;</a></h3>
+<p>Store baseline results in:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>docs/memory/BASELINE_RESULTS.md
+</code></pre></div>
+<p>Include:</p>
+<ul>
+<li>Raw data (JSON format)</li>
+<li>Statistical summaries</li>
+<li>Scenario-specific performance</li>
+<li>Environmental context (machine specs, model version)</li>
+</ul>
+<hr />
+<h2 id="6-test-harness-implementation">6. Test Harness Implementation<a class="headerlink" href="#6-test-harness-implementation" title="Permanent link">&para;</a></h2>
+<h3 id="61-architecture">6.1 Architecture<a class="headerlink" href="#61-architecture" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>scripts/memory_test_harness.py
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>├── Configuration Management
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>│   ├── ControlConfig (no memory)
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>│   ├── SQLiteConfig (SQLite memory)
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>│   └── Neo4jConfig (Neo4j memory)
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>├── Scenario Management
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>│   ├── ScenarioLoader (load scenario definitions)
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>│   ├── ScenarioRunner (execute scenarios)
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>│   └── ScenarioValidator (verify results)
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>├── Metrics Collection
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a>│   ├── MetricsCollector (collect metrics)
+<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a>│   ├── MetricsAggregator (aggregate across runs)
+<a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a>│   └── MetricsStorage (save to database)
+<a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a>├── Statistical Analysis
+<a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a>│   ├── StatisticalTests (t-tests, effect sizes)
+<a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a>│   ├── ConfidenceIntervals (calculate CIs)
+<a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a>│   └── MultipleComparisonsCorrection (Bonferroni)
+<a id="__codelineno-26-18" name="__codelineno-26-18" href="#__codelineno-26-18"></a>└── Reporting
+<a id="__codelineno-26-19" name="__codelineno-26-19" href="#__codelineno-26-19"></a>    ├── ReportGenerator (create comparison reports)
+<a id="__codelineno-26-20" name="__codelineno-26-20" href="#__codelineno-26-20"></a>    ├── Visualization (generate plots)
+<a id="__codelineno-26-21" name="__codelineno-26-21" href="#__codelineno-26-21"></a>    └── SummaryExporter (export results)
+</code></pre></div>
+<h3 id="62-core-interface">6.2 Core Interface<a class="headerlink" href="#62-core-interface" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># scripts/memory_test_harness.py</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">MemoryTestHarness</span><span class="p">:</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Automated A/B test harness for memory systems.&quot;&quot;&quot;</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;test_results&quot;</span><span class="p">):</span>
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">scenarios</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_scenarios</span><span class="p">()</span>
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">configurations</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>            <span class="s2">&quot;control&quot;</span><span class="p">:</span> <span class="n">ControlConfiguration</span><span class="p">(),</span>
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>            <span class="s2">&quot;sqlite&quot;</span><span class="p">:</span> <span class="n">SQLiteConfiguration</span><span class="p">(),</span>
+<a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>            <span class="s2">&quot;neo4j&quot;</span><span class="p">:</span> <span class="n">Neo4jConfiguration</span><span class="p">()</span>
+<a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a>        <span class="p">}</span>
+<a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a>
+<a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">run_full_test_suite</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-27-16" name="__codelineno-27-16" href="#__codelineno-27-16"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Run complete A/B test suite.&quot;&quot;&quot;</span>
+<a id="__codelineno-27-17" name="__codelineno-27-17" href="#__codelineno-27-17"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+<a id="__codelineno-27-18" name="__codelineno-27-18" href="#__codelineno-27-18"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MEMORY SYSTEM A/B TEST SUITE&quot;</span><span class="p">)</span>
+<a id="__codelineno-27-19" name="__codelineno-27-19" href="#__codelineno-27-19"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+<a id="__codelineno-27-20" name="__codelineno-27-20" href="#__codelineno-27-20"></a>
+<a id="__codelineno-27-21" name="__codelineno-27-21" href="#__codelineno-27-21"></a>        <span class="c1"># Phase 1: Baseline</span>
+<a id="__codelineno-27-22" name="__codelineno-27-22" href="#__codelineno-27-22"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[Phase 1] Establishing baseline (no memory)...&quot;</span><span class="p">)</span>
+<a id="__codelineno-27-23" name="__codelineno-27-23" href="#__codelineno-27-23"></a>        <span class="n">baseline_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_configuration</span><span class="p">(</span><span class="s2">&quot;control&quot;</span><span class="p">)</span>
+<a id="__codelineno-27-24" name="__codelineno-27-24" href="#__codelineno-27-24"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">save_results</span><span class="p">(</span><span class="n">baseline_results</span><span class="p">,</span> <span class="s2">&quot;baseline&quot;</span><span class="p">)</span>
+<a id="__codelineno-27-25" name="__codelineno-27-25" href="#__codelineno-27-25"></a>
+<a id="__codelineno-27-26" name="__codelineno-27-26" href="#__codelineno-27-26"></a>        <span class="c1"># Phase 2: SQLite</span>
+<a id="__codelineno-27-27" name="__codelineno-27-27" href="#__codelineno-27-27"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[Phase 2] Testing SQLite memory...&quot;</span><span class="p">)</span>
+<a id="__codelineno-27-28" name="__codelineno-27-28" href="#__codelineno-27-28"></a>        <span class="n">sqlite_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_configuration</span><span class="p">(</span><span class="s2">&quot;sqlite&quot;</span><span class="p">)</span>
+<a id="__codelineno-27-29" name="__codelineno-27-29" href="#__codelineno-27-29"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">save_results</span><span class="p">(</span><span class="n">sqlite_results</span><span class="p">,</span> <span class="s2">&quot;sqlite&quot;</span><span class="p">)</span>
+<a id="__codelineno-27-30" name="__codelineno-27-30" href="#__codelineno-27-30"></a>
+<a id="__codelineno-27-31" name="__codelineno-27-31" href="#__codelineno-27-31"></a>        <span class="c1"># Analyze Phase 2</span>
+<a id="__codelineno-27-32" name="__codelineno-27-32" href="#__codelineno-27-32"></a>        <span class="n">comparison_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compare_configurations</span><span class="p">(</span><span class="n">baseline_results</span><span class="p">,</span> <span class="n">sqlite_results</span><span class="p">)</span>
+<a id="__codelineno-27-33" name="__codelineno-27-33" href="#__codelineno-27-33"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">save_comparison</span><span class="p">(</span><span class="n">comparison_2</span><span class="p">,</span> <span class="s2">&quot;baseline_vs_sqlite&quot;</span><span class="p">)</span>
+<a id="__codelineno-27-34" name="__codelineno-27-34" href="#__codelineno-27-34"></a>
+<a id="__codelineno-27-35" name="__codelineno-27-35" href="#__codelineno-27-35"></a>        <span class="k">if</span> <span class="n">comparison_2</span><span class="p">[</span><span class="s2">&quot;proceed_recommendation&quot;</span><span class="p">]:</span>
+<a id="__codelineno-27-36" name="__codelineno-27-36" href="#__codelineno-27-36"></a>            <span class="c1"># Phase 3: Neo4j (only if Phase 2 successful)</span>
+<a id="__codelineno-27-37" name="__codelineno-27-37" href="#__codelineno-27-37"></a>            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[Phase 3] Testing Neo4j memory...&quot;</span><span class="p">)</span>
+<a id="__codelineno-27-38" name="__codelineno-27-38" href="#__codelineno-27-38"></a>            <span class="n">neo4j_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_configuration</span><span class="p">(</span><span class="s2">&quot;neo4j&quot;</span><span class="p">)</span>
+<a id="__codelineno-27-39" name="__codelineno-27-39" href="#__codelineno-27-39"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">save_results</span><span class="p">(</span><span class="n">neo4j_results</span><span class="p">,</span> <span class="s2">&quot;neo4j&quot;</span><span class="p">)</span>
+<a id="__codelineno-27-40" name="__codelineno-27-40" href="#__codelineno-27-40"></a>
+<a id="__codelineno-27-41" name="__codelineno-27-41" href="#__codelineno-27-41"></a>            <span class="c1"># Analyze Phase 3</span>
+<a id="__codelineno-27-42" name="__codelineno-27-42" href="#__codelineno-27-42"></a>            <span class="n">comparison_3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compare_configurations</span><span class="p">(</span><span class="n">sqlite_results</span><span class="p">,</span> <span class="n">neo4j_results</span><span class="p">)</span>
+<a id="__codelineno-27-43" name="__codelineno-27-43" href="#__codelineno-27-43"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">save_comparison</span><span class="p">(</span><span class="n">comparison_3</span><span class="p">,</span> <span class="s2">&quot;sqlite_vs_neo4j&quot;</span><span class="p">)</span>
+<a id="__codelineno-27-44" name="__codelineno-27-44" href="#__codelineno-27-44"></a>
+<a id="__codelineno-27-45" name="__codelineno-27-45" href="#__codelineno-27-45"></a>        <span class="c1"># Phase 4: Final Analysis</span>
+<a id="__codelineno-27-46" name="__codelineno-27-46" href="#__codelineno-27-46"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[Phase 4] Generating final report...&quot;</span><span class="p">)</span>
+<a id="__codelineno-27-47" name="__codelineno-27-47" href="#__codelineno-27-47"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">generate_final_report</span><span class="p">()</span>
+<a id="__codelineno-27-48" name="__codelineno-27-48" href="#__codelineno-27-48"></a>
+<a id="__codelineno-27-49" name="__codelineno-27-49" href="#__codelineno-27-49"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">run_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<a id="__codelineno-27-50" name="__codelineno-27-50" href="#__codelineno-27-50"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Run all scenarios for a configuration.&quot;&quot;&quot;</span>
+<a id="__codelineno-27-51" name="__codelineno-27-51" href="#__codelineno-27-51"></a>        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configurations</span><span class="p">[</span><span class="n">config_name</span><span class="p">]</span>
+<a id="__codelineno-27-52" name="__codelineno-27-52" href="#__codelineno-27-52"></a>        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-27-53" name="__codelineno-27-53" href="#__codelineno-27-53"></a>
+<a id="__codelineno-27-54" name="__codelineno-27-54" href="#__codelineno-27-54"></a>        <span class="k">for</span> <span class="n">scenario</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenarios</span><span class="p">:</span>
+<a id="__codelineno-27-55" name="__codelineno-27-55" href="#__codelineno-27-55"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Running scenario: </span><span class="si">{</span><span class="n">scenario</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-27-56" name="__codelineno-27-56" href="#__codelineno-27-56"></a>
+<a id="__codelineno-27-57" name="__codelineno-27-57" href="#__codelineno-27-57"></a>            <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>  <span class="c1"># 5 iterations per scenario</span>
+<a id="__codelineno-27-58" name="__codelineno-27-58" href="#__codelineno-27-58"></a>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Iteration </span><span class="si">{</span><span class="n">iteration</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/5...&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<a id="__codelineno-27-59" name="__codelineno-27-59" href="#__codelineno-27-59"></a>
+<a id="__codelineno-27-60" name="__codelineno-27-60" href="#__codelineno-27-60"></a>                <span class="c1"># Run scenario</span>
+<a id="__codelineno-27-61" name="__codelineno-27-61" href="#__codelineno-27-61"></a>                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_single_test</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">iteration</span><span class="p">)</span>
+<a id="__codelineno-27-62" name="__codelineno-27-62" href="#__codelineno-27-62"></a>                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<a id="__codelineno-27-63" name="__codelineno-27-63" href="#__codelineno-27-63"></a>
+<a id="__codelineno-27-64" name="__codelineno-27-64" href="#__codelineno-27-64"></a>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; Done (</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">][</span><span class="s1">&#39;total_execution&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">s)&quot;</span><span class="p">)</span>
+<a id="__codelineno-27-65" name="__codelineno-27-65" href="#__codelineno-27-65"></a>
+<a id="__codelineno-27-66" name="__codelineno-27-66" href="#__codelineno-27-66"></a>        <span class="k">return</span> <span class="n">results</span>
+<a id="__codelineno-27-67" name="__codelineno-27-67" href="#__codelineno-27-67"></a>
+<a id="__codelineno-27-68" name="__codelineno-27-68" href="#__codelineno-27-68"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">run_single_test</span><span class="p">(</span>
+<a id="__codelineno-27-69" name="__codelineno-27-69" href="#__codelineno-27-69"></a>        <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-27-70" name="__codelineno-27-70" href="#__codelineno-27-70"></a>        <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+<a id="__codelineno-27-71" name="__codelineno-27-71" href="#__codelineno-27-71"></a>        <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
+<a id="__codelineno-27-72" name="__codelineno-27-72" href="#__codelineno-27-72"></a>        <span class="n">iteration</span><span class="p">:</span> <span class="nb">int</span>
+<a id="__codelineno-27-73" name="__codelineno-27-73" href="#__codelineno-27-73"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<a id="__codelineno-27-74" name="__codelineno-27-74" href="#__codelineno-27-74"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Run a single test iteration.&quot;&quot;&quot;</span>
+<a id="__codelineno-27-75" name="__codelineno-27-75" href="#__codelineno-27-75"></a>        <span class="c1"># Initialize metrics collector</span>
+<a id="__codelineno-27-76" name="__codelineno-27-76" href="#__codelineno-27-76"></a>        <span class="n">collector</span> <span class="o">=</span> <span class="n">MetricsCollector</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<a id="__codelineno-27-77" name="__codelineno-27-77" href="#__codelineno-27-77"></a>        <span class="n">collector</span><span class="o">.</span><span class="n">start_collection</span><span class="p">()</span>
+<a id="__codelineno-27-78" name="__codelineno-27-78" href="#__codelineno-27-78"></a>
+<a id="__codelineno-27-79" name="__codelineno-27-79" href="#__codelineno-27-79"></a>        <span class="c1"># Run scenario with configuration</span>
+<a id="__codelineno-27-80" name="__codelineno-27-80" href="#__codelineno-27-80"></a>        <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-27-81" name="__codelineno-27-81" href="#__codelineno-27-81"></a>            <span class="n">output</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">run_scenario</span><span class="p">(</span><span class="n">scenario</span><span class="p">)</span>
+<a id="__codelineno-27-82" name="__codelineno-27-82" href="#__codelineno-27-82"></a>
+<a id="__codelineno-27-83" name="__codelineno-27-83" href="#__codelineno-27-83"></a>            <span class="c1"># Collect metrics from output</span>
+<a id="__codelineno-27-84" name="__codelineno-27-84" href="#__codelineno-27-84"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">collect_metrics_from_output</span><span class="p">(</span><span class="n">collector</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+<a id="__codelineno-27-85" name="__codelineno-27-85" href="#__codelineno-27-85"></a>
+<a id="__codelineno-27-86" name="__codelineno-27-86" href="#__codelineno-27-86"></a>        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-27-87" name="__codelineno-27-87" href="#__codelineno-27-87"></a>            <span class="c1"># Record failure</span>
+<a id="__codelineno-27-88" name="__codelineno-27-88" href="#__codelineno-27-88"></a>            <span class="n">collector</span><span class="o">.</span><span class="n">record_quality_metric</span><span class="p">(</span><span class="s2">&quot;error_occurred&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-27-89" name="__codelineno-27-89" href="#__codelineno-27-89"></a>            <span class="n">collector</span><span class="o">.</span><span class="n">record_quality_metric</span><span class="p">(</span><span class="s2">&quot;error_message&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+<a id="__codelineno-27-90" name="__codelineno-27-90" href="#__codelineno-27-90"></a>
+<a id="__codelineno-27-91" name="__codelineno-27-91" href="#__codelineno-27-91"></a>        <span class="c1"># Finalize and return metrics</span>
+<a id="__codelineno-27-92" name="__codelineno-27-92" href="#__codelineno-27-92"></a>        <span class="k">return</span> <span class="n">collector</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
+<a id="__codelineno-27-93" name="__codelineno-27-93" href="#__codelineno-27-93"></a>
+<a id="__codelineno-27-94" name="__codelineno-27-94" href="#__codelineno-27-94"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">compare_configurations</span><span class="p">(</span>
+<a id="__codelineno-27-95" name="__codelineno-27-95" href="#__codelineno-27-95"></a>        <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-27-96" name="__codelineno-27-96" href="#__codelineno-27-96"></a>        <span class="n">baseline</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span>
+<a id="__codelineno-27-97" name="__codelineno-27-97" href="#__codelineno-27-97"></a>        <span class="n">treatment</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span>
+<a id="__codelineno-27-98" name="__codelineno-27-98" href="#__codelineno-27-98"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<a id="__codelineno-27-99" name="__codelineno-27-99" href="#__codelineno-27-99"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare two configurations statistically.&quot;&quot;&quot;</span>
+<a id="__codelineno-27-100" name="__codelineno-27-100" href="#__codelineno-27-100"></a>        <span class="n">comparison</span> <span class="o">=</span> <span class="p">{}</span>
+<a id="__codelineno-27-101" name="__codelineno-27-101" href="#__codelineno-27-101"></a>
+<a id="__codelineno-27-102" name="__codelineno-27-102" href="#__codelineno-27-102"></a>        <span class="c1"># Extract metrics for comparison</span>
+<a id="__codelineno-27-103" name="__codelineno-27-103" href="#__codelineno-27-103"></a>        <span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">,</span> <span class="s2">&quot;error_count&quot;</span><span class="p">,</span> <span class="s2">&quot;quality_score&quot;</span><span class="p">]</span>
+<a id="__codelineno-27-104" name="__codelineno-27-104" href="#__codelineno-27-104"></a>
+<a id="__codelineno-27-105" name="__codelineno-27-105" href="#__codelineno-27-105"></a>        <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
+<a id="__codelineno-27-106" name="__codelineno-27-106" href="#__codelineno-27-106"></a>            <span class="n">baseline_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">][</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">metric</span> <span class="o">==</span> <span class="s2">&quot;execution_time&quot;</span>
+<a id="__codelineno-27-107" name="__codelineno-27-107" href="#__codelineno-27-107"></a>                              <span class="k">else</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;quality&quot;</span><span class="p">][</span><span class="n">metric</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">baseline</span><span class="p">]</span>
+<a id="__codelineno-27-108" name="__codelineno-27-108" href="#__codelineno-27-108"></a>            <span class="n">treatment_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">][</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">metric</span> <span class="o">==</span> <span class="s2">&quot;execution_time&quot;</span>
+<a id="__codelineno-27-109" name="__codelineno-27-109" href="#__codelineno-27-109"></a>                               <span class="k">else</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;quality&quot;</span><span class="p">][</span><span class="n">metric</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">treatment</span><span class="p">]</span>
+<a id="__codelineno-27-110" name="__codelineno-27-110" href="#__codelineno-27-110"></a>
+<a id="__codelineno-27-111" name="__codelineno-27-111" href="#__codelineno-27-111"></a>            <span class="c1"># Run statistical test</span>
+<a id="__codelineno-27-112" name="__codelineno-27-112" href="#__codelineno-27-112"></a>            <span class="n">comparison</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">statistical_test</span><span class="p">(</span><span class="n">baseline_values</span><span class="p">,</span> <span class="n">treatment_values</span><span class="p">)</span>
+<a id="__codelineno-27-113" name="__codelineno-27-113" href="#__codelineno-27-113"></a>
+<a id="__codelineno-27-114" name="__codelineno-27-114" href="#__codelineno-27-114"></a>        <span class="c1"># Determine recommendation</span>
+<a id="__codelineno-27-115" name="__codelineno-27-115" href="#__codelineno-27-115"></a>        <span class="n">comparison</span><span class="p">[</span><span class="s2">&quot;proceed_recommendation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_proceed</span><span class="p">(</span><span class="n">comparison</span><span class="p">)</span>
+<a id="__codelineno-27-116" name="__codelineno-27-116" href="#__codelineno-27-116"></a>
+<a id="__codelineno-27-117" name="__codelineno-27-117" href="#__codelineno-27-117"></a>        <span class="k">return</span> <span class="n">comparison</span>
+<a id="__codelineno-27-118" name="__codelineno-27-118" href="#__codelineno-27-118"></a>
+<a id="__codelineno-27-119" name="__codelineno-27-119" href="#__codelineno-27-119"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">should_proceed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comparison</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<a id="__codelineno-27-120" name="__codelineno-27-120" href="#__codelineno-27-120"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Determine if results justify proceeding.&quot;&quot;&quot;</span>
+<a id="__codelineno-27-121" name="__codelineno-27-121" href="#__codelineno-27-121"></a>        <span class="c1"># Check if improvement is statistically significant</span>
+<a id="__codelineno-27-122" name="__codelineno-27-122" href="#__codelineno-27-122"></a>        <span class="n">significant</span> <span class="o">=</span> <span class="n">comparison</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">][</span><span class="s2">&quot;significant&quot;</span><span class="p">]</span>
+<a id="__codelineno-27-123" name="__codelineno-27-123" href="#__codelineno-27-123"></a>
+<a id="__codelineno-27-124" name="__codelineno-27-124" href="#__codelineno-27-124"></a>        <span class="c1"># Check if effect size is meaningful</span>
+<a id="__codelineno-27-125" name="__codelineno-27-125" href="#__codelineno-27-125"></a>        <span class="n">effect_size</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">comparison</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">][</span><span class="s2">&quot;effect_size&quot;</span><span class="p">])</span>
+<a id="__codelineno-27-126" name="__codelineno-27-126" href="#__codelineno-27-126"></a>        <span class="n">meaningful</span> <span class="o">=</span> <span class="n">effect_size</span> <span class="o">&gt;</span> <span class="mf">0.5</span>  <span class="c1"># Medium effect</span>
+<a id="__codelineno-27-127" name="__codelineno-27-127" href="#__codelineno-27-127"></a>
+<a id="__codelineno-27-128" name="__codelineno-27-128" href="#__codelineno-27-128"></a>        <span class="c1"># Check if p-value is strong</span>
+<a id="__codelineno-27-129" name="__codelineno-27-129" href="#__codelineno-27-129"></a>        <span class="n">strong</span> <span class="o">=</span> <span class="n">comparison</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">][</span><span class="s2">&quot;p_value&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.01</span>
+<a id="__codelineno-27-130" name="__codelineno-27-130" href="#__codelineno-27-130"></a>
+<a id="__codelineno-27-131" name="__codelineno-27-131" href="#__codelineno-27-131"></a>        <span class="k">return</span> <span class="n">significant</span> <span class="ow">and</span> <span class="n">meaningful</span>
+<a id="__codelineno-27-132" name="__codelineno-27-132" href="#__codelineno-27-132"></a>
+<a id="__codelineno-27-133" name="__codelineno-27-133" href="#__codelineno-27-133"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">generate_final_report</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-27-134" name="__codelineno-27-134" href="#__codelineno-27-134"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate comprehensive comparison report.&quot;&quot;&quot;</span>
+<a id="__codelineno-27-135" name="__codelineno-27-135" href="#__codelineno-27-135"></a>        <span class="n">report</span> <span class="o">=</span> <span class="n">FinalReportGenerator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span>
+<a id="__codelineno-27-136" name="__codelineno-27-136" href="#__codelineno-27-136"></a>        <span class="n">report</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<a id="__codelineno-27-137" name="__codelineno-27-137" href="#__codelineno-27-137"></a>
+<a id="__codelineno-27-138" name="__codelineno-27-138" href="#__codelineno-27-138"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">70</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-27-139" name="__codelineno-27-139" href="#__codelineno-27-139"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final report saved to: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">/COMPARISON_RESULTS.md&quot;</span><span class="p">)</span>
+<a id="__codelineno-27-140" name="__codelineno-27-140" href="#__codelineno-27-140"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">70</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="63-scenario-definition-format">6.3 Scenario Definition Format<a class="headerlink" href="#63-scenario-definition-format" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># scenarios/01_repeat_authentication.yaml</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">repeat_authentication</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Repeat Authentication Implementation</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">learning_from_repetition</span>
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="nt">expected_benefit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">high</span>
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="nt">iterations</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a><span class="w">  </span><span class="no">Implement JWT authentication for REST API.</span>
+<a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a><span class="w">  </span><span class="no">First iteration: no memory, explores options.</span>
+<a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a><span class="w">  </span><span class="no">Second iteration: should reuse proven pattern.</span>
+<a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a>
+<a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a><span class="nt">first_run</span><span class="p">:</span>
+<a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a><span class="w">  </span><span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Implement</span><span class="nv"> </span><span class="s">JWT</span><span class="nv"> </span><span class="s">authentication</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">REST</span><span class="nv"> </span><span class="s">API</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">user</span><span class="nv"> </span><span class="s">login</span><span class="nv"> </span><span class="s">endpoint&quot;</span>
+<a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a><span class="w">  </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test_project_auth_1&quot;</span>
+<a id="__codelineno-28-17" name="__codelineno-28-17" href="#__codelineno-28-17"></a><span class="w">  </span><span class="nt">expected_files</span><span class="p">:</span>
+<a id="__codelineno-28-18" name="__codelineno-28-18" href="#__codelineno-28-18"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;auth/jwt_handler.py&quot;</span>
+<a id="__codelineno-28-19" name="__codelineno-28-19" href="#__codelineno-28-19"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;auth/user_model.py&quot;</span>
+<a id="__codelineno-28-20" name="__codelineno-28-20" href="#__codelineno-28-20"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;tests/test_auth.py&quot;</span>
+<a id="__codelineno-28-21" name="__codelineno-28-21" href="#__codelineno-28-21"></a>
+<a id="__codelineno-28-22" name="__codelineno-28-22" href="#__codelineno-28-22"></a><span class="w">  </span><span class="nt">success_criteria</span><span class="p">:</span>
+<a id="__codelineno-28-23" name="__codelineno-28-23" href="#__codelineno-28-23"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Tests</span><span class="nv"> </span><span class="s">pass&quot;</span>
+<a id="__codelineno-28-24" name="__codelineno-28-24" href="#__codelineno-28-24"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;JWT</span><span class="nv"> </span><span class="s">token</span><span class="nv"> </span><span class="s">generation</span><span class="nv"> </span><span class="s">works&quot;</span>
+<a id="__codelineno-28-25" name="__codelineno-28-25" href="#__codelineno-28-25"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Token</span><span class="nv"> </span><span class="s">validation</span><span class="nv"> </span><span class="s">works&quot;</span>
+<a id="__codelineno-28-26" name="__codelineno-28-26" href="#__codelineno-28-26"></a>
+<a id="__codelineno-28-27" name="__codelineno-28-27" href="#__codelineno-28-27"></a><span class="nt">second_run</span><span class="p">:</span>
+<a id="__codelineno-28-28" name="__codelineno-28-28" href="#__codelineno-28-28"></a><span class="w">  </span><span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Implement</span><span class="nv"> </span><span class="s">JWT</span><span class="nv"> </span><span class="s">authentication</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">REST</span><span class="nv"> </span><span class="s">API</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">user</span><span class="nv"> </span><span class="s">login</span><span class="nv"> </span><span class="s">endpoint&quot;</span>
+<a id="__codelineno-28-29" name="__codelineno-28-29" href="#__codelineno-28-29"></a><span class="w">  </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test_project_auth_2&quot;</span>
+<a id="__codelineno-28-30" name="__codelineno-28-30" href="#__codelineno-28-30"></a><span class="w">  </span><span class="nt">expected_files</span><span class="p">:</span>
+<a id="__codelineno-28-31" name="__codelineno-28-31" href="#__codelineno-28-31"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;authentication/jwt.py&quot;</span>
+<a id="__codelineno-28-32" name="__codelineno-28-32" href="#__codelineno-28-32"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;models/user.py&quot;</span>
+<a id="__codelineno-28-33" name="__codelineno-28-33" href="#__codelineno-28-33"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;tests/test_jwt.py&quot;</span>
+<a id="__codelineno-28-34" name="__codelineno-28-34" href="#__codelineno-28-34"></a>
+<a id="__codelineno-28-35" name="__codelineno-28-35" href="#__codelineno-28-35"></a><span class="w">  </span><span class="nt">success_criteria</span><span class="p">:</span>
+<a id="__codelineno-28-36" name="__codelineno-28-36" href="#__codelineno-28-36"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Tests</span><span class="nv"> </span><span class="s">pass&quot;</span>
+<a id="__codelineno-28-37" name="__codelineno-28-37" href="#__codelineno-28-37"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;JWT</span><span class="nv"> </span><span class="s">token</span><span class="nv"> </span><span class="s">generation</span><span class="nv"> </span><span class="s">works&quot;</span>
+<a id="__codelineno-28-38" name="__codelineno-28-38" href="#__codelineno-28-38"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Token</span><span class="nv"> </span><span class="s">validation</span><span class="nv"> </span><span class="s">works&quot;</span>
+<a id="__codelineno-28-39" name="__codelineno-28-39" href="#__codelineno-28-39"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Reuses</span><span class="nv"> </span><span class="s">pattern</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">first</span><span class="nv"> </span><span class="s">run</span><span class="nv"> </span><span class="s">(memory)&quot;</span>
+<a id="__codelineno-28-40" name="__codelineno-28-40" href="#__codelineno-28-40"></a>
+<a id="__codelineno-28-41" name="__codelineno-28-41" href="#__codelineno-28-41"></a><span class="nt">metrics</span><span class="p">:</span>
+<a id="__codelineno-28-42" name="__codelineno-28-42" href="#__codelineno-28-42"></a><span class="w">  </span><span class="nt">primary</span><span class="p">:</span>
+<a id="__codelineno-28-43" name="__codelineno-28-43" href="#__codelineno-28-43"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">execution_time</span>
+<a id="__codelineno-28-44" name="__codelineno-28-44" href="#__codelineno-28-44"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">error_count</span>
+<a id="__codelineno-28-45" name="__codelineno-28-45" href="#__codelineno-28-45"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pattern_reuse_detected</span>
+<a id="__codelineno-28-46" name="__codelineno-28-46" href="#__codelineno-28-46"></a>
+<a id="__codelineno-28-47" name="__codelineno-28-47" href="#__codelineno-28-47"></a><span class="w">  </span><span class="nt">secondary</span><span class="p">:</span>
+<a id="__codelineno-28-48" name="__codelineno-28-48" href="#__codelineno-28-48"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">code_quality_score</span>
+<a id="__codelineno-28-49" name="__codelineno-28-49" href="#__codelineno-28-49"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test_coverage</span>
+<a id="__codelineno-28-50" name="__codelineno-28-50" href="#__codelineno-28-50"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">documentation_completeness</span>
+</code></pre></div>
+<hr />
+<h2 id="7-reporting-format">7. Reporting Format<a class="headerlink" href="#7-reporting-format" title="Permanent link">&para;</a></h2>
+<h3 id="71-comparison-report-structure">7.1 Comparison Report Structure<a class="headerlink" href="#71-comparison-report-structure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="gh"># Memory System Comparison Results</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="gs">**Test Date**</span>: 2025-11-03
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="gs">**Configurations Tested**</span>: Control, SQLite, Neo4j
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="gs">**Total Test Runs**</span>: 150 (50 per configuration)
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="gu">## Executive Summary</span>
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a><span class="gu">### Key Findings</span>
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Memory Benefit**</span>: [YES/NO] - Memory provides [X]% improvement over no memory
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Neo4j Benefit**</span>: [YES/NO] - Neo4j provides [X]% improvement over SQLite
+<a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Statistical Confidence**</span>: [HIGH/MEDIUM/LOW] - p-value: [X], effect size: [X]
+<a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Recommendation**</span>: [PROCEED/STOP/ADJUST]
+<a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a>
+<a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a><span class="gu">### Performance Summary</span>
+<a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a>
+<a id="__codelineno-29-18" name="__codelineno-29-18" href="#__codelineno-29-18"></a>| Metric             | Control | SQLite | Neo4j | SQLite Δ | Neo4j Δ  |
+<a id="__codelineno-29-19" name="__codelineno-29-19" href="#__codelineno-29-19"></a>| ------------------ | ------- | ------ | ----- | -------- | -------- |
+<a id="__codelineno-29-20" name="__codelineno-29-20" href="#__codelineno-29-20"></a>| Avg Execution Time | 180s    | 120s   | 115s  | <span class="gs">**-33%**</span> | <span class="gs">**-36%**</span> |
+<a id="__codelineno-29-21" name="__codelineno-29-21" href="#__codelineno-29-21"></a>| Avg Error Count    | 3.2     | 1.5    | 1.2   | <span class="gs">**-53%**</span> | <span class="gs">**-63%**</span> |
+<a id="__codelineno-29-22" name="__codelineno-29-22" href="#__codelineno-29-22"></a>| Avg Quality Score  | 7.5     | 8.3    | 8.5   | <span class="gs">**+11%**</span> | <span class="gs">**+13%**</span> |
+<a id="__codelineno-29-23" name="__codelineno-29-23" href="#__codelineno-29-23"></a>
+<a id="__codelineno-29-24" name="__codelineno-29-24" href="#__codelineno-29-24"></a><span class="gu">## Detailed Analysis</span>
+<a id="__codelineno-29-25" name="__codelineno-29-25" href="#__codelineno-29-25"></a>
+<a id="__codelineno-29-26" name="__codelineno-29-26" href="#__codelineno-29-26"></a><span class="gu">### 1. Execution Time</span>
+<a id="__codelineno-29-27" name="__codelineno-29-27" href="#__codelineno-29-27"></a>
+<a id="__codelineno-29-28" name="__codelineno-29-28" href="#__codelineno-29-28"></a><span class="gs">**Baseline (Control)**</span>: 180.5s (±25.3s)
+<a id="__codelineno-29-29" name="__codelineno-29-29" href="#__codelineno-29-29"></a><span class="gs">**SQLite**</span>: 120.2s (±18.7s)
+<a id="__codelineno-29-30" name="__codelineno-29-30" href="#__codelineno-29-30"></a><span class="gs">**Neo4j**</span>: 115.3s (±17.2s)
+<a id="__codelineno-29-31" name="__codelineno-29-31" href="#__codelineno-29-31"></a>
+<a id="__codelineno-29-32" name="__codelineno-29-32" href="#__codelineno-29-32"></a><span class="gs">**Statistical Test (Control vs SQLite)**</span>:
+<a id="__codelineno-29-33" name="__codelineno-29-33" href="#__codelineno-29-33"></a>
+<a id="__codelineno-29-34" name="__codelineno-29-34" href="#__codelineno-29-34"></a><span class="k">-</span><span class="w"> </span>t-statistic: -12.34
+<a id="__codelineno-29-35" name="__codelineno-29-35" href="#__codelineno-29-35"></a><span class="k">-</span><span class="w"> </span>p-value: &lt; 0.001 ✓ <span class="gs">**Highly Significant**</span>
+<a id="__codelineno-29-36" name="__codelineno-29-36" href="#__codelineno-29-36"></a><span class="k">-</span><span class="w"> </span>Effect size (Cohen&#39;s d): 0.82 (Large)
+<a id="__codelineno-29-37" name="__codelineno-29-37" href="#__codelineno-29-37"></a><span class="k">-</span><span class="w"> </span>95% CI for difference: [-65.2, -55.4]s
+<a id="__codelineno-29-38" name="__codelineno-29-38" href="#__codelineno-29-38"></a>
+<a id="__codelineno-29-39" name="__codelineno-29-39" href="#__codelineno-29-39"></a><span class="gs">**Interpretation**</span>: SQLite memory reduces execution time by 33% with large effect size. This is a <span class="gs">**substantial and statistically significant improvement**</span>.
+<a id="__codelineno-29-40" name="__codelineno-29-40" href="#__codelineno-29-40"></a>
+<a id="__codelineno-29-41" name="__codelineno-29-41" href="#__codelineno-29-41"></a>[... continue for each metric ...]
+<a id="__codelineno-29-42" name="__codelineno-29-42" href="#__codelineno-29-42"></a>
+<a id="__codelineno-29-43" name="__codelineno-29-43" href="#__codelineno-29-43"></a><span class="gu">## Scenario-Specific Results</span>
+<a id="__codelineno-29-44" name="__codelineno-29-44" href="#__codelineno-29-44"></a>
+<a id="__codelineno-29-45" name="__codelineno-29-45" href="#__codelineno-29-45"></a><span class="gu">### Scenario 1: Repeat Authentication</span>
+<a id="__codelineno-29-46" name="__codelineno-29-46" href="#__codelineno-29-46"></a>
+<a id="__codelineno-29-47" name="__codelineno-29-47" href="#__codelineno-29-47"></a><span class="k">-</span><span class="w"> </span>Control: 210s ± 30s
+<a id="__codelineno-29-48" name="__codelineno-29-48" href="#__codelineno-29-48"></a><span class="k">-</span><span class="w"> </span>SQLite: 95s ± 12s (<span class="gs">**-55%**</span>)
+<a id="__codelineno-29-49" name="__codelineno-29-49" href="#__codelineno-29-49"></a><span class="k">-</span><span class="w"> </span>Neo4j: 90s ± 11s (<span class="gs">**-57%**</span>)
+<a id="__codelineno-29-50" name="__codelineno-29-50" href="#__codelineno-29-50"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Memory Impact**</span>: Very High
+<a id="__codelineno-29-51" name="__codelineno-29-51" href="#__codelineno-29-51"></a>
+<a id="__codelineno-29-52" name="__codelineno-29-52" href="#__codelineno-29-52"></a>[... continue for each scenario ...]
+<a id="__codelineno-29-53" name="__codelineno-29-53" href="#__codelineno-29-53"></a>
+<a id="__codelineno-29-54" name="__codelineno-29-54" href="#__codelineno-29-54"></a><span class="gu">## Cost-Benefit Analysis</span>
+<a id="__codelineno-29-55" name="__codelineno-29-55" href="#__codelineno-29-55"></a>
+<a id="__codelineno-29-56" name="__codelineno-29-56" href="#__codelineno-29-56"></a><span class="gu">### Development Cost</span>
+<a id="__codelineno-29-57" name="__codelineno-29-57" href="#__codelineno-29-57"></a>
+<a id="__codelineno-29-58" name="__codelineno-29-58" href="#__codelineno-29-58"></a><span class="k">-</span><span class="w"> </span>SQLite implementation: 3 weeks (1 FTE)
+<a id="__codelineno-29-59" name="__codelineno-29-59" href="#__codelineno-29-59"></a><span class="k">-</span><span class="w"> </span>Neo4j migration: +2 weeks (1 FTE)
+<a id="__codelineno-29-60" name="__codelineno-29-60" href="#__codelineno-29-60"></a>
+<a id="__codelineno-29-61" name="__codelineno-29-61" href="#__codelineno-29-61"></a><span class="gu">### Expected Benefits</span>
+<a id="__codelineno-29-62" name="__codelineno-29-62" href="#__codelineno-29-62"></a>
+<a id="__codelineno-29-63" name="__codelineno-29-63" href="#__codelineno-29-63"></a><span class="k">-</span><span class="w"> </span>Time saved per developer: 2-4 hours/week
+<a id="__codelineno-29-64" name="__codelineno-29-64" href="#__codelineno-29-64"></a><span class="k">-</span><span class="w"> </span>Error reduction: 50-70%
+<a id="__codelineno-29-65" name="__codelineno-29-65" href="#__codelineno-29-65"></a><span class="k">-</span><span class="w"> </span>Break-even: 4-6 weeks
+<a id="__codelineno-29-66" name="__codelineno-29-66" href="#__codelineno-29-66"></a>
+<a id="__codelineno-29-67" name="__codelineno-29-67" href="#__codelineno-29-67"></a><span class="gu">### Recommendation</span>
+<a id="__codelineno-29-68" name="__codelineno-29-68" href="#__codelineno-29-68"></a>
+<a id="__codelineno-29-69" name="__codelineno-29-69" href="#__codelineno-29-69"></a><span class="gs">**PROCEED with SQLite implementation**</span>
+<a id="__codelineno-29-70" name="__codelineno-29-70" href="#__codelineno-29-70"></a>
+<a id="__codelineno-29-71" name="__codelineno-29-71" href="#__codelineno-29-71"></a><span class="k">-</span><span class="w"> </span>Provides substantial benefit (33% time reduction)
+<a id="__codelineno-29-72" name="__codelineno-29-72" href="#__codelineno-29-72"></a><span class="k">-</span><span class="w"> </span>Statistically significant (p &lt; 0.001)
+<a id="__codelineno-29-73" name="__codelineno-29-73" href="#__codelineno-29-73"></a><span class="k">-</span><span class="w"> </span>Justifies development investment
+<a id="__codelineno-29-74" name="__codelineno-29-74" href="#__codelineno-29-74"></a>
+<a id="__codelineno-29-75" name="__codelineno-29-75" href="#__codelineno-29-75"></a><span class="gs">**DEFER Neo4j migration**</span>
+<a id="__codelineno-29-76" name="__codelineno-29-76" href="#__codelineno-29-76"></a>
+<a id="__codelineno-29-77" name="__codelineno-29-77" href="#__codelineno-29-77"></a><span class="k">-</span><span class="w"> </span>Incremental benefit over SQLite is small (3%)
+<a id="__codelineno-29-78" name="__codelineno-29-78" href="#__codelineno-29-78"></a><span class="k">-</span><span class="w"> </span>Current scale doesn&#39;t justify complexity
+<a id="__codelineno-29-79" name="__codelineno-29-79" href="#__codelineno-29-79"></a><span class="k">-</span><span class="w"> </span>Revisit when &gt;100k memory entries
+</code></pre></div>
+<h3 id="72-visualization-examples">7.2 Visualization Examples<a class="headerlink" href="#72-visualization-examples" title="Permanent link">&para;</a></h3>
+<p>Generate plots for report:</p>
+<ol>
+<li><strong>Execution Time Comparison</strong> (box plot)</li>
+<li><strong>Error Count Comparison</strong> (box plot)</li>
+<li><strong>Quality Score Comparison</strong> (violin plot)</li>
+<li><strong>Scenario-Specific Performance</strong> (grouped bar chart)</li>
+<li><strong>Memory Hit Rate Over Time</strong> (line chart)</li>
+<li><strong>Statistical Power Analysis</strong> (power curve)</li>
+</ol>
+<hr />
+<h2 id="8-decision-criteria">8. Decision Criteria<a class="headerlink" href="#8-decision-criteria" title="Permanent link">&para;</a></h2>
+<h3 id="81-gono-go-decision-matrix">8.1 Go/No-Go Decision Matrix<a class="headerlink" href="#81-gono-go-decision-matrix" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Criteria</th>
+<th>Threshold</th>
+<th>Weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Statistical Significance</td>
+<td>p &lt; 0.05</td>
+<td>Required</td>
+</tr>
+<tr>
+<td>Effect Size</td>
+<td>Cohen's d &gt; 0.5</td>
+<td>Required</td>
+</tr>
+<tr>
+<td>Practical Improvement</td>
+<td>&gt; 20% time reduction</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Error Reduction</td>
+<td>&gt; 30% fewer errors</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Quality Improvement</td>
+<td>&gt; 10% quality increase</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Cost-Benefit Ratio</td>
+<td>ROI &gt; 0 within 6 months</td>
+<td>High</td>
+</tr>
+</tbody>
+</table>
+<h3 id="82-decision-rules">8.2 Decision Rules<a class="headerlink" href="#82-decision-rules" title="Permanent link">&para;</a></h3>
+<p><strong>Proceed with SQLite if</strong>:</p>
+<ul>
+<li>Statistical significance (p &lt; 0.05) ✓</li>
+<li>Medium-to-large effect size (d &gt; 0.5) ✓</li>
+<li>Practical benefit &gt; 20% ✓</li>
+<li>No significant negative side effects ✓</li>
+</ul>
+<p><strong>Proceed with Neo4j if</strong>:</p>
+<ul>
+<li>Statistical significance vs SQLite (p &lt; 0.05) ✓</li>
+<li>Meaningful improvement &gt; 15% over SQLite ✓</li>
+<li>Complexity justified by benefit ✓</li>
+<li>Current scale warrants graph database (&gt;100k nodes) ✓</li>
+</ul>
+<p><strong>Stop/Adjust if</strong>:</p>
+<ul>
+<li>No statistical significance (p &gt; 0.05)</li>
+<li>Negligible effect size (d &lt; 0.2)</li>
+<li>Negative impact on other metrics</li>
+<li>High false positive rate in memory retrieval</li>
+</ul>
+<hr />
+<h2 id="9-limitations-and-threats-to-validity">9. Limitations and Threats to Validity<a class="headerlink" href="#9-limitations-and-threats-to-validity" title="Permanent link">&para;</a></h2>
+<h3 id="91-internal-validity-threats">9.1 Internal Validity Threats<a class="headerlink" href="#91-internal-validity-threats" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Learning Effects</strong>: Later iterations may benefit from agent "learning" independent of memory</li>
+<li>
+<p><strong>Mitigation</strong>: Randomize scenario order, use fresh agent instances</p>
+</li>
+<li>
+<p><strong>Scenario Selection Bias</strong>: Chosen scenarios may favor memory systems</p>
+</li>
+<li>
+<p><strong>Mitigation</strong>: Include diverse scenario types, some less memory-dependent</p>
+</li>
+<li>
+<p><strong>Metric Gaming</strong>: Agents may optimize for measured metrics</p>
+</li>
+<li><strong>Mitigation</strong>: Use multiple independent metrics, manual quality reviews</li>
+</ol>
+<h3 id="92-external-validity-threats">9.2 External Validity Threats<a class="headerlink" href="#92-external-validity-threats" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Generalization</strong>: Test scenarios may not represent all real-world usage</li>
+<li>
+<p><strong>Mitigation</strong>: Select scenarios based on user research, validate with users</p>
+</li>
+<li>
+<p><strong>Scale</strong>: Test scale (50 runs) may not reflect production scale</p>
+</li>
+<li>
+<p><strong>Mitigation</strong>: Run longer-term trials after initial validation</p>
+</li>
+<li>
+<p><strong>Environment</strong>: Controlled test environment differs from real usage</p>
+</li>
+<li><strong>Mitigation</strong>: Follow up with in-situ testing with real users</li>
+</ol>
+<h3 id="93-construct-validity-threats">9.3 Construct Validity Threats<a class="headerlink" href="#93-construct-validity-threats" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Metric Validity</strong>: Measured metrics may not capture all aspects of quality</li>
+<li>
+<p><strong>Mitigation</strong>: Combine automated metrics with expert review</p>
+</li>
+<li>
+<p><strong>Memory Quality</strong>: Test may not assess memory correctness (false positives)</p>
+</li>
+<li><strong>Mitigation</strong>: Manual review of memory retrieval accuracy</li>
+</ol>
+<hr />
+<h2 id="10-implementation-timeline">10. Implementation Timeline<a class="headerlink" href="#10-implementation-timeline" title="Permanent link">&para;</a></h2>
+<h3 id="week-1-test-harness-development">Week 1: Test Harness Development<a class="headerlink" href="#week-1-test-harness-development" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Day 1-2: Design test harness architecture</li>
+<li>Day 3-5: Implement core harness functionality</li>
+<li>Weekend: Review and refinement</li>
+</ul>
+<h3 id="week-2-scenario-implementation">Week 2: Scenario Implementation<a class="headerlink" href="#week-2-scenario-implementation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Day 1-2: Implement 5 scenarios</li>
+<li>Day 3-4: Implement remaining 5 scenarios</li>
+<li>Day 5: Validate scenarios, dry runs</li>
+</ul>
+<h3 id="week-3-baseline-testing">Week 3: Baseline Testing<a class="headerlink" href="#week-3-baseline-testing" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Day 1-3: Run baseline tests (Control configuration)</li>
+<li>Day 4: Analyze baseline results</li>
+<li>Day 5: Document baseline, prepare for Phase 2</li>
+</ul>
+<h3 id="week-4-sqlite-testing">Week 4: SQLite Testing<a class="headerlink" href="#week-4-sqlite-testing" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Day 1-3: Run SQLite memory tests</li>
+<li>Day 4: Statistical analysis, comparison to baseline</li>
+<li>Day 5: Phase 2 decision gate meeting</li>
+</ul>
+<h3 id="week-5-neo4j-testing-if-phase-2-successful">Week 5: Neo4j Testing (if Phase 2 successful)<a class="headerlink" href="#week-5-neo4j-testing-if-phase-2-successful" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Day 1-3: Run Neo4j memory tests</li>
+<li>Day 4: Statistical analysis, comparison to SQLite</li>
+<li>Day 5: Generate final report</li>
+</ul>
+<h3 id="week-6-analysis-and-reporting">Week 6: Analysis and Reporting<a class="headerlink" href="#week-6-analysis-and-reporting" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Day 1-2: Comprehensive analysis</li>
+<li>Day 3-4: Create visualizations, write report</li>
+<li>Day 5: Present findings, make final decision</li>
+</ul>
+<p><strong>Total Duration</strong>: 6 weeks (assuming no major issues)</p>
+<hr />
+<h2 id="11-success-criteria">11. Success Criteria<a class="headerlink" href="#11-success-criteria" title="Permanent link">&para;</a></h2>
+<h3 id="minimum-success-criteria-required">Minimum Success Criteria (Required)<a class="headerlink" href="#minimum-success-criteria-required" title="Permanent link">&para;</a></h3>
+<ol>
+<li>✓ Statistical significance (p &lt; 0.05)</li>
+<li>✓ Medium effect size (d &gt; 0.5)</li>
+<li>✓ Practical improvement (&gt;20% time reduction)</li>
+<li>✓ No major negative side effects</li>
+</ol>
+<h3 id="stretch-success-criteria-desired">Stretch Success Criteria (Desired)<a class="headerlink" href="#stretch-success-criteria-desired" title="Permanent link">&para;</a></h3>
+<ol>
+<li>✓ Large effect size (d &gt; 0.8)</li>
+<li>✓ Strong significance (p &lt; 0.01)</li>
+<li>✓ Error reduction &gt;50%</li>
+<li>✓ Quality improvement &gt;15%</li>
+<li>✓ Positive user feedback</li>
+</ol>
+<hr />
+<h2 id="12-risk-mitigation">12. Risk Mitigation<a class="headerlink" href="#12-risk-mitigation" title="Permanent link">&para;</a></h2>
+<h3 id="risk-1-insufficient-sample-size">Risk 1: Insufficient Sample Size<a class="headerlink" href="#risk-1-insufficient-sample-size" title="Permanent link">&para;</a></h3>
+<p><strong>Mitigation</strong>: Run additional iterations if initial results show high variance</p>
+<h3 id="risk-2-confounding-variables">Risk 2: Confounding Variables<a class="headerlink" href="#risk-2-confounding-variables" title="Permanent link">&para;</a></h3>
+<p><strong>Mitigation</strong>: Strictly control environment, document all variables</p>
+<h3 id="risk-3-test-harness-bugs">Risk 3: Test Harness Bugs<a class="headerlink" href="#risk-3-test-harness-bugs" title="Permanent link">&para;</a></h3>
+<p><strong>Mitigation</strong>: Extensive testing of harness before main test runs</p>
+<h3 id="risk-4-long-test-duration">Risk 4: Long Test Duration<a class="headerlink" href="#risk-4-long-test-duration" title="Permanent link">&para;</a></h3>
+<p><strong>Mitigation</strong>: Parallelize test runs where possible, use automation</p>
+<hr />
+<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>This A/B test design provides a <strong>rigorous, fair, and scientifically sound</strong> methodology for evaluating memory system effectiveness. Key strengths:</p>
+<ol>
+<li><strong>Three-way comparison</strong>: Control, SQLite, Neo4j</li>
+<li><strong>Statistical rigor</strong>: Proper sample sizes, multiple tests correction</li>
+<li><strong>Fair comparison</strong>: Controlled variables, randomization</li>
+<li><strong>Practical focus</strong>: Measures what matters (time, errors, quality)</li>
+<li><strong>Phased approach</strong>: Decision gates prevent over-investment</li>
+</ol>
+<p><strong>Next Steps</strong>:</p>
+<ol>
+<li>Review and approve design</li>
+<li>Implement test harness (Week 1-2)</li>
+<li>Run baseline tests (Week 3)</li>
+<li>Make data-driven decisions at each gate</li>
+</ol>
+<hr />
+<p><strong>Document Status</strong>: ✅ Design Complete - Ready for Implementation
+<strong>Author</strong>: Architect Agent
+<strong>Review Date</strong>: 2025-11-03</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2409 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI-powered development framework for Claude Code">
+      
+      
+      
+        <link rel="canonical" href="https://rysweet.github.io/MicrosoftHackathon2025-AgenticCoding/CREATE_YOUR_OWN_TOOLS/">
+      
+      
+        <link rel="prev" href="../IMPLEMENTATION_SUMMARY/">
+      
+      
+        <link rel="next" href="../BENCHMARKING/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Creating Tools - amplihack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#creating-your-own-tools-with-amplihack" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="amplihack" class="md-header__button md-logo" aria-label="amplihack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            amplihack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Creating Tools
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amplihack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../PREREQUISITES/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../PHILOSOPHY/" class="md-tabs__link">
+          
+  
+  
+  Core Concepts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../AUTO_MODE/" class="md-tabs__link">
+          
+  
+  
+  Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../DEVELOPING_AMPLIHACK/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../BENCHMARKING/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="amplihack" class="md-nav__button md-logo" aria-label="amplihack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    amplihack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amplihack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PREREQUISITES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AUTO_MODE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PROXY_CONFIG_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PHILOSOPHY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WORKFLOW_COMPLETION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Features
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AUTO_MODE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agent-bundle-generator-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Bundles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../document_driven_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Document-Driven Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/power-steering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Power-Steering Mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/power-steering/customization-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Power-Steering Customization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DEVELOPING_AMPLIHACK/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../IMPLEMENTATION_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating Tools
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-identify-a-problem-or-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Identify a Problem or Need
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-formulate-a-metacognitive-recipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Formulate a Metacognitive Recipe
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Formulate a Metacognitive Recipe">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#break-the-task-into-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Break the Task into Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#provide-context-and-checkpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provide Context and Checkpoints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plan-for-errors-or-ambiguity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plan for Errors or Ambiguity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-use-amplihack-to-build-the-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Use Amplihack to Build the Tool
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Use Amplihack to Build the Tool">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-tool-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Tool Creation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planning-and-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planning and Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactive-clarification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive Clarification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automatic-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automatic Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-tool-types-and-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Tool Types and Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Tool Types and Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pattern-1-specialized-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 1: Specialized Agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-2-slash-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 2: Slash Command
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-3-python-scriptmodule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 3: Python Script/Module
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-refine-the-tool-iterate-and-improve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Refine the Tool (Iterate and Improve)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Refine the Tool (Iterate and Improve)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#test-the-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test the Tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#observe-and-note-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observe and Note Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#provide-feedback-in-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provide Feedback in Context
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iterate-until-satisfied" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Iterate Until Satisfied
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-best-practices-for-tool-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Best Practices for Tool Creation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Best Practices for Tool Creation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#follow-the-philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Follow the Philosophy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logging-and-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging and Visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-use-your-tool-and-enrich-amplihack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Use Your Tool and Enrich Amplihack
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Use Your Tool and Enrich Amplihack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#direct-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direct Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combination-and-composition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combination and Composition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reusable-recipes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reusable Recipes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-improvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Continuous Improvement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-sharing-and-next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Sharing and Next Steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Sharing and Next Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#contributing-your-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contributing Your Tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#learning-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning Resources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tool-creation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tool Creation Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BENCHMARKING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DISCOVERIES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discoveries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-identify-a-problem-or-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Identify a Problem or Need
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-formulate-a-metacognitive-recipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Formulate a Metacognitive Recipe
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Formulate a Metacognitive Recipe">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#break-the-task-into-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Break the Task into Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#provide-context-and-checkpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provide Context and Checkpoints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plan-for-errors-or-ambiguity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plan for Errors or Ambiguity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-use-amplihack-to-build-the-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Use Amplihack to Build the Tool
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Use Amplihack to Build the Tool">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-tool-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Tool Creation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planning-and-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planning and Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactive-clarification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive Clarification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automatic-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automatic Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-tool-types-and-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Tool Types and Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Tool Types and Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pattern-1-specialized-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 1: Specialized Agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-2-slash-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 2: Slash Command
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-3-python-scriptmodule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 3: Python Script/Module
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-refine-the-tool-iterate-and-improve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Refine the Tool (Iterate and Improve)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Refine the Tool (Iterate and Improve)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#test-the-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test the Tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#observe-and-note-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observe and Note Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#provide-feedback-in-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provide Feedback in Context
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iterate-until-satisfied" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Iterate Until Satisfied
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-best-practices-for-tool-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Best Practices for Tool Creation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Best Practices for Tool Creation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#follow-the-philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Follow the Philosophy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logging-and-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging and Visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-use-your-tool-and-enrich-amplihack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Use Your Tool and Enrich Amplihack
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Use Your Tool and Enrich Amplihack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#direct-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direct Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combination-and-composition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combination and Composition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reusable-recipes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reusable Recipes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-improvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Continuous Improvement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-sharing-and-next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Sharing and Next Steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Sharing and Next Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#contributing-your-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contributing Your Tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#learning-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning Resources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tool-creation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tool Creation Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="creating-your-own-tools-with-amplihack">Creating Your Own Tools with Amplihack<a class="headerlink" href="#creating-your-own-tools-with-amplihack" title="Permanent link">&para;</a></h1>
+<p>Amplihack is designed so <strong>you can create new AI-powered tools</strong> just by describing how they should think. This guide will walk you through the process of turning an idea into a working tool using <strong>metacognitive recipes</strong> – structured thought processes that the AI will follow. You don't need to write code; you'll describe the <strong>problem</strong>, outline the <strong>approach</strong>, and let amplihack build the solution.</p>
+<p><strong>Workflow Overview:</strong></p>
+<ol>
+<li><strong>Identify a Problem or Need</strong> – Pick a task or workflow you want to automate or improve</li>
+<li><strong>Outline a Metacognitive Recipe</strong> – Describe the step-by-step thinking process an expert would use</li>
+<li><strong>Use Amplihack to Build the Tool</strong> – Launch the creation process with your description (via <code>/amplihack:ultrathink</code>)</li>
+<li><strong>Refine and Integrate</strong> – Test the generated tool, give feedback, and iterate until it works well</li>
+<li><strong>Leverage and Evolve</strong> – Use your new tool, combine it with others for bigger tasks, and contribute improvements</li>
+</ol>
+<h2 id="1-identify-a-problem-or-need">1. Identify a Problem or Need<a class="headerlink" href="#1-identify-a-problem-or-need" title="Permanent link">&para;</a></h2>
+<p>Every great tool begins with a <strong>clear need</strong>. Start by pinpointing a task that is repetitive, complex, or time-consuming – something you wish an AI agent could handle reliably. This could be anything from <em>codebase analysis</em> (finding patterns across many files) to <em>documentation generation</em> (creating comprehensive docs from code). The key is that you can describe <strong>what the goal is</strong> and <strong>what a successful outcome looks like</strong>.</p>
+<p>If you're unsure what to build, try <strong>brainstorming with amplihack</strong>. For example, you can ask:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/amplihack:ultrathink I&#39;m new to creating custom agents. What are some useful tools I could create with amplihack that show how agents can self-evaluate and improve via feedback loops? Just brainstorm ideas, don&#39;t build them yet.
+</code></pre></div>
+<p>This will prompt the AI to suggest possible tools. You might get inspired by suggestions like a <em>"Code Quality Analyzer"</em> or a <em>"Test Coverage Enhancer"</em> tool. Use your own experience and needs to choose an idea that would be genuinely useful to you. Remember, amplihack works best when the problem is something <strong>concrete</strong> that you can break down into parts.</p>
+<h2 id="2-formulate-a-metacognitive-recipe">2. Formulate a Metacognitive Recipe<a class="headerlink" href="#2-formulate-a-metacognitive-recipe" title="Permanent link">&para;</a></h2>
+<p>Once you have a problem in mind, <strong>outline the approach</strong> an expert (or you, on your best day) would take to solve it. This outline is your <strong>metacognitive recipe</strong> – essentially the game plan for the tool. Focus on <strong>how the AI should think</strong>, not just what it should do. Think in terms of stages, decision points, and loops:</p>
+<h3 id="break-the-task-into-steps">Break the Task into Steps<a class="headerlink" href="#break-the-task-into-steps" title="Permanent link">&para;</a></h3>
+<p>Divide the problem into logical phases or sub-tasks. Each step should be something the AI can tackle in a single go. For example, a documentation generator might have steps for:</p>
+<ol>
+<li><em>Analyzing code structure</em></li>
+<li><em>Extracting function signatures and docstrings</em></li>
+<li><em>Generating API reference</em></li>
+<li><em>Creating usage examples</em></li>
+<li><em>Reviewing for completeness</em></li>
+</ol>
+<p>If a task feels too big or complex, it's a sign to decompose it into smaller steps or agents. Amplihack excels at this incremental approach. As a rule of thumb, <strong>avoid making one agent handle "everything at once"</strong> – smaller focused steps improve reliability.</p>
+<p><em>For more strategies on breaking down problems, see <strong>THIS_IS_THE_WAY.md</strong>, which covers best practices like task decomposition.</em></p>
+<h3 id="provide-context-and-checkpoints">Provide Context and Checkpoints<a class="headerlink" href="#provide-context-and-checkpoints" title="Permanent link">&para;</a></h3>
+<p>Consider what information each step needs and when to pause for review. For instance, should the AI summarize its findings before moving on? Should it ask the user to confirm something if ambiguity arises? By building in checkpoints or reviews (even if just self-reviews), you make the process more robust.</p>
+<p>A tool recipe might include a loop where the AI evaluates its own output or seeks user feedback before proceeding to the next stage.</p>
+<h3 id="plan-for-errors-or-ambiguity">Plan for Errors or Ambiguity<a class="headerlink" href="#plan-for-errors-or-ambiguity" title="Permanent link">&para;</a></h3>
+<p>Metacognitive recipes often include fallback plans. Think about what the AI should do if a step produces incomplete or low-quality results. For example:</p>
+<ul>
+<li>"If the code analysis is incomplete, have the AI refine it again"</li>
+<li>"If no usage examples can be generated, the tool should explain the issue rather than proceeding blindly"</li>
+</ul>
+<p>Designing these recovery or iteration steps helps the tool adapt when things don't go perfectly on the first try.</p>
+<p>Write down your recipe in plain language. It can be a numbered list of steps or a few short paragraphs describing the flow. The goal is to <strong>describe the thinking process</strong> clearly enough that amplihack (and you) understand the intended logic.</p>
+<blockquote>
+<p><strong>Tip:</strong> Aim for the level of detail you'd give if delegating the task to a smart colleague. Include important details (criteria for decisions, what outputs to generate, etc.), but don't micromanage every tiny action. Amplihack's AI will fill in routine parts – you just define the high-level game plan.</p>
+</blockquote>
+<h2 id="3-use-amplihack-to-build-the-tool">3. Use Amplihack to Build the Tool<a class="headerlink" href="#3-use-amplihack-to-build-the-tool" title="Permanent link">&para;</a></h2>
+<p>With your idea and recipe in hand, it's time to <strong>turn it into a tool</strong>. In amplihack, you use the <code>/amplihack:ultrathink</code> command to kick off the tool generation:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/amplihack:ultrathink &lt;Your tool description and recipe&gt;
+</code></pre></div>
+<h3 id="example-tool-creation">Example Tool Creation<a class="headerlink" href="#example-tool-creation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>/amplihack:ultrathink I want to create a tool called &quot;API Documentation Generator&quot;.
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Goal: Analyze Python API code and generate comprehensive documentation with usage examples.
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Steps:
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>1. Scan the specified directory for Python files containing API endpoints
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>2. Extract function signatures, docstrings, and type hints
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>3. Identify request/response models and data structures
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>4. Generate markdown documentation with:
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>   - Endpoint descriptions
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>   - Parameter documentation
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>   - Response format examples
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>   - Code usage examples
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>5. Validate that all public endpoints are documented
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>6. Offer the draft for review and incorporate feedback
+</code></pre></div>
+<p>When you submit this prompt, amplihack will spring into action:</p>
+<h3 id="planning-and-generation">Planning and Generation<a class="headerlink" href="#planning-and-generation" title="Permanent link">&para;</a></h3>
+<p>Amplihack's AI will interpret your description and begin creating the tool. It will:</p>
+<ul>
+<li>Outline the plan using the architect agent</li>
+<li>Create necessary code modules</li>
+<li>Implement each step with the builder agent</li>
+<li>Generate tests with the tester agent</li>
+</ul>
+<p>Remember, <em>you</em> are not writing the code – amplihack is, based on your instructions.</p>
+<h3 id="interactive-clarification">Interactive Clarification<a class="headerlink" href="#interactive-clarification" title="Permanent link">&para;</a></h3>
+<p>Depending on the complexity, amplihack may ask clarifying questions:</p>
+<ul>
+<li>"Should the documentation include authentication examples?"</li>
+<li>"Do you want to generate OpenAPI/Swagger specs?"</li>
+<li>"Should deprecated endpoints be included or excluded?"</li>
+</ul>
+<p>Answer these questions to guide the build. This is amplihack making sure it correctly understands your intent before finalizing the tool.</p>
+<h3 id="automatic-documentation">Automatic Documentation<a class="headerlink" href="#automatic-documentation" title="Permanent link">&para;</a></h3>
+<p>Amplihack automatically creates documentation for your new tool as part of the build process. This includes:</p>
+<ul>
+<li>Usage instructions</li>
+<li>Example invocations</li>
+<li>Configuration options</li>
+<li>Integration guidance</li>
+</ul>
+<h2 id="4-tool-types-and-patterns">4. Tool Types and Patterns<a class="headerlink" href="#4-tool-types-and-patterns" title="Permanent link">&para;</a></h2>
+<p>Amplihack supports several patterns for tool creation, each suited to different needs.</p>
+<h3 id="pattern-1-specialized-agent">Pattern 1: Specialized Agent<a class="headerlink" href="#pattern-1-specialized-agent" title="Permanent link">&para;</a></h3>
+<p>Create a new agent that can be invoked for specific tasks.</p>
+<p><strong>When to use:</strong> For tasks that need to be repeated with different inputs</p>
+<p><strong>Location:</strong> <code>.claude/agents/your-agent-name.md</code></p>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="gh"># Your Agent Name</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>You are a specialized agent for [purpose].
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="gu">## Capabilities</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">-</span><span class="w"> </span>[What the agent can do]
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">-</span><span class="w"> </span>[Specific skills or knowledge]
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="gu">## Approach</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="k">1.</span> [Step 1 of the agent&#39;s process]
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="k">2.</span> [Step 2]
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="k">3.</span> [Step 3]
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="gu">## Output Format</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>[What the agent produces]
+</code></pre></div>
+<p><strong>Invocation:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Can you have the your-agent-name agent analyze @src/api/endpoints.py?
+</code></pre></div>
+<h3 id="pattern-2-slash-command">Pattern 2: Slash Command<a class="headerlink" href="#pattern-2-slash-command" title="Permanent link">&para;</a></h3>
+<p>Create a reusable slash command for common workflows.</p>
+<p><strong>When to use:</strong> For multi-step workflows that you run frequently</p>
+<p><strong>Location:</strong> <code>.claude/commands/your-command.md</code></p>
+<p><strong>Example command structure:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="gh"># Your Command</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Description of what this command does.
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="gu">## Steps</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">1.</span> [Action 1]
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">2.</span> [Action 2]
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="k">3.</span> [Action 3]
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="gu">## Usage</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>/your-command [arguments]
+</code></pre></div>
+<p><strong>Invocation:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>/your-command [arguments]
+</code></pre></div>
+<h3 id="pattern-3-python-scriptmodule">Pattern 3: Python Script/Module<a class="headerlink" href="#pattern-3-python-scriptmodule" title="Permanent link">&para;</a></h3>
+<p>Create executable code for complex processing.</p>
+<p><strong>When to use:</strong> For tasks requiring significant computation or external API calls</p>
+<p><strong>Location:</strong> <code>src/amplihack/tools/your_tool.py</code></p>
+<p><strong>Structure:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="sd">Your tool description.</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">input_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="sd">    Main entry point for your tool.</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="sd">    Args:</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="sd">        input_path: Path to input data</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="sd">        output_path: Where to write results</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing </span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>    <span class="c1"># Implementation</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Results written to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>    <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>    <span class="n">main</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">Path</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+</code></pre></div>
+<p><strong>Integration with agent:</strong>
+Create an agent in <code>.claude/agents/</code> that invokes your Python tool.</p>
+<h2 id="5-refine-the-tool-iterate-and-improve">5. Refine the Tool (Iterate and Improve)<a class="headerlink" href="#5-refine-the-tool-iterate-and-improve" title="Permanent link">&para;</a></h2>
+<p>Newly generated tools might work on the first try, but often you'll need a round of tweaking to get them just right. Treat this as an iterative <strong>conversation with amplihack</strong>:</p>
+<h3 id="test-the-tool">Test the Tool<a class="headerlink" href="#test-the-tool" title="Permanent link">&para;</a></h3>
+<p>Run your tool on a sample task or input. For example, if you created an API documentation generator:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Use the API Documentation Generator to document @src/api/
+</code></pre></div>
+<p>The tool should execute its steps and produce an output (like generated markdown docs).</p>
+<h3 id="observe-and-note-issues">Observe and Note Issues<a class="headerlink" href="#observe-and-note-issues" title="Permanent link">&para;</a></h3>
+<p>As it runs, watch for any steps that seem off. Does it skip a step? Is the output of a phase not what you expected? For instance:</p>
+<ul>
+<li>Maybe it didn't include usage examples</li>
+<li>The generated docs are too verbose</li>
+<li>Some endpoints weren't discovered</li>
+</ul>
+<p>These observations will guide your refinements.</p>
+<h3 id="provide-feedback-in-context">Provide Feedback in Context<a class="headerlink" href="#provide-feedback-in-context" title="Permanent link">&para;</a></h3>
+<p>You can improve the tool by continuing the conversation with amplihack:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>The generated documentation was missing usage examples.
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Please update the tool to include practical code examples for each endpoint.
+</code></pre></div>
+<p>Because amplihack keeps track of the tool it just built, it can modify the implementation accordingly.</p>
+<h3 id="iterate-until-satisfied">Iterate Until Satisfied<a class="headerlink" href="#iterate-until-satisfied" title="Permanent link">&para;</a></h3>
+<p>Repeat testing and providing adjustments. Don't hesitate to iterate; this is a normal part of crafting a reliable tool. Even complex multi-step tools can usually be perfected with a few rounds of feedback.</p>
+<p>Throughout this refinement, keep the <strong>metacognitive principles</strong> in mind: if a particular step is failing, maybe it needs to be broken into two steps, or given more context. You can instruct amplihack to make such changes:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Break the endpoint discovery into a separate step before documentation generation,
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>so it can handle nested route definitions correctly.
+</code></pre></div>
+<h2 id="6-best-practices-for-tool-creation">6. Best Practices for Tool Creation<a class="headerlink" href="#6-best-practices-for-tool-creation" title="Permanent link">&para;</a></h2>
+<h3 id="follow-the-philosophy">Follow the Philosophy<a class="headerlink" href="#follow-the-philosophy" title="Permanent link">&para;</a></h3>
+<p>All tools should adhere to amplihack's philosophy (see <code>.claude/context/PHILOSOPHY.md</code>):</p>
+<p>✅ <strong>Ruthless Simplicity</strong></p>
+<ul>
+<li>Start with minimal implementation</li>
+<li>Add features only when needed</li>
+<li>Avoid premature abstractions</li>
+</ul>
+<p>✅ <strong>Zero-BS Implementation</strong></p>
+<ul>
+<li>No placeholder functions or TODOs</li>
+<li>Complete, working code only</li>
+<li>Explicit error handling</li>
+</ul>
+<p>✅ <strong>Modular Design</strong></p>
+<ul>
+<li>Clear separation of concerns</li>
+<li>Self-contained modules</li>
+<li>Well-defined interfaces</li>
+</ul>
+<h3 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h3>
+<p>❌ <strong>Don't do this:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">process</span><span class="p">()</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="k">except</span><span class="p">:</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="k">pass</span>  <span class="c1"># Silent failure</span>
+</code></pre></div>
+<p>✅ <strong>Do this:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">process</span><span class="p">()</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">except</span> <span class="n">ProcessingError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="k">raise</span> <span class="n">ToolError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to process input: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+</code></pre></div>
+<h3 id="logging-and-visibility">Logging and Visibility<a class="headerlink" href="#logging-and-visibility" title="Permanent link">&para;</a></h3>
+<p>✅ <strong>Always provide feedback:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span><span class="si">}</span><span class="s2"> files to process&quot;</span><span class="p">)</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">[:</span><span class="mi">5</span><span class="p">]:</span>  <span class="c1"># Show first 5</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  • </span><span class="si">{</span><span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  ... and </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">5</span><span class="si">}</span><span class="s2"> more&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="input-validation">Input Validation<a class="headerlink" href="#input-validation" title="Permanent link">&para;</a></h3>
+<p>✅ <strong>Validate early:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">generate_docs</span><span class="p">(</span><span class="n">source_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">source_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Source directory does not exist: </span><span class="si">{</span><span class="n">source_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">output_dir</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output parent directory does not exist: </span><span class="si">{</span><span class="n">output_dir</span><span class="o">.</span><span class="n">parent</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    <span class="c1"># Proceed with generation</span>
+</code></pre></div>
+<h2 id="7-use-your-tool-and-enrich-amplihack">7. Use Your Tool and Enrich Amplihack<a class="headerlink" href="#7-use-your-tool-and-enrich-amplihack" title="Permanent link">&para;</a></h2>
+<p>Congratulations – you've built a new tool! Now it's time to put it to work and integrate it into your broader workflows:</p>
+<h3 id="direct-usage">Direct Usage<a class="headerlink" href="#direct-usage" title="Permanent link">&para;</a></h3>
+<p>You can call your tool whenever you need it. For example, once the <em>API Documentation Generator</em> is ready, you can invoke it in any future session:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Use the API Documentation Generator to document the new endpoints in @src/api/v2/
+</code></pre></div>
+<h3 id="combination-and-composition">Combination and Composition<a class="headerlink" href="#combination-and-composition" title="Permanent link">&para;</a></h3>
+<p>One of the most powerful aspects of amplihack is that <strong>tools can be combined</strong>. Your new tool can be used alongside others to handle bigger tasks:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>/amplihack:ultrathink
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>1. Use the API Documentation Generator on @src/api/
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>2. Use the code-reviewer agent to review the generated docs
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>3. Use the knowledge-builder to create a searchable knowledge base from the docs
+</code></pre></div>
+<p>Over time, you'll build up a suite of specialized tools, and you'll find you can chain them together – the output of one becoming the input to another – to accomplish complex workflows.</p>
+<h3 id="reusable-recipes">Reusable Recipes<a class="headerlink" href="#reusable-recipes" title="Permanent link">&para;</a></h3>
+<p>The recipe you encoded in your tool is now part of amplihack's knowledge. Future tasks could potentially learn from what you've built. Even if you tackle a different project, you might reuse the same pattern.</p>
+<p>For example, the approach used in your documentation tool (e.g. <em>"scan → extract → generate → validate"</em>) could be repurposed in a totally different domain by creating a new tool with a similar structure.</p>
+<h3 id="continuous-improvement">Continuous Improvement<a class="headerlink" href="#continuous-improvement" title="Permanent link">&para;</a></h3>
+<p>The amplihack system evolves constantly. As you add tools, you're extending the overall capability of the environment. Every tool you create and refine contributes to a richer ecosystem of AI agents.</p>
+<p>Your tools might even surface insights for future development. By building and using custom tools, you're helping amplihack get smarter and more useful for everyone.</p>
+<h2 id="8-sharing-and-next-steps">8. Sharing and Next Steps<a class="headerlink" href="#8-sharing-and-next-steps" title="Permanent link">&para;</a></h2>
+<p>Part of amplihack's vision is to build a community-driven library of tools. If your new tool is broadly useful, consider contributing it back to the project.</p>
+<h3 id="contributing-your-tool">Contributing Your Tool<a class="headerlink" href="#contributing-your-tool" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Document thoroughly</strong> - Include usage examples and edge cases</li>
+<li><strong>Test comprehensively</strong> - Ensure it works across different scenarios</li>
+<li><strong>Follow philosophy</strong> - Verify it adheres to ruthless simplicity</li>
+<li><strong>Submit a PR</strong> - Include the tool and documentation</li>
+</ol>
+<h3 id="learning-resources">Learning Resources<a class="headerlink" href="#learning-resources" title="Permanent link">&para;</a></h3>
+<p>To deepen your understanding and improve your tool-creation skills, make sure to read:</p>
+<ul>
+<li><strong>THIS_IS_THE_WAY.md</strong> - Effective strategies and patterns for AI-agent development</li>
+<li><strong>DISCOVERIES.md</strong> - Non-obvious problems and solutions from real development</li>
+<li><strong>PHILOSOPHY.md</strong> - Core principles including the Brick Philosophy and zero-BS implementation</li>
+<li><strong>DEFAULT_WORKFLOW.md</strong> - The 15-step workflow for development tasks</li>
+<li><strong>Existing Agents</strong> - Browse <code>.claude/agents/</code> for examples of specialized agents</li>
+</ul>
+<h3 id="tool-creation-checklist">Tool Creation Checklist<a class="headerlink" href="#tool-creation-checklist" title="Permanent link">&para;</a></h3>
+<p>Before considering your tool complete, verify:</p>
+<ul>
+<li>[ ] Clear purpose and use cases documented</li>
+<li>[ ] Metacognitive recipe is well-defined</li>
+<li>[ ] Input validation implemented</li>
+<li>[ ] Error handling is explicit and informative</li>
+<li>[ ] Logging provides visibility into progress</li>
+<li>[ ] Testing covers common and edge cases</li>
+<li>[ ] No TODOs, placeholders, or stub functions</li>
+<li>[ ] Philosophy compliance verified</li>
+<li>[ ] Usage examples provided</li>
+<li>[ ] Integration with existing agents considered</li>
+</ul>
+<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>By following this guide, you should be able to turn your own ideas into reliable, reusable amplihack tools. <strong>Find a need, describe the approach, and let the AI build it.</strong> You'll be expanding amplihack's capabilities with each tool you create.</p>
+<p>The process is iterative and collaborative – you provide the vision and guidance, amplihack provides the implementation. Together, you build tools that make development faster, more reliable, and more enjoyable.</p>
+<p><strong>Have fun experimenting, and happy building!</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>

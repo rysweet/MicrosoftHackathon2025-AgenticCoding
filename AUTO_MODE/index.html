@@ -1,0 +1,3494 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI-powered development framework for Claude Code">
+      
+      
+      
+        <link rel="canonical" href="https://rysweet.github.io/MicrosoftHackathon2025-AgenticCoding/AUTO_MODE/">
+      
+      
+        <link rel="prev" href="../WORKFLOW_COMPLETION/">
+      
+      
+        <link rel="next" href="../agent-bundle-generator-guide/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Quick Start - amplihack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#auto-mode-documentation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="amplihack" class="md-header__button md-logo" aria-label="amplihack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            amplihack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Quick Start
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amplihack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../PREREQUISITES/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../PHILOSOPHY/" class="md-tabs__link">
+          
+  
+  
+  Core Concepts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../DEVELOPING_AMPLIHACK/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../BENCHMARKING/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="amplihack" class="md-nav__button md-logo" aria-label="amplihack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    amplihack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amplihack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PREREQUISITES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#with-claude-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With Claude Code
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactive-ui-mode-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive UI Mode (--ui)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-github-copilot-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With GitHub Copilot CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How It Works">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#turn-1-objective-clarification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turn 1: Objective Clarification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#turn-2-plan-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turn 2: Plan Creation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#turns-3-execute-evaluate-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turns 3+: Execute &amp; Evaluate Loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-turn-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final Turn: Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#max-turns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Max Turns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Logging
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-implementing-a-feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 1: Implementing a Feature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-bug-fix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 2: Bug Fix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-refactoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 3: Refactoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-4-test-suite-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 4: Test Suite Creation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#injecting-instructions-mid-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Injecting Instructions Mid-Session
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Injecting Instructions Mid-Session">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices-for-appending" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices for Appending
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting-append" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Append
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-and-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security and Limits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Directory Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-be-specific-in-your-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Be Specific in Your Prompt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-set-appropriate-max-turns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Set Appropriate Max Turns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-let-auto-mode-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Let Auto Mode Work
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-review-before-committing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Review Before Committing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-use-for-repetitive-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Use for Repetitive Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#auto-mode-stops-early" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto Mode Stops Early
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reaches-max-turns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reaches Max Turns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installation-issues-copilot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation Issues (Copilot)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hooks-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hooks Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hooks Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#session-start-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Start Hook
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stop-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stop Hook
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#combining-with-subagents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining with Subagents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parallel-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parallel Execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuing-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Continuing Work
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-claude-vs-copilot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison: Claude vs Copilot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comparison: Claude vs Copilot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#claude-auto-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claude Auto Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copilot-auto-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copilot Auto Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tips
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PROXY_CONFIG_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PHILOSOPHY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WORKFLOW_COMPLETION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Features
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#with-claude-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With Claude Code
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactive-ui-mode-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive UI Mode (--ui)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-github-copilot-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With GitHub Copilot CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How It Works">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#turn-1-objective-clarification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turn 1: Objective Clarification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#turn-2-plan-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turn 2: Plan Creation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#turns-3-execute-evaluate-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turns 3+: Execute &amp; Evaluate Loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-turn-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final Turn: Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#max-turns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Max Turns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Logging
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-implementing-a-feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 1: Implementing a Feature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-bug-fix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 2: Bug Fix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-refactoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 3: Refactoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-4-test-suite-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 4: Test Suite Creation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#injecting-instructions-mid-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Injecting Instructions Mid-Session
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Injecting Instructions Mid-Session">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices-for-appending" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices for Appending
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting-append" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Append
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-and-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security and Limits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Directory Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-be-specific-in-your-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Be Specific in Your Prompt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-set-appropriate-max-turns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Set Appropriate Max Turns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-let-auto-mode-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Let Auto Mode Work
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-review-before-committing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Review Before Committing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-use-for-repetitive-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Use for Repetitive Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#auto-mode-stops-early" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto Mode Stops Early
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reaches-max-turns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reaches Max Turns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installation-issues-copilot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation Issues (Copilot)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hooks-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hooks Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hooks Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#session-start-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Start Hook
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stop-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stop Hook
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#combining-with-subagents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining with Subagents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parallel-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parallel Execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuing-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Continuing Work
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-claude-vs-copilot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison: Claude vs Copilot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comparison: Claude vs Copilot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#claude-auto-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claude Auto Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copilot-auto-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copilot Auto Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tips
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agent-bundle-generator-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Bundles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../document_driven_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Document-Driven Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/power-steering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Power-Steering Mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/power-steering/customization-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Power-Steering Customization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DEVELOPING_AMPLIHACK/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../IMPLEMENTATION_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CREATE_YOUR_OWN_TOOLS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BENCHMARKING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DISCOVERIES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discoveries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#with-claude-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With Claude Code
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactive-ui-mode-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive UI Mode (--ui)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-github-copilot-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With GitHub Copilot CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How It Works">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#turn-1-objective-clarification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turn 1: Objective Clarification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#turn-2-plan-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turn 2: Plan Creation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#turns-3-execute-evaluate-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turns 3+: Execute &amp; Evaluate Loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-turn-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final Turn: Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#max-turns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Max Turns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Logging
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-implementing-a-feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 1: Implementing a Feature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-bug-fix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 2: Bug Fix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-refactoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 3: Refactoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-4-test-suite-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 4: Test Suite Creation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#injecting-instructions-mid-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Injecting Instructions Mid-Session
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Injecting Instructions Mid-Session">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices-for-appending" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices for Appending
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting-append" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Append
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-and-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security and Limits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Directory Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-be-specific-in-your-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Be Specific in Your Prompt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-set-appropriate-max-turns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Set Appropriate Max Turns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-let-auto-mode-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Let Auto Mode Work
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-review-before-committing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Review Before Committing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-use-for-repetitive-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Use for Repetitive Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#auto-mode-stops-early" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto Mode Stops Early
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reaches-max-turns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reaches Max Turns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installation-issues-copilot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation Issues (Copilot)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hooks-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hooks Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hooks Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#session-start-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Start Hook
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stop-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stop Hook
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#combining-with-subagents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining with Subagents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parallel-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parallel Execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuing-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Continuing Work
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-claude-vs-copilot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison: Claude vs Copilot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comparison: Claude vs Copilot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#claude-auto-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claude Auto Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copilot-auto-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copilot Auto Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tips
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="auto-mode-documentation">Auto Mode Documentation<a class="headerlink" href="#auto-mode-documentation" title="Permanent link">&para;</a></h1>
+<p>Auto mode enables autonomous agentic loops with Claude Code or GitHub Copilot CLI, allowing AI to work through multi-turn workflows with minimal human intervention.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Auto mode orchestrates an intelligent loop that:</p>
+<ol>
+<li>Clarifies objectives with measurable evaluation criteria</li>
+<li>Creates detailed execution plans identifying parallel opportunities</li>
+<li>Executes plans autonomously through multiple turns</li>
+<li>Evaluates progress after each turn</li>
+<li>Continues until objective achieved or max turns reached</li>
+<li>Provides comprehensive summary of work completed</li>
+</ol>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<h3 id="with-claude-code">With Claude Code<a class="headerlink" href="#with-claude-code" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Basic auto mode</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;implement user authentication&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># With custom max turns</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--max-turns<span class="w"> </span><span class="m">20</span><span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;refactor the API module&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># With interactive UI (requires Rich library)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--ui<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;implement user authentication&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Alias: launch command also supports auto mode</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>amplihack<span class="w"> </span>launch<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;fix all failing tests&quot;</span>
+</code></pre></div>
+<h3 id="interactive-ui-mode-ui">Interactive UI Mode (<code>--ui</code>)<a class="headerlink" href="#interactive-ui-mode-ui" title="Permanent link">&para;</a></h3>
+<p>Auto mode supports an optional interactive terminal UI that displays real-time progress with:</p>
+<ul>
+<li>Session title and details (turn counter, elapsed time, cost tracking)</li>
+<li>Todo list with status indicators</li>
+<li>Streaming log output</li>
+<li>Interactive controls (pause, resume, exit)</li>
+</ul>
+<p><strong>Installing UI Dependencies:</strong></p>
+<p>The UI feature requires the Rich library. Install it with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Install with optional UI dependencies</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;microsofthackathon2025-agenticcoding[ui]&#39;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Or install Rich directly</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;rich&gt;=13.0.0&#39;</span>
+</code></pre></div>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Enable interactive UI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--ui<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;implement user authentication&quot;</span>
+</code></pre></div>
+<p><strong>What happens if Rich is not installed:</strong></p>
+<p>If you use the <code>--ui</code> flag without Rich installed, auto mode will display a helpful error message and continue in non-UI mode:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>⚠️  WARNING: --ui flag requires Rich library
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>   Error: No module named &#39;rich&#39;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>   To enable TUI mode, install Rich:
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>     pip install &#39;microsofthackathon2025-agenticcoding[ui]&#39;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>   or:
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>     pip install rich&gt;=13.0.0
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>   Continuing in non-UI mode...
+</code></pre></div>
+<p>This ensures auto mode always works, whether Rich is installed or not.</p>
+<h3 id="with-github-copilot-cli">With GitHub Copilot CLI<a class="headerlink" href="#with-github-copilot-cli" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Basic auto mode</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>amplihack<span class="w"> </span>copilot<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;add logging to all services&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># With custom max turns</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>amplihack<span class="w"> </span>copilot<span class="w"> </span>--auto<span class="w"> </span>--max-turns<span class="w"> </span><span class="m">15</span><span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;implement feature X&quot;</span>
+</code></pre></div>
+<h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
+<h3 id="turn-1-objective-clarification">Turn 1: Objective Clarification<a class="headerlink" href="#turn-1-objective-clarification" title="Permanent link">&para;</a></h3>
+<p>Auto mode starts by transforming your prompt into a clear objective with evaluation criteria.</p>
+<p><strong>Input</strong>: Your prompt
+<strong>Output</strong>:</p>
+<ul>
+<li>Clear objective statement</li>
+<li>Measurable evaluation criteria</li>
+<li>Key constraints</li>
+</ul>
+<h3 id="turn-2-plan-creation">Turn 2: Plan Creation<a class="headerlink" href="#turn-2-plan-creation" title="Permanent link">&para;</a></h3>
+<p>Creates a detailed execution plan identifying parallel work opportunities.</p>
+<p><strong>Output</strong>:</p>
+<ul>
+<li>Step-by-step plan</li>
+<li>Parallel execution groups</li>
+<li>Dependencies between steps</li>
+<li>Complexity estimates</li>
+</ul>
+<h3 id="turns-3-execute-evaluate-loop">Turns 3+: Execute &amp; Evaluate Loop<a class="headerlink" href="#turns-3-execute-evaluate-loop" title="Permanent link">&para;</a></h3>
+<p>Iteratively executes the plan and evaluates progress.</p>
+<p><strong>Each turn</strong>:</p>
+<ol>
+<li>Execute next part of plan</li>
+<li>Evaluate if objective achieved</li>
+<li>Continue or complete based on evaluation</li>
+</ol>
+<h3 id="final-turn-summary">Final Turn: Summary<a class="headerlink" href="#final-turn-summary" title="Permanent link">&para;</a></h3>
+<p>Provides comprehensive summary of the auto mode session.</p>
+<p><strong>Summary includes</strong>:</p>
+<ul>
+<li>What was accomplished</li>
+<li>What remains (if anything)</li>
+<li>Key decisions made</li>
+<li>Files modified</li>
+<li>Tests run</li>
+</ul>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<h3 id="max-turns">Max Turns<a class="headerlink" href="#max-turns" title="Permanent link">&para;</a></h3>
+<p>Default: 10 turns</p>
+<p>Adjust based on task complexity:</p>
+<ul>
+<li>Simple tasks: 5-10 turns</li>
+<li>Medium tasks: 10-15 turns</li>
+<li>Complex tasks: 15-30 turns</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--max-turns<span class="w"> </span><span class="m">25</span><span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;complex multi-module refactoring&quot;</span>
+</code></pre></div>
+<h3 id="session-logging">Session Logging<a class="headerlink" href="#session-logging" title="Permanent link">&para;</a></h3>
+<p>All auto mode sessions are logged to:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>.claude/runtime/logs/auto_{sdk}_{timestamp}/
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  ├── auto.log          # Turn-by-turn log
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  ├── prompt.md         # Original prompt and session metadata
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  ├── DECISIONS.md      # Decision records (if any)
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  ├── append/           # Pending instructions (for --append feature)
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  └── appended/         # Processed instructions (archived)
+</code></pre></div>
+<h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
+<h3 id="example-1-implementing-a-feature">Example 1: Implementing a Feature<a class="headerlink" href="#example-1-implementing-a-feature" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Implement user profile editing with validation and persistence&quot;</span>
+</code></pre></div>
+<p><strong>What happens</strong>:</p>
+<ol>
+<li>Clarifies requirements for profile editing feature</li>
+<li>Plans: API endpoint, validation logic, database updates, tests</li>
+<li>Executes: Implements each component</li>
+<li>Evaluates: Checks tests pass, requirements met</li>
+<li>Completes: Summarizes implementation</li>
+</ol>
+<h3 id="example-2-bug-fix">Example 2: Bug Fix<a class="headerlink" href="#example-2-bug-fix" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>amplihack<span class="w"> </span>copilot<span class="w"> </span>--auto<span class="w"> </span>--max-turns<span class="w"> </span><span class="m">5</span><span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Fix the login timeout issue reported in issue #123&quot;</span>
+</code></pre></div>
+<p><strong>What happens</strong>:</p>
+<ol>
+<li>Clarifies the timeout bug and success criteria</li>
+<li>Plans: Investigate cause, implement fix, add tests</li>
+<li>Executes: Identifies issue, applies fix</li>
+<li>Evaluates: Verifies fix resolves timeout</li>
+<li>Completes: Documents fix and tests</li>
+</ol>
+<h3 id="example-3-refactoring">Example 3: Refactoring<a class="headerlink" href="#example-3-refactoring" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--max-turns<span class="w"> </span><span class="m">15</span><span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Refactor authentication module to use dependency injection&quot;</span>
+</code></pre></div>
+<p><strong>What happens</strong>:</p>
+<ol>
+<li>Clarifies refactoring scope and constraints</li>
+<li>Plans: Update interfaces, modify implementations, update tests</li>
+<li>Executes: Refactors module incrementally</li>
+<li>Evaluates: Ensures all tests pass, no regressions</li>
+<li>Completes: Documents refactoring decisions</li>
+</ol>
+<h3 id="example-4-test-suite-creation">Example 4: Test Suite Creation<a class="headerlink" href="#example-4-test-suite-creation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>amplihack<span class="w"> </span>copilot<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Add comprehensive test coverage for the payment processing module&quot;</span>
+</code></pre></div>
+<p><strong>What happens</strong>:</p>
+<ol>
+<li>Clarifies coverage goals and test types needed</li>
+<li>Plans: Unit tests, integration tests, edge cases</li>
+<li>Executes: Writes test suite</li>
+<li>Evaluates: Checks coverage percentage, test quality</li>
+<li>Completes: Reports final coverage metrics</li>
+</ol>
+<h2 id="injecting-instructions-mid-session">Injecting Instructions Mid-Session<a class="headerlink" href="#injecting-instructions-mid-session" title="Permanent link">&para;</a></h2>
+<p>You can append new instructions to a running auto mode session without interrupting it using the <code>--append</code> flag. This allows you to steer the agent's work in real-time as you observe its progress.</p>
+<h3 id="usage_1">Usage<a class="headerlink" href="#usage_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Terminal 1: Start auto mode</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Implement user authentication&quot;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Terminal 2: After reviewing initial work, append a new instruction</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--append<span class="w"> </span><span class="s2">&quot;Also add rate limiting to prevent brute force attacks&quot;</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Terminal 2: Add another instruction</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--append<span class="w"> </span><span class="s2">&quot;Ensure all passwords are hashed with bcrypt&quot;</span>
+</code></pre></div>
+<h3 id="how-it-works_1">How It Works<a class="headerlink" href="#how-it-works_1" title="Permanent link">&para;</a></h3>
+<ol>
+<li>The <code>--append</code> flag finds the active auto mode session in the current project</li>
+<li>It writes your instruction to <code>.claude/runtime/logs/auto_&lt;sdk&gt;_&lt;timestamp&gt;/append/&lt;timestamp&gt;.md</code></li>
+<li>Before the next turn, auto mode reads and processes all instructions in the <code>append/</code> directory</li>
+<li>The instructions are integrated into the turn prompt as additional requirements</li>
+<li>Processed instruction files are moved to <code>appended/</code> directory for tracking</li>
+</ol>
+<h3 id="example-workflow">Example Workflow<a class="headerlink" href="#example-workflow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Start auto mode with initial task</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>$<span class="w"> </span>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--max-turns<span class="w"> </span><span class="m">20</span><span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Implement user authentication system&quot;</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Watch progress in logs</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>$<span class="w"> </span>tail<span class="w"> </span>-f<span class="w"> </span>.claude/runtime/logs/auto_claude_*/auto.log
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># After turn 3, you realize you need additional security</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>$<span class="w"> </span>amplihack<span class="w"> </span>claude<span class="w"> </span>--append<span class="w"> </span><span class="s2">&quot;Add two-factor authentication support&quot;</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>✓<span class="w"> </span>Instruction<span class="w"> </span>appended<span class="w"> </span>to<span class="w"> </span>session:<span class="w"> </span>auto_claude_1729699200
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">  </span>File:<span class="w"> </span>20241023_120534_123456.md
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">  </span>The<span class="w"> </span>auto<span class="w"> </span>mode<span class="w"> </span>session<span class="w"> </span>will<span class="w"> </span>process<span class="w"> </span>this<span class="w"> </span>on<span class="w"> </span>its<span class="w"> </span>next<span class="w"> </span>turn.
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Add another requirement</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>$<span class="w"> </span>amplihack<span class="w"> </span>claude<span class="w"> </span>--append<span class="w"> </span><span class="s2">&quot;Include comprehensive input validation for all forms&quot;</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>✓<span class="w"> </span>Instruction<span class="w"> </span>appended<span class="w"> </span>to<span class="w"> </span>session:<span class="w"> </span>auto_claude_1729699200
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">  </span>File:<span class="w"> </span>20241023_120612_789012.md
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="w">  </span>The<span class="w"> </span>auto<span class="w"> </span>mode<span class="w"> </span>session<span class="w"> </span>will<span class="w"> </span>process<span class="w"> </span>this<span class="w"> </span>on<span class="w"> </span>its<span class="w"> </span>next<span class="w"> </span>turn.
+</code></pre></div>
+<h3 id="best-practices-for-appending">Best Practices for Appending<a class="headerlink" href="#best-practices-for-appending" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Be Specific</strong>: Appended instructions are added as-is. Be clear and specific about what you want.</li>
+</ol>
+<p><strong>Good</strong>: <code>amplihack claude --append "Add input validation that checks password length is at least 12 characters"</code></p>
+<p><strong>Less Good</strong>: <code>amplihack claude --append "improve security"</code></p>
+<ol>
+<li>
+<p><strong>Timing</strong>: Instructions are processed before the next turn starts. Wait for the current turn to complete before expecting the new instruction to take effect.</p>
+</li>
+<li>
+<p><strong>Multiple Instructions</strong>: You can append multiple instructions - they queue in order and are all processed before the next turn.</p>
+</li>
+<li>
+<p><strong>Monitor Progress</strong>: Watch the logs to see when your appended instructions are processed:</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>tail<span class="w"> </span>-f<span class="w"> </span>.claude/runtime/logs/auto_claude_*/auto.log
+</code></pre></div>
+<ol>
+<li><strong>Review Appended History</strong>: Check what has been processed:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ls<span class="w"> </span>-la<span class="w"> </span>.claude/runtime/logs/auto_claude_*/appended/
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>cat<span class="w"> </span>.claude/runtime/logs/auto_claude_*/appended/*.md
+</code></pre></div></li>
+</ol>
+<h3 id="troubleshooting-append">Troubleshooting Append<a class="headerlink" href="#troubleshooting-append" title="Permanent link">&para;</a></h3>
+<p><strong>Error: No active auto mode session found</strong></p>
+<ul>
+<li><strong>Cause</strong>: No auto mode is currently running in this project</li>
+<li><strong>Solution</strong>: Start an auto mode session first with <code>amplihack claude --auto -- -p "your task"</code></li>
+</ul>
+<p><strong>Instruction not being processed</strong></p>
+<ul>
+<li><strong>Cause</strong>: Auto mode may have completed before processing</li>
+<li><strong>Solution</strong>: Check if auto mode reached max turns or completed the objective. Review logs to see what happened.</li>
+</ul>
+<p><strong>Multiple sessions detected</strong></p>
+<ul>
+<li><strong>Behavior</strong>: The system will use the most recent auto mode session</li>
+<li><strong>Tip</strong>: Only run one auto mode session per project to avoid confusion</li>
+</ul>
+<h3 id="security-and-limits">Security and Limits<a class="headerlink" href="#security-and-limits" title="Permanent link">&para;</a></h3>
+<p>The append feature includes several security controls:</p>
+<ul>
+<li><strong>Size Limit</strong>: Instructions are limited to 100KB each</li>
+<li><strong>Rate Limiting</strong>: Maximum 10 appends per minute, 100 pending instructions total</li>
+<li><strong>Content Sanitization</strong>: Suspicious patterns are detected and sanitized before injection</li>
+<li><strong>File Permissions</strong>: Instruction files are created with restrictive permissions (owner-only)</li>
+</ul>
+<h3 id="log-directory-structure">Log Directory Structure<a class="headerlink" href="#log-directory-structure" title="Permanent link">&para;</a></h3>
+<p>When using the append feature, your log directory will have this structure:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>.claude/runtime/logs/auto_claude_1729699200/
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>├── auto.log              # Turn-by-turn execution log
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>├── prompt.md             # Original prompt and session metadata
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>├── DECISIONS.md          # Decision records (if any)
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>├── append/               # Pending instructions (waiting to be processed)
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>│   ├── 20241023_120534_123456.md
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>│   └── 20241023_120612_789012.md
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>└── appended/             # Processed instructions (archived)
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    └── 20241023_120455_000000.md
+</code></pre></div>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="1-be-specific-in-your-prompt">1. Be Specific in Your Prompt<a class="headerlink" href="#1-be-specific-in-your-prompt" title="Permanent link">&para;</a></h3>
+<p><strong>Good</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Add rate limiting to the API with 100 requests per minute per user&quot;</span>
+</code></pre></div>
+<p><strong>Less Good</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;improve the API&quot;</span>
+</code></pre></div>
+<h3 id="2-set-appropriate-max-turns">2. Set Appropriate Max Turns<a class="headerlink" href="#2-set-appropriate-max-turns" title="Permanent link">&para;</a></h3>
+<p>Match max turns to task complexity:</p>
+<ul>
+<li>Quick fixes: 3-5 turns</li>
+<li>Feature implementation: 10-15 turns</li>
+<li>Major refactoring: 20-30 turns</li>
+</ul>
+<h3 id="3-let-auto-mode-work">3. Let Auto Mode Work<a class="headerlink" href="#3-let-auto-mode-work" title="Permanent link">&para;</a></h3>
+<p>Don't interrupt the process. Auto mode is designed to work autonomously. Check the logs afterward to see what was done.</p>
+<h3 id="4-review-before-committing">4. Review Before Committing<a class="headerlink" href="#4-review-before-committing" title="Permanent link">&para;</a></h3>
+<p>Auto mode implements changes but doesn't commit them. Always:</p>
+<ol>
+<li>Review the changes made</li>
+<li>Run final tests manually</li>
+<li>Verify quality before committing</li>
+</ol>
+<h3 id="5-use-for-repetitive-tasks">5. Use for Repetitive Tasks<a class="headerlink" href="#5-use-for-repetitive-tasks" title="Permanent link">&para;</a></h3>
+<p>Auto mode excels at:</p>
+<ul>
+<li>Adding tests to multiple files</li>
+<li>Refactoring patterns across codebase</li>
+<li>Implementing similar features</li>
+<li>Fixing categories of bugs</li>
+</ul>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="auto-mode-stops-early">Auto Mode Stops Early<a class="headerlink" href="#auto-mode-stops-early" title="Permanent link">&para;</a></h3>
+<p><strong>Cause</strong>: Objective achieved before max turns
+<strong>Solution</strong>: This is normal - check the summary</p>
+<h3 id="reaches-max-turns">Reaches Max Turns<a class="headerlink" href="#reaches-max-turns" title="Permanent link">&para;</a></h3>
+<p><strong>Cause</strong>: Task more complex than estimated
+<strong>Solution</strong>:</p>
+<ul>
+<li>Increase <code>--max-turns</code></li>
+<li>Break task into smaller subtasks</li>
+<li>Review what was completed and continue manually</li>
+</ul>
+<h3 id="execution-errors">Execution Errors<a class="headerlink" href="#execution-errors" title="Permanent link">&para;</a></h3>
+<p><strong>Cause</strong>: Syntax errors, test failures during execution
+<strong>Solution</strong>: Auto mode logs errors and continues. Review logs in <code>.claude/runtime/logs/</code> to see what happened.</p>
+<h3 id="installation-issues-copilot">Installation Issues (Copilot)<a class="headerlink" href="#installation-issues-copilot" title="Permanent link">&para;</a></h3>
+<p><strong>Cause</strong>: GitHub Copilot CLI not installed
+<strong>Solution</strong>: Auto mode will attempt to install via npm. Ensure Node.js and npm are installed.</p>
+<h2 id="hooks-integration">Hooks Integration<a class="headerlink" href="#hooks-integration" title="Permanent link">&para;</a></h2>
+<h3 id="session-start-hook">Session Start Hook<a class="headerlink" href="#session-start-hook" title="Permanent link">&para;</a></h3>
+<p>Runs at the beginning of auto mode session.</p>
+<ul>
+<li>Location: <code>.claude/tools/amplihack/hooks/session_start.py</code></li>
+<li>Use: Initialize session logging, set up environment</li>
+</ul>
+<h3 id="stop-hook">Stop Hook<a class="headerlink" href="#stop-hook" title="Permanent link">&para;</a></h3>
+<p>Runs at the end of auto mode session.</p>
+<ul>
+<li>Location: <code>.claude/tools/amplihack/hooks/stop.py</code></li>
+<li>Use: Cleanup, final logging, metrics collection</li>
+</ul>
+<p><strong>Note</strong>: Only <code>session_start</code> and <code>stop</code> hooks run in auto mode. Tool-use hooks aren't supported.</p>
+<h2 id="advanced-usage">Advanced Usage<a class="headerlink" href="#advanced-usage" title="Permanent link">&para;</a></h2>
+<h3 id="combining-with-subagents">Combining with Subagents<a class="headerlink" href="#combining-with-subagents" title="Permanent link">&para;</a></h3>
+<p>Auto mode automatically leverages subagents when appropriate. You can guide this in your prompt:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Use the architect agent to design a caching layer, then the builder agent to implement it&quot;</span>
+</code></pre></div>
+<h3 id="parallel-execution">Parallel Execution<a class="headerlink" href="#parallel-execution" title="Permanent link">&para;</a></h3>
+<p>Auto mode identifies parallel work opportunities. Help it by structuring your prompt:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>amplihack<span class="w"> </span>copilot<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Add logging to all three services: auth, payment, and notification - these can be done in parallel&quot;</span>
+</code></pre></div>
+<h3 id="continuing-work">Continuing Work<a class="headerlink" href="#continuing-work" title="Permanent link">&para;</a></h3>
+<p>If auto mode runs out of turns, you can continue manually or start a new auto mode session with adjusted objectives:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># First session</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--max-turns<span class="w"> </span><span class="m">10</span><span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;implement feature X&quot;</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># If incomplete, refine and continue</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--max-turns<span class="w"> </span><span class="m">10</span><span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;complete feature X implementation: finish the API endpoint and add tests&quot;</span>
+</code></pre></div>
+<h2 id="comparison-claude-vs-copilot">Comparison: Claude vs Copilot<a class="headerlink" href="#comparison-claude-vs-copilot" title="Permanent link">&para;</a></h2>
+<h3 id="claude-auto-mode">Claude Auto Mode<a class="headerlink" href="#claude-auto-mode" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Tighter integration with Claude Code features</li>
+<li>Supports <code>--continue</code> flag for context preservation</li>
+<li>Automatic hook execution</li>
+<li>Better for complex, multi-file changes</li>
+</ul>
+<h3 id="copilot-auto-mode">Copilot Auto Mode<a class="headerlink" href="#copilot-auto-mode" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Works with GitHub Copilot CLI</li>
+<li>Requires explicit subagent invocation</li>
+<li>Manual hook execution</li>
+<li>Good for focused, specific tasks</li>
+</ul>
+<h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Start small</strong>: Test auto mode with simpler tasks first</li>
+<li><strong>Monitor logs</strong>: Check <code>.claude/runtime/logs/</code> to understand what auto mode is doing</li>
+<li><strong>Iterate prompts</strong>: Refine your prompts based on results</li>
+<li><strong>Use max-turns wisely</strong>: Don't set too high - better to run multiple focused sessions</li>
+<li><strong>Trust the process</strong>: Let auto mode work through its turns autonomously</li>
+</ol>
+<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>AGENTS.md</code> - Guide for using subagents with Copilot CLI</li>
+<li><code>.claude/workflow/DEFAULT_WORKFLOW.md</code> - Standard workflow steps</li>
+<li><code>.claude/context/PHILOSOPHY.md</code> - Development principles</li>
+</ul>
+<hr />
+<p>Auto mode brings autonomous agent capabilities to your development workflow, handling multi-turn tasks with minimal intervention while maintaining quality and following best practices.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>

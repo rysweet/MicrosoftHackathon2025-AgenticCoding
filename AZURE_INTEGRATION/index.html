@@ -1,0 +1,1941 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI-powered development framework for Claude Code">
+      
+      
+      
+        <link rel="canonical" href="https://rysweet.github.io/MicrosoftHackathon2025-AgenticCoding/AZURE_INTEGRATION/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Azure OpenAI Integration Guide - amplihack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#azure-openai-integration-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="amplihack" class="md-header__button md-logo" aria-label="amplihack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            amplihack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Azure OpenAI Integration Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amplihack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../PREREQUISITES/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../PHILOSOPHY/" class="md-tabs__link">
+          
+  
+  
+  Core Concepts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../AUTO_MODE/" class="md-tabs__link">
+          
+  
+  
+  Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../DEVELOPING_AMPLIHACK/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../BENCHMARKING/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="amplihack" class="md-nav__button md-logo" aria-label="amplihack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    amplihack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amplihack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PREREQUISITES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AUTO_MODE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PROXY_CONFIG_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PHILOSOPHY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WORKFLOW_COMPLETION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Features
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AUTO_MODE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agent-bundle-generator-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Bundles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../document_driven_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Document-Driven Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/power-steering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Power-Steering Mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/power-steering/customization-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Power-Steering Customization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DEVELOPING_AMPLIHACK/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../IMPLEMENTATION_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CREATE_YOUR_OWN_TOOLS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BENCHMARKING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DISCOVERIES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discoveries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-basic-setup-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Basic Setup (&lt; 5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-what-happens-automatically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. What Happens Automatically
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#required-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#azure-endpoint-url-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Endpoint URL Format
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Azure Endpoint URL Format">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#azure-responses-api-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Responses API Support
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#single-model-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Single Model Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-model-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Model Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#high-performance-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High-Performance Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recent-fixes-pr-679" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recent Fixes (PR #679)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recent Fixes (PR #679)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed-request_timeout-parsing-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed: REQUEST_TIMEOUT Parsing Error
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#known-issues-external-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known Issues (External Package)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Known Issues (External Package)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#issue-internal-server-error-from-claude-code-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: Internal Server Error from claude-code-proxy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed-environment-variable-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed: Environment Variable Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed-configuration-format-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed: Configuration Format Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proxy-wont-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proxy Won't Start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internal-server-error-new-issue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal Server Error (NEW ISSUE)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-timeouts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection Timeouts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Not Found
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-format-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Format Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#custom-model-deployments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Model Deployments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-azure-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multiple Azure Resources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitoring-and-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring and Logging
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Support">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Help
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="azure-openai-integration-guide">Azure OpenAI Integration Guide<a class="headerlink" href="#azure-openai-integration-guide" title="Permanent link">&para;</a></h1>
+<p>This guide covers the comprehensive Azure OpenAI integration for AmplihHack, including setup, configuration, troubleshooting, and advanced usage scenarios.</p>
+<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
+<h3 id="1-basic-setup-5-minutes">1. Basic Setup (&lt; 5 minutes)<a class="headerlink" href="#1-basic-setup-5-minutes" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Copy the example configuration</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>cp<span class="w"> </span>examples/example.azure.env<span class="w"> </span>.azure.env
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># 2. Edit with your Azure credentials</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>nano<span class="w"> </span>.azure.env<span class="w">  </span><span class="c1"># Set OPENAI_API_KEY, OPENAI_BASE_URL, etc.</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 3. Launch with Azure integration</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>uvx<span class="w"> </span>--from<span class="w"> </span>git+https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding<span class="w"> </span>amplihack<span class="w"> </span>launch<span class="w"> </span>--with-proxy-config<span class="w"> </span>./.azure.env
+</code></pre></div>
+<h3 id="2-what-happens-automatically">2. What Happens Automatically<a class="headerlink" href="#2-what-happens-automatically" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✅ <strong>Proxy Setup</strong>: claude-code-proxy starts with Azure configuration</li>
+<li>✅ <strong>Auto-load .azure.env</strong>: The proxy automatically loads <code>.azure.env</code> from current directory</li>
+<li>✅ <strong>Model Mapping</strong>: OpenAI model names → Azure deployment names</li>
+<li>✅ <strong>Persistence</strong>: Azure persistence prompt automatically appended</li>
+<li>✅ <strong>Environment</strong>: Proper environment variables configured</li>
+</ul>
+<h2 id="configuration-reference">Configuration Reference<a class="headerlink" href="#configuration-reference" title="Permanent link">&para;</a></h2>
+<h3 id="required-variables">Required Variables<a class="headerlink" href="#required-variables" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># Your Azure OpenAI API key
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>OPENAI_API_KEY=&quot;your-azure-openai-api-key-here&quot;  # pragma: allowlist secret
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Azure OpenAI endpoint URL with deployment and API version
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>OPENAI_BASE_URL=&quot;https://your-resource.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2025-01-01-preview&quot;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># Azure-specific settings
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>AZURE_OPENAI_KEY=&quot;your-azure-openai-api-key-here&quot;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>AZURE_API_VERSION=&quot;2025-01-01-preview&quot;
+</code></pre></div>
+<h3 id="model-mapping">Model Mapping<a class="headerlink" href="#model-mapping" title="Permanent link">&para;</a></h3>
+<p>Map Claude's model tiers to your Azure deployments:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># Maps to Claude&#39;s largest model
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>BIG_MODEL=&quot;gpt-4&quot;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a># Maps to Claude&#39;s mid-tier model
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>MIDDLE_MODEL=&quot;gpt-4&quot;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a># Maps to Claude&#39;s smallest/fastest model
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>SMALL_MODEL=&quot;gpt-4-turbo&quot;
+</code></pre></div>
+<h3 id="performance-settings">Performance Settings<a class="headerlink" href="#performance-settings" title="Permanent link">&para;</a></h3>
+<p>Optimized for large context windows:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># Use localhost for security
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>HOST=&quot;127.0.0.1&quot;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>PORT=&quot;8082&quot;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a># Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>LOG_LEVEL=&quot;INFO&quot;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a># 512k tokens - maximum context size
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>MAX_TOKENS_LIMIT=&quot;512000&quot;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a># Minimum tokens (to avoid errors with thinking model)
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>MIN_TOKENS_LIMIT=&quot;4096&quot;
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a># 5 minutes for large requests
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>REQUEST_TIMEOUT=&quot;300&quot;
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a># Retry on transient failures
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>MAX_RETRIES=&quot;2&quot;
+</code></pre></div>
+<h2 id="azure-endpoint-url-format">Azure Endpoint URL Format<a class="headerlink" href="#azure-endpoint-url-format" title="Permanent link">&para;</a></h2>
+<p>Your <code>OPENAI_BASE_URL</code> should follow this pattern:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>https://&lt;resource-name&gt;.openai.azure.com/openai/deployments/&lt;deployment-name&gt;/chat/completions?api-version=&lt;version&gt;
+</code></pre></div>
+<p><strong>Examples:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># GPT-4 deployment
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>OPENAI_BASE_URL=&quot;https://mycompany-ai.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2025-01-01-preview&quot;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a># GPT-4o deployment
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>OPENAI_BASE_URL=&quot;https://eastus-openai.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview&quot;
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a># Custom deployment name
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>OPENAI_BASE_URL=&quot;https://prod-ai.openai.azure.com/openai/deployments/my-gpt4-model/chat/completions?api-version=2025-01-01-preview&quot;
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a># Azure Responses API (for structured output)
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>OPENAI_BASE_URL=&quot;https://mycompany-ai.openai.azure.com/openai/responses?api-version=2025-04-01-preview&quot;
+</code></pre></div>
+<h3 id="azure-responses-api-support">Azure Responses API Support<a class="headerlink" href="#azure-responses-api-support" title="Permanent link">&para;</a></h3>
+<p>The proxy automatically detects and handles Azure Responses API endpoints:</p>
+<ul>
+<li>Preserves the <code>/openai/responses</code> path for proper routing</li>
+<li>Uses the appropriate API version (2025-04-01-preview)</li>
+<li>Maps all Claude models to your BIG_MODEL deployment</li>
+</ul>
+<h2 id="configuration-examples">Configuration Examples<a class="headerlink" href="#configuration-examples" title="Permanent link">&para;</a></h2>
+<h3 id="single-model-setup">Single Model Setup<a class="headerlink" href="#single-model-setup" title="Permanent link">&para;</a></h3>
+<p>For simple setups using one Azure deployment:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>OPENAI_API_KEY=&quot;abcd1234...&quot;  # pragma: allowlist secret
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>OPENAI_BASE_URL=&quot;https://myai.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2025-01-01-preview&quot;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>AZURE_OPENAI_KEY=&quot;abcd1234...&quot;
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>AZURE_API_VERSION=&quot;2025-01-01-preview&quot;
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>BIG_MODEL=&quot;gpt-4&quot;
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>MIDDLE_MODEL=&quot;gpt-4&quot;
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>SMALL_MODEL=&quot;gpt-4&quot;
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>HOST=&quot;127.0.0.1&quot;
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>PORT=&quot;8082&quot;
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>LOG_LEVEL=&quot;INFO&quot;
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>REQUEST_TIMEOUT=&quot;300&quot;
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>MAX_RETRIES=&quot;2&quot;
+</code></pre></div>
+<h3 id="multi-model-setup">Multi-Model Setup<a class="headerlink" href="#multi-model-setup" title="Permanent link">&para;</a></h3>
+<p>For environments with multiple Azure deployments:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>OPENAI_API_KEY=&quot;abcd1234...&quot;  # pragma: allowlist secret
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>OPENAI_BASE_URL=&quot;https://multimodel.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2025-01-01-preview&quot;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>AZURE_OPENAI_KEY=&quot;abcd1234...&quot;
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>AZURE_API_VERSION=&quot;2025-01-01-preview&quot;
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a># Different deployments for different model tiers
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>BIG_MODEL=&quot;gpt-4-32k&quot;
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>MIDDLE_MODEL=&quot;gpt-4&quot;
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>SMALL_MODEL=&quot;gpt-4o-mini&quot;
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>HOST=&quot;127.0.0.1&quot;
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>PORT=&quot;8082&quot;
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>LOG_LEVEL=&quot;INFO&quot;
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>REQUEST_TIMEOUT=&quot;300&quot;
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>MAX_RETRIES=&quot;3&quot;
+</code></pre></div>
+<h3 id="high-performance-setup">High-Performance Setup<a class="headerlink" href="#high-performance-setup" title="Permanent link">&para;</a></h3>
+<p>For heavy usage with maximum context windows:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>OPENAI_API_KEY=&quot;abcd1234...&quot;  # pragma: allowlist secret
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>OPENAI_BASE_URL=&quot;https://perf-ai.openai.azure.com/openai/deployments/gpt-4-turbo/chat/completions?api-version=2025-01-01-preview&quot;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>AZURE_OPENAI_KEY=&quot;abcd1234...&quot;
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>AZURE_API_VERSION=&quot;2025-01-01-preview&quot;
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>BIG_MODEL=&quot;gpt-4-turbo&quot;
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>MIDDLE_MODEL=&quot;gpt-4-turbo&quot;
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>SMALL_MODEL=&quot;gpt-4o&quot;
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>HOST=&quot;127.0.0.1&quot;
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>PORT=&quot;8082&quot;
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>LOG_LEVEL=&quot;DEBUG&quot;  # More detailed logging
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>MAX_TOKENS_LIMIT=&quot;512000&quot;  # Maximum context
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>MIN_TOKENS_LIMIT=&quot;8192&quot;    # Higher minimum for complex tasks
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>REQUEST_TIMEOUT=&quot;600&quot;      # 10 minutes for very large requests
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>MAX_RETRIES=&quot;5&quot;            # More retries for reliability
+</code></pre></div>
+<h2 id="recent-fixes-pr-679">Recent Fixes (PR #679)<a class="headerlink" href="#recent-fixes-pr-679" title="Permanent link">&para;</a></h2>
+<h3 id="fixed-request_timeout-parsing-error">Fixed: REQUEST_TIMEOUT Parsing Error<a class="headerlink" href="#fixed-request_timeout-parsing-error" title="Permanent link">&para;</a></h3>
+<p><strong>Problem</strong>: Proxy failed to start with error:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ValueError: could not convert string to float: &#39;&quot;300&quot;      # 5 minutes for large requests&#39;
+</code></pre></div>
+<p><strong>Solution</strong>: Enhanced configuration parser to handle inline comments in .env files.</p>
+<h2 id="known-issues-external-package">Known Issues (External Package)<a class="headerlink" href="#known-issues-external-package" title="Permanent link">&para;</a></h2>
+<h3 id="issue-internal-server-error-from-claude-code-proxy">Issue: Internal Server Error from claude-code-proxy<a class="headerlink" href="#issue-internal-server-error-from-claude-code-proxy" title="Permanent link">&para;</a></h3>
+<p><strong>Problem</strong>: The external <code>claude-code-proxy</code> package has bugs that cause Internal Server Errors:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>TypeError: Object of type Response is not JSON serializable
+</code></pre></div>
+<p><strong>Root Cause</strong>: Bug in the proxy's error handling code when trying to log Azure request failures.</p>
+<p><strong>Impact</strong>:</p>
+<ul>
+<li>❌ Proxy returns "Internal Server Error" instead of proper responses</li>
+<li>❌ No log file location output during startup</li>
+<li>⚠️ Model mapping warnings for Azure deployments</li>
+</ul>
+<p><strong>Workaround</strong>: This is an external package issue that needs to be reported upstream to the <code>claude-code-proxy</code> maintainers.</p>
+<p><strong>Before (Broken):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>REQUEST_TIMEOUT=&quot;300&quot;      # 5 minutes for large requests
+</code></pre></div>
+<p><strong>After (Fixed):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a># 5 minutes for large requests
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>REQUEST_TIMEOUT=&quot;300&quot;
+</code></pre></div>
+<h3 id="fixed-environment-variable-handling">Fixed: Environment Variable Handling<a class="headerlink" href="#fixed-environment-variable-handling" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added support for performance and server configuration variables</li>
+<li>Improved environment variable validation and sanitization</li>
+<li>Fixed cross-platform compatibility issues</li>
+</ul>
+<h3 id="fixed-configuration-format-issues">Fixed: Configuration Format Issues<a class="headerlink" href="#fixed-configuration-format-issues" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Enhanced .env file parsing to strip inline comments</li>
+<li>Better error messages for configuration problems</li>
+<li>Improved validation of Azure endpoint URLs</li>
+</ul>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="proxy-wont-start">Proxy Won't Start<a class="headerlink" href="#proxy-wont-start" title="Permanent link">&para;</a></h3>
+<p><strong>Error:</strong> <code>Proxy failed to start. Exit code: 1</code></p>
+<p><strong>Common Causes:</strong></p>
+<ol>
+<li><strong>Inline comments in .env file</strong></li>
+<li><strong>Solution</strong>: Move comments to separate lines above variables</li>
+<li>
+<p><strong>Example</strong>: Change <code>PORT="8082"  # comment</code> to separate lines</p>
+</li>
+<li>
+<p><strong>Invalid Azure endpoint URL</strong></p>
+</li>
+<li><strong>Check</strong>: URL format matches Azure OpenAI pattern</li>
+<li>
+<p><strong>Verify</strong>: Deployment name exists in your Azure resource</p>
+</li>
+<li>
+<p><strong>Missing or invalid API key</strong></p>
+</li>
+<li><strong>Check</strong>: API key is correct and has proper permissions</li>
+<li><strong>Verify</strong>: Key works with direct Azure API calls</li>
+</ol>
+<h3 id="internal-server-error-new-issue">Internal Server Error (NEW ISSUE)<a class="headerlink" href="#internal-server-error-new-issue" title="Permanent link">&para;</a></h3>
+<p><strong>Error:</strong> <code>Internal Server Error</code> responses when making requests to proxy</p>
+<p><strong>Root Cause:</strong> Bug in external <code>claude-code-proxy</code> package's error handling</p>
+<p><strong>Diagnosis Steps:</strong></p>
+<ol>
+<li>Check proxy logs for <code>TypeError: Object of type Response is not JSON serializable</code></li>
+<li>Look for model mapping warnings: <code>⚠️ No prefix or mapping rule for model</code></li>
+<li>Verify proxy starts but provides no log location output</li>
+</ol>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Report upstream</strong>: This is a bug in the <code>claude-code-proxy</code> PyPI package</li>
+<li><strong>Use alternative</strong>: Consider direct Azure OpenAI integration</li>
+<li><strong>Monitor status</strong>: Check for updates to the external package</li>
+</ol>
+<h3 id="authentication-errors">Authentication Errors<a class="headerlink" href="#authentication-errors" title="Permanent link">&para;</a></h3>
+<p><strong>Error:</strong> <code>401 Unauthorized</code> or <code>403 Forbidden</code></p>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Verify API key</strong>: Test with <code>curl</code> directly to Azure endpoint</li>
+<li><strong>Check permissions</strong>: Ensure key has access to the deployment</li>
+<li><strong>Validate endpoint</strong>: Confirm deployment name and resource name</li>
+</ol>
+<h3 id="connection-timeouts">Connection Timeouts<a class="headerlink" href="#connection-timeouts" title="Permanent link">&para;</a></h3>
+<p><strong>Error:</strong> <code>Request timed out</code> or slow responses</p>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Increase timeout</strong>: Set higher <code>REQUEST_TIMEOUT</code> value</li>
+<li><strong>Check region</strong>: Use Azure region closest to your location</li>
+<li><strong>Reduce context</strong>: Lower <code>MAX_TOKENS_LIMIT</code> if hitting limits</li>
+</ol>
+<h3 id="model-not-found">Model Not Found<a class="headerlink" href="#model-not-found" title="Permanent link">&para;</a></h3>
+<p><strong>Error:</strong> <code>The model 'gpt-4' does not exist</code></p>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Check deployment name</strong>: Verify exact deployment name in Azure portal</li>
+<li><strong>Update URL</strong>: Ensure <code>OPENAI_BASE_URL</code> uses correct deployment</li>
+<li><strong>Verify model mapping</strong>: Check <code>BIG_MODEL</code>, <code>MIDDLE_MODEL</code>, <code>SMALL_MODEL</code> values</li>
+</ol>
+<h3 id="configuration-format-errors">Configuration Format Errors<a class="headerlink" href="#configuration-format-errors" title="Permanent link">&para;</a></h3>
+<p><strong>Error:</strong> <code>Invalid configuration</code> or parsing errors</p>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>No inline comments</strong>: Move all comments to separate lines</li>
+<li><strong>Proper quotes</strong>: Use double quotes consistently: <code>KEY="value"</code></li>
+<li><strong>No trailing spaces</strong>: Remove spaces after values</li>
+<li><strong>Valid URLs</strong>: Ensure endpoints start with <code>https://</code></li>
+</ol>
+<h2 id="advanced-configuration">Advanced Configuration<a class="headerlink" href="#advanced-configuration" title="Permanent link">&para;</a></h2>
+<h3 id="custom-model-deployments">Custom Model Deployments<a class="headerlink" href="#custom-model-deployments" title="Permanent link">&para;</a></h3>
+<p>If you have custom deployment names in Azure:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a># Map to your actual Azure deployment names
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>BIG_MODEL=&quot;my-company-gpt4-large&quot;
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>MIDDLE_MODEL=&quot;my-company-gpt4-standard&quot;
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>SMALL_MODEL=&quot;my-company-gpt35-fast&quot;
+</code></pre></div>
+<h3 id="multiple-azure-resources">Multiple Azure Resources<a class="headerlink" href="#multiple-azure-resources" title="Permanent link">&para;</a></h3>
+<p>For organizations with multiple Azure OpenAI resources:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a># Primary resource for large models
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>OPENAI_BASE_URL=&quot;https://primary.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2025-01-01-preview&quot;
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a># You can switch resources by changing the base URL
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a># Secondary resource would be:
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a># OPENAI_BASE_URL=&quot;https://secondary.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2025-01-01-preview&quot;
+</code></pre></div>
+<h3 id="security-best-practices">Security Best Practices<a class="headerlink" href="#security-best-practices" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Use localhost only</strong>: Always set <code>HOST="127.0.0.1"</code></li>
+<li><strong>Secure credentials</strong>: Never commit <code>.azure.env</code> to git</li>
+<li><strong>Regular key rotation</strong>: Rotate Azure API keys periodically</li>
+<li><strong>Monitor usage</strong>: Use Azure monitoring for API usage tracking</li>
+<li><strong>Network security</strong>: Consider VPN/private endpoints for production</li>
+</ol>
+<h3 id="monitoring-and-logging">Monitoring and Logging<a class="headerlink" href="#monitoring-and-logging" title="Permanent link">&para;</a></h3>
+<p>Enable detailed logging for troubleshooting:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>LOG_LEVEL=&quot;DEBUG&quot;
+</code></pre></div>
+<p>Log files are automatically created in your system's temporary directory. The proxy will show the log file path when starting:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Logs will be written to:
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>  JSONL: /tmp/amplihack_logs/log-2025-10-04-19-16-16.jsonl
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>  HTML:  /tmp/amplihack_logs/log-2025-10-04-19-16-16.html
+</code></pre></div>
+<h2 id="support">Support<a class="headerlink" href="#support" title="Permanent link">&para;</a></h2>
+<h3 id="common-questions">Common Questions<a class="headerlink" href="#common-questions" title="Permanent link">&para;</a></h3>
+<p><strong>Q: Can I use multiple Azure deployments simultaneously?</strong>
+A: Currently, you configure one primary deployment via <code>OPENAI_BASE_URL</code>. Model mapping (<code>BIG_MODEL</code>, etc.) allows different deployments for different Claude model tiers.</p>
+<p><strong>Q: Does this work with Azure Government Cloud?</strong>
+A: Yes, use the appropriate Azure Government endpoints (e.g., <code>*.azure.us</code>).</p>
+<p><strong>Q: Can I switch between OpenAI and Azure dynamically?</strong>
+A: You need to restart with different configuration. Consider using multiple <code>.env</code> files for different providers.</p>
+<p><strong>Q: What Azure API versions are supported?</strong>
+A: The integration supports all current Azure OpenAI API versions. Use the latest stable version (e.g., <code>2025-01-01-preview</code>) for best results.</p>
+<h3 id="getting-help">Getting Help<a class="headerlink" href="#getting-help" title="Permanent link">&para;</a></h3>
+<p>If you encounter issues:</p>
+<ol>
+<li><strong>Check logs</strong>: Review proxy logs for detailed error information</li>
+<li><strong>Test direct connection</strong>: Use <code>curl</code> to test Azure endpoint directly</li>
+<li><strong>Validate configuration</strong>: Use Azure portal to verify deployment names</li>
+<li><strong>Update integration</strong>: Ensure you're using the latest version with fixes</li>
+</ol>
+<hr />
+<p><strong>Last Updated</strong>: Based on PR #679 fixes for configuration parsing and environment handling.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>

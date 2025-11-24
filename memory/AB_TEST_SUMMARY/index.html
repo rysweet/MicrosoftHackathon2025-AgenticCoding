@@ -1,0 +1,2421 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI-powered development framework for Claude Code">
+      
+      
+      
+        <link rel="canonical" href="https://rysweet.github.io/MicrosoftHackathon2025-AgenticCoding/memory/AB_TEST_SUMMARY/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Memory System A/B Test - Summary - amplihack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#memory-system-ab-test-summary" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="amplihack" class="md-header__button md-logo" aria-label="amplihack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            amplihack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Memory System A/B Test - Summary
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amplihack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../PREREQUISITES/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../PHILOSOPHY/" class="md-tabs__link">
+          
+  
+  
+  Core Concepts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../AUTO_MODE/" class="md-tabs__link">
+          
+  
+  
+  Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../DEVELOPING_AMPLIHACK/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../BENCHMARKING/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="amplihack" class="md-nav__button md-logo" aria-label="amplihack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    amplihack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amplihack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PREREQUISITES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AUTO_MODE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PROXY_CONFIG_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PHILOSOPHY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../WORKFLOW_COMPLETION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Features
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AUTO_MODE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agent-bundle-generator-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Bundles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../document_driven_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Document-Driven Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/power-steering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Power-Steering Mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/power-steering/customization-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Power-Steering Customization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DEVELOPING_AMPLIHACK/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../IMPLEMENTATION_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CREATE_YOUR_OWN_TOOLS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BENCHMARKING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DISCOVERIES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discoveries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-decision-makers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Decision Makers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-implementers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Implementers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-was-delivered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Was Delivered
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What Was Delivered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-comprehensive-test-design-28kb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Comprehensive Test Design (28KB)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-test-harness-skeleton-16kb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Test Harness Skeleton (16KB)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-methodology-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Methodology Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Test Methodology Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#three-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three Configurations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#four-phases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Four Phases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sample Size
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-scenarios-10-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Scenarios (10 Scenarios)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Test Scenarios (10 Scenarios)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#high-memory-benefit-expected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High Memory Benefit Expected
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#medium-memory-benefit-expected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Medium Memory Benefit Expected
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#low-medium-memory-benefit-expected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Low-Medium Memory Benefit Expected
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metrics-collected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metrics Collected
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Metrics Collected">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#primary-metrics-automated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primary Metrics (Automated)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secondary-metrics-manual-review-20-sample" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secondary Metrics (Manual Review - 20% sample)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#statistical-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Statistical Analysis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Statistical Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tests-applied" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests Applied
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decision-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision Criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#effect-size-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Effect Size Interpretation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Timeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Timeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#week-1-2-test-harness-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 1-2: Test Harness Development
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-3-phase-1-baseline-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 3: Phase 1 - Baseline Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-4-phase-2-sqlite-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 4: Phase 2 - SQLite Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-5-phase-3-neo4j-testing-conditional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 5: Phase 3 - Neo4j Testing (conditional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-6-phase-4-analysis-reporting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 6: Phase 4 - Analysis &amp; Reporting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expected-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Expected Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#memory-vs-no-memory-control-vs-sqlite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory vs No Memory (Control vs SQLite)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#neo4j-vs-sqlite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Neo4j vs SQLite
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risk-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risk Assessment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Risk Assessment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overall-risk-medium-manageable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overall Risk: MEDIUM (Manageable)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success Criteria
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Success Criteria">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minimum-success-required-for-proceed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimum Success (Required for Proceed)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stretch-success-desired" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stretch Success (Desired)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Design Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Design Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-three-way-comparison-not-two-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Three-Way Comparison (Not Two-Way)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-phased-approach-with-decision-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Phased Approach with Decision Gates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-50-runs-per-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 50 Runs Per Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-paired-t-test-not-independent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Paired T-Test (Not Independent)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-mock-data-initially" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Mock Data Initially
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Next Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#immediate-this-week" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Immediate (This Week)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-1-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 1 Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#questions-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions &amp; Answers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Questions &amp; Answers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-why-not-just-implement-memory-and-see-if-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Why not just implement memory and see if it works?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-why-test-neo4j-if-research-says-sqlite-is-sufficient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Why test Neo4j if research says SQLite is sufficient?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-sqlite-shows-no-benefit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if SQLite shows no benefit?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-50-runs-seems-like-a-lot-can-we-use-fewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: 50 runs seems like a lot - can we use fewer?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-how-do-we-ensure-fair-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: How do we ensure fair comparison?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#files-delivered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files Delivered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="memory-system-ab-test-summary">Memory System A/B Test - Summary<a class="headerlink" href="#memory-system-ab-test-summary" title="Permanent link">&para;</a></h1>
+<p><strong>Date</strong>: 2025-11-03
+<strong>Status</strong>: Design Complete - Ready for Implementation
+<strong>Goal</strong>: Validate memory system effectiveness through rigorous A/B testing</p>
+<hr />
+<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
+<h3 id="for-decision-makers">For Decision Makers<a class="headerlink" href="#for-decision-makers" title="Permanent link">&para;</a></h3>
+<p><strong>Read First</strong>: <a href="../EFFECTIVENESS_TEST_DESIGN/">Test Design Document</a> - Section 1 (Executive Summary)</p>
+<p><strong>Key Question</strong>: Does memory provide measurable value?</p>
+<p><strong>Answer Approach</strong>:</p>
+<ol>
+<li>Run baseline tests (no memory) - 3 weeks</li>
+<li>Run SQLite memory tests - 3 weeks</li>
+<li>Statistical comparison with 95% confidence</li>
+<li><strong>Decision Gate</strong>: Proceed with memory if &gt;20% improvement AND p&lt;0.05</li>
+</ol>
+<p><strong>Investment</strong>: 6 weeks, 1 FTE for testing + analysis</p>
+<h3 id="for-implementers">For Implementers<a class="headerlink" href="#for-implementers" title="Permanent link">&para;</a></h3>
+<p><strong>Start Here</strong>:</p>
+<ol>
+<li><a href="../EFFECTIVENESS_TEST_DESIGN/">Test Design</a> - Complete methodology</li>
+<li><a href="../scripts/memory_test_harness.py">Test Harness</a> - Skeleton implementation</li>
+</ol>
+<p><strong>Next Steps</strong>:</p>
+<ol>
+<li>Review and approve test design</li>
+<li>Implement scenario execution logic</li>
+<li>Run baseline tests (Phase 1)</li>
+<li>Analyze and make data-driven decisions</li>
+</ol>
+<hr />
+<h2 id="what-was-delivered">What Was Delivered<a class="headerlink" href="#what-was-delivered" title="Permanent link">&para;</a></h2>
+<h3 id="1-comprehensive-test-design-28kb">1. Comprehensive Test Design (28KB)<a class="headerlink" href="#1-comprehensive-test-design-28kb" title="Permanent link">&para;</a></h3>
+<p><strong>File</strong>: <code>docs/memory/EFFECTIVENESS_TEST_DESIGN.md</code></p>
+<p><strong>Contents</strong>:</p>
+<ul>
+<li>Complete A/B test methodology</li>
+<li>10 realistic test scenarios</li>
+<li>Statistical analysis approach</li>
+<li>Success criteria and decision rules</li>
+<li>Implementation timeline (6 weeks)</li>
+<li>Risk assessment and mitigation</li>
+</ul>
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li><strong>Three-way comparison</strong>: Control, SQLite, Neo4j</li>
+<li><strong>Statistical rigor</strong>: Proper sample sizes, confidence intervals</li>
+<li><strong>Fair comparison</strong>: Controlled variables, randomization</li>
+<li><strong>Phased approach</strong>: Decision gates prevent over-investment</li>
+</ul>
+<h3 id="2-test-harness-skeleton-16kb">2. Test Harness Skeleton (16KB)<a class="headerlink" href="#2-test-harness-skeleton-16kb" title="Permanent link">&para;</a></h3>
+<p><strong>File</strong>: <code>scripts/memory_test_harness.py</code></p>
+<p><strong>What's Implemented</strong>:</p>
+<ul>
+<li>✅ Data models (TestRun, Metrics, Scenarios)</li>
+<li>✅ Metrics collection framework</li>
+<li>✅ Statistical analysis (t-tests, effect sizes, power analysis)</li>
+<li>✅ Configuration management (Control, SQLite, Neo4j)</li>
+<li>✅ Test execution orchestration</li>
+<li>✅ Results storage and comparison</li>
+<li>✅ CLI interface</li>
+</ul>
+<p><strong>What Needs Implementation</strong>:</p>
+<ul>
+<li>⏳ Actual scenario execution logic</li>
+<li>⏳ Integration with amplihack agents</li>
+<li>⏳ Automated code quality analysis</li>
+<li>⏳ Full report generation</li>
+<li>⏳ Visualization generation</li>
+</ul>
+<hr />
+<h2 id="test-methodology-overview">Test Methodology Overview<a class="headerlink" href="#test-methodology-overview" title="Permanent link">&para;</a></h2>
+<h3 id="three-configurations">Three Configurations<a class="headerlink" href="#three-configurations" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th>Description</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Control</strong></td>
+<td>No memory system</td>
+<td>Establish if memory provides value</td>
+</tr>
+<tr>
+<td><strong>SQLite</strong></td>
+<td>SQLite-based memory</td>
+<td>Measure basic memory effectiveness</td>
+</tr>
+<tr>
+<td><strong>Neo4j</strong></td>
+<td>Neo4j-based memory</td>
+<td>Measure graph capabilities value</td>
+</tr>
+</tbody>
+</table>
+<h3 id="four-phases">Four Phases<a class="headerlink" href="#four-phases" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Phase 1: Baseline (Control)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  ↓
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Phase 2: SQLite Testing + Analysis
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  ↓ [Decision Gate: Proceed if &gt;20% improvement]
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Phase 3: Neo4j Testing + Analysis (conditional)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  ↓ [Decision Gate: Proceed if Neo4j &gt; SQLite]
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Phase 4: Final Report + Recommendation
+</code></pre></div>
+<h3 id="sample-size">Sample Size<a class="headerlink" href="#sample-size" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>10 scenarios</strong> × <strong>5 iterations</strong> = <strong>50 runs per configuration</strong></li>
+<li>Total: <strong>150 test runs</strong> (if all phases executed)</li>
+<li>Power: ~75% to detect 20% improvement at α=0.05</li>
+</ul>
+<hr />
+<h2 id="test-scenarios-10-scenarios">Test Scenarios (10 Scenarios)<a class="headerlink" href="#test-scenarios-10-scenarios" title="Permanent link">&para;</a></h2>
+<h3 id="high-memory-benefit-expected">High Memory Benefit Expected<a class="headerlink" href="#high-memory-benefit-expected" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Repeat Authentication</strong> - Implement JWT auth twice (learning from repetition)</li>
+<li><strong>Error Resolution Learning</strong> - Same error pattern in different contexts</li>
+<li><strong>Integration Debugging</strong> - Timeout errors and retry logic patterns</li>
+</ol>
+<h3 id="medium-memory-benefit-expected">Medium Memory Benefit Expected<a class="headerlink" href="#medium-memory-benefit-expected" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Cross-Project Validation</strong> - Transfer validation patterns between projects</li>
+<li><strong>API Design with Examples</strong> - Design consistency using past patterns</li>
+<li><strong>Code Review with History</strong> - Catch patterns seen in previous reviews</li>
+<li><strong>Test Generation</strong> - Reuse test patterns from similar modules</li>
+<li><strong>Refactoring Legacy Code</strong> - Apply proven refactoring strategies</li>
+<li><strong>Multi-File Features</strong> - Use feature implementation templates</li>
+</ol>
+<h3 id="low-medium-memory-benefit-expected">Low-Medium Memory Benefit Expected<a class="headerlink" href="#low-medium-memory-benefit-expected" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Performance Optimization</strong> - Recall previous optimization strategies</li>
+</ol>
+<p>Each scenario:</p>
+<ul>
+<li>Runs 5 times per configuration</li>
+<li>Has clear success criteria</li>
+<li>Measures time, quality, errors, memory usage</li>
+</ul>
+<hr />
+<h2 id="metrics-collected">Metrics Collected<a class="headerlink" href="#metrics-collected" title="Permanent link">&para;</a></h2>
+<h3 id="primary-metrics-automated">Primary Metrics (Automated)<a class="headerlink" href="#primary-metrics-automated" title="Permanent link">&para;</a></h3>
+<p><strong>Time Metrics</strong>:</p>
+<ul>
+<li>Total execution time</li>
+<li>Time to first action</li>
+<li>Decision time</li>
+<li>Implementation time</li>
+</ul>
+<p><strong>Quality Metrics</strong>:</p>
+<ul>
+<li>Test pass rate</li>
+<li>Code complexity</li>
+<li>Error count</li>
+<li>Revision cycles</li>
+<li>PyLint score</li>
+</ul>
+<p><strong>Memory Metrics</strong>:</p>
+<ul>
+<li>Memory retrievals</li>
+<li>Memory hits</li>
+<li>Memory applied</li>
+<li>Retrieval time</li>
+</ul>
+<p><strong>Output Metrics</strong>:</p>
+<ul>
+<li>Lines of code</li>
+<li>Files modified</li>
+<li>Test coverage</li>
+<li>Documentation completeness</li>
+</ul>
+<h3 id="secondary-metrics-manual-review-20-sample">Secondary Metrics (Manual Review - 20% sample)<a class="headerlink" href="#secondary-metrics-manual-review-20-sample" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Architecture appropriateness (1-5 scale)</li>
+<li>Pattern selection quality (1-5 scale)</li>
+<li>Error handling completeness (1-5 scale)</li>
+<li>Edge case coverage (1-5 scale)</li>
+</ul>
+<hr />
+<h2 id="statistical-analysis">Statistical Analysis<a class="headerlink" href="#statistical-analysis" title="Permanent link">&para;</a></h2>
+<h3 id="tests-applied">Tests Applied<a class="headerlink" href="#tests-applied" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Paired t-test</strong> - Compare same scenarios across configurations</li>
+<li><strong>Effect size (Cohen's d)</strong> - Measure practical significance</li>
+<li><strong>Bonferroni correction</strong> - Prevent false positives from multiple tests</li>
+<li><strong>95% Confidence intervals</strong> - Quantify uncertainty</li>
+</ol>
+<h3 id="decision-criteria">Decision Criteria<a class="headerlink" href="#decision-criteria" title="Permanent link">&para;</a></h3>
+<p><strong>Proceed with SQLite if</strong>:</p>
+<ul>
+<li>✅ Statistical significance (p &lt; 0.05)</li>
+<li>✅ Medium-to-large effect (d &gt; 0.5)</li>
+<li>✅ Practical benefit (&gt;20% time reduction)</li>
+<li>✅ No negative side effects</li>
+</ul>
+<p><strong>Proceed with Neo4j if</strong>:</p>
+<ul>
+<li>✅ Statistical significance vs SQLite</li>
+<li>✅ Meaningful improvement (&gt;15% over SQLite)</li>
+<li>✅ Benefit justifies complexity</li>
+<li>✅ Scale warrants graph database (&gt;100k nodes)</li>
+</ul>
+<h3 id="effect-size-interpretation">Effect Size Interpretation<a class="headerlink" href="#effect-size-interpretation" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Cohen's d</th>
+<th>Interpretation</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt; 0.2</td>
+<td>Negligible</td>
+<td>Stop or adjust</td>
+</tr>
+<tr>
+<td>0.2 - 0.5</td>
+<td>Small</td>
+<td>Consider alternatives</td>
+</tr>
+<tr>
+<td>0.5 - 0.8</td>
+<td>Medium</td>
+<td><strong>Proceed</strong> ✅</td>
+</tr>
+<tr>
+<td>&gt; 0.8</td>
+<td>Large</td>
+<td><strong>Strong proceed</strong> ✅✅</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="implementation-timeline">Implementation Timeline<a class="headerlink" href="#implementation-timeline" title="Permanent link">&para;</a></h2>
+<h3 id="week-1-2-test-harness-development">Week 1-2: Test Harness Development<a class="headerlink" href="#week-1-2-test-harness-development" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Implement scenario execution logic</li>
+<li>Integrate with amplihack agents</li>
+<li>Add automated code analysis</li>
+<li>Validate with dry runs</li>
+</ul>
+<h3 id="week-3-phase-1-baseline-testing">Week 3: Phase 1 - Baseline Testing<a class="headerlink" href="#week-3-phase-1-baseline-testing" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Run 50 control tests (no memory)</li>
+<li>Collect all metrics</li>
+<li>Analyze baseline statistics</li>
+<li>Document baseline results</li>
+</ul>
+<h3 id="week-4-phase-2-sqlite-testing">Week 4: Phase 2 - SQLite Testing<a class="headerlink" href="#week-4-phase-2-sqlite-testing" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Run 50 SQLite memory tests</li>
+<li>Statistical comparison to baseline</li>
+<li><strong>Decision Gate</strong>: Proceed to Phase 3?</li>
+</ul>
+<h3 id="week-5-phase-3-neo4j-testing-conditional">Week 5: Phase 3 - Neo4j Testing (conditional)<a class="headerlink" href="#week-5-phase-3-neo4j-testing-conditional" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Run 50 Neo4j memory tests (if Phase 2 succeeds)</li>
+<li>Statistical comparison to SQLite</li>
+<li><strong>Decision Gate</strong>: Recommend Neo4j?</li>
+</ul>
+<h3 id="week-6-phase-4-analysis-reporting">Week 6: Phase 4 - Analysis &amp; Reporting<a class="headerlink" href="#week-6-phase-4-analysis-reporting" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Comprehensive analysis</li>
+<li>Generate visualizations</li>
+<li>Write final report</li>
+<li><strong>Final Decision</strong>: Deploy memory system?</li>
+</ul>
+<p><strong>Total</strong>: 6 weeks from start to decision</p>
+<hr />
+<h2 id="expected-results">Expected Results<a class="headerlink" href="#expected-results" title="Permanent link">&para;</a></h2>
+<p>Based on research findings, we hypothesize:</p>
+<h3 id="memory-vs-no-memory-control-vs-sqlite">Memory vs No Memory (Control vs SQLite)<a class="headerlink" href="#memory-vs-no-memory-control-vs-sqlite" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Expected Improvement</th>
+<th>Confidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Execution Time</td>
+<td><strong>-20% to -35%</strong></td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Error Count</td>
+<td><strong>-50% to -70%</strong></td>
+<td>High</td>
+</tr>
+<tr>
+<td>Quality Score</td>
+<td><strong>+25% to +40%</strong></td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Pattern Reuse</td>
+<td><strong>+60% to +80%</strong></td>
+<td>High</td>
+</tr>
+</tbody>
+</table>
+<h3 id="neo4j-vs-sqlite">Neo4j vs SQLite<a class="headerlink" href="#neo4j-vs-sqlite" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Expected Improvement</th>
+<th>Confidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Execution Time</td>
+<td><strong>-5% to -15%</strong></td>
+<td>Low-Medium</td>
+</tr>
+<tr>
+<td>Query Performance</td>
+<td><strong>-10% to -30%</strong></td>
+<td>Medium (at scale)</td>
+</tr>
+<tr>
+<td>Graph Queries</td>
+<td><strong>+40% to +60%</strong></td>
+<td>High (if needed)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Insight</strong>: Neo4j benefit only appears at scale (&gt;100k nodes) or when graph traversal is critical.</p>
+<hr />
+<h2 id="risk-assessment">Risk Assessment<a class="headerlink" href="#risk-assessment" title="Permanent link">&para;</a></h2>
+<h3 id="overall-risk-medium-manageable">Overall Risk: MEDIUM (Manageable)<a class="headerlink" href="#overall-risk-medium-manageable" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Probability</th>
+<th>Impact</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Insufficient samples</td>
+<td>Low</td>
+<td>Medium</td>
+<td>Run additional iterations if needed</td>
+</tr>
+<tr>
+<td>Confounding variables</td>
+<td>Medium</td>
+<td>High</td>
+<td>Strict environment control</td>
+</tr>
+<tr>
+<td>Test harness bugs</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Extensive validation before main runs</td>
+</tr>
+<tr>
+<td>Long test duration</td>
+<td>Medium</td>
+<td>Low</td>
+<td>Parallelize where possible</td>
+</tr>
+<tr>
+<td>Memory provides no value</td>
+<td>Low</td>
+<td>High</td>
+<td><strong>Decision gates prevent over-investment</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="success-criteria">Success Criteria<a class="headerlink" href="#success-criteria" title="Permanent link">&para;</a></h2>
+<h3 id="minimum-success-required-for-proceed">Minimum Success (Required for Proceed)<a class="headerlink" href="#minimum-success-required-for-proceed" title="Permanent link">&para;</a></h3>
+<ol>
+<li>✓ Statistical significance (p &lt; 0.05)</li>
+<li>✓ Medium effect size (d &gt; 0.5)</li>
+<li>✓ Practical improvement (&gt;20%)</li>
+<li>✓ No major negative side effects</li>
+</ol>
+<h3 id="stretch-success-desired">Stretch Success (Desired)<a class="headerlink" href="#stretch-success-desired" title="Permanent link">&para;</a></h3>
+<ol>
+<li>✓ Large effect size (d &gt; 0.8)</li>
+<li>✓ Strong significance (p &lt; 0.01)</li>
+<li>✓ Error reduction &gt;50%</li>
+<li>✓ Quality improvement &gt;15%</li>
+</ol>
+<hr />
+<h2 id="key-design-decisions">Key Design Decisions<a class="headerlink" href="#key-design-decisions" title="Permanent link">&para;</a></h2>
+<h3 id="1-three-way-comparison-not-two-way">1. Three-Way Comparison (Not Two-Way)<a class="headerlink" href="#1-three-way-comparison-not-two-way" title="Permanent link">&para;</a></h3>
+<p><strong>Decision</strong>: Test Control, SQLite, AND Neo4j</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Establishes if memory provides ANY value (Control vs SQLite)</li>
+<li>Establishes if Neo4j provides INCREMENTAL value (SQLite vs Neo4j)</li>
+<li>Prevents premature optimization (start with SQLite)</li>
+</ul>
+<h3 id="2-phased-approach-with-decision-gates">2. Phased Approach with Decision Gates<a class="headerlink" href="#2-phased-approach-with-decision-gates" title="Permanent link">&para;</a></h3>
+<p><strong>Decision</strong>: Phase 2 gates Phase 3</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Don't test Neo4j if SQLite fails to show benefit</li>
+<li>Prevents wasted effort on advanced system if basic doesn't work</li>
+<li>Aligns with project philosophy (ruthless simplicity)</li>
+</ul>
+<h3 id="3-50-runs-per-configuration">3. 50 Runs Per Configuration<a class="headerlink" href="#3-50-runs-per-configuration" title="Permanent link">&para;</a></h3>
+<p><strong>Decision</strong>: 10 scenarios × 5 iterations = 50 runs</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>75% power to detect 20% improvement</li>
+<li>Reasonable time investment (8-10 hours per config)</li>
+<li>Better than 64 (80% power) would require</li>
+</ul>
+<h3 id="4-paired-t-test-not-independent">4. Paired T-Test (Not Independent)<a class="headerlink" href="#4-paired-t-test-not-independent" title="Permanent link">&para;</a></h3>
+<p><strong>Decision</strong>: Use paired t-test comparing same scenarios</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Higher statistical power (controls for scenario difficulty)</li>
+<li>More sensitive to differences</li>
+<li>Appropriate for within-subjects design</li>
+</ul>
+<h3 id="5-mock-data-initially">5. Mock Data Initially<a class="headerlink" href="#5-mock-data-initially" title="Permanent link">&para;</a></h3>
+<p><strong>Decision</strong>: Test harness uses mock data until scenarios implemented</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Can validate statistical analysis independently</li>
+<li>Can test harness orchestration</li>
+<li>Realistic metrics can be swapped in later</li>
+</ul>
+<hr />
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<h3 id="immediate-this-week">Immediate (This Week)<a class="headerlink" href="#immediate-this-week" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Review Test Design</strong></li>
+<li>Architect reviews methodology</li>
+<li>Team reviews scenarios</li>
+<li>
+<p>Stakeholders approve timeline</p>
+</li>
+<li>
+<p><strong>Make Go/No-Go Decision</strong></p>
+</li>
+<li>Approve 6-week testing phase</li>
+<li>Allocate resources (1 FTE)</li>
+<li>
+<p>Set success criteria</p>
+</li>
+<li>
+<p><strong>Prepare for Implementation</strong></p>
+</li>
+<li>Create project branch: <code>feat/memory-effectiveness-testing</code></li>
+<li>Assign developer</li>
+<li>Schedule kickoff</li>
+</ol>
+<h3 id="week-1-implementation">Week 1 Implementation<a class="headerlink" href="#week-1-implementation" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Scenario Implementation</strong></li>
+<li>Implement 10 scenario execution functions</li>
+<li>Integrate with amplihack agents</li>
+<li>
+<p>Add real metric collection</p>
+</li>
+<li>
+<p><strong>Validation</strong></p>
+</li>
+<li>Dry run with 1-2 scenarios</li>
+<li>Verify metrics collection</li>
+<li>
+<p>Test statistical analysis</p>
+</li>
+<li>
+<p><strong>Documentation</strong></p>
+</li>
+<li>Document scenario execution process</li>
+<li>Create troubleshooting guide</li>
+<li>Update implementation notes</li>
+</ol>
+<hr />
+<h2 id="questions-answers">Questions &amp; Answers<a class="headerlink" href="#questions-answers" title="Permanent link">&para;</a></h2>
+<h3 id="q-why-not-just-implement-memory-and-see-if-it-works">Q: Why not just implement memory and see if it works?<a class="headerlink" href="#q-why-not-just-implement-memory-and-see-if-it-works" title="Permanent link">&para;</a></h3>
+<p><strong>A</strong>: Because:</p>
+<ol>
+<li>"See if it works" is subjective - we need objective measures</li>
+<li>Without baseline, can't prove memory is the improvement factor</li>
+<li>Statistical rigor prevents confirmation bias</li>
+<li>Justifies investment with data</li>
+</ol>
+<h3 id="q-why-test-neo4j-if-research-says-sqlite-is-sufficient">Q: Why test Neo4j if research says SQLite is sufficient?<a class="headerlink" href="#q-why-test-neo4j-if-research-says-sqlite-is-sufficient" title="Permanent link">&para;</a></h3>
+<p><strong>A</strong>: Because:</p>
+<ol>
+<li>Research is theoretical - testing validates assumptions</li>
+<li>May discover graph benefits not anticipated</li>
+<li>Provides data for future migration decision</li>
+<li>Small incremental cost (1 week) for complete picture</li>
+</ol>
+<h3 id="q-what-if-sqlite-shows-no-benefit">Q: What if SQLite shows no benefit?<a class="headerlink" href="#q-what-if-sqlite-shows-no-benefit" title="Permanent link">&para;</a></h3>
+<p><strong>A</strong>: Then we:</p>
+<ol>
+<li>Stop testing (don't proceed to Neo4j)</li>
+<li>Investigate WHY (wrong metrics? bad scenarios? memory not helpful?)</li>
+<li>Adjust approach or abandon memory system</li>
+<li><strong>This is a feature, not a bug</strong> - prevents wasted effort</li>
+</ol>
+<h3 id="q-50-runs-seems-like-a-lot-can-we-use-fewer">Q: 50 runs seems like a lot - can we use fewer?<a class="headerlink" href="#q-50-runs-seems-like-a-lot-can-we-use-fewer" title="Permanent link">&para;</a></h3>
+<p><strong>A</strong>: We could, but:</p>
+<ul>
+<li>30 runs → 60% power (too low)</li>
+<li>40 runs → 70% power (marginal)</li>
+<li>50 runs → 75% power (acceptable)</li>
+<li>64 runs → 80% power (ideal but time-consuming)</li>
+</ul>
+<p>50 is the minimum for reasonable confidence.</p>
+<h3 id="q-how-do-we-ensure-fair-comparison">Q: How do we ensure fair comparison?<a class="headerlink" href="#q-how-do-we-ensure-fair-comparison" title="Permanent link">&para;</a></h3>
+<p><strong>A</strong>: By:</p>
+<ol>
+<li>Same scenarios across all configs</li>
+<li>Same agent prompts</li>
+<li>Same environment (machine, model)</li>
+<li>Randomized order (prevent ordering effects)</li>
+<li>Blinded execution (automated harness)</li>
+<li>Statistical controls (paired t-test)</li>
+</ol>
+<hr />
+<h2 id="files-delivered">Files Delivered<a class="headerlink" href="#files-delivered" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docs/memory/
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── EFFECTIVENESS_TEST_DESIGN.md    # Complete test methodology (28KB)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>├── AB_TEST_SUMMARY.md              # This file (11KB)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>└── [Future]
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    ├── BASELINE_RESULTS.md         # Baseline test results
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    ├── SQLITE_RESULTS.md           # SQLite test results
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    ├── NEO4J_RESULTS.md            # Neo4j test results (if Phase 3)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    └── COMPARISON_RESULTS.md       # Final comparison report
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>scripts/
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>└── memory_test_harness.py          # Test harness implementation (16KB)
+</code></pre></div>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>We have designed a <strong>rigorous, fair, and scientifically sound</strong> A/B test methodology for memory system validation:</p>
+<p>✅ <strong>Complete test design</strong> with 10 realistic scenarios
+✅ <strong>Statistical rigor</strong> with proper sample sizes and analysis
+✅ <strong>Phased approach</strong> with decision gates
+✅ <strong>Working test harness</strong> skeleton ready for implementation
+✅ <strong>Clear decision criteria</strong> for go/no-go decisions
+✅ <strong>6-week timeline</strong> from start to final decision</p>
+<p><strong>Next Action</strong>: Review, approve, and proceed with implementation.</p>
+<hr />
+<p><strong>Status</strong>: ✅ Design Complete - Ready for Implementation Review
+<strong>Architect</strong>: AI Agent
+<strong>Date</strong>: 2025-11-03</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>

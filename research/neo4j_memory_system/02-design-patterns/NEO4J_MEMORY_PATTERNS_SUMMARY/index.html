@@ -1,0 +1,2215 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI-powered development framework for Claude Code">
+      
+      
+      
+        <link rel="canonical" href="https://rysweet.github.io/MicrosoftHackathon2025-AgenticCoding/research/neo4j_memory_system/02-design-patterns/NEO4J_MEMORY_PATTERNS_SUMMARY/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Neo4j Memory Patterns - Quick Reference - amplihack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#neo4j-memory-patterns-quick-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="amplihack" class="md-header__button md-logo" aria-label="amplihack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            amplihack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Neo4j Memory Patterns - Quick Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amplihack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../PREREQUISITES/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../PHILOSOPHY/" class="md-tabs__link">
+          
+  
+  
+  Core Concepts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../AUTO_MODE/" class="md-tabs__link">
+          
+  
+  
+  Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../DEVELOPING_AMPLIHACK/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../BENCHMARKING/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="amplihack" class="md-nav__button md-logo" aria-label="amplihack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    amplihack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amplihack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../PREREQUISITES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../AUTO_MODE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../PROXY_CONFIG_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../PHILOSOPHY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../WORKFLOW_COMPLETION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Features
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../AUTO_MODE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../agent-bundle-generator-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Bundles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../document_driven_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Document-Driven Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../features/power-steering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Power-Steering Mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../features/power-steering/customization-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Power-Steering Customization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../DEVELOPING_AMPLIHACK/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../IMPLEMENTATION_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../CREATE_YOUR_OWN_TOOLS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../BENCHMARKING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../DISCOVERIES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discoveries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pattern-selection-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern Selection Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pattern-dependency-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern Dependency Graph
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-decision-matrices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Decision Matrices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Decision Matrices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#matrix-1-architecture-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Matrix 1: Architecture Selection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matrix-2-performance-vs-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Matrix 2: Performance vs. Complexity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matrix-3-memory-type-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Matrix 3: Memory Type Selection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pattern-combinations-recipes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern Combinations (Recipes)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pattern Combinations (Recipes)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recipe-1-production-ai-coding-assistant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe 1: Production AI Coding Assistant
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recipe-2-multi-agent-collaborative-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe 2: Multi-Agent Collaborative System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recipe-3-high-performance-rag-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe 3: High-Performance RAG System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recipe-4-minimal-viable-memory-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe 4: Minimal Viable Memory (MVP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anti-pattern-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anti-Pattern Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pattern-maturity-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern Maturity Levels
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pattern Maturity Levels">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#level-1-prototype-1-2-weeks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 1: Prototype (1-2 weeks)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#level-2-functional-2-4-weeks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 2: Functional (2-4 weeks)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#level-3-production-ready-4-8-weeks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 3: Production-Ready (4-8 weeks)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#level-4-advanced-8-12-weeks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 4: Advanced (8-12 weeks)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-targets-by-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Targets by Level
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Started Checklist
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting Started Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#week-1-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 1: Foundation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-2-core-functionality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 2: Core Functionality
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-3-4-code-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 3-4: Code Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-5-6-advanced-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 5-6: Advanced Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-7-8-production-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 7-8: Production Hardening
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Guide
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting Guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-slow-queries-1s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Slow Queries (&gt; 1s)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-memory-inconsistency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Memory Inconsistency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-high-storage-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: High Storage Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-poor-retrieval-accuracy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Poor Retrieval Accuracy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-metrics-to-track" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Metrics to Track
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Metrics to Track">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#performance-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quality-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quality Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resource-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="neo4j-memory-patterns-quick-reference">Neo4j Memory Patterns - Quick Reference<a class="headerlink" href="#neo4j-memory-patterns-quick-reference" title="Permanent link">&para;</a></h1>
+<p><strong>Visual guide to choosing the right patterns for your Neo4j-based memory system</strong></p>
+<hr />
+<h2 id="pattern-selection-flow">Pattern Selection Flow<a class="headerlink" href="#pattern-selection-flow" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>START: Building AI Coding Agent Memory System
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├─ What&#39;s your project scale?
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ├─ Small (&lt; 10k nodes)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │  └─&gt; Use: SQLite + Simple Schema
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │      Patterns: Basic episodic + semantic only
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  ├─ Medium (10k-1M nodes) ← MOST PROJECTS
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  └─&gt; Use: Neo4j Community + Unified Graph
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  │      Patterns: Three-Tier Hierarchy (1.1)
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  │               + Temporal Tracking (1.2)
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  │               + Hybrid Search (1.3)
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  │               + Code-Aware Memory (2.3)
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  └─ Large (&gt; 1M nodes)
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│     └─&gt; Use: Neo4j Enterprise + Federated
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│         Patterns: Multi-Modal Architecture (1.5)
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                  + Federated System (2.2)
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>├─ What memory types do you need?
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  ├─ Conversations only
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  │  └─&gt; Episodic Memory (basic)
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  ├─ Conversations + Code understanding
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  │  └─&gt; Episodic + Semantic + Code Graph (2.3)
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  ├─ Full AI agent (errors, patterns, workflows)
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  │  └─&gt; Multi-Modal Memory (1.5)
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  │      - Episodic (conversations, events)
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  │      - Semantic (entities, relationships)
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  │      - Procedural (how-to, workflows)
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  │      - Code Graph (AST, dependencies)
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  └─ Multi-agent collaboration
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│     └─&gt; Add Agent Collaboration Pattern (7.3)
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>└─ What&#39;s your performance requirement?
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>   ├─ Interactive (&lt; 100ms)
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>   │  └─&gt; Patterns: Incremental Updates (1.4)
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>   │                + Caching (6.3)
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>   │                + Batch Operations (6.1)
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>   │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>   ├─ Near real-time (&lt; 1s)
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>   │  └─&gt; Patterns: Hybrid Search (1.3)
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>   │                + Query Optimization (6.2)
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>   │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>   └─ Batch acceptable (&gt; 1s)
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>      └─&gt; Standard patterns sufficient
+</code></pre></div>
+<hr />
+<h2 id="pattern-dependency-graph">Pattern Dependency Graph<a class="headerlink" href="#pattern-dependency-graph" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>FOUNDATIONAL LAYER (Start here - Required for all systems)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>┌────────────────────────────────────────────────────────────┐
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│ 1. Three-Tier Hierarchical Graph (1.1)                    │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│    - Episodic → Semantic → Community layers               │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│    - Foundation for all retrieval patterns                │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│                                                            │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│ 2. Temporal Validity Tracking (1.2)                       │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│    - Bi-temporal model (valid time + transaction time)    │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│    - Essential for debugging and knowledge evolution      │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                            │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│ 3. Graph Schema Patterns (Section 3)                      │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│    - Labeled property graph with type hierarchy           │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│    - Relationship semantics with properties               │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│    - Index strategy for performance                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>└────────────────────────────────────────────────────────────┘
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>                            ↓ enables
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>CORE PATTERNS LAYER (Build upon foundations)
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>┌────────────────────────────────────────────────────────────┐
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│ 4. Hybrid Search (1.3)                                     │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│    - Vector + Graph + Temporal                            │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│    - 94.8% accuracy (Zep benchmarks)                      │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│    Requires: Hierarchical graph + Temporal tracking       │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│                                                            │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│ 5. Incremental Graph Updates (1.4)                        │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    - Update only affected nodes (&lt; 1s per file)           │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│    - Enables real-time memory                             │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│    Requires: Schema patterns                              │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                            │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│ 6. Multi-Modal Memory Architecture (1.5)                  │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│    - Separate components (episodic, semantic, procedural) │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│    - Meta-manager for routing                             │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│    Requires: Temporal tracking                            │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>└────────────────────────────────────────────────────────────┘
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>                            ↓ enables
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>SPECIALIZED PATTERNS LAYER (Domain-specific)
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>┌────────────────────────────────────────────────────────────┐
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│ 7. Code-Aware Memory Graph (2.3)                          │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│    - Integrates AST + dependencies                        │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│    - Links code to conversations and errors               │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│    Requires: Hierarchical graph + Incremental updates     │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│                                                            │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│ 8. Error Pattern Learning (5.4)                           │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│    - Learn from debugging sessions                        │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│    - Track success rates of procedures                    │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│    Requires: Multi-modal memory                           │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│                                                            │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│ 9. Agent Collaboration Memory (7.3)                       │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│    - Share insights between agents                        │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│    - Track collaborative work                             │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│    Requires: Multi-modal memory + Temporal tracking       │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>└────────────────────────────────────────────────────────────┘
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>                            ↓ enables
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>OPTIMIZATION LAYER (Performance and scale)
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>┌────────────────────────────────────────────────────────────┐
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>│ 10. Performance Patterns (Section 6)                      │
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>│     - Batch operations (6.1): 588x speedup                │
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>│     - Query optimization (6.2): &lt;100ms queries            │
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>│     - Caching strategy (6.3): 10-100x speedup             │
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>│     - Periodic community recomputation (6.4)              │
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>│     Requires: All above patterns                          │
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>└────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="quick-decision-matrices">Quick Decision Matrices<a class="headerlink" href="#quick-decision-matrices" title="Permanent link">&para;</a></h2>
+<h3 id="matrix-1-architecture-selection">Matrix 1: Architecture Selection<a class="headerlink" href="#matrix-1-architecture-selection" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Your Situation</th>
+<th>Use This Architecture</th>
+<th>Key Patterns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Single agent, medium codebase</td>
+<td>Unified Graph (2.1)</td>
+<td>1.1, 1.2, 1.3, 2.3</td>
+</tr>
+<tr>
+<td>Multiple agents, large scale</td>
+<td>Federated System (2.2)</td>
+<td>1.5, 2.2, 7.3</td>
+</tr>
+<tr>
+<td>Coding assistant with debugging</td>
+<td>Code-Aware + Procedural</td>
+<td>2.3, 5.4, 1.4</td>
+</tr>
+<tr>
+<td>Multi-project memory</td>
+<td>Per-project Neo4j containers</td>
+<td>1.1, 1.2, 1.3</td>
+</tr>
+<tr>
+<td>RAG system</td>
+<td>Unified Graph + Hybrid Search</td>
+<td>2.1, 1.3, 6.3</td>
+</tr>
+</tbody>
+</table>
+<h3 id="matrix-2-performance-vs-complexity">Matrix 2: Performance vs. Complexity<a class="headerlink" href="#matrix-2-performance-vs-complexity" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Setup Complexity</th>
+<th>Runtime Complexity</th>
+<th>Performance Gain</th>
+<th>When to Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Basic episodic only</td>
+<td>Low</td>
+<td>Low</td>
+<td>Baseline</td>
+<td>Prototypes</td>
+</tr>
+<tr>
+<td>+ Semantic layer</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>2x retrieval</td>
+<td>Small projects</td>
+</tr>
+<tr>
+<td>+ Community layer</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>3x retrieval</td>
+<td>Medium projects</td>
+</tr>
+<tr>
+<td>+ Hybrid search</td>
+<td>High</td>
+<td>Medium</td>
+<td>5x accuracy</td>
+<td>Production</td>
+</tr>
+<tr>
+<td>+ Caching</td>
+<td>Medium</td>
+<td>Low</td>
+<td>10x speed</td>
+<td>High traffic</td>
+</tr>
+<tr>
+<td>+ Batch operations</td>
+<td>Low</td>
+<td>Low</td>
+<td>100x writes</td>
+<td>Large imports</td>
+</tr>
+</tbody>
+</table>
+<h3 id="matrix-3-memory-type-selection">Matrix 3: Memory Type Selection<a class="headerlink" href="#matrix-3-memory-type-selection" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>What You're Building</th>
+<th>Episodic</th>
+<th>Semantic</th>
+<th>Procedural</th>
+<th>Code Graph</th>
+<th>Community</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chat bot</td>
+<td>✅ Required</td>
+<td>✅ Recommended</td>
+<td>❌ Optional</td>
+<td>❌ No</td>
+<td>❌ Optional</td>
+</tr>
+<tr>
+<td>Code navigation tool</td>
+<td>✅ Recommended</td>
+<td>✅ Required</td>
+<td>❌ Optional</td>
+<td>✅ Required</td>
+<td>✅ Recommended</td>
+</tr>
+<tr>
+<td>Debugging assistant</td>
+<td>✅ Required</td>
+<td>✅ Required</td>
+<td>✅ Required</td>
+<td>✅ Required</td>
+<td>❌ Optional</td>
+</tr>
+<tr>
+<td>AI coding agent (full)</td>
+<td>✅ Required</td>
+<td>✅ Required</td>
+<td>✅ Required</td>
+<td>✅ Required</td>
+<td>✅ Recommended</td>
+</tr>
+<tr>
+<td>Multi-agent system</td>
+<td>✅ Required</td>
+<td>✅ Required</td>
+<td>✅ Recommended</td>
+<td>✅ Recommended</td>
+<td>✅ Required</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="pattern-combinations-recipes">Pattern Combinations (Recipes)<a class="headerlink" href="#pattern-combinations-recipes" title="Permanent link">&para;</a></h2>
+<h3 id="recipe-1-production-ai-coding-assistant">Recipe 1: Production AI Coding Assistant<a class="headerlink" href="#recipe-1-production-ai-coding-assistant" title="Permanent link">&para;</a></h3>
+<p><strong>Goal</strong>: Real-time coding assistance with debugging and pattern learning</p>
+<p><strong>Patterns Stack</strong>:</p>
+<ol>
+<li>✅ Three-Tier Hierarchical Graph (1.1) - Foundation</li>
+<li>✅ Temporal Validity Tracking (1.2) - Track knowledge evolution</li>
+<li>✅ Hybrid Search (1.3) - 94.8% retrieval accuracy</li>
+<li>✅ Code-Aware Memory (2.3) - Integrate AST + dependencies</li>
+<li>✅ Incremental Updates (1.4) - &lt; 1s file updates</li>
+<li>✅ Error Pattern Learning (5.4) - Learn from debugging</li>
+<li>✅ Batch Operations (6.1) - Fast bulk imports</li>
+<li>✅ Caching Strategy (6.3) - &lt; 100ms queries</li>
+</ol>
+<p><strong>Expected Performance</strong>:</p>
+<ul>
+<li>Query latency: 50-100ms (p95)</li>
+<li>File update: &lt; 1s</li>
+<li>Retrieval accuracy: &gt; 90%</li>
+<li>Storage: ~500MB per medium project</li>
+</ul>
+<p><strong>Implementation Time</strong>: 6-8 weeks</p>
+<hr />
+<h3 id="recipe-2-multi-agent-collaborative-system">Recipe 2: Multi-Agent Collaborative System<a class="headerlink" href="#recipe-2-multi-agent-collaborative-system" title="Permanent link">&para;</a></h3>
+<p><strong>Goal</strong>: Multiple AI agents sharing knowledge and collaborating</p>
+<p><strong>Patterns Stack</strong>:</p>
+<ol>
+<li>✅ Multi-Modal Memory Architecture (1.5) - Separate components</li>
+<li>✅ Temporal Validity Tracking (1.2) - Handle conflicting knowledge</li>
+<li>✅ Agent Collaboration Memory (7.3) - Share insights</li>
+<li>✅ Workflow State Management (7.2) - Track multi-step tasks</li>
+<li>✅ Hybrid Search (1.3) - Cross-agent retrieval</li>
+<li>✅ Query Optimization (6.2) - Handle high query volume</li>
+</ol>
+<p><strong>Expected Performance</strong>:</p>
+<ul>
+<li>Cross-agent latency: 100-200ms</li>
+<li>Workflow persistence: &lt; 50ms</li>
+<li>Collaboration overhead: &lt; 10% vs single agent</li>
+</ul>
+<p><strong>Implementation Time</strong>: 8-10 weeks</p>
+<hr />
+<h3 id="recipe-3-high-performance-rag-system">Recipe 3: High-Performance RAG System<a class="headerlink" href="#recipe-3-high-performance-rag-system" title="Permanent link">&para;</a></h3>
+<p><strong>Goal</strong>: Retrieval-augmented generation with maximum accuracy</p>
+<p><strong>Patterns Stack</strong>:</p>
+<ol>
+<li>✅ Unified Graph Model (2.1) - Single source of truth</li>
+<li>✅ Hybrid Search (1.3) - Vector + Graph + Temporal</li>
+<li>✅ Multi-Stage Retrieval Pipeline (4.1) - Progressive refinement</li>
+<li>✅ Batch Operations (6.1) - Fast document ingestion</li>
+<li>✅ Caching Strategy (6.3) - Reduce query latency</li>
+<li>✅ Query Optimization (6.2) - &lt;100ms retrieval</li>
+</ol>
+<p><strong>Expected Performance</strong>:</p>
+<ul>
+<li>Retrieval accuracy: &gt; 90%</li>
+<li>Query latency: 50-150ms (p95)</li>
+<li>Indexing speed: 10k docs/minute</li>
+<li>Storage efficiency: 99.9% reduction vs full-text (MIRIX benchmark)</li>
+</ul>
+<p><strong>Implementation Time</strong>: 4-6 weeks</p>
+<hr />
+<h3 id="recipe-4-minimal-viable-memory-mvp">Recipe 4: Minimal Viable Memory (MVP)<a class="headerlink" href="#recipe-4-minimal-viable-memory-mvp" title="Permanent link">&para;</a></h3>
+<p><strong>Goal</strong>: Get started quickly with core functionality</p>
+<p><strong>Patterns Stack</strong> (Minimum):</p>
+<ol>
+<li>✅ Three-Tier Hierarchical Graph (1.1) - Episodic + Semantic only</li>
+<li>✅ Basic Schema (3.1) - Simple labeled property graph</li>
+<li>✅ Index Strategy (3.3) - Critical indexes only</li>
+<li>✅ Query-Based Retrieval (5.1) - On-demand context</li>
+</ol>
+<p><strong>Expected Performance</strong>:</p>
+<ul>
+<li>Query latency: 100-500ms</li>
+<li>Basic functionality only</li>
+<li>Good for prototyping</li>
+</ul>
+<p><strong>Implementation Time</strong>: 1-2 weeks</p>
+<hr />
+<h2 id="anti-pattern-checklist">Anti-Pattern Checklist<a class="headerlink" href="#anti-pattern-checklist" title="Permanent link">&para;</a></h2>
+<p>Before deploying, verify you're NOT doing these:</p>
+<ul>
+<li>[ ] ❌ String concatenation in queries (use parameters)</li>
+<li>[ ] ❌ Rebuilding entire graph on file changes (use incremental updates)</li>
+<li>[ ] ❌ Storing large content in graph nodes (use external storage)</li>
+<li>[ ] ❌ Deleting nodes when invalidated (use temporal invalidation)</li>
+<li>[ ] ❌ Using py2neo or embedded Neo4j (use official driver)</li>
+<li>[ ] ❌ Unbounded graph traversals (add depth limits)</li>
+<li>[ ] ❌ No indexes on filtered properties (create strategic indexes)</li>
+<li>[ ] ❌ Individual node creates (use batch operations)</li>
+</ul>
+<hr />
+<h2 id="pattern-maturity-levels">Pattern Maturity Levels<a class="headerlink" href="#pattern-maturity-levels" title="Permanent link">&para;</a></h2>
+<h3 id="level-1-prototype-1-2-weeks">Level 1: Prototype (1-2 weeks)<a class="headerlink" href="#level-1-prototype-1-2-weeks" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Basic episodic memory</li>
+<li>Simple queries</li>
+<li>No optimization</li>
+<li><strong>Patterns</strong>: Basic schema only</li>
+</ul>
+<h3 id="level-2-functional-2-4-weeks">Level 2: Functional (2-4 weeks)<a class="headerlink" href="#level-2-functional-2-4-weeks" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Episodic + Semantic layers</li>
+<li>Query-based retrieval</li>
+<li>Basic indexing</li>
+<li><strong>Patterns</strong>: 1.1, 3.1, 3.3</li>
+</ul>
+<h3 id="level-3-production-ready-4-8-weeks">Level 3: Production-Ready (4-8 weeks)<a class="headerlink" href="#level-3-production-ready-4-8-weeks" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Three-tier hierarchy</li>
+<li>Hybrid search</li>
+<li>Incremental updates</li>
+<li>Performance optimization</li>
+<li><strong>Patterns</strong>: 1.1, 1.2, 1.3, 1.4, 6.1, 6.2, 6.3</li>
+</ul>
+<h3 id="level-4-advanced-8-12-weeks">Level 4: Advanced (8-12 weeks)<a class="headerlink" href="#level-4-advanced-8-12-weeks" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Multi-modal architecture</li>
+<li>Agent collaboration</li>
+<li>Procedural learning</li>
+<li>Cross-project memory</li>
+<li><strong>Patterns</strong>: All applicable patterns</li>
+</ul>
+<hr />
+<h2 id="performance-targets-by-level">Performance Targets by Level<a class="headerlink" href="#performance-targets-by-level" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Prototype</th>
+<th>Functional</th>
+<th>Production</th>
+<th>Advanced</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Query latency (p95)</td>
+<td>&lt; 1s</td>
+<td>&lt; 500ms</td>
+<td>&lt; 100ms</td>
+<td>&lt; 50ms</td>
+</tr>
+<tr>
+<td>File update</td>
+<td>N/A</td>
+<td>&lt; 10s</td>
+<td>&lt; 1s</td>
+<td>&lt; 500ms</td>
+</tr>
+<tr>
+<td>Retrieval accuracy</td>
+<td>60%</td>
+<td>75%</td>
+<td>90%</td>
+<td>95%</td>
+</tr>
+<tr>
+<td>Max nodes</td>
+<td>10k</td>
+<td>100k</td>
+<td>1M</td>
+<td>10M+</td>
+</tr>
+<tr>
+<td>Concurrent users</td>
+<td>1</td>
+<td>10</td>
+<td>100</td>
+<td>1000+</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="getting-started-checklist">Getting Started Checklist<a class="headerlink" href="#getting-started-checklist" title="Permanent link">&para;</a></h2>
+<h3 id="week-1-foundation">Week 1: Foundation<a class="headerlink" href="#week-1-foundation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Set up Neo4j Community Edition (Docker)</li>
+<li>[ ] Implement basic episodic memory (conversations)</li>
+<li>[ ] Create foundational schema (Episode, Entity nodes)</li>
+<li>[ ] Add temporal properties (timestamp, t_valid, t_invalid)</li>
+<li>[ ] Create basic indexes (name, timestamp)</li>
+</ul>
+<h3 id="week-2-core-functionality">Week 2: Core Functionality<a class="headerlink" href="#week-2-core-functionality" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Add semantic memory (entity extraction)</li>
+<li>[ ] Implement basic retrieval (text search)</li>
+<li>[ ] Link episodes to entities (MENTIONS relationships)</li>
+<li>[ ] Test basic queries</li>
+<li>[ ] Benchmark query performance</li>
+</ul>
+<h3 id="week-3-4-code-integration">Week 3-4: Code Integration<a class="headerlink" href="#week-3-4-code-integration" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Integrate blarify or tree-sitter (code parsing)</li>
+<li>[ ] Build code graph (functions, classes, calls)</li>
+<li>[ ] Link code to episodes (MODIFIED, OCCURRED_IN)</li>
+<li>[ ] Implement incremental updates</li>
+<li>[ ] Test file change detection</li>
+</ul>
+<h3 id="week-5-6-advanced-features">Week 5-6: Advanced Features<a class="headerlink" href="#week-5-6-advanced-features" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Add procedural memory (error patterns)</li>
+<li>[ ] Implement hybrid search (vector + graph)</li>
+<li>[ ] Add community layer (clustering)</li>
+<li>[ ] Performance optimization (batching, caching)</li>
+<li>[ ] Test multi-hop reasoning</li>
+</ul>
+<h3 id="week-7-8-production-hardening">Week 7-8: Production Hardening<a class="headerlink" href="#week-7-8-production-hardening" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Add comprehensive error handling</li>
+<li>[ ] Implement backup/restore</li>
+<li>[ ] Set up monitoring (query performance, storage)</li>
+<li>[ ] Load testing (1000+ queries)</li>
+<li>[ ] Documentation</li>
+</ul>
+<hr />
+<h2 id="troubleshooting-guide">Troubleshooting Guide<a class="headerlink" href="#troubleshooting-guide" title="Permanent link">&para;</a></h2>
+<h3 id="problem-slow-queries-1s">Problem: Slow Queries (&gt; 1s)<a class="headerlink" href="#problem-slow-queries-1s" title="Permanent link">&para;</a></h3>
+<p><strong>Check</strong>:</p>
+<ol>
+<li>Are indexes created? (Pattern 3.3)</li>
+<li>Using parameters? (not concatenation)</li>
+<li>Limiting traversal depth? (<code>CALLS*1..3</code>)</li>
+<li>Adding <code>LIMIT</code> clause?</li>
+</ol>
+<p><strong>Solutions</strong>:</p>
+<ul>
+<li>Add indexes: <code>CREATE INDEX entity_name FOR (e:Entity) ON (e.name)</code></li>
+<li>Use EXPLAIN to analyze query plan</li>
+<li>Consider caching (Pattern 6.3)</li>
+</ul>
+<h3 id="problem-memory-inconsistency">Problem: Memory Inconsistency<a class="headerlink" href="#problem-memory-inconsistency" title="Permanent link">&para;</a></h3>
+<p><strong>Check</strong>:</p>
+<ol>
+<li>Using temporal invalidation? (Pattern 1.2)</li>
+<li>Transactions for multi-step updates?</li>
+<li>Incremental update logic correct?</li>
+</ol>
+<p><strong>Solutions</strong>:</p>
+<ul>
+<li>Never delete nodes (mark as invalid)</li>
+<li>Use transactions for consistency</li>
+<li>Add consistency checks</li>
+</ul>
+<h3 id="problem-high-storage-usage">Problem: High Storage Usage<a class="headerlink" href="#problem-high-storage-usage" title="Permanent link">&para;</a></h3>
+<p><strong>Check</strong>:</p>
+<ol>
+<li>Storing large content in nodes? (Anti-pattern 8.3)</li>
+<li>Never cleaning up old episodes?</li>
+<li>No data lifecycle management?</li>
+</ol>
+<p><strong>Solutions</strong>:</p>
+<ul>
+<li>Store content externally (S3, filesystem)</li>
+<li>Archive old episodes (&gt; 90 days)</li>
+<li>Implement periodic cleanup</li>
+</ul>
+<h3 id="problem-poor-retrieval-accuracy">Problem: Poor Retrieval Accuracy<a class="headerlink" href="#problem-poor-retrieval-accuracy" title="Permanent link">&para;</a></h3>
+<p><strong>Check</strong>:</p>
+<ol>
+<li>Using single retrieval method? (not hybrid)</li>
+<li>Missing semantic layer?</li>
+<li>No community clustering?</li>
+</ol>
+<p><strong>Solutions</strong>:</p>
+<ul>
+<li>Implement hybrid search (Pattern 1.3)</li>
+<li>Add entity extraction</li>
+<li>Compute communities periodically</li>
+</ul>
+<hr />
+<h2 id="key-metrics-to-track">Key Metrics to Track<a class="headerlink" href="#key-metrics-to-track" title="Permanent link">&para;</a></h2>
+<h3 id="performance-metrics">Performance Metrics<a class="headerlink" href="#performance-metrics" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Query latency (p50, p95, p99)</strong>: Target &lt; 100ms</li>
+<li><strong>File update time</strong>: Target &lt; 1s</li>
+<li><strong>Indexing throughput</strong>: Target 1000+ nodes/second</li>
+</ul>
+<h3 id="quality-metrics">Quality Metrics<a class="headerlink" href="#quality-metrics" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Retrieval accuracy</strong>: Target &gt; 90%</li>
+<li><strong>Entity extraction precision</strong>: Target &gt; 85%</li>
+<li><strong>Procedure success rate</strong>: Track per procedure</li>
+</ul>
+<h3 id="resource-metrics">Resource Metrics<a class="headerlink" href="#resource-metrics" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Storage size</strong>: Monitor growth rate</li>
+<li><strong>Memory usage</strong>: Target &lt; 1GB per project</li>
+<li><strong>Query cache hit rate</strong>: Target &gt; 80%</li>
+</ul>
+<hr />
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Read Full Patterns Document</strong>: <code>NEO4J_MEMORY_DESIGN_PATTERNS.md</code></li>
+<li><strong>Choose Your Recipe</strong>: Start with MVP or Production Assistant</li>
+<li><strong>Set Up Infrastructure</strong>: Neo4j Docker container</li>
+<li><strong>Implement Foundation</strong>: Patterns 1.1, 1.2, 3.1, 3.3</li>
+<li><strong>Iterate</strong>: Add patterns as needed</li>
+</ol>
+<hr />
+<h2 id="resources">Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h2>
+<p><strong>Main Document</strong>: <code>NEO4J_MEMORY_DESIGN_PATTERNS.md</code> (comprehensive patterns)
+<strong>Research Source</strong>: <code>KNOWLEDGE_GRAPH_RESEARCH_EXCAVATION.md</code> (original research)
+<strong>Amplihack Integration</strong>: <code>/.claude/tools/amplihack/memory/</code> (existing implementation)</p>
+<p><strong>External Resources</strong>:</p>
+<ul>
+<li>Zep Architecture: https://arxiv.org/html/2501.13956v1</li>
+<li>MIRIX System: https://arxiv.org/html/2507.07957v1</li>
+<li>Neo4j Python Driver: https://neo4j.com/docs/api/python-driver/current/</li>
+<li>blarify Code Graph Tool: https://github.com/blarApp/blarify</li>
+</ul>
+<hr />
+<p><strong>Last Updated</strong>: 2025-11-02
+<strong>Version</strong>: 1.0</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.tabs", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>

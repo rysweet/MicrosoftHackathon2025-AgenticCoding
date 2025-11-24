@@ -1,0 +1,2018 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI-powered development framework for Claude Code">
+      
+      
+      
+        <link rel="canonical" href="https://rysweet.github.io/MicrosoftHackathon2025-AgenticCoding/THIS_IS_THE_WAY/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>The Amplihack Way: Effective Strategies for AI-Agent Development - amplihack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#the-amplihack-way-effective-strategies-for-ai-agent-development" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="amplihack" class="md-header__button md-logo" aria-label="amplihack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            amplihack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              The Amplihack Way: Effective Strategies for AI-Agent Development
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amplihack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../PREREQUISITES/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../PHILOSOPHY/" class="md-tabs__link">
+          
+  
+  
+  Core Concepts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../AUTO_MODE/" class="md-tabs__link">
+          
+  
+  
+  Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../DEVELOPING_AMPLIHACK/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../BENCHMARKING/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="amplihack" class="md-nav__button md-logo" aria-label="amplihack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    amplihack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amplihack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PREREQUISITES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AUTO_MODE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PROXY_CONFIG_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PHILOSOPHY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WORKFLOW_COMPLETION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Features
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AUTO_MODE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agent-bundle-generator-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Bundles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../document_driven_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Document-Driven Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/power-steering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Power-Steering Mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/power-steering/customization-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Power-Steering Customization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DEVELOPING_AMPLIHACK/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../IMPLEMENTATION_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CREATE_YOUR_OWN_TOOLS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BENCHMARKING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DISCOVERIES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discoveries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-capability-vs-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Capability vs. Context
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding Capability vs. Context">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-tasks-dont-complete-two-root-causes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Tasks Don't Complete: Two Root Causes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-context-solution-space-is-bigger-than-you-think" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Context Solution Space is Bigger Than You Think
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decomposition-breaking-down-big-swings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decomposition: Breaking Down Big Swings
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decomposition: Breaking Down Big Swings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#building-systems-that-are-too-large" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building Systems That Are Too Large
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-persistence-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Persistence Principle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-amplihackultrathink-for-complex-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using /amplihack:ultrathink for Complex Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using /amplihack:ultrathink for Complex Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-ultrathink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use UltraThink
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ultrathink-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UltraThink Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#working-with-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Working with Agents
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Working with Agents">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-agent-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Agent Library
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-invocation-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Invocation Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#philosophy-ruthless-simplicity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Philosophy: Ruthless Simplicity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Philosophy: Ruthless Simplicity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-core-principles-in-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Core Principles in Practice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invoking-the-cleanup-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invoking the Cleanup Agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#working-with-worktrees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Working with Worktrees
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Working with Worktrees">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-worktree-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Worktree Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#working-across-worktrees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Working Across Worktrees
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#handling-context-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handling Context Limits
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Handling Context Limits">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strategies-for-context-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strategies for Context Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-testing-pyramid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Testing Pyramid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-first-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test-First Development
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cicd-and-pre-commit-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CI/CD and Pre-commit Hooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CI/CD and Pre-commit Hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-commit-hook-success" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-commit Hook Success
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cicd-failure-diagnosis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CI/CD Failure Diagnosis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#continuous-improvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Continuous Improvement
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Continuous Improvement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#contributing-to-amplihack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contributing to Amplihack
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Takeaways
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Takeaways">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shift-your-mindset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shift Your Mindset
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Practical Strategies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-amplihack-philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Amplihack Philosophy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Further Reading
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="the-amplihack-way-effective-strategies-for-ai-agent-development">The Amplihack Way: Effective Strategies for AI-Agent Development<a class="headerlink" href="#the-amplihack-way-effective-strategies-for-ai-agent-development" title="Permanent link">&para;</a></h1>
+<p>This guide distills hard-won insights for working effectively with amplihack and Claude Code. These aren't theoretical best practices—they're battle-tested strategies that transform how you approach complex development challenges.</p>
+<h2 id="understanding-capability-vs-context">Understanding Capability vs. Context<a class="headerlink" href="#understanding-capability-vs-context" title="Permanent link">&para;</a></h2>
+<p>Amplihack isn't yet capable of doing all of the things we will eventually be able to do with it, but it's also not stuck in its current state. It is highly capable of helping improve itself for those who have the patience and willingness to help it learn.</p>
+<h3 id="when-tasks-dont-complete-two-root-causes">When Tasks Don't Complete: Two Root Causes<a class="headerlink" href="#when-tasks-dont-complete-two-root-causes" title="Permanent link">&para;</a></h3>
+<p>If you've made an ask of amplihack that is too challenging for it to complete within a few requests, your requests likely have one or both of the following problems:</p>
+<ol>
+<li><strong>Too challenging for current capabilities</strong> - The task genuinely exceeds what amplihack can reliably accomplish right now</li>
+<li><strong>Not enough of the <em>right</em> context</strong> - Missing information that would enable completion</li>
+</ol>
+<h3 id="the-context-solution-space-is-bigger-than-you-think">The Context Solution Space is Bigger Than You Think<a class="headerlink" href="#the-context-solution-space-is-bigger-than-you-think" title="Permanent link">&para;</a></h3>
+<p>The "not enough context" problem has a <em>very</em> big space. It could be that more context on the details of your ask are required, but it could <em>also</em> mean that <strong>metacognitive strategies</strong> as part of its context can be provided to overcome the "too challenging for current capabilities" issue.</p>
+<p><strong>Example:</strong> If you ask amplihack to go off and perform an action on a collection of a hundred files, it likely will only get partially through that on its own (though it's getting better, so maybe it can by now). <strong>BUT</strong> if you tell it to:</p>
+<ol>
+<li>Write an agent that will read in the list of files</li>
+<li>Create a file for tracking status</li>
+<li>Have that agent iterate through each file</li>
+<li>Perform whatever action you need (great place to have it also create an agent to do that processing)</li>
+</ol>
+<p>Then you are likely to get 100% completion. Technically, this is "just" giving it the context it needs to drive this behavior. This is why I'd consider this a context solution (whereas the lack of agents and pre-provided context hints about the use of agents, without user guidance, would be in the "too challenging for current capabilities" area).</p>
+<h2 id="decomposition-breaking-down-big-swings">Decomposition: Breaking Down Big Swings<a class="headerlink" href="#decomposition-breaking-down-big-swings" title="Permanent link">&para;</a></h2>
+<h3 id="building-systems-that-are-too-large">Building Systems That Are Too Large<a class="headerlink" href="#building-systems-that-are-too-large" title="Permanent link">&para;</a></h3>
+<p>If you are trying to build a new system (maybe a "consensus workflow orchestrator" or agents for managing your documentation) and that system doesn't end up achieving all you hope for, consider that maybe your system is trying to do too much in too large of a swing.</p>
+<p><strong>Ask yourself:</strong> What can you decompose and break apart into smaller, useful units?</p>
+<p><strong>The Pattern:</strong></p>
+<ol>
+<li>Have amplihack help solve for and build agents for tackling those smaller units first</li>
+<li>Then, go back to your larger scenario and ask it to create it again</li>
+<li>This time provide the agents you had it create</li>
+</ol>
+<p>This is a bit of a "cognitive offloading" that reduces the complexity (and token capacity and attention challenges) of trying to do it all in one larger "space".</p>
+<p><strong>Bonus Value:</strong> Those smaller agents usually also provide re-use value for other scenarios. Contributed back or shared with others extend their value further.</p>
+<h3 id="the-persistence-principle">The Persistence Principle<a class="headerlink" href="#the-persistence-principle" title="Permanent link">&para;</a></h3>
+<p><strong>If something is too big to get it to do reliably, don't give up.</strong></p>
+<p>Lean in, leverage the decomposition ideas above, and keep plowing forward. Amplihack is continuously improving and can help improve itself with patience and willingness to guide it through learning.</p>
+<h2 id="using-amplihackultrathink-for-complex-tasks">Using /amplihack:ultrathink for Complex Tasks<a class="headerlink" href="#using-amplihackultrathink-for-complex-tasks" title="Permanent link">&para;</a></h2>
+<p>The <code>/amplihack:ultrathink</code> command is your power tool for complex, multi-step development tasks. It orchestrates multiple specialized agents in parallel to execute your workflow efficiently.</p>
+<h3 id="when-to-use-ultrathink">When to Use UltraThink<a class="headerlink" href="#when-to-use-ultrathink" title="Permanent link">&para;</a></h3>
+<p><strong>Perfect for:</strong></p>
+<ul>
+<li>Multi-step features requiring planning, implementation, testing, and documentation</li>
+<li>Complex refactoring across multiple modules</li>
+<li>Creating new features that need architecture design first</li>
+<li>Tasks that benefit from parallel agent execution</li>
+</ul>
+<p><strong>Skip for:</strong></p>
+<ul>
+<li>Single file edits</li>
+<li>Simple bug fixes</li>
+<li>Straightforward documentation updates</li>
+<li>Quick configuration changes</li>
+</ul>
+<h3 id="ultrathink-best-practices">UltraThink Best Practices<a class="headerlink" href="#ultrathink-best-practices" title="Permanent link">&para;</a></h3>
+<p><strong>1. Be Specific About Requirements:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/amplihack:ultrathink Add user authentication with JWT tokens. Must support:
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>- Token refresh mechanism
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- Role-based access control
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- Session management
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>- Secure password hashing with bcrypt
+</code></pre></div>
+<p><strong>2. Provide Context:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/amplihack:ultrathink Looking at @src/api/endpoints.py, add rate limiting.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Use the existing middleware pattern and integrate with Redis.
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Follow the pattern in @src/middleware/auth.py.
+</code></pre></div>
+<p><strong>3. Trust the Workflow:</strong>
+UltraThink follows the DEFAULT_WORKFLOW.md pattern:</p>
+<ul>
+<li>Creates GitHub issues</li>
+<li>Sets up worktrees</li>
+<li>Implements with TDD</li>
+<li>Runs tests and pre-commit hooks</li>
+<li>Creates and reviews PRs</li>
+</ul>
+<p>Let it orchestrate—don't micromanage the steps.</p>
+<h2 id="working-with-agents">Working with Agents<a class="headerlink" href="#working-with-agents" title="Permanent link">&para;</a></h2>
+<h3 id="the-agent-library">The Agent Library<a class="headerlink" href="#the-agent-library" title="Permanent link">&para;</a></h3>
+<p>Amplihack provides specialized agents for different tasks. Understanding when to use each one accelerates development.</p>
+<p><strong>Core Workflow Agents:</strong></p>
+<ul>
+<li><strong>prompt-writer</strong>: Clarify and structure task requirements</li>
+<li><strong>architect</strong>: Design system architecture and module structure</li>
+<li><strong>builder</strong>: Implement code from specifications</li>
+<li><strong>reviewer</strong>: Code review and quality checks</li>
+<li><strong>cleanup</strong>: Ruthless simplification and philosophy compliance</li>
+</ul>
+<p><strong>Specialized Agents:</strong></p>
+<ul>
+<li><strong>knowledge-builder</strong>: Build comprehensive knowledge bases</li>
+<li><strong>worktree-manager</strong>: Manage git worktrees and branches</li>
+<li><strong>ci-diagnostic-workflow</strong>: Debug CI/CD failures</li>
+<li><strong>security</strong>: Security review and vulnerability analysis</li>
+<li><strong>optimizer</strong>: Performance optimization</li>
+</ul>
+<h3 id="agent-invocation-patterns">Agent Invocation Patterns<a class="headerlink" href="#agent-invocation-patterns" title="Permanent link">&para;</a></h3>
+<p><strong>Direct invocation</strong> for specific tasks:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Can you have the security agent review @src/auth/jwt.py for vulnerabilities?
+</code></pre></div>
+<p><strong>Workflow invocation</strong> for complex tasks:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>/amplihack:ultrathink [task description]
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a># UltraThink will invoke appropriate agents automatically
+</code></pre></div>
+<p><strong>Parallel agent execution</strong> for speed:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Please run these agents in parallel:
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>1. reviewer agent on @src/api/
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>2. security agent on @src/auth/
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>3. optimizer agent on @src/database/queries.py
+</code></pre></div>
+<h2 id="philosophy-ruthless-simplicity">Philosophy: Ruthless Simplicity<a class="headerlink" href="#philosophy-ruthless-simplicity" title="Permanent link">&para;</a></h2>
+<p>Amplihack follows the philosophy documented in <code>.claude/context/PHILOSOPHY.md</code>. Understanding and applying these principles makes you vastly more effective.</p>
+<h3 id="the-core-principles-in-practice">The Core Principles in Practice<a class="headerlink" href="#the-core-principles-in-practice" title="Permanent link">&para;</a></h3>
+<p><strong>1. Start Minimal, Grow as Needed</strong></p>
+<p>❌ <strong>Don't do this:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Create generic, future-proof abstraction</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">DataStore</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nd">@abstractmethod</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">pass</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="nd">@abstractmethod</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">pass</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="nd">@abstractmethod</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">pass</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="nd">@abstractmethod</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">pass</span>
+</code></pre></div>
+<p>✅ <strong>Do this:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Simple, direct implementation</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">save_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">config</span><span class="p">))</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">def</span><span class="w"> </span><span class="nf">load_config</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
+</code></pre></div>
+<p><strong>2. No Placeholders or TODOs</strong></p>
+<p>❌ <strong>Don't do this:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">process_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="c1"># TODO: Add validation</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="c1"># TODO: Handle edge cases</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="k">pass</span>  <span class="c1"># Implement later</span>
+</code></pre></div>
+<p>✅ <strong>Do this:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">process_data</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Data cannot be empty&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="k">return</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;valid&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)]</span>
+</code></pre></div>
+<p><strong>3. Explicit Error Handling</strong></p>
+<p>❌ <strong>Don't do this:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">dangerous_operation</span><span class="p">()</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">except</span><span class="p">:</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="k">pass</span>  <span class="c1"># Silent failure</span>
+</code></pre></div>
+<p>✅ <strong>Do this:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">dangerous_operation</span><span class="p">()</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">except</span> <span class="n">SpecificError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Operation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="k">raise</span> <span class="n">OperationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to process: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+</code></pre></div>
+<h3 id="invoking-the-cleanup-agent">Invoking the Cleanup Agent<a class="headerlink" href="#invoking-the-cleanup-agent" title="Permanent link">&para;</a></h3>
+<p>The cleanup agent is your philosophy enforcement tool. Use it liberally:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Please have the cleanup agent review @src/new_feature/ and apply ruthless simplification.
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>The user requirement was: [state the explicit requirement]
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Remove any complexity that doesn&#39;t directly serve this requirement.
+</code></pre></div>
+<p><strong>Key:</strong> Always provide the original user requirement to prevent over-simplification.</p>
+<h2 id="working-with-worktrees">Working with Worktrees<a class="headerlink" href="#working-with-worktrees" title="Permanent link">&para;</a></h2>
+<p>Amplihack uses git worktrees for parallel development. This enables working on multiple features simultaneously without branch switching.</p>
+<h3 id="the-worktree-pattern">The Worktree Pattern<a class="headerlink" href="#the-worktree-pattern" title="Permanent link">&para;</a></h3>
+<p><strong>Standard structure:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>./worktrees/
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>├── feat/issue-123-auth-system/
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>├── feat/issue-456-api-refactor/
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>├── fix/issue-789-rate-limit-bug/
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>└── docs/issue-101-user-guide/
+</code></pre></div>
+<p><strong>Using the worktree-manager agent:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Please have the worktree-manager create a worktree for implementing user authentication.
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>This is for issue #123.
+</code></pre></div>
+<p>The agent will:</p>
+<ol>
+<li>Create worktree at <code>./worktrees/feat/issue-123-user-authentication/</code></li>
+<li>Create and push branch <code>feat/issue-123-user-authentication</code></li>
+<li>Set up tracking with remote</li>
+</ol>
+<h3 id="working-across-worktrees">Working Across Worktrees<a class="headerlink" href="#working-across-worktrees" title="Permanent link">&para;</a></h3>
+<p><strong>Switch between worktrees:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">cd</span><span class="w"> </span>worktrees/feat/issue-123-auth-system/
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Work on auth</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="nb">cd</span><span class="w"> </span>../feat/issue-456-api-refactor/
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Work on API</span>
+</code></pre></div>
+<p><strong>Cleanup merged worktrees:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>git<span class="w"> </span>worktree<span class="w"> </span>prune
+</code></pre></div>
+<h2 id="handling-context-limits">Handling Context Limits<a class="headerlink" href="#handling-context-limits" title="Permanent link">&para;</a></h2>
+<p>When working with large codebases, context limits become real constraints.</p>
+<h3 id="strategies-for-context-management">Strategies for Context Management<a class="headerlink" href="#strategies-for-context-management" title="Permanent link">&para;</a></h3>
+<p><strong>1. Use Targeted Reads</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Read just the files I need:
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>@src/auth/jwt.py
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>@src/auth/tokens.py
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>@tests/test_auth.py
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>Not the entire src/ directory.
+</code></pre></div>
+<p><strong>2. Leverage Agent Memory</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>First, have the knowledge-builder agent create a knowledge base of @src/api/.
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Then use that knowledge base for subsequent questions.
+</code></pre></div>
+<p><strong>3. Work in Vertical Slices</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Let&#39;s implement user registration end-to-end first:
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>- API endpoint
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>- Database model
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>- Business logic
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>- Tests
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>Then we&#39;ll do login as a separate slice.
+</code></pre></div>
+<p><strong>4. Use Session State</strong></p>
+<p>Maintain <code>ai_working/session_state.md</code> with current context:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="gu">## Current Focus</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Implementing JWT authentication
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="gu">## Recent Decisions</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="k">-</span><span class="w"> </span>Using RS256 algorithm (not HS256) for better key management
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="k">-</span><span class="w"> </span>Token expiry: 15 minutes access, 7 days refresh
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="k">-</span><span class="w"> </span>Storing refresh tokens in Redis, not database
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="gu">## Next Steps</span>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="k">1.</span> Implement token refresh endpoint
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a><span class="k">2.</span> Add middleware for token validation
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a><span class="k">3.</span> Write integration tests
+</code></pre></div>
+<h2 id="testing-strategy">Testing Strategy<a class="headerlink" href="#testing-strategy" title="Permanent link">&para;</a></h2>
+<p>Amplihack enforces test-driven development through the workflow.</p>
+<h3 id="the-testing-pyramid">The Testing Pyramid<a class="headerlink" href="#the-testing-pyramid" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>     /\      10% End-to-End
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>    /  \     30% Integration
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>   /    \    60% Unit
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>  /______\
+</code></pre></div>
+<p><strong>Unit tests</strong> for business logic:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_generate_jwt_token</span><span class="p">():</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>    <span class="n">token</span> <span class="o">=</span> <span class="n">generate_jwt</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="s2">&quot;123&quot;</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span><span class="p">)</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    <span class="n">payload</span> <span class="o">=</span> <span class="n">decode_jwt</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>    <span class="k">assert</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;user_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;123&quot;</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>    <span class="k">assert</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;role&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;admin&quot;</span>
+</code></pre></div>
+<p><strong>Integration tests</strong> for system interactions:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_authentication_flow</span><span class="p">(</span><span class="n">client</span><span class="p">):</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>    <span class="c1"># Register</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/auth/register&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">user_data</span><span class="p">)</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>    <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">201</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>    <span class="c1"># Login</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/auth/login&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">credentials</span><span class="p">)</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>    <span class="n">token</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;access_token&quot;</span><span class="p">]</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>    <span class="c1"># Access protected endpoint</span>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/profile&quot;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">})</span>
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>    <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+</code></pre></div>
+<p><strong>End-to-end tests</strong> for critical flows:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_complete_user_journey</span><span class="p">():</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>    <span class="c1"># Registration → Login → Profile Update → Logout</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>    <span class="c1"># Tests entire user lifecycle</span>
+</code></pre></div>
+<h3 id="test-first-development">Test-First Development<a class="headerlink" href="#test-first-development" title="Permanent link">&para;</a></h3>
+<p>Let the tester agent write failing tests before implementation:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>/amplihack:ultrathink Implement password reset functionality.
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>Step 1: Have tester agent write tests for:
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>- Request reset email
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>- Validate reset token
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>- Update password with valid token
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>- Reject expired tokens
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>Step 2: Have builder agent make tests pass.
+</code></pre></div>
+<h2 id="cicd-and-pre-commit-hooks">CI/CD and Pre-commit Hooks<a class="headerlink" href="#cicd-and-pre-commit-hooks" title="Permanent link">&para;</a></h2>
+<p>Amplihack's workflow enforces quality gates through CI/CD and pre-commit hooks.</p>
+<h3 id="pre-commit-hook-success">Pre-commit Hook Success<a class="headerlink" href="#pre-commit-hook-success" title="Permanent link">&para;</a></h3>
+<p><strong>If pre-commit fails:</strong></p>
+<ol>
+<li>The workflow will automatically fix what it can (formatting, imports)</li>
+<li>Review the changes</li>
+<li>Fix any remaining issues (type errors, linting)</li>
+<li>Re-run: <code>pre-commit run --all-files</code></li>
+</ol>
+<p><strong>Common failures:</strong></p>
+<ul>
+<li><strong>Ruff linting</strong>: Code style violations</li>
+<li><strong>Type checking</strong>: mypy or pyright errors</li>
+<li><strong>Import sorting</strong>: isort violations</li>
+<li><strong>Formatting</strong>: Black/Prettier violations</li>
+</ul>
+<p><strong>Using the pre-commit-diagnostic agent:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Pre-commit is failing on the type-check hook.
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>Can you have the pre-commit-diagnostic agent investigate and fix it?
+</code></pre></div>
+<h3 id="cicd-failure-diagnosis">CI/CD Failure Diagnosis<a class="headerlink" href="#cicd-failure-diagnosis" title="Permanent link">&para;</a></h3>
+<p><strong>If CI fails after PR creation:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>PR #123 has failing CI checks.
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>Can you have the ci-diagnostic-workflow agent investigate and fix the issues?
+</code></pre></div>
+<p>The agent will:</p>
+<ol>
+<li>Fetch CI logs</li>
+<li>Identify failure root cause</li>
+<li>Implement fixes</li>
+<li>Verify fixes locally</li>
+<li>Push updates to PR</li>
+</ol>
+<h2 id="continuous-improvement">Continuous Improvement<a class="headerlink" href="#continuous-improvement" title="Permanent link">&para;</a></h2>
+<p>Amplihack improves itself through usage. You're part of that process.</p>
+<h3 id="contributing-to-amplihack">Contributing to Amplihack<a class="headerlink" href="#contributing-to-amplihack" title="Permanent link">&para;</a></h3>
+<p><strong>Found a useful pattern?</strong> Document it in <code>docs/DISCOVERIES.md</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="gu">## [Problem Title] (YYYY-MM-DD)</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="gu">### Issue</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>[What went wrong]
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="gu">### Solution</span>
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>[How you fixed it]
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a><span class="gu">### Key Learnings</span>
+<a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>
+<a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a>[What you learned]
+</code></pre></div>
+<p><strong>Created a useful agent?</strong> Consider contributing:</p>
+<ol>
+<li>Document the agent's purpose and use cases</li>
+<li>Provide examples of invocation</li>
+<li>Test with multiple scenarios</li>
+<li>Submit a PR</li>
+</ol>
+<p><strong>Improved a workflow?</strong> Update the relevant documentation:</p>
+<ul>
+<li><code>DEFAULT_WORKFLOW.md</code> for process improvements</li>
+<li><code>PHILOSOPHY.md</code> for principle refinements</li>
+<li><code>THIS_IS_THE_WAY.md</code> for practical patterns</li>
+</ul>
+<h2 id="key-takeaways">Key Takeaways<a class="headerlink" href="#key-takeaways" title="Permanent link">&para;</a></h2>
+<h3 id="shift-your-mindset">Shift Your Mindset<a class="headerlink" href="#shift-your-mindset" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Context over capability</strong> - Most "limitations" are actually context gaps</li>
+<li><strong>Decomposition over monoliths</strong> - Break big problems into agent-solvable steps</li>
+<li><strong>Philosophy-first</strong> - Ruthless simplicity beats clever complexity</li>
+<li><strong>Agents over manual work</strong> - Encode workflows in reusable agents</li>
+</ul>
+<h3 id="practical-strategies">Practical Strategies<a class="headerlink" href="#practical-strategies" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>For complex tasks</strong> - Use <code>/amplihack:ultrathink</code> to orchestrate the full workflow</li>
+<li><strong>For batch operations</strong> - Have amplihack build an agent with status tracking and iteration</li>
+<li><strong>For large systems</strong> - Build smaller useful components first, then compose them</li>
+<li><strong>When stuck</strong> - Don't give up, provide metacognitive strategies as context</li>
+<li><strong>After success</strong> - Document learnings in DISCOVERIES.md for future reference</li>
+</ol>
+<h3 id="the-amplihack-philosophy">The Amplihack Philosophy<a class="headerlink" href="#the-amplihack-philosophy" title="Permanent link">&para;</a></h3>
+<p>Amplihack is highly capable of helping improve itself. Your patience and willingness to guide it through learning doesn't just solve your immediate problem—it makes the system better for everyone.</p>
+<p><strong>Don't give up. Lean in. Keep plowing forward.</strong></p>
+<p>The challenges you overcome today become capabilities amplihack has tomorrow.</p>
+<h2 id="further-reading">Further Reading<a class="headerlink" href="#further-reading" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>PHILOSOPHY.md</strong> - Core principles and the Brick Philosophy</li>
+<li><strong>DISCOVERIES.md</strong> - Documented problems and solutions</li>
+<li><strong>DEFAULT_WORKFLOW.md</strong> - The 15-step development workflow</li>
+<li><strong>agents/</strong> - Specialized agent documentation</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
