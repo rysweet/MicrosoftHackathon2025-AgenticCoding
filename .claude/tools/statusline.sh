@@ -178,7 +178,7 @@ ps_count_file="$project_dir/.claude/runtime/power-steering/session_count"
 if [ -f "$ps_count_file" ]; then
     ps_count=$(cat "$ps_count_file" 2>/dev/null || echo "0")
     if [ "$ps_count" -gt 0 ] 2>/dev/null; then
-        power_steering_str=" \033[35m🎯×$ps_count\033[0m"
+        power_steering_str=" \033[35m🚦×$ps_count\033[0m"
     fi
 fi
 
