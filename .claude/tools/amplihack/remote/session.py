@@ -12,6 +12,7 @@ Public API (the "studs"):
 """
 
 import json
+import logging
 import os
 import re
 import secrets
@@ -22,6 +23,8 @@ from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Dict, List, Optional, Set
+
+logger = logging.getLogger(__name__)
 
 
 class SessionStatus(Enum):
@@ -456,11 +459,13 @@ class SessionManager:
             )
             return result.stdout
         except subprocess.TimeoutExpired:
+            logger.warning("SSH command to VM '%s' timed out after 30s", vm_name)
             return ""
         except FileNotFoundError:
-            # azlin not available
+            logger.warning("azlin command not found - ensure it is installed")
             return ""
-        except Exception:
+        except Exception as e:
+            logger.error("SSH command to VM '%s' failed: %s", vm_name, e)
             return ""
 
 
