@@ -1,0 +1,2006 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI-powered development framework for Claude Code">
+      
+      
+      
+        <link rel="canonical" href="https://rysweet.github.io/MicrosoftHackathon2025-AgenticCoding/skills/SKILL_BUILDER_EXAMPLES/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Skill Builder Command - Usage Examples - amplihack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#skill-builder-command-usage-examples" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="amplihack" class="md-header__button md-logo" aria-label="amplihack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            amplihack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Skill Builder Command - Usage Examples
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amplihack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../PREREQUISITES/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../PHILOSOPHY/" class="md-tabs__link">
+          
+  
+  
+  Core Concepts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../AUTO_MODE/" class="md-tabs__link">
+          
+  
+  
+  Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../DEVELOPING_AMPLIHACK/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../BENCHMARKING/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="amplihack" class="md-nav__button md-logo" aria-label="amplihack" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    amplihack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    amplihack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PREREQUISITES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AUTO_MODE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PROXY_CONFIG_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PHILOSOPHY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../WORKFLOW_COMPLETION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Features
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AUTO_MODE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agent-bundle-generator-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Bundles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../document_driven_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Document-Driven Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/power-steering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Power-Steering Mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/power-steering/customization-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Power-Steering Customization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DEVELOPING_AMPLIHACK/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../IMPLEMENTATION_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CREATE_YOUR_OWN_TOOLS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BENCHMARKING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DISCOVERIES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discoveries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-1-creating-a-claude-code-skill-auto-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 1: Creating a Claude Code Skill (Auto-Discovery)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-2-creating-an-agent-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 2: Creating an Agent Skill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-2-creating-a-command-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 2: Creating a Command Skill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-3-creating-a-scenario-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 3: Creating a Scenario Skill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-4-simple-agent-minimal-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 4: Simple Agent (Minimal Complexity)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-5-complex-scenario-high-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 5: Complex Scenario (High Complexity)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validation Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#valid-skill-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Valid Skill Names ✅
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invalid-skill-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invalid Skill Names ❌
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#valid-skill-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Valid Skill Types ✅
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invalid-skill-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invalid Skill Types ❌
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#valid-descriptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Valid Descriptions ✅
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invalid-descriptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invalid Descriptions ❌
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-your-generated-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Your Generated Skills
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing Your Generated Skills">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-agent-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Agent Skills
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-command-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Command Skills
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-scenario-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Scenario Skills
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues-and-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues and Solutions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Issues and Solutions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#issue-invalid-skill-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: "Invalid skill name"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-missing-required-field-in-yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: "Missing required field in YAML"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-token-budget-too-high" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: "Token budget too high"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-philosophy-compliance-failed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: "Philosophy compliance failed"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-file-already-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: "File already exists"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-related-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Related Skills
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iterating-on-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Iterating on Skills
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-with-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration with Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#naming-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Skills
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#writing-descriptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing Descriptions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choosing-skill-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing Skill Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token-budget-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token Budget Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#philosophy-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Philosophy Alignment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps-after-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps After Creation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Help
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contributing
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="skill-builder-command-usage-examples">Skill Builder Command - Usage Examples<a class="headerlink" href="#skill-builder-command-usage-examples" title="Permanent link">&para;</a></h1>
+<p>This document provides practical examples of using the <code>/amplihack:skill-builder</code> command.</p>
+<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/amplihack:skill-builder<span class="w"> </span>&lt;skill-name&gt;<span class="w"> </span>&lt;skill-type&gt;<span class="w"> </span>&lt;description&gt;
+</code></pre></div>
+<p><strong>Skill Types</strong>: <code>skill</code>, <code>agent</code>, <code>command</code>, <code>scenario</code></p>
+<h2 id="example-1-creating-a-claude-code-skill-auto-discovery">Example 1: Creating a Claude Code Skill (Auto-Discovery)<a class="headerlink" href="#example-1-creating-a-claude-code-skill-auto-discovery" title="Permanent link">&para;</a></h2>
+<p>Create an auto-discoverable skill that loads when Claude detects relevance:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/amplihack:skill-builder<span class="w"> </span>json-validator<span class="w"> </span>skill<span class="w"> </span><span class="s2">&quot;Validates JSON data against schemas with detailed error reporting and format checking&quot;</span>
+</code></pre></div>
+<p><strong>Expected Workflow:</strong></p>
+<ol>
+<li>Validates arguments (name, type, description)</li>
+<li>Creates todo list with 8 steps</li>
+<li>Invokes prompt-writer to clarify requirements</li>
+<li>Invokes architect to design skill structure with progressive disclosure</li>
+<li>Invokes builder to generate SKILL.md with YAML frontmatter</li>
+<li>Invokes reviewer to validate philosophy compliance</li>
+<li>Validates YAML frontmatter and token budget</li>
+<li>Creates directory and file at: <code>.claude/skills/json-validator/SKILL.md</code></li>
+</ol>
+<p><strong>Expected Output:</strong></p>
+<ul>
+<li>Auto-discoverable skill with keyword-rich description</li>
+<li>Progressive disclosure structure (SKILL.md core &lt;5K tokens)</li>
+<li>Optional supporting files (reference.md, examples.md, scripts/)</li>
+<li>Activates automatically when user says "validate JSON" or similar</li>
+<li>Philosophy compliance score &gt;85%</li>
+</ul>
+<p><strong>How It Works After Creation:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>User: &quot;Can you validate this JSON for me?&quot;
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Claude: *json-validator skill loads automatically*
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        &quot;I&#39;ll validate that JSON using schema validation...&quot;
+</code></pre></div>
+<h2 id="example-2-creating-an-agent-skill">Example 2: Creating an Agent Skill<a class="headerlink" href="#example-2-creating-an-agent-skill" title="Permanent link">&para;</a></h2>
+<p>Create a specialized agent for data transformation:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>/amplihack:skill-builder<span class="w"> </span>data-transformer<span class="w"> </span>agent<span class="w"> </span><span class="s2">&quot;Transforms data between JSON, YAML, XML, and CSV formats with schema validation&quot;</span>
+</code></pre></div>
+<p><strong>Expected Workflow:</strong></p>
+<ol>
+<li>Validates arguments (name, type, description)</li>
+<li>Creates todo list with 8 steps</li>
+<li>Invokes prompt-writer to clarify requirements</li>
+<li>Invokes architect to design skill structure</li>
+<li>Invokes builder to generate skill file</li>
+<li>Invokes reviewer to validate philosophy compliance</li>
+<li>Validates YAML frontmatter and structure</li>
+<li>Creates file at: <code>.claude/agents/amplihack/specialized/data-transformer.md</code></li>
+</ol>
+<p><strong>Expected Output:</strong></p>
+<ul>
+<li>Complete agent skill file with YAML frontmatter</li>
+<li>Clear responsibilities and execution instructions</li>
+<li>2-3 usage examples</li>
+<li>Validation rules and error handling</li>
+<li>Philosophy compliance notes</li>
+<li>References to documentation</li>
+</ul>
+<h2 id="example-2-creating-a-command-skill">Example 2: Creating a Command Skill<a class="headerlink" href="#example-2-creating-a-command-skill" title="Permanent link">&para;</a></h2>
+<p>Create a slash command for dependency analysis:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/amplihack:skill-builder<span class="w"> </span>analyze-dependencies<span class="w"> </span><span class="nb">command</span><span class="w"> </span><span class="s2">&quot;Analyzes project dependencies, identifies outdated packages, and generates security report&quot;</span>
+</code></pre></div>
+<p><strong>Expected Workflow:</strong></p>
+<ol>
+<li>Validates arguments</li>
+<li>Clarifies requirements (what to analyze, report format)</li>
+<li>Designs command structure (arguments, options, output)</li>
+<li>Generates command file with proper frontmatter</li>
+<li>Reviews for philosophy compliance</li>
+<li>Validates YAML and structure</li>
+<li>Creates file at: <code>.claude/commands/amplihack/analyze-dependencies.md</code></li>
+</ol>
+<p><strong>Key Features:</strong></p>
+<ul>
+<li><code>argument-hint</code> in YAML frontmatter</li>
+<li>Clear usage instructions with examples</li>
+<li>Argument parsing and validation</li>
+<li>Error handling and user feedback</li>
+<li>Integration with existing tools</li>
+</ul>
+<h2 id="example-3-creating-a-scenario-skill">Example 3: Creating a Scenario Skill<a class="headerlink" href="#example-3-creating-a-scenario-skill" title="Permanent link">&para;</a></h2>
+<p>Create a production-ready tool for code review:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>/amplihack:skill-builder<span class="w"> </span>code-reviewer<span class="w"> </span>scenario<span class="w"> </span><span class="s2">&quot;Reviews code for quality, security, performance, and best practices with detailed reports&quot;</span>
+</code></pre></div>
+<p><strong>Expected Workflow:</strong></p>
+<ol>
+<li>Validates arguments</li>
+<li>Clarifies requirements (what to review, criteria)</li>
+<li>Designs comprehensive scenario structure</li>
+<li>Generates complete scenario with directory structure</li>
+<li>Reviews for production readiness</li>
+<li>Validates all components</li>
+<li>Creates directory: <code>.claude/scenarios/code-reviewer/</code></li>
+<li><code>SKILL.md</code> - Main skill definition</li>
+<li><code>README.md</code> - User-facing documentation</li>
+<li><code>tool.py</code> - Implementation placeholder</li>
+<li><code>tests/</code> - Test directory structure</li>
+<li><code>examples/</code> - Usage examples</li>
+</ol>
+<p><strong>Maturity Path:</strong></p>
+<ul>
+<li>Starts as <code>experimental</code></li>
+<li>Graduates to <code>beta</code> after 2-3 successful uses</li>
+<li>Reaches <code>stable</code> after 1+ week of stability</li>
+</ul>
+<h2 id="example-4-simple-agent-minimal-complexity">Example 4: Simple Agent (Minimal Complexity)<a class="headerlink" href="#example-4-simple-agent-minimal-complexity" title="Permanent link">&para;</a></h2>
+<p>Create a simple formatter agent:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>/amplihack:skill-builder<span class="w"> </span>json-formatter<span class="w"> </span>agent<span class="w"> </span><span class="s2">&quot;Formats JSON with configurable indentation and sorting&quot;</span>
+</code></pre></div>
+<p><strong>Complexity Assessment:</strong></p>
+<ul>
+<li>Scope: Simple (single purpose)</li>
+<li>Implementation: Straightforward</li>
+<li>Token Budget: ~3,000 (recommended for simple skills)</li>
+</ul>
+<p><strong>Generated Structure:</strong></p>
+<ul>
+<li>Basic YAML frontmatter</li>
+<li>Clear purpose statement</li>
+<li>Simple usage instructions</li>
+<li>2-3 examples</li>
+<li>Minimal validation rules</li>
+</ul>
+<h2 id="example-5-complex-scenario-high-complexity">Example 5: Complex Scenario (High Complexity)<a class="headerlink" href="#example-5-complex-scenario-high-complexity" title="Permanent link">&para;</a></h2>
+<p>Create a comprehensive system analysis tool:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>/amplihack:skill-builder<span class="w"> </span>system-analyzer<span class="w"> </span>scenario<span class="w"> </span><span class="s2">&quot;Analyzes entire codebase for architecture patterns, dependencies, security issues, performance bottlenecks, and generates comprehensive report with recommendations&quot;</span>
+</code></pre></div>
+<p><strong>Complexity Assessment:</strong></p>
+<ul>
+<li>Scope: Complex (multi-system analysis)</li>
+<li>Implementation: Advanced (multiple integrations)</li>
+<li>Token Budget: ~8,000 (recommended for complex skills)</li>
+</ul>
+<p><strong>Generated Structure:</strong></p>
+<ul>
+<li>Comprehensive YAML frontmatter with dependencies</li>
+<li>Detailed purpose and responsibilities</li>
+<li>Multiple usage modes (quick, standard, deep)</li>
+<li>Extensive examples (5-7 scenarios)</li>
+<li>Advanced validation and error handling</li>
+<li>Integration points with multiple systems</li>
+<li>Philosophy compliance checks</li>
+</ul>
+<h2 id="validation-examples">Validation Examples<a class="headerlink" href="#validation-examples" title="Permanent link">&para;</a></h2>
+<h3 id="valid-skill-names">Valid Skill Names ✅<a class="headerlink" href="#valid-skill-names" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>data-transformer</code></li>
+<li><code>code-reviewer</code></li>
+<li><code>api-client</code></li>
+<li><code>json-formatter</code></li>
+<li><code>system-analyzer</code></li>
+</ul>
+<h3 id="invalid-skill-names">Invalid Skill Names ❌<a class="headerlink" href="#invalid-skill-names" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>DataTransformer</code> (camelCase not allowed)</li>
+<li><code>data_transformer</code> (underscores not allowed)</li>
+<li><code>data transformer</code> (spaces not allowed)</li>
+<li><code>dt</code> (too short, min 3 chars)</li>
+<li><code>DataTransformerWithVeryLongNameThatExceedsMaxLength</code> (too long, max 50 chars)</li>
+</ul>
+<h3 id="valid-skill-types">Valid Skill Types ✅<a class="headerlink" href="#valid-skill-types" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>agent</code></li>
+<li><code>command</code></li>
+<li><code>scenario</code></li>
+<li><code>AGENT</code> (normalized to lowercase)</li>
+<li><code>Command</code> (normalized to lowercase)</li>
+</ul>
+<h3 id="invalid-skill-types">Invalid Skill Types ❌<a class="headerlink" href="#invalid-skill-types" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>tool</code> (not a recognized type)</li>
+<li><code>utility</code> (not a recognized type)</li>
+<li><code>helper</code> (not a recognized type)</li>
+</ul>
+<h3 id="valid-descriptions">Valid Descriptions ✅<a class="headerlink" href="#valid-descriptions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>"Transforms data between formats" (clear and concise)</li>
+<li>"Analyzes code for security vulnerabilities and generates report" (specific and detailed)</li>
+<li>"Formats JSON with customizable options" (simple and direct)</li>
+</ul>
+<h3 id="invalid-descriptions">Invalid Descriptions ❌<a class="headerlink" href="#invalid-descriptions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>"Does stuff" (too vague, length &lt; 10)</li>
+<li>"Transform" (too short, not descriptive)</li>
+<li>"A comprehensive multi-system integrated super-advanced tool that does everything you could possibly imagine with extensive features and capabilities beyond imagination..." (too long, length &gt; 200)</li>
+</ul>
+<h2 id="testing-your-generated-skills">Testing Your Generated Skills<a class="headerlink" href="#testing-your-generated-skills" title="Permanent link">&para;</a></h2>
+<h3 id="for-agent-skills">For Agent Skills<a class="headerlink" href="#for-agent-skills" title="Permanent link">&para;</a></h3>
+<p>Test by invoking the agent from another command or agent:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="gs">**Task for {skill-name}:**</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>{Provide test input matching the agent&#39;s contract}
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Expected:
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="k">-</span><span class="w"> </span>{Expected output 1}
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="k">-</span><span class="w"> </span>{Expected output 2}
+</code></pre></div>
+<h3 id="for-command-skills">For Command Skills<a class="headerlink" href="#for-command-skills" title="Permanent link">&para;</a></h3>
+<p>Test by invoking the slash command:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>/<span class="o">{</span>skill-name<span class="o">}</span><span class="w"> </span><span class="o">{</span>test-arguments<span class="o">}</span>
+</code></pre></div>
+<p>Verify:</p>
+<ul>
+<li>Arguments are parsed correctly</li>
+<li>Validation works as expected</li>
+<li>Output is formatted properly</li>
+<li>Error handling works for invalid inputs</li>
+</ul>
+<h3 id="for-scenario-skills">For Scenario Skills<a class="headerlink" href="#for-scenario-skills" title="Permanent link">&para;</a></h3>
+<p>Test by running through Makefile (once integrated):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>make<span class="w"> </span><span class="o">{</span>skill-name<span class="o">}</span><span class="w"> </span><span class="nv">TARGET</span><span class="o">={</span>test-target<span class="o">}</span>
+</code></pre></div>
+<p>Verify:</p>
+<ul>
+<li>Tool executes successfully</li>
+<li>Output meets expectations</li>
+<li>Tests pass (if test suite created)</li>
+<li>Documentation is clear and accurate</li>
+</ul>
+<h2 id="common-issues-and-solutions">Common Issues and Solutions<a class="headerlink" href="#common-issues-and-solutions" title="Permanent link">&para;</a></h2>
+<h3 id="issue-invalid-skill-name">Issue: "Invalid skill name"<a class="headerlink" href="#issue-invalid-skill-name" title="Permanent link">&para;</a></h3>
+<p><strong>Cause</strong>: Name doesn't follow kebab-case convention
+<strong>Solution</strong>: Use lowercase letters, numbers, and hyphens only</p>
+<h3 id="issue-missing-required-field-in-yaml">Issue: "Missing required field in YAML"<a class="headerlink" href="#issue-missing-required-field-in-yaml" title="Permanent link">&para;</a></h3>
+<p><strong>Cause</strong>: Generated skill missing name, description, or version
+<strong>Solution</strong>: Builder agent should always include these; review and regenerate</p>
+<h3 id="issue-token-budget-too-high">Issue: "Token budget too high"<a class="headerlink" href="#issue-token-budget-too-high" title="Permanent link">&para;</a></h3>
+<p><strong>Cause</strong>: Skill is too complex or has excessive documentation
+<strong>Solution</strong>: Simplify scope, break into multiple skills, or optimize documentation</p>
+<h3 id="issue-philosophy-compliance-failed">Issue: "Philosophy compliance failed"<a class="headerlink" href="#issue-philosophy-compliance-failed" title="Permanent link">&para;</a></h3>
+<p><strong>Cause</strong>: Generated skill contains stubs, TODOs, or placeholders
+<strong>Solution</strong>: Reviewer catches these; builder regenerates with complete implementation</p>
+<h3 id="issue-file-already-exists">Issue: "File already exists"<a class="headerlink" href="#issue-file-already-exists" title="Permanent link">&para;</a></h3>
+<p><strong>Cause</strong>: Skill with same name already exists
+<strong>Solution</strong>: Choose different name or remove existing file first</p>
+<h2 id="advanced-usage">Advanced Usage<a class="headerlink" href="#advanced-usage" title="Permanent link">&para;</a></h2>
+<h3 id="creating-related-skills">Creating Related Skills<a class="headerlink" href="#creating-related-skills" title="Permanent link">&para;</a></h3>
+<p>Build a family of related skills:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># 1. Core transformer agent</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>/amplihack:skill-builder<span class="w"> </span>data-transformer<span class="w"> </span>agent<span class="w"> </span><span class="s2">&quot;Core data transformation engine&quot;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># 2. JSON-specific command</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>/amplihack:skill-builder<span class="w"> </span>json-transform<span class="w"> </span><span class="nb">command</span><span class="w"> </span><span class="s2">&quot;Transform JSON files using data-transformer agent&quot;</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># 3. Full scenario tool</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>/amplihack:skill-builder<span class="w"> </span>batch-transform<span class="w"> </span>scenario<span class="w"> </span><span class="s2">&quot;Batch transform multiple files with progress tracking&quot;</span>
+</code></pre></div>
+<h3 id="iterating-on-skills">Iterating on Skills<a class="headerlink" href="#iterating-on-skills" title="Permanent link">&para;</a></h3>
+<p>If first generation isn't perfect:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># 1. Review the generated skill</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># 2. Identify specific improvements</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># 3. Re-run with refined description</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>/amplihack:skill-builder<span class="w"> </span>data-transformer<span class="w"> </span>agent<span class="w"> </span><span class="s2">&quot;Transforms data between JSON, YAML, XML formats with schema validation, error recovery, and detailed logging&quot;</span>
+</code></pre></div>
+<h3 id="integration-with-workflow">Integration with Workflow<a class="headerlink" href="#integration-with-workflow" title="Permanent link">&para;</a></h3>
+<p>Use generated skills in your workflow:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># 1. Create the skill</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>/amplihack:skill-builder<span class="w"> </span>api-client<span class="w"> </span>agent<span class="w"> </span><span class="s2">&quot;HTTP client with retry logic and error handling&quot;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># 2. Use in /ultrathink workflow</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>/ultrathink<span class="w"> </span><span class="s2">&quot;Implement new API endpoint using api-client agent&quot;</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># 3. Agent orchestration will leverage new skill</span>
+</code></pre></div>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="naming-skills">Naming Skills<a class="headerlink" href="#naming-skills" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Use clear, descriptive names</li>
+<li>Follow single responsibility principle</li>
+<li>Keep names under 30 characters when possible</li>
+<li>Use consistent naming patterns (e.g., <code>{domain}-{action}</code>)</li>
+</ol>
+<h3 id="writing-descriptions">Writing Descriptions<a class="headerlink" href="#writing-descriptions" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Be specific about WHAT the skill does</li>
+<li>Mention key features or capabilities</li>
+<li>Keep under 150 characters for clarity</li>
+<li>Avoid implementation details (HOW)</li>
+</ol>
+<h3 id="choosing-skill-type">Choosing Skill Type<a class="headerlink" href="#choosing-skill-type" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Agent</strong>: Internal automation, invoked by other agents</li>
+<li><strong>Command</strong>: User-facing, slash command interface</li>
+<li><strong>Scenario</strong>: Production tool, may have UI/CLI</li>
+</ul>
+<h3 id="token-budget-management">Token Budget Management<a class="headerlink" href="#token-budget-management" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Simple skills: 2,000-4,000 tokens</li>
+<li>Medium skills: 4,000-6,000 tokens</li>
+<li>Complex skills: 6,000-10,000 tokens</li>
+<li>Avoid exceeding 10,000 unless absolutely necessary</li>
+</ul>
+<h3 id="philosophy-alignment">Philosophy Alignment<a class="headerlink" href="#philosophy-alignment" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Always prioritize simplicity</li>
+<li>Include working examples, no stubs</li>
+<li>Make skills self-contained</li>
+<li>Ensure regeneratability from spec</li>
+<li>Document integration points clearly</li>
+</ul>
+<h2 id="success-criteria">Success Criteria<a class="headerlink" href="#success-criteria" title="Permanent link">&para;</a></h2>
+<p>A successfully generated skill should:</p>
+<ol>
+<li>✅ Pass all validation checks (name, type, YAML, structure)</li>
+<li>✅ Achieve &gt;85% philosophy compliance score</li>
+<li>✅ Include 2-3 concrete usage examples</li>
+<li>✅ Have clear instructions for execution</li>
+<li>✅ Be immediately usable without editing</li>
+<li>✅ Include proper error handling</li>
+<li>✅ Reference relevant documentation</li>
+<li>✅ Stay within recommended token budget</li>
+</ol>
+<h2 id="next-steps-after-creation">Next Steps After Creation<a class="headerlink" href="#next-steps-after-creation" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Review</strong>: Read the generated skill file</li>
+<li><strong>Test</strong>: Try using the skill with sample inputs</li>
+<li><strong>Iterate</strong>: Refine if needed by regenerating</li>
+<li><strong>Integrate</strong>: Use in your workflow or commands</li>
+<li><strong>Document</strong>: Add to project documentation</li>
+<li><strong>Share</strong>: Contribute to team's skill library</li>
+</ol>
+<h2 id="getting-help">Getting Help<a class="headerlink" href="#getting-help" title="Permanent link">&para;</a></h2>
+<p>If you encounter issues:</p>
+<ol>
+<li>Check this examples file</li>
+<li>Review the main command documentation</li>
+<li>Examine similar existing skills</li>
+<li>Test with simpler examples first</li>
+<li>Validate arguments before running</li>
+<li>Check agent logs for detailed errors</li>
+</ol>
+<h2 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h2>
+<p>To improve the skill builder:</p>
+<ol>
+<li>Document patterns you discover</li>
+<li>Share successful skill examples</li>
+<li>Report issues or edge cases</li>
+<li>Suggest template improvements</li>
+<li>Add new validation rules</li>
+</ol>
+<hr />
+<p><strong>Last Updated</strong>: 2025-11-15
+<strong>Version</strong>: 1.0.0
+<strong>Status</strong>: Phase 1 Complete</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
