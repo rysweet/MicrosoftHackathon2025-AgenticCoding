@@ -1,8 +1,8 @@
 ---
 name: DEFAULT_WORKFLOW
 version: 1.0.0
-description: Standard 15-step workflow for feature development, bug fixes, and refactoring
-steps: 15
+description: Standard 21-step workflow for feature development, bug fixes, and refactoring
+steps: 21
 phases:
   - requirements-clarification
   - design
@@ -64,7 +64,7 @@ This workflow should be followed for:
 When creating todos during workflow execution, reference the workflow steps directly:
 
 - Format: `Step N: [Step Name] - [Specific Action]`
-- This helps users track exactly which workflow step is active (Step X of 15)
+- This helps users track exactly which workflow step is active
 - Always show your full ToDo list
 - When you get to a particular step, you may always decide to break it down into smaller steps - this is preferred.
 
@@ -109,16 +109,16 @@ Step 5: Implement the Solution - Use builder agent to implement from specificati
 This step-based structure helps users understand:
 
 - Exactly which workflow step is currently active
-- How many steps remain (e.g., Step 5 of 16 means 11 steps left)
+- How many steps remain
 - What comes next in the workflow
 
 ## The Workflow
 
-### Prepare the workspace
+### Step 1: Prepare the Workspace
 
 - [ ] start with a clean local environment and make sure it is up to date (no unstashed changes, git fetch)
 
-### Rewrite and Clarify Requirements
+### Step 2: Rewrite and Clarify Requirements
 
 - [ ] **FIRST: Identify explicit user requirements** that CANNOT be optimized away
 - [ ] **Always use** prompt-writer agent to clarify task requirements (includes automatic task classification)
@@ -129,7 +129,7 @@ This step-based structure helps users understand:
 - [ ] Document acceptance criteria
 - [ ] **CRITICAL: Pass explicit requirements to ALL subsequent agents**
 
-### Step 2: Create GitHub Issue
+### Step 3: Create GitHub Issue
 
 - [ ] **Use** GitHub issue creation tool via agent
 - [ ] Create issue using `gh issue create`
@@ -138,7 +138,7 @@ This step-based structure helps users understand:
 - [ ] Add success criteria
 - [ ] Assign appropriate labels
 
-### Step 3: Setup Worktree and Branch
+### Step 4: Setup Worktree and Branch
 
 - [ ] **Always use** worktree-manager agent for worktree operations
 - [ ] Create new git worktree in `./worktrees/{branch-name}` for isolated development
@@ -147,7 +147,7 @@ This step-based structure helps users understand:
 - [ ] Push branch to remote with tracking: `git push -u origin {branch-name}`
 - [ ] Switch to new worktree directory: `cd ./worktrees/{branch-name}`
 
-### Step 4: Research and Design
+### Step 5: Research and Design
 
 **⚠️ INVESTIGATION-FIRST PATTERN**: If the existing codebase or system is unfamiliar/complex, consider running the Skills tool Skill(investigation-workflow) or ~.claude/workflow/INVESTIGATION_WORKFLOW.md FIRST, then return here to continue development. This is especially valuable when:
 
@@ -171,17 +171,17 @@ After investigation completes, continue with these tasks:
 - [ ] Create detailed implementation plan
 - [ ] Identify risks and dependencies
 
-### Retcon Documentation Writing
+### Step 6: Retcon Documentation Writing
 
 - [ ] ask @documentation-writer agent to retcon write the documentation for the finished feature as if it already exists - ie the documentation for the feature as we want it to be. Write ONLY the documentation, not the code.
 - [ ] ask the @architect agent to review the documentation to see if it aligns with their vision correctly or if it highlights any changes that should be made
 - [ ] ask @documentation-writer to make revisions based ont he architect's review
 
-### Test Driven Development - Writing Tests First
+### Step 7: Test Driven Development - Writing Tests First
 
 - [ ] Followingg the Test Driven Development methodology - use the tester agent to write failing tests (TDD approach) based upon the work done so far.
 
-### Implement the Solution
+### Step 8: Implement the Solution
 
 - [ ] **Always use** builder agent to implement from specifications, including considering the retcon'd documentation
 - [ ] **Use** integration agent for external service connections
@@ -190,7 +190,7 @@ After investigation completes, continue with these tasks:
 - [ ] Ensure all requirements are met
 - [ ] Update documentation as needed
 
-### Refactor and Simplify
+### Step 9: Refactor and Simplify
 
 - [ ] **CRITICAL: Provide cleanup agent with original user requirements**
 - [ ] **Always use** cleanup agent for ruthless simplification WITHIN user constraints
@@ -202,7 +202,7 @@ After investigation completes, continue with these tasks:
 - [ ] Verify no placeholders remain - no stubs, no TODOs, no swallowed exceptions, no unimplemented functions - follow the zero-BS principle.
 - [ ] **VALIDATE: All explicit user requirements still preserved** and still adhering to @.claude/context/PHILOSOPHY.md
 
-### Review pass before commit
+### Step 10: Review Pass Before Commit
 
 - [ ] **Always use** reviewer agent for comprehensive code review
 - [ ] **Use** security agent for security review
@@ -212,12 +212,12 @@ After investigation completes, continue with these tasks:
 - [ ] Identify potential improvements
 - [ ] Ensure there are no TODOs, faked apis or faked data, stubs, or swallowed exceptions, no unimplemented functions - follow the zero-BS principle.
 
-### Incorporate any review feedback
+### Step 11: Incorporate Any Review Feedback
 
 - [ ] Use the architect agent to assess the reviewer feedback and then handoff to the builder agent to implement any changes
 - [ ] Update documentation as needed
 
-### Run Tests and Pre-commit Hooks
+### Step 12: Run Tests and Pre-commit Hooks
 
 - [ ] **Use** pre-commit-diagnostic agent if hooks fail
 - [ ] **💡 TIP**: For test failures, use [parallel investigation](.claude/CLAUDE.md#parallel-agent-investigation-strategy) to explore issues while continuing work
@@ -228,7 +228,7 @@ After investigation completes, continue with these tasks:
 - [ ] Resolve type checking errors
 - [ ] Iterate until all checks pass
 
-### Mandatory Local Testing (NOT in CI)
+### Step 13: Mandatory Local Testing (NOT in CI)
 
 **CRITICAL: Test all changes locally in realistic scenarios BEFORE committing.**
 Test like a user would use the feature - outside-in - not just unit tests.
@@ -254,7 +254,7 @@ Test like a user would use the feature - outside-in - not just unit tests.
 - Faster feedback loop than waiting for CI
 - Prevents embarrassing failures after merge
 
-### Commit and Push
+### Step 14: Commit and Push
 
 - [ ] Stage all changes
 - [ ] Write detailed commit message
@@ -263,7 +263,7 @@ Test like a user would use the feature - outside-in - not just unit tests.
 - [ ] Push to remote branch
 - [ ] Verify push succeeded
 
-### Open Pull Request as Draft
+### Step 15: Open Pull Request as Draft
 
 - [ ] Create PR as DRAFT using `gh pr create --draft` (pipe through `| cat` for reliable output)
 - [ ] Link to the GitHub issue
@@ -289,7 +289,7 @@ gh pr create --draft --title "..." --body "..." 2>&1 | cat
 
 This ensures you see success messages, error details, and PR URLs.
 
-### Review the PR
+### Step 16: Review the PR
 
 **⚠️ MANDATORY - DO NOT SKIP ⚠️**
 
@@ -310,7 +310,7 @@ This ensures you see success messages, error details, and PR URLs.
 - [ ] Ensure there are no TODOs, stubs, or swallowed exceptions, no unimplemented functions - follow the zero-BS principle.
 - [ ] Always Post the review as a comment on the PR
 
-### Implement Review Feedback
+### Step 17: Implement Review Feedback
 
 **⚠️ MANDATORY - DO NOT SKIP ⚠️**
 
@@ -332,7 +332,7 @@ This ensures you see success messages, error details, and PR URLs.
 - [ ] Ensure PR is still mergeable
 - [ ] Request re-review if needed
 
-### Philosophy Compliance Check
+### Step 18: Philosophy Compliance Check
 
 - [ ] **Always use** reviewer agent for final philosophy check
 - [ ] **Use** patterns agent to verify pattern compliance
@@ -342,7 +342,7 @@ This ensures you see success messages, error details, and PR URLs.
 - [ ] Verify all tests passing
 - [ ] Check documentation completeness and accuracy
 
-### Final Cleanup and Verification
+### Step 19: Final Cleanup and Verification
 
 - [ ] **CRITICAL: Provide cleanup agent with original user requirements AGAIN**
 - [ ] **Always use** cleanup agent for final quality pass
@@ -355,10 +355,10 @@ This ensures you see success messages, error details, and PR URLs.
 - [ ] Ensure any cleanup agent changes get committed, validated by pre-commit, pushed to remote
 - [ ] Add a comment to the PR about any work the Cleanup agent did
 
-### Convert PR to Ready for Review
+### Step 20: Convert PR to Ready for Review
 
 - [ ] Convert draft PR to ready-for-review using `gh pr ready`
-- [ ] Verify all previous steps completed (Steps 11-13)
+- [ ] Verify all previous steps completed
 - [ ] Ensure all review feedback has been addressed
 - [ ] Confirm philosophy compliance check passed
 - [ ] Add comment summarizing changes and readiness
@@ -366,8 +366,8 @@ This ensures you see success messages, error details, and PR URLs.
 
 **Important**: Only convert to ready when:
 
-- All review feedback addressed (Step 12)
-- Philosophy compliance verified (Step 13)
+- All review feedback addressed
+- Philosophy compliance verified
 - You believe the PR is truly ready to merge
 - No known blockers remain
 
@@ -382,7 +382,7 @@ gh pr ready 2>&1 | cat
 - Requests final approval from reviewers
 - Makes PR eligible for merge queue
 
-### Ensure PR is Mergeable
+### Step 21: Ensure PR is Mergeable
 
 - [ ] Check CI status (all checks passing)
 - [ ] **Always use** ci-diagnostic-workflow agent if CI fails
