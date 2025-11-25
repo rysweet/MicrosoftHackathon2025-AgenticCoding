@@ -328,4 +328,3 @@ Before submitting documentation, verify:
 - [Write the Docs](https://www.writethedocs.org/guide/writing/docs-principles/) - Community best practices
 - [GitHub Documentation Guide](https://github.blog/developer-skills/documentation-done-right-a-developers-guide/) - Developer experience
 - [Atlassian Documentation Best Practices](https://www.atlassian.com/blog/loom/software-documentation-best-practices) - Real examples
-- [Claude Code Skill Best Practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) - Token efficiency

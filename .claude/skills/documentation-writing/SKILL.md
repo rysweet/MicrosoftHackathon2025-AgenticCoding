@@ -6,18 +6,15 @@ source_urls:
   - https://diataxis.fr/
   - https://www.writethedocs.org/guide/writing/docs-principles/
   - https://github.blog/developer-skills/documentation-done-right-a-developers-guide/
-activation_keywords:
-  - documentation
-  - write docs
-  - create readme
-  - document this
-  - api docs
-  - tutorial
-  - how-to guide
-  - explain this
-auto_activate: true
+auto_activates:
+  - "write documentation"
+  - "create docs"
+  - "document this feature"
+  - "create a README"
+  - "write a tutorial"
+  - "api docs"
+  - "how-to guide"
 token_budget: 1800
-allowed-tools: Read, Write, Grep, Glob
 ---
 
 # Documentation Writing Skill
