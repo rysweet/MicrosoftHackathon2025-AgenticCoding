@@ -2,6 +2,15 @@
 
 This MVP version uses simple heuristics instead of Claude AI for faster,
 deterministic validation. Suitable for initial deployment and testing.
+
+Comprehensive Review Detection:
+    Recognizes structured code reviews posted as comments (not just formal GitHub reviews).
+    Pattern examples that trigger comprehensive detection (need 4+):
+    - "Review Summary:" / "Overall Assessment:"
+    - "Strengths:" / "Issues Found:"
+    - "Breaking Changes:" / "Philosophy Compliance"
+    - "Final Verdict" / "Score: 8.5" / "8/10"
+    - "Recommendations:"
 """
 
 import re
@@ -22,7 +31,12 @@ COMPREHENSIVE_REVIEW_PATTERNS = [
 ]
 
 PATTERN_THRESHOLD = 4  # 4+ patterns = comprehensive review
+# Chosen to avoid false positives from casual comments while catching
+# structured reviews. Validated by PR #1595 which had 7 patterns.
+
 COMPREHENSIVE_REVIEW_BOOST = 10  # Equivalent to 2 formal approvals
+# (Formal approval = +5 score, so 2 × 5 = 10)
+# Ensures comprehensive comment reviews have equal weight to formal reviews
 
 
 def validate_workflow_compliance(pr_data: Dict[str, Any]) -> Dict[str, Any]:
