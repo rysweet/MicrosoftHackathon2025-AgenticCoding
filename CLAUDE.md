@@ -16,6 +16,50 @@ When starting a session, import these files for context:
 [@.claude/context/USER_PREFERENCES.md](.claude/context/USER_PREFERENCES.md)
 [@.claude/context/USER_REQUIREMENT_PRIORITY.md](.claude/context/USER_REQUIREMENT_PRIORITY.md)
 
+## 🧠 WORKFLOW SELECTION REASONING (REQUIRED)
+
+Before proceeding, you MUST explain your reasoning:
+
+### 1. Task Analysis
+- **What is the user asking for?**
+- **What keywords indicate workflow type?**
+- **What artifacts will be needed?**
+
+### 2. Workflow Selection
+- **Which workflow am I choosing?** [Q&A | INVESTIGATION | DEFAULT]
+- **Why is this the correct workflow?**
+- **What are the alternative workflows and why did I reject them?**
+
+### 3. Step Commitment
+- **How many steps does this workflow have?**
+- **Which steps are mandatory vs optional?**
+- **What happens if I skip a mandatory step?**
+
+🚫 **YOUR JUDGMENT DOES NOT OVERRIDE WORKFLOW**
+
+These are NOT valid justifications for skipping steps:
+❌ "This is a simple internal utility function"
+❌ "This doesn't need a full workflow"
+❌ "This task is too trivial for GitHub issues"
+❌ "Tests seem excessive for this"
+❌ "I can deliver this faster by skipping steps"
+
+**The workflow is MANDATORY regardless of task complexity.**
+**Your role is to EXECUTE the workflow, not EVALUATE whether it's needed.**
+
+---
+
+## 🔍 SELF-VERIFICATION QUESTIONS
+
+Ask yourself BEFORE each decision:
+- **Am I about to skip any workflow steps?**
+- **If yes, what is my justification?**
+- **Would the user expect the artifacts I'm skipping (issues, PRs, tests)?**
+- **Is my justification "this is too simple" or "this doesn't need X"?**
+- **If yes: I am making an ERROR - follow the full workflow**
+
+---
+
 ## MANDATORY: Workflow Selection (ALWAYS FIRST)
 
 **CRITICAL**: You MUST classify every user request into one of three workflows
