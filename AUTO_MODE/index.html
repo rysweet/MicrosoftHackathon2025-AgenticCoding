@@ -690,6 +690,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#per-turn-timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-Turn Timeout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#session-logging" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -971,6 +982,17 @@
     <span class="md-ellipsis">
       
         Execution Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#turn-timeouts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turn Timeouts
       
     </span>
   </a>
@@ -1571,6 +1593,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#per-turn-timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-Turn Timeout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#session-logging" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1852,6 +1885,17 @@
     <span class="md-ellipsis">
       
         Execution Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#turn-timeouts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turn Timeouts
       
     </span>
   </a>
@@ -2582,6 +2626,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#per-turn-timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-Turn Timeout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#session-logging" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2863,6 +2918,17 @@
     <span class="md-ellipsis">
       
         Execution Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#turn-timeouts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turn Timeouts
       
     </span>
   </a>
@@ -3169,18 +3235,41 @@
 </ul>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--max-turns<span class="w"> </span><span class="m">25</span><span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;complex multi-module refactoring&quot;</span>
 </code></pre></div>
+<h3 id="per-turn-timeout">Per-Turn Timeout<a class="headerlink" href="#per-turn-timeout" title="Permanent link">&para;</a></h3>
+<p>Default: 30 minutes per turn</p>
+<p>Controls how long each turn can run before timing out. This prevents runaway executions while allowing complex operations to complete.</p>
+<p><strong>Priority order (highest to lowest):</strong></p>
+<ol>
+<li><code>--no-timeout</code> flag (disables timeout entirely)</li>
+<li>Explicit <code>--query-timeout-minutes</code> value</li>
+<li>Auto-detection (Opus models → 60 minutes)</li>
+<li>Default (30 minutes)</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Use default 30-minute timeout</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;implement feature&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Explicit timeout (45 minutes)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--query-timeout-minutes<span class="w"> </span><span class="m">45</span><span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;complex refactoring&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Disable timeout for very long operations</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--no-timeout<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;comprehensive codebase analysis&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Opus model auto-detects to 60 minutes</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>--model<span class="w"> </span>opus<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;architectural design&quot;</span>
+</code></pre></div>
+<p><strong>Note:</strong> Opus models automatically use 60-minute timeouts due to extended thinking requirements. Use <code>--no-timeout</code> for operations expected to exceed 60 minutes.</p>
 <h3 id="session-logging">Session Logging<a class="headerlink" href="#session-logging" title="Permanent link">&para;</a></h3>
 <p>All auto mode sessions are logged to:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>.claude/runtime/logs/auto_{sdk}_{timestamp}/
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  ├── auto.log          # Turn-by-turn log
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  ├── prompt.md         # Original prompt and session metadata
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  ├── DECISIONS.md      # Decision records (if any)
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  ├── append/           # Pending instructions (for --append feature)
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  └── appended/         # Processed instructions (archived)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>.claude/runtime/logs/auto_{sdk}_{timestamp}/
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  ├── auto.log          # Turn-by-turn log
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  ├── prompt.md         # Original prompt and session metadata
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  ├── DECISIONS.md      # Decision records (if any)
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  ├── append/           # Pending instructions (for --append feature)
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  └── appended/         # Processed instructions (archived)
 </code></pre></div>
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
 <h3 id="example-1-implementing-a-feature">Example 1: Implementing a Feature<a class="headerlink" href="#example-1-implementing-a-feature" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Implement user profile editing with validation and persistence&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Implement user profile editing with validation and persistence&quot;</span>
 </code></pre></div>
 <p><strong>What happens</strong>:</p>
 <ol>
@@ -3191,7 +3280,7 @@
 <li>Completes: Summarizes implementation</li>
 </ol>
 <h3 id="example-2-bug-fix">Example 2: Bug Fix<a class="headerlink" href="#example-2-bug-fix" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>amplihack<span class="w"> </span>copilot<span class="w"> </span>--auto<span class="w"> </span>--max-turns<span class="w"> </span><span class="m">5</span><span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Fix the login timeout issue reported in issue #123&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>amplihack<span class="w"> </span>copilot<span class="w"> </span>--auto<span class="w"> </span>--max-turns<span class="w"> </span><span class="m">5</span><span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Fix the login timeout issue reported in issue #123&quot;</span>
 </code></pre></div>
 <p><strong>What happens</strong>:</p>
 <ol>
@@ -3202,7 +3291,7 @@
 <li>Completes: Documents fix and tests</li>
 </ol>
 <h3 id="example-3-refactoring">Example 3: Refactoring<a class="headerlink" href="#example-3-refactoring" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--max-turns<span class="w"> </span><span class="m">15</span><span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Refactor authentication module to use dependency injection&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--max-turns<span class="w"> </span><span class="m">15</span><span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Refactor authentication module to use dependency injection&quot;</span>
 </code></pre></div>
 <p><strong>What happens</strong>:</p>
 <ol>
@@ -3213,7 +3302,7 @@
 <li>Completes: Documents refactoring decisions</li>
 </ol>
 <h3 id="example-4-test-suite-creation">Example 4: Test Suite Creation<a class="headerlink" href="#example-4-test-suite-creation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>amplihack<span class="w"> </span>copilot<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Add comprehensive test coverage for the payment processing module&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>amplihack<span class="w"> </span>copilot<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Add comprehensive test coverage for the payment processing module&quot;</span>
 </code></pre></div>
 <p><strong>What happens</strong>:</p>
 <ol>
@@ -3226,14 +3315,14 @@
 <h2 id="injecting-instructions-mid-session">Injecting Instructions Mid-Session<a class="headerlink" href="#injecting-instructions-mid-session" title="Permanent link">&para;</a></h2>
 <p>You can append new instructions to a running auto mode session without interrupting it using the <code>--append</code> flag. This allows you to steer the agent's work in real-time as you observe its progress.</p>
 <h3 id="usage_1">Usage<a class="headerlink" href="#usage_1" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Terminal 1: Start auto mode</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Implement user authentication&quot;</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Terminal 2: After reviewing initial work, append a new instruction</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--append<span class="w"> </span><span class="s2">&quot;Also add rate limiting to prevent brute force attacks&quot;</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Terminal 2: Add another instruction</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--append<span class="w"> </span><span class="s2">&quot;Ensure all passwords are hashed with bcrypt&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Terminal 1: Start auto mode</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Implement user authentication&quot;</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Terminal 2: After reviewing initial work, append a new instruction</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--append<span class="w"> </span><span class="s2">&quot;Also add rate limiting to prevent brute force attacks&quot;</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Terminal 2: Add another instruction</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--append<span class="w"> </span><span class="s2">&quot;Ensure all passwords are hashed with bcrypt&quot;</span>
 </code></pre></div>
 <h3 id="how-it-works_1">How It Works<a class="headerlink" href="#how-it-works_1" title="Permanent link">&para;</a></h3>
 <ol>
@@ -3244,23 +3333,23 @@
 <li>Processed instruction files are moved to <code>appended/</code> directory for tracking</li>
 </ol>
 <h3 id="example-workflow">Example Workflow<a class="headerlink" href="#example-workflow" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Start auto mode with initial task</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>$<span class="w"> </span>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--max-turns<span class="w"> </span><span class="m">20</span><span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Implement user authentication system&quot;</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Watch progress in logs</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>$<span class="w"> </span>tail<span class="w"> </span>-f<span class="w"> </span>.claude/runtime/logs/auto_claude_*/auto.log
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># After turn 3, you realize you need additional security</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>$<span class="w"> </span>amplihack<span class="w"> </span>claude<span class="w"> </span>--append<span class="w"> </span><span class="s2">&quot;Add two-factor authentication support&quot;</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>✓<span class="w"> </span>Instruction<span class="w"> </span>appended<span class="w"> </span>to<span class="w"> </span>session:<span class="w"> </span>auto_claude_1729699200
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">  </span>File:<span class="w"> </span>20241023_120534_123456.md
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">  </span>The<span class="w"> </span>auto<span class="w"> </span>mode<span class="w"> </span>session<span class="w"> </span>will<span class="w"> </span>process<span class="w"> </span>this<span class="w"> </span>on<span class="w"> </span>its<span class="w"> </span>next<span class="w"> </span>turn.
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Add another requirement</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>$<span class="w"> </span>amplihack<span class="w"> </span>claude<span class="w"> </span>--append<span class="w"> </span><span class="s2">&quot;Include comprehensive input validation for all forms&quot;</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>✓<span class="w"> </span>Instruction<span class="w"> </span>appended<span class="w"> </span>to<span class="w"> </span>session:<span class="w"> </span>auto_claude_1729699200
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">  </span>File:<span class="w"> </span>20241023_120612_789012.md
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="w">  </span>The<span class="w"> </span>auto<span class="w"> </span>mode<span class="w"> </span>session<span class="w"> </span>will<span class="w"> </span>process<span class="w"> </span>this<span class="w"> </span>on<span class="w"> </span>its<span class="w"> </span>next<span class="w"> </span>turn.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Start auto mode with initial task</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>$<span class="w"> </span>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--max-turns<span class="w"> </span><span class="m">20</span><span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Implement user authentication system&quot;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Watch progress in logs</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>$<span class="w"> </span>tail<span class="w"> </span>-f<span class="w"> </span>.claude/runtime/logs/auto_claude_*/auto.log
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># After turn 3, you realize you need additional security</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>$<span class="w"> </span>amplihack<span class="w"> </span>claude<span class="w"> </span>--append<span class="w"> </span><span class="s2">&quot;Add two-factor authentication support&quot;</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>✓<span class="w"> </span>Instruction<span class="w"> </span>appended<span class="w"> </span>to<span class="w"> </span>session:<span class="w"> </span>auto_claude_1729699200
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">  </span>File:<span class="w"> </span>20241023_120534_123456.md
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">  </span>The<span class="w"> </span>auto<span class="w"> </span>mode<span class="w"> </span>session<span class="w"> </span>will<span class="w"> </span>process<span class="w"> </span>this<span class="w"> </span>on<span class="w"> </span>its<span class="w"> </span>next<span class="w"> </span>turn.
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1"># Add another requirement</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>$<span class="w"> </span>amplihack<span class="w"> </span>claude<span class="w"> </span>--append<span class="w"> </span><span class="s2">&quot;Include comprehensive input validation for all forms&quot;</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>✓<span class="w"> </span>Instruction<span class="w"> </span>appended<span class="w"> </span>to<span class="w"> </span>session:<span class="w"> </span>auto_claude_1729699200
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="w">  </span>File:<span class="w"> </span>20241023_120612_789012.md
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="w">  </span>The<span class="w"> </span>auto<span class="w"> </span>mode<span class="w"> </span>session<span class="w"> </span>will<span class="w"> </span>process<span class="w"> </span>this<span class="w"> </span>on<span class="w"> </span>its<span class="w"> </span>next<span class="w"> </span>turn.
 </code></pre></div>
 <h3 id="best-practices-for-appending">Best Practices for Appending<a class="headerlink" href="#best-practices-for-appending" title="Permanent link">&para;</a></h3>
 <ol>
@@ -3279,12 +3368,12 @@
 <p><strong>Monitor Progress</strong>: Watch the logs to see when your appended instructions are processed:</p>
 </li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>tail<span class="w"> </span>-f<span class="w"> </span>.claude/runtime/logs/auto_claude_*/auto.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>tail<span class="w"> </span>-f<span class="w"> </span>.claude/runtime/logs/auto_claude_*/auto.log
 </code></pre></div>
 <ol>
 <li><strong>Review Appended History</strong>: Check what has been processed:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ls<span class="w"> </span>-la<span class="w"> </span>.claude/runtime/logs/auto_claude_*/appended/
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>cat<span class="w"> </span>.claude/runtime/logs/auto_claude_*/appended/*.md
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ls<span class="w"> </span>-la<span class="w"> </span>.claude/runtime/logs/auto_claude_*/appended/
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>cat<span class="w"> </span>.claude/runtime/logs/auto_claude_*/appended/*.md
 </code></pre></div></li>
 </ol>
 <h3 id="troubleshooting-append">Troubleshooting Append<a class="headerlink" href="#troubleshooting-append" title="Permanent link">&para;</a></h3>
@@ -3313,23 +3402,23 @@
 </ul>
 <h3 id="log-directory-structure">Log Directory Structure<a class="headerlink" href="#log-directory-structure" title="Permanent link">&para;</a></h3>
 <p>When using the append feature, your log directory will have this structure:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>.claude/runtime/logs/auto_claude_1729699200/
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>├── auto.log              # Turn-by-turn execution log
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>├── prompt.md             # Original prompt and session metadata
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>├── DECISIONS.md          # Decision records (if any)
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>├── append/               # Pending instructions (waiting to be processed)
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>│   ├── 20241023_120534_123456.md
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>│   └── 20241023_120612_789012.md
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>└── appended/             # Processed instructions (archived)
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    └── 20241023_120455_000000.md
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>.claude/runtime/logs/auto_claude_1729699200/
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>├── auto.log              # Turn-by-turn execution log
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>├── prompt.md             # Original prompt and session metadata
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>├── DECISIONS.md          # Decision records (if any)
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>├── append/               # Pending instructions (waiting to be processed)
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>│   ├── 20241023_120534_123456.md
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>│   └── 20241023_120612_789012.md
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>└── appended/             # Processed instructions (archived)
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>    └── 20241023_120455_000000.md
 </code></pre></div>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="1-be-specific-in-your-prompt">1. Be Specific in Your Prompt<a class="headerlink" href="#1-be-specific-in-your-prompt" title="Permanent link">&para;</a></h3>
 <p><strong>Good</strong>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Add rate limiting to the API with 100 requests per minute per user&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Add rate limiting to the API with 100 requests per minute per user&quot;</span>
 </code></pre></div>
 <p><strong>Less Good</strong>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;improve the API&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;improve the API&quot;</span>
 </code></pre></div>
 <h3 id="2-set-appropriate-max-turns">2. Set Appropriate Max Turns<a class="headerlink" href="#2-set-appropriate-max-turns" title="Permanent link">&para;</a></h3>
 <p>Match max turns to task complexity:</p>
@@ -3370,6 +3459,16 @@
 <h3 id="execution-errors">Execution Errors<a class="headerlink" href="#execution-errors" title="Permanent link">&para;</a></h3>
 <p><strong>Cause</strong>: Syntax errors, test failures during execution
 <strong>Solution</strong>: Auto mode logs errors and continues. Review logs in <code>.claude/runtime/logs/</code> to see what happened.</p>
+<h3 id="turn-timeouts">Turn Timeouts<a class="headerlink" href="#turn-timeouts" title="Permanent link">&para;</a></h3>
+<p><strong>Cause</strong>: A turn exceeded the per-turn timeout (default 30 minutes)
+<strong>Solution</strong>:</p>
+<ul>
+<li>Check logs for <code>Turn N timed out after X seconds</code></li>
+<li>For Opus models, ensure auto-detection is working (uses 60 min automatically)</li>
+<li>Use <code>--query-timeout-minutes 60</code> for longer operations</li>
+<li>Use <code>--no-timeout</code> for very long operations (use with caution)</li>
+<li>Consider breaking complex tasks into smaller subtasks</li>
+</ul>
 <h3 id="installation-issues-copilot">Installation Issues (Copilot)<a class="headerlink" href="#installation-issues-copilot" title="Permanent link">&para;</a></h3>
 <p><strong>Cause</strong>: GitHub Copilot CLI not installed
 <strong>Solution</strong>: Auto mode will attempt to install via npm. Ensure Node.js and npm are installed.</p>
@@ -3390,19 +3489,19 @@
 <h2 id="advanced-usage">Advanced Usage<a class="headerlink" href="#advanced-usage" title="Permanent link">&para;</a></h2>
 <h3 id="combining-with-subagents">Combining with Subagents<a class="headerlink" href="#combining-with-subagents" title="Permanent link">&para;</a></h3>
 <p>Auto mode automatically leverages subagents when appropriate. You can guide this in your prompt:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Use the architect agent to design a caching layer, then the builder agent to implement it&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Use the architect agent to design a caching layer, then the builder agent to implement it&quot;</span>
 </code></pre></div>
 <h3 id="parallel-execution">Parallel Execution<a class="headerlink" href="#parallel-execution" title="Permanent link">&para;</a></h3>
 <p>Auto mode identifies parallel work opportunities. Help it by structuring your prompt:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>amplihack<span class="w"> </span>copilot<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Add logging to all three services: auth, payment, and notification - these can be done in parallel&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>amplihack<span class="w"> </span>copilot<span class="w"> </span>--auto<span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Add logging to all three services: auth, payment, and notification - these can be done in parallel&quot;</span>
 </code></pre></div>
 <h3 id="continuing-work">Continuing Work<a class="headerlink" href="#continuing-work" title="Permanent link">&para;</a></h3>
 <p>If auto mode runs out of turns, you can continue manually or start a new auto mode session with adjusted objectives:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># First session</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--max-turns<span class="w"> </span><span class="m">10</span><span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;implement feature X&quot;</span>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># If incomplete, refine and continue</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--max-turns<span class="w"> </span><span class="m">10</span><span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;complete feature X implementation: finish the API endpoint and add tests&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># First session</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--max-turns<span class="w"> </span><span class="m">10</span><span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;implement feature X&quot;</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># If incomplete, refine and continue</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>amplihack<span class="w"> </span>claude<span class="w"> </span>--auto<span class="w"> </span>--max-turns<span class="w"> </span><span class="m">10</span><span class="w"> </span>--<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;complete feature X implementation: finish the API endpoint and add tests&quot;</span>
 </code></pre></div>
 <h2 id="comparison-claude-vs-copilot">Comparison: Claude vs Copilot<a class="headerlink" href="#comparison-claude-vs-copilot" title="Permanent link">&para;</a></h2>
 <h3 id="claude-auto-mode">Claude Auto Mode<a class="headerlink" href="#claude-auto-mode" title="Permanent link">&para;</a></h3>
