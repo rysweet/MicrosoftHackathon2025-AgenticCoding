@@ -16,6 +16,63 @@ When starting a session, import these files for context:
 [@.claude/context/USER_PREFERENCES.md](.claude/context/USER_PREFERENCES.md)
 [@.claude/context/USER_REQUIREMENT_PRIORITY.md](.claude/context/USER_REQUIREMENT_PRIORITY.md)
 
+## ⚠️ WORKFLOW VIOLATION = TASK FAILURE ⚠️
+
+Skipping workflow steps is a CRITICAL ERROR that results in:
+
+❌ **INCOMPLETE WORK** - Missing GitHub issues, PRs, tests
+❌ **QUALITY FAILURES** - No code review, no philosophy compliance
+❌ **USER TRUST DAMAGE** - Work appears rushed and careless
+❌ **WASTED EFFORT** - Incomplete work must be redone
+
+**If you skip workflow steps, the task has FAILED and must be restarted.**
+
+---
+
+## ✅ TASK SUCCESS CRITERIA
+
+A task is only considered COMPLETE when:
+
+1. ✅ ALL workflow steps executed (no skipping)
+2. ✅ ALL TodoWrite items marked complete
+3. ✅ ALL mandatory agents invoked
+4. ✅ ALL required artifacts created (issues, PRs, tests)
+
+**Anything less = INCOMPLETE TASK = FAILURE**
+
+---
+
+## 🚫 STEP SKIPPING = POLICY VIOLATION
+
+"This task is too simple for the workflow" is NOT a valid justification.
+
+The workflow exists BECAUSE:
+- Users expect consistent quality standards
+- GitHub issues provide audit trails
+- PRs enable code review
+- Tests prevent regressions
+- Philosophy compliance maintains codebase quality
+
+**Skipping steps violates user expectations and project standards.**
+
+---
+
+## 📋 WORKFLOW MODIFICATION PERMISSIONS
+
+You are NOT authorized to:
+- ❌ Skip workflow steps based on task complexity
+- ❌ Apply judgment about which steps are "necessary"
+- ❌ Decide certain tasks don't need issues/PRs/tests
+
+You ARE authorized to:
+- ✅ Ask user if they want to use a lighter workflow
+- ✅ Suggest Q&A_WORKFLOW for simple questions
+- ✅ Request clarification about requirements
+
+**When in doubt: Follow the full workflow.**
+
+---
+
 ## MANDATORY: Workflow Selection (ALWAYS FIRST)
 
 **CRITICAL**: You MUST classify every user request into one of three workflows
