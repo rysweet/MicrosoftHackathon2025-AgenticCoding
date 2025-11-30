@@ -2000,6 +2000,15 @@ class PowerSteeringChecker:
 
         This allows users to see results even when stderr isn't visible.
 
+        Note on message branches: This method handles three cases:
+        1. Some checks passed → "ALL CHECKS PASSED"
+        2. No checks ran (all skipped) → "NO CHECKS APPLICABLE"
+        3. Some checks failed → "CHECKS FAILED"
+
+        Case #2 is primarily for testing - in production, check() returns early
+        (line 759) when len(analysis.results)==0, so this method won't be called.
+        However, tests call this method directly to verify message formatting works.
+
         Args:
             analysis: ConsiderationAnalysis with results
             session_type: Session type (e.g., "SIMPLE", "STANDARD")
