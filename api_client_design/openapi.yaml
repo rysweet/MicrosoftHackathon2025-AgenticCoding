@@ -1,0 +1,188 @@
+openapi: 3.0.0
+info:
+  title: REST API Client Library Interface
+  version: 1.0.0
+  description: |
+    Contract specification for a REST API client library.
+    This defines the public interface for the library, not the APIs it calls.
+
+    Philosophy:
+    - Single purpose: Each component has ONE clear responsibility
+    - Ruthless simplicity: No unnecessary abstractions
+    - Regeneratable: Any module can be rebuilt from this spec
+
+paths:
+  # This OpenAPI spec documents the library's interface, not HTTP endpoints
+  /library/interface:
+    get:
+      summary: Library Interface Documentation
+      description: |
+        The REST API Client library provides:
+        - APIClient class with standard HTTP methods
+        - Request/Response dataclasses
+        - Custom exception hierarchy
+        - Retry and rate limiting interfaces
+        - Full type hints
+
+components:
+  schemas:
+    APIClient:
+      type: object
+      description: Main client class for making HTTP requests
+      properties:
+        base_url:
+          type: string
+          description: Base URL for all API requests
+        timeout:
+          type: number
+          description: Default timeout in seconds
+        retry_config:
+          $ref: '#/components/schemas/RetryConfig'
+        rate_limiter:
+          $ref: '#/components/schemas/RateLimiter'
+      required:
+        - base_url
+
+    Request:
+      type: object
+      description: HTTP request representation
+      properties:
+        method:
+          type: string
+          enum: [GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS]
+        path:
+          type: string
+          description: Path relative to base_url
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+        params:
+          type: object
+          additionalProperties:
+            type: string
+        json:
+          type: object
+          description: JSON body data
+        data:
+          type: string
+          description: Raw body data
+        timeout:
+          type: number
+          description: Request-specific timeout override
+      required:
+        - method
+        - path
+
+    Response:
+      type: object
+      description: HTTP response representation
+      properties:
+        status_code:
+          type: integer
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+        json:
+          type: object
+          description: Parsed JSON response
+        text:
+          type: string
+          description: Raw text response
+        elapsed:
+          type: number
+          description: Request duration in seconds
+        request:
+          $ref: '#/components/schemas/Request'
+      required:
+        - status_code
+        - headers
+        - text
+        - request
+
+    RetryConfig:
+      type: object
+      description: Configuration for retry behavior
+      properties:
+        max_retries:
+          type: integer
+          default: 3
+        backoff_factor:
+          type: number
+          default: 1.0
+          description: Exponential backoff multiplier
+        retry_on_status:
+          type: array
+          items:
+            type: integer
+          default: [429, 500, 502, 503, 504]
+      required:
+        - max_retries
+
+    RateLimiter:
+      type: object
+      description: Rate limiting configuration
+      properties:
+        requests_per_second:
+          type: number
+        burst_size:
+          type: integer
+          description: Maximum burst capacity
+      required:
+        - requests_per_second
+
+    APIError:
+      type: object
+      description: Base exception for all API errors
+      properties:
+        message:
+          type: string
+        request:
+          $ref: '#/components/schemas/Request'
+        response:
+          $ref: '#/components/schemas/Response'
+      required:
+        - message
+
+    HTTPError:
+      allOf:
+        - $ref: '#/components/schemas/APIError'
+        - type: object
+          properties:
+            status_code:
+              type: integer
+          required:
+            - status_code
+
+    ConnectionError:
+      allOf:
+        - $ref: '#/components/schemas/APIError'
+        - type: object
+          properties:
+            cause:
+              type: string
+              description: Underlying connection error
+          required:
+            - cause
+
+    TimeoutError:
+      allOf:
+        - $ref: '#/components/schemas/APIError'
+        - type: object
+          properties:
+            timeout:
+              type: number
+          required:
+            - timeout
+
+    RateLimitError:
+      allOf:
+        - $ref: '#/components/schemas/APIError'
+        - type: object
+          properties:
+            retry_after:
+              type: number
+              description: Seconds to wait before retry
+          required:
+            - retry_after

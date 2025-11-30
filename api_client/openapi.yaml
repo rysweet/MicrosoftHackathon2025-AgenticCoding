@@ -1,0 +1,166 @@
+openapi: 3.0.0
+info:
+  title: REST API Client Library
+  version: 1.0.0
+  description: |
+    A ruthlessly simple REST API client library with clear contracts.
+
+    Design Principles:
+    - Single responsibility per component
+    - Clear public interfaces via __all__
+    - Regeneratable from specification
+    - Thread-safe by default
+    - Zero-BS implementation
+
+paths:
+  # This is a client library, not a server API
+  # Paths section exists for OpenAPI compliance but is not used
+  /placeholder:
+    get:
+      summary: Placeholder endpoint
+      responses:
+        '200':
+          description: OK
+
+components:
+  schemas:
+    APIClientConfig:
+      type: object
+      description: Configuration for the API client
+      properties:
+        base_url:
+          type: string
+          format: uri
+          description: Base URL for all API requests
+        timeout:
+          type: number
+          default: 30
+          description: Default timeout in seconds
+        retry_config:
+          $ref: '#/components/schemas/RetryConfig'
+        rate_limit_config:
+          $ref: '#/components/schemas/RateLimitConfig'
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+          description: Default headers for all requests
+      required:
+        - base_url
+
+    RetryConfig:
+      type: object
+      description: Configuration for retry behavior
+      properties:
+        max_retries:
+          type: integer
+          default: 3
+          minimum: 0
+          maximum: 10
+        backoff_factor:
+          type: number
+          default: 2.0
+          minimum: 1.0
+          description: Exponential backoff multiplier
+        retry_on_status:
+          type: array
+          items:
+            type: integer
+          default: [429, 500, 502, 503, 504]
+          description: HTTP status codes that trigger retry
+
+    RateLimitConfig:
+      type: object
+      description: Configuration for rate limiting
+      properties:
+        requests_per_second:
+          type: number
+          minimum: 0.1
+          maximum: 1000
+          description: Maximum requests per second
+        burst_size:
+          type: integer
+          default: 10
+          minimum: 1
+          description: Maximum burst size for rate limiting
+
+    Request:
+      type: object
+      description: HTTP request model
+      properties:
+        method:
+          type: string
+          enum: [GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS]
+        path:
+          type: string
+          description: Path relative to base URL
+        params:
+          type: object
+          additionalProperties: true
+          description: Query parameters
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+          description: Request-specific headers
+        json_data:
+          type: object
+          description: JSON body data
+        data:
+          type: string
+          format: binary
+          description: Raw body data
+        timeout:
+          type: number
+          description: Request-specific timeout
+      required:
+        - method
+        - path
+
+    Response:
+      type: object
+      description: HTTP response model
+      properties:
+        status_code:
+          type: integer
+          description: HTTP status code
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+        json_data:
+          type: object
+          description: Parsed JSON response
+        text:
+          type: string
+          description: Raw text response
+        elapsed:
+          type: number
+          description: Request duration in seconds
+      required:
+        - status_code
+        - headers
+
+    ErrorResponse:
+      type: object
+      description: Standard error response format
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code
+            message:
+              type: string
+              description: Human-readable error message
+            details:
+              type: object
+              additionalProperties: true
+              description: Additional error context
+            retry_after:
+              type: number
+              description: Seconds to wait before retry (for rate limits)
+          required:
+            - code
+            - message
