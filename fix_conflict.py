@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
 """Fix merge conflicts in stop.py by keeping pragma comment version.
 
-This script resolves a specific merge conflict where one version has
-a pragma comment and the other doesn't. It explicitly checks for the
-pragma comment to make the resolution robust.
+Philosophy:
+- Single responsibility: Only resolves pragma comment conflicts
+- Standard library only: No external dependencies
+- Explicit strategy: Clear selection logic with fallback
+- Testable: Pure function design for easy testing
+
+Public API (the "studs"):
+    fix_conflict_content: Main conflict resolution function
+    main: CLI entry point for standalone usage
 
 Usage:
     python3 fix_conflict.py <file_path>
@@ -15,6 +21,8 @@ Returns:
 
 import sys
 from pathlib import Path
+
+__all__ = ["fix_conflict_content", "main"]
 
 
 def fix_conflict_content(content: str) -> tuple[str, bool]:
