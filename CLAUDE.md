@@ -5,6 +5,21 @@ configures the amplihack agentic coding framework - a development tool that uses
 specialized AI agents to accelerate software development through intelligent
 automation and collaborative problem-solving.
 
+
+## 🚨 CRITICAL: AUTONOMOUS EXECUTION REQUIRED 🚨
+
+**MANDATORY BEHAVIOR FOR ALL WORKFLOW EXECUTION:**
+
+- **NEVER ASK QUESTIONS during workflow execution** - proceed autonomously
+- **NEVER STOP to request permission** - continue through all steps
+- **NEVER pause for confirmation** - USER_PREFERENCES.md already specifies autonomous mode
+- **DO NOT interpret checkpoints as permission requests** - they are verification only
+- **Checkpoints are INFORMATIONAL** - confirm mentally, then proceed immediately
+
+**If you find yourself about to ask "Should I continue?" - the answer is ALWAYS YES during workflow execution.**
+
+---
+
 ## Important Files to Import
 
 When starting a session, import these files for context:
@@ -16,10 +31,39 @@ When starting a session, import these files for context:
 [@.claude/context/USER_PREFERENCES.md](.claude/context/USER_PREFERENCES.md)
 [@.claude/context/USER_REQUIREMENT_PRIORITY.md](.claude/context/USER_REQUIREMENT_PRIORITY.md)
 
+## 🛑 STOP: PRE-FLIGHT CHECKLIST (MANDATORY) 🛑
+
+Before taking ANY action on this task, you MUST complete this checklist. DO NOT
+PROCEED until ALL boxes are checked:
+
+```
+PRE-FLIGHT CHECKLIST - MUST COMPLETE BEFORE ANY WORK:
+
+□ I have READ the complete user request from start to finish
+□ I have CLASSIFIED the task type (Q&A, INVESTIGATION, or DEFAULT)
+□ I have JUSTIFIED my classification with specific keywords
+□ I have READ the FULL workflow file for my classification
+□ I have CREATED TodoWrite entries for ALL workflow steps
+□ I am READY to execute the workflow WITHOUT skipping any steps
+
+⚠️  IF YOU CANNOT CHECK ALL BOXES ABOVE, DO NOT PROCEED  ⚠️
+⚠️  STOP and complete the missing items before continuing  ⚠️
+```
+
+Once checklist is complete, state: **"PRE-FLIGHT CHECKLIST COMPLETE - PROCEEDING
+WITH [WORKFLOW_NAME]"**
+
+---
+
 ## MANDATORY: Workflow Selection (ALWAYS FIRST)
 
 **CRITICAL**: You MUST classify every user request into one of three workflows
 BEFORE taking action. No exceptions.
+
+🛑 **STOP GATE 1**: Have you completed the PRE-FLIGHT CHECKLIST above?
+
+- If NO: Return to PRE-FLIGHT CHECKLIST and complete it now
+- If YES: Continue to classification
 
 ### Quick Classification (3 seconds max)
 
@@ -46,6 +90,21 @@ WORKFLOW: [Q&A | INVESTIGATION | DEFAULT]
 Reason: [Brief justification]
 Following: .claude/workflow/[WORKFLOW_NAME].md
 ```
+
+🛑 **STOP GATE 2**: Have you announced your workflow classification?
+
+- If NO: State your classification now using the format above
+- If YES: Continue to reading the workflow file
+
+🛑 **STOP GATE 3**: Have you read the COMPLETE workflow file?
+
+- If NO: Use Read tool to read .claude/workflow/[WORKFLOW_NAME].md NOW
+- If YES: Continue to creating todos
+
+🛑 **STOP GATE 4**: Have you created TodoWrite entries for ALL workflow steps?
+
+- If NO: Use TodoWrite tool to create entries for ALL steps (0-21 for DEFAULT)
+- If YES: Proceed with execution
 
 ### Rules
 
@@ -688,7 +747,9 @@ skill is:
 Amplihack includes production-ready scenario tools that follow the **Progressive
 Maturity Model**:
 
-**Note**: When users request "a tool", they typically mean an executable program (scenarios/), not a Claude Code skill (skills/). Build the tool first; optionally add a skill that calls it.
+**Note**: When users request "a tool", they typically mean an executable program
+(scenarios/), not a Claude Code skill (skills/). Build the tool first;
+optionally add a skill that calls it.
 
 ### Using Scenario Tools
 
@@ -898,3 +959,22 @@ liberally, execute in parallel, and continuously learn.
 
 1. Executable tool in `.claude/scenarios/` (the program itself)
 2. Skill in `.claude/skills/` that calls the tool (convenient interface)
+
+---
+
+## 🔍 CHECKPOINT VALIDATION (After Step 5)
+
+After completing the first 5 workflow steps, STOP and verify:
+
+```
+CHECKPOINT VALIDATION:
+
+□ Steps 0-5 are ALL marked "completed" in TodoWrite
+□ NO steps were skipped
+□ ALL mandatory agent calls were made (prompt-writer, architect, etc.)
+□ Workflow file guidance was followed
+
+⚠️  IF VALIDATION FAILS: STOP and correct before continuing  ⚠️
+```
+
+If validation passes, state: **"CHECKPOINT VALIDATED - CONTINUING"**
