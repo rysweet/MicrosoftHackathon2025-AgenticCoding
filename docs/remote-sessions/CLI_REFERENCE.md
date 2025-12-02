@@ -269,7 +269,7 @@ Total Capacity: 5/8 slots available
 
 ---
 
-### amplihack remote prime (Phase 2)
+### amplihack remote prime (Future Enhancement)
 
 Pre-warm VMs to reduce cold start latency.
 
@@ -295,7 +295,7 @@ amplihack remote prime --count 3 --vm-size l
 amplihack remote prime --count 2 --region eastus
 ```
 
-**Note:** This command is planned for Phase 2. Currently, VMs are provisioned on-demand.
+**Note:** This command is planned for a future enhancement. Currently, VMs are provisioned on-demand with intelligent pooling and reuse.
 
 ---
 
@@ -342,22 +342,34 @@ Location: `~/.amplihack/remote-state.json`
       "completed_at": null,
       "exit_code": null
     }
+  },
+  "vm_pool": {
+    "amplihack-user-20251125-143000": {
+      "size": "Standard_D4s_v3",
+      "capacity": 4,
+      "active_sessions": [
+        "sess-20251125-143022-abc",
+        "sess-20251125-143025-def"
+      ],
+      "region": "westus3",
+      "created_at": "2025-11-25T14:30:00Z"
+    }
   }
 }
 ```
 
-**Note:** VM pool tracking (`vms` key with size, region, max_sessions) is planned for Phase 2.
+**Note:** VM pool tracking with capacity management is now available in Phase 2.
 
 ## Memory Management
 
 | VM Size | Total RAM | Max Sessions | Per Session |
 | ------- | --------- | ------------ | ----------- |
-| s       | 8GB       | 1            | 4GB         |
-| m       | 64GB      | 2            | 16GB        |
-| l       | 128GB     | 4            | 16GB        |
-| xl      | 256GB     | 8            | 16GB        |
+| s       | 32GB      | 1            | 32GB        |
+| m       | 64GB      | 2            | 32GB        |
+| l       | 128GB     | 4            | 32GB        |
+| xl      | 256GB     | 8            | 32GB        |
 
-Memory is set via `NODE_OPTIONS="--max-old-space-size=16384"` in each tmux session.
+Memory is set via `NODE_OPTIONS="--max-old-space-size=32768"` in each tmux session (32GB).
 
 ## tmux Session Structure
 

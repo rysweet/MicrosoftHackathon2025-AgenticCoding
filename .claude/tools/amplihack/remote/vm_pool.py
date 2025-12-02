@@ -31,21 +31,22 @@ class VMSize(Enum):
     """VM capacity tiers for concurrent sessions.
 
     Each size represents the number of concurrent Claude Code sessions
-    that can run on a VM of that size.
+    that can run on a VM of that size, with 32GB RAM per session.
     """
 
-    S = 1  # Small: 1 concurrent session (Standard_D2s_v3)
-    M = 2  # Medium: 2 concurrent sessions (Standard_D2s_v3)
-    L = 4  # Large: 4 concurrent sessions (Standard_D4s_v3)
-    XL = 8  # Extra Large: 8 concurrent sessions (Standard_D8s_v3)
+    S = 1  # Small: 1 concurrent session (32GB VM)
+    M = 2  # Medium: 2 concurrent sessions (64GB VM)
+    L = 4  # Large: 4 concurrent sessions (128GB VM)
+    XL = 8  # Extra Large: 8 concurrent sessions (256GB VM)
 
 
 # Map VMSize to Azure VM SKUs
+# Each session gets 32GB RAM for optimal Claude Code performance
 _VMSIZE_TO_AZURE_SIZE = {
-    VMSize.S: "Standard_D2s_v3",
-    VMSize.M: "Standard_D2s_v3",
-    VMSize.L: "Standard_D4s_v3",
-    VMSize.XL: "Standard_D8s_v3",
+    VMSize.S: "Standard_D8s_v3",  # 32GB RAM - 1 session × 32GB
+    VMSize.M: "Standard_E8s_v5",  # 64GB RAM - 2 sessions × 32GB
+    VMSize.L: "Standard_E16s_v5",  # 128GB RAM - 4 sessions × 32GB
+    VMSize.XL: "Standard_E32s_v5",  # 256GB RAM - 8 sessions × 32GB
 }
 
 

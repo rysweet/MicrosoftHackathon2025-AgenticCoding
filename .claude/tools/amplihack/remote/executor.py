@@ -528,6 +528,7 @@ PROMPT=$(echo '{encoded_prompt}' | base64 -d)
 tmux new-session -d -s {safe_session_id} -c {safe_workspace}
 tmux send-keys -t {safe_session_id} "source ~/.amplihack-venv/bin/activate" C-m
 tmux send-keys -t {safe_session_id} "export ANTHROPIC_API_KEY='$ANTHROPIC_API_KEY'" C-m
+tmux send-keys -t {safe_session_id} "export NODE_OPTIONS='--max-old-space-size=32768'" C-m
 tmux send-keys -t {safe_session_id} "amplihack claude --{command} --max-turns {max_turns} -- -p \\"$PROMPT\\"" C-m
 
 echo "Tmux session {safe_session_id} started successfully"
