@@ -6,12 +6,7 @@ This file documents non-obvious problems, solutions, and patterns discovered dur
 
 ## Table of Contents
 
-### Recent (December 2025)
-
-- [Mandatory User Testing Validates Its Own Value](#mandatory-user-testing-validates-value-2025-12-02)
-- [System Metadata vs User Content in Git Conflict Detection](#system-metadata-vs-user-content-git-conflict-2025-12-01)
-
-### November 2025
+### Recent (November 2025)
 
 - [Power-Steering Session Type Detection Fix](#power-steering-session-type-detection-fix-2025-11-25)
 - [Transcripts System Architecture Validation](#transcripts-system-investigation-2025-11-22)
@@ -52,112 +47,6 @@ How was it resolved? Include code if relevant.
 
 What insights should be remembered?
 ```
-
----
-
-## System Metadata vs User Content in Git Conflict Detection (2025-12-01)
-
-### Problem
-
-User reported: "amplihack's copytree_manifest fails when .claude/ has uncommitted changes" specifically with `.claude/.version` file modified. Despite having a comprehensive safety system (GitConflictDetector + SafeCopyStrategy), deployment proceeded without warning and created a version mismatch state.
-
-### Root Cause
-
-The `.version` file is a **system-generated tracking file** that stores the git commit hash of the deployed amplihack package. The issue occurred due to a semantic classification gap:
-
-1. **Git Status Detection**: `GitConflictDetector._get_uncommitted_files()` correctly detects ALL uncommitted files including `.version` (status: M)
-
-2. **Filtering Logic Gap**: `_filter_conflicts()` at lines 82-97 in `git_conflict_detector.py` only checks files against ESSENTIAL_DIRS patterns:
-   ```python
-   for essential_dir in essential_dirs:
-       if relative_path.startswith(essential_dir + "/"):
-           conflicts.append(file_path)
-   ```
-
-3. **ESSENTIAL_DIRS Are All Subdirectories**: `["agents/amplihack", "commands/amplihack", "context/", ...]` - all contain "/"
-
-4. **Root-Level Files Filtered Out**: `.version` at `.claude/.version` doesn't match any pattern → filtered OUT → `has_conflicts = False`
-
-5. **No Warning Issued**: SafeCopyStrategy sees no conflicts, proceeds to working directory without prompting user
-
-6. **Version Mismatch Created**: copytree_manifest copies fresh directories but **doesn't copy `.version`** (not in ESSENTIAL_FILES), leaving stale version marker with fresh code
-
-### Solution
-
-Exclude system-generated metadata files from conflict detection by adding explicit categorization:
-
-```python
-# In src/amplihack/safety/git_conflict_detector.py
-
-SYSTEM_METADATA = {
-    ".version",        # Framework version tracking (auto-generated)
-    "settings.json",   # Runtime settings (auto-generated)
-}
-
-def _filter_conflicts(
-    self, uncommitted_files: List[str], essential_dirs: List[str]
-) -> List[str]:
-    """Filter uncommitted files for conflicts with essential_dirs."""
-    conflicts = []
-    for file_path in uncommitted_files:
-        if file_path.startswith(".claude/"):
-            relative_path = file_path[8:]
-
-            # Skip system-generated metadata - safe to overwrite
-            if relative_path in SYSTEM_METADATA:
-                continue
-
-            # Existing filtering logic for essential directories
-            for essential_dir in essential_dirs:
-                if (
-                    relative_path.startswith(essential_dir + "/")
-                    or relative_path == essential_dir
-                ):
-                    conflicts.append(file_path)
-                    break
-    return conflicts
-```
-
-**Rationale**:
-- **Semantic Classification**: Filter by PURPOSE (system vs user), not just directory structure
-- **Ruthlessly Simple**: 3-line change, surgical fix
-- **Philosophy-Aligned**: Treats system files appropriately (not user content)
-- **Zero-BS**: Fixes exact issue without over-engineering
-
-### Key Learnings
-
-1. **Root-Level Files Need Special Handling**: Directory-based filtering (checking for "/") misses root-level files entirely. System metadata often lives at root.
-
-2. **Semantic > Structural Classification**: Git conflict detection should categorize by FILE PURPOSE (user-managed vs system-generated), not just location patterns.
-
-3. **Auto-Generated Files vs User Content**: Framework metadata files like `.version`, `*.lock`, `.state` should never trigger conflict warnings - they're infrastructure, not content.
-
-4. **ESSENTIAL_DIRS Pattern Limitation**: Works great for subdirectories (`context/`, `tools/`), but silently excludes root-level files. Need explicit system file list.
-
-5. **False Negatives Are Worse Than False Positives**: Safety system failing to warn about user content is bad, but warning about system files breaks user trust and workflow.
-
-6. **Version Files Are Special**: Any framework with version tracking faces this - `.version`, `.state`, `.lock` files should be treated as disposable metadata, not user content to protect.
-
-### Related Patterns
-
-- See PATTERNS.md: "System Metadata vs User Content Classification" - NEW pattern added from this discovery
-- Relates to "Graceful Environment Adaptation" (different file handling per environment)
-- Reinforces "Fail-Fast Prerequisite Checking" (but needs correct semantic classification)
-
-### Impact
-
-- **Affects**: All deployments where `.version` or other system metadata has uncommitted changes
-- **Frequency**: Common after updates (`.version` auto-updated but not committed)
-- **User Experience**: Confusing "version mismatch" errors despite fresh deployment
-- **Fix Priority**: High - breaks user trust in safety system
-
-### Verification
-
-Test cases added:
-- Uncommitted `.version` doesn't trigger conflict warning ✅
-- Uncommitted user content (`.claude/context/custom.md`) DOES trigger warning ✅
-- Deployment proceeds smoothly with modified `.version` ✅
-- Version mismatch detection still works correctly ✅
 
 ---
 
@@ -1789,126 +1678,47 @@ Opus V2:
 
 **Lesson**: Always validate AI guidance changes empirically with ALL target models before deploying
 
----
+## 2025-12-02: V5 (Outcome Emphasis) Achieves Opus 22/22 at 92% Cost Reduction
 
-## Mandatory User Testing Validates Its Own Value {#mandatory-user-testing-validates-value-2025-12-02}
+**Context**: After V2 (No STOP Gates) got Opus to ~20/22 steps, tested 4 enhancements (V4-V7) to achieve full 22/22.
 
-**Date**: 2025-12-02
-**Context**: Implementing Parallel Task Orchestrator (Issue #1783, PR #1784)
-**Impact**: HIGH - Validates mandatory testing requirement, found production-blocking bug
+**Breakthrough**: **ALL THREE Opus variations (V4, V5, V7) achieved 22/22 steps!**
 
-### Problem
+**Winner: V5 (Outcome Emphasis)**:
 
-Unit tests can achieve high coverage (86%) and 100% pass rate while missing critical real-world bugs.
+- **22/22 workflow steps** ✅ (Opus finally completes all steps!)
+- **$4.57 cost** (92% reduction vs V2's $56.86!)
+- **23.8m duration** (61% faster than V2's 61.4m)
+- **Mechanism**: Mandatory deliverables checklist at top of CLAUDE.md
 
-### Discovery
+**What Worked**:
 
-Mandatory user testing (USER_PREFERENCES.md requirement) caught a **production-blocking bug** that 110 passing unit tests missed:
+- Deliverables focus (outcome, not process)
+- Simple checklist: "[ ] GitHub issue created", "[ ] Feature branch created", etc.
+- Positioned at top for immediate visibility
+- No STOP gates (learned from V2)
 
-**Bug**: `SubIssue` dataclass not hashable, but `OrchestrationConfig` uses `set()` for deduplication
+**Other Successes**:
 
-```python
-# This passed all unit tests but fails in real usage:
-config = OrchestrationConfig(sub_issues=[...])
-# TypeError: unhashable type: 'SubIssue'
-```
+- V4 (Explicit Steps): 22/22, $9.82, 20.7m (fastest)
+- V7 (Progress Tracking): 22/22, $11.89, 26.5m
 
-### How It Was Missed
+**Why V5 Wins**:
 
-**Unit Tests** (110/110 passing):
-- Mocked all `SubIssue` creation
-- Never tested real deduplication path
-- Assumed API worked without instantiation
+- Cheapest (53% cheaper than V4)
+- Still fast (15% slower than V4, but 2x cheaper)
+- Simplest mechanism (outcome checklist)
+- Universal (works for both models - V6 Sonnet also 22/22)
 
-**User Testing** (mandatory requirement):
-- Tried actual config creation
-- **Bug discovered in <2 minutes**
-- Immediate TypeError on first real use
+**Comparison to Previous Approaches**:
 
-### Fix
+- #1687 Original Opus: 3/22 steps, $3.54
+- #1703 Approach 1 (Visual): 22/22 steps, $24.15 (expensive!)
+- #1781 V2 (No STOP Gates): ~20/22 steps, $56.86
+- **#1785 V5 (Outcome Emphasis): 22/22 steps, $4.57** ⭐ **BEST**
 
-```python
-# Before
-@dataclass
-class SubIssue:
-    labels: List[str] = field(default_factory=list)
+**Key Insight**: **Outcome-focused prompts > Process-focused prompts** for Opus adherence. Telling Opus WHAT artifacts to create is more effective than HOW to execute steps.
 
-# After  
-@dataclass(frozen=True)
-class SubIssue:
-    labels: tuple = field(default_factory=tuple)
-```
+**Impact**: We now have a universally-effective, low-cost solution for Opus workflow compliance. V5 should replace V2 in production.
 
-### Validation
-
-**Test Results After Fix**:
-```
-✅ Config creation works
-✅ Deduplication works (3 items → 2 unique)
-✅ Orchestrator instantiation works
-✅ Status API functional
-```
-
-### Key Insights
-
-1. **High test coverage ≠ Real-world readiness**
-   - 86% coverage, 110/110 tests, still had production blocker
-   - Mocks hide integration issues
-
-2. **User testing finds different bugs**
-   - Unit tests validate component logic
-   - User tests validate actual workflows
-   - Both are necessary
-
-3. **Mandatory requirement justified**
-   - Without user testing, would've shipped broken code
-   - CI wouldn't catch this (unit tests pass)
-   - First user would've hit TypeError
-
-4. **Time investment worthwhile**
-   - <5 minutes of user testing
-   - Found bug that could've cost hours of debugging
-   - Prevented embarrassing production failure
-
-### Implementation
-
-**Mandatory User Testing Pattern**:
-```bash
-# Test like a user would
-python -c "from module import Class; obj = Class(...)"  # Real instantiation
-config = RealConfig(real_data)  # No mocks
-result = api.actual_method()  # Real workflow
-```
-
-**NOT sufficient**:
-```python
-# Unit test approach (can miss real issues)
-@patch("module.Class")
-def test_with_mock(mock_class):  # Never tests real instantiation
-    ...
-```
-
-### Lessons Learned
-
-1. **Always test like a user** - No mocks, real instantiation, actual workflows
-2. **High coverage isn't enough** - Need real usage validation
-3. **Mocks hide bugs** - Integration issues invisible to mocked tests  
-4. **User requirements are wise** - This explicit requirement saved us from shipping broken code
-
-### Related
-
-- Issue #1783: Parallel Task Orchestrator
-- PR #1784: Implementation
-- USER_PREFERENCES.md: Mandatory E2E testing requirement
-- Commit dc90b350: Hashability fix
-
-### Recommendation
-
-**ENFORCE mandatory user testing** for ALL features:
-- Test with `uvx --from git+...` (no local state)
-- Try actual user workflows (no mocks)
-- Verify error messages and UX
-- Document test results in PR
-
-This discovery **validates the user's explicit requirement** - mandatory user testing prevents production failures that unit tests miss.
-
+**Related**: Issues #1703, #1781, #1785; Branches experiment/v4-v7-opus-enhancement
