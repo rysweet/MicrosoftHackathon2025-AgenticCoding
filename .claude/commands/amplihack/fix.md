@@ -1,5 +1,5 @@
 ---
-name: fix
+name: amplihack:fix
 version: 1.0.0
 description: Rapid diagnosis and fix for common issues
 triggers:
@@ -243,7 +243,7 @@ For comprehensive fixes, automatically integrates with UltraThink:
 1. /fix comprehensive [pattern]
 2. → Calls /ultrathink with fix task
 3. → UltraThink reads DEFAULT_WORKFLOW.md
-4. → Follows full 14-step process
+4. → Follows full multi-step process
 5. → Uses fix-agent and templates as needed
 ```
 

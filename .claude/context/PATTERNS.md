@@ -7,12 +7,14 @@ This document captures proven patterns and solutions for clean design and robust
 This document maintains **14 foundational patterns** that apply across most amplihack development.
 
 **Patterns are kept when they:**
+
 1. Solve recurring problems (used 3+ times in real PRs)
 2. Apply broadly across multiple agent types and scenarios
 3. Represent non-obvious solutions with working code
 4. Prevent costly errors or enable critical capabilities
 
 **Patterns are removed when they:**
+
 - Become project-specific (better suited for PROJECT.md or DISCOVERIES.md)
 - Are one-time solutions (preserved in git history)
 - Are obvious applications of existing patterns
@@ -52,6 +54,7 @@ __all__ = ["MainClass", "helper_function", "CONSTANT"]
 ```
 
 **Module Structure**:
+
 ```
 module_name/
 ├── __init__.py         # Public interface via __all__
@@ -62,6 +65,7 @@ module_name/
 ```
 
 **Key Points**:
+
 - Module docstring documents philosophy and public API
 - `__all__` defines the public interface explicitly
 - Standard library only for core utilities (avoid circular dependencies)
@@ -100,6 +104,7 @@ def process_payment(amount, payments_file="payments.json"):
 ```
 
 **Key Points**:
+
 - Every function must work or not exist
 - Use files instead of external services initially
 - No TODOs without working code
@@ -148,6 +153,7 @@ except Exception as e:
 ```
 
 **Key Points**:
+
 - 5-10 min validation prevents 20-30 min debug cycles
 - Use official documentation as source of truth
 - Test imports and minimal examples before full implementation
@@ -189,6 +195,7 @@ async def extract_with_claude_sdk(prompt: str, timeout_seconds: int = 120):
 ```
 
 **Key Points**:
+
 - 120-second timeout is optimal
 - SDK only works in Claude Code environment
 - Handle markdown in responses
@@ -238,6 +245,7 @@ def safe_subprocess_call(
 ```
 
 **Key Points**:
+
 - Standard exit codes (127 for command not found)
 - Context parameter is critical - always tell users what operation failed
 - User-friendly messages with actionable guidance
@@ -285,6 +293,7 @@ class Launcher:
 ```
 
 **Key Points**:
+
 - Check at entry point before any operations
 - Check all at once - show all issues
 - Structured results with dataclasses
@@ -318,6 +327,7 @@ class ResilientProcessor:
 ```
 
 **Key Points**:
+
 - Save after every item - never lose progress
 - Continue on failure - don't let one failure stop the batch
 - Track failure reasons
@@ -365,6 +375,7 @@ class TestEndToEnd:
 ```
 
 **Key Points**:
+
 - 60% unit tests for speed
 - Strategic mocking of external dependencies
 - E2E tests for complete workflows
@@ -402,6 +413,7 @@ class PrerequisiteChecker:
 ```
 
 **Key Points**:
+
 - Automatic platform detection (including WSL)
 - Multiple package managers for Linux
 - Documentation links for complex installations
@@ -435,6 +447,7 @@ class EnvironmentAdapter:
 ```
 
 **Key Points**:
+
 - Automatic environment detection
 - Configuration objects over scattered conditionals
 - Environment variable overrides for customization
@@ -470,6 +483,7 @@ class SmartCache:
 ```
 
 **Key Points**:
+
 - lru_cache for automatic size management
 - Thread safety is essential
 - Provide invalidation methods
@@ -504,9 +518,89 @@ def write_with_retry(filepath: Path, data: str, max_retries: int = 3):
 ```
 
 **Key Points**:
+
 - Exponential backoff for cloud sync
 - Inform user about delays
 - Create parent directories
+
+### Pattern: System Metadata vs User Content Classification in Git Operations
+
+**Challenge**: Git-aware operations treat framework-generated metadata files (like `.version`, `.state`) as user content, causing false conflict warnings when files are auto-updated by the system.
+
+**Solution**: Explicitly categorize and filter system-generated files based on semantic purpose, not just directory structure.
+
+```python
+from pathlib import Path
+from typing import Set, List
+
+class GitAwareFileFilter:
+    """Distinguish system metadata from user content in git operations"""
+
+    # System-generated files that should never trigger conflicts
+    SYSTEM_METADATA = {
+        ".version",           # Framework version tracking
+        ".state",            # Runtime state
+        "settings.json",     # Auto-generated settings
+        "*.pyc",             # Compiled bytecode
+        "__pycache__",       # Python cache
+        ".pytest_cache",     # Test cache
+    }
+
+    def _filter_conflicts(
+        self, uncommitted_files: List[str], essential_dirs: List[str]
+    ) -> List[str]:
+        """Filter git status to exclude system metadata"""
+        conflicts = []
+        for file_path in uncommitted_files:
+            if file_path.startswith(".claude/"):
+                relative_path = file_path[8:]  # Strip ".claude/"
+
+                # Skip system-generated metadata - safe to overwrite
+                if relative_path in self.SYSTEM_METADATA:
+                    continue
+
+                # Check if file is in essential directories (user content)
+                for essential_dir in essential_dirs:
+                    if (
+                        relative_path.startswith(essential_dir + "/")
+                        or relative_path == essential_dir
+                    ):
+                        conflicts.append(file_path)
+                        break
+
+        return conflicts
+```
+
+**Usage in conflict detection**:
+
+```python
+class ConflictChecker:
+    def check_conflicts(self, source_dir: Path, essential_dirs: List[str]) -> List[Path]:
+        """Check for REAL conflicts - ignore system metadata"""
+        result = subprocess.run(
+            ["git", "status", "--porcelain"],
+            capture_output=True, text=True, cwd=source_dir
+        )
+
+        uncommitted = self._parse_git_status(result.stdout)
+        user_changes = self._filter_conflicts(uncommitted, essential_dirs)
+
+        if user_changes:
+            raise ConflictError(
+                f"Uncommitted user content: {user_changes}\n"
+                f"(System metadata changes are normal and ignored)"
+            )
+```
+
+**Key Points**:
+
+- **Semantic categorization**: Filter by PURPOSE (system vs user), not location
+- **Root-level awareness**: Don't assume all root files are user content
+- **Clear error messages**: Tell users when conflicts are real vs system noise
+- **Philosophy alignment**: Ruthlessly simple - add explicit exclusion list
+- **Common pitfall**: Only checking subdirectories and missing root-level system files
+
+> **Origin**: Discovered investigating `.version` file causing false conflicts during UVX deployment. See DISCOVERIES.md (2025-12-01).
 
 ### Pattern: Async Context Management
 
@@ -527,6 +621,7 @@ class Service:
 ```
 
 **Key Points**:
+
 - Never mix sync/async APIs
 - Avoid asyncio.run() in libraries
 - Let caller manage the event loop
@@ -540,6 +635,7 @@ class Service:
 **Solution**: Always perform documentation discovery before code analysis.
 
 **Process**:
+
 1. Search for documentation files (README, ARCHITECTURE, docs/)
 2. Filter by relevance using keywords
 3. Read top 5 most relevant files
@@ -549,7 +645,7 @@ class Service:
 ```markdown
 Before analyzing [TOPIC], discover existing documentation:
 
-1. Glob: **/README.md, **/ARCHITECTURE.md, **/docs/**/*.md
+1. Glob: **/README.md, **/ARCHITECTURE.md, **/docs/**/\*.md
 2. Grep: Search for keywords related to TOPIC
 3. Read: Top 5 most relevant files
 4. Establish: What docs claim vs what exists
@@ -557,9 +653,152 @@ Before analyzing [TOPIC], discover existing documentation:
 ```
 
 **Key Points**:
+
 - Always discover docs first (30-second limit)
 - Identify doc/code discrepancies
 - Graceful degradation for missing docs
+
+## Decision-Making Patterns
+
+### Pattern: Cross-Domain Pattern Applicability Analysis
+
+**Challenge**: Teams import "industry best practices" from other domains without validating applicability, leading to unnecessary complexity.
+
+**Solution**: Five-phase framework for evaluating pattern adoption from other domains.
+
+**Phase 1: Threat Model Match**
+
+- Identify actual failure modes in YOUR system
+- Identify pattern's target failure modes
+- Verify failure modes match
+- If mismatch, REJECT pattern
+
+**Phase 2: Mechanism Appropriateness**
+
+- Does pattern assume adversarial nodes? (Usually wrong for AI agents)
+- Does pattern optimize for network communication? (Usually irrelevant for AI)
+- Does pattern solve YOUR domain's specific problem?
+
+**Phase 3: Complexity Justification**
+
+```
+Justified Complexity: Benefit Gain / Complexity Cost > 3.0
+```
+
+If ratio < 3.0, seek simpler alternatives.
+
+**Phase 4: Domain Validation**
+
+- Research pattern's origin domain
+- Verify target domain shares those characteristics
+- Check for successful applications in similar contexts
+
+**Phase 5: Alternative Exploration**
+
+- Can simpler mechanisms achieve same benefits?
+- Can you get 80% of benefit with 20% of complexity?
+
+**Key Points**:
+
+- Threat model mismatch is primary source of inappropriate pattern adoption
+- Distributed systems patterns rarely map to AI agent systems
+- "Industry best practice" without context validation is a red flag
+- Default to ruthless simplicity unless complexity clearly justified
+
+> **Origin**: Discovered evaluating PBZFT vs N-Version Programming. PBZFT would be 6-9x more complex with zero benefit. See DISCOVERIES.md (2025-10-20).
+
+## Multi-Model AI Patterns
+
+### Pattern: Multi-Model Validation Anti-Pattern (STOP Gates)
+
+**Challenge**: Validation checkpoints in AI guidance can trigger model-specific responses, helping one model while breaking another.
+
+**Problem**: STOP gates added to improve Opus caused Sonnet degradation:
+
+- Opus 4.5: STOP gates help (20/22 → 22/22 steps) ✅
+- Sonnet 4.5: STOP gates break (22/22 → 8/22 steps) ❌
+- Same text, opposite outcomes
+
+**Solution**: Remove validation checkpoints, use flow language instead.
+
+**Example - Bad (STOP Gates)**:
+
+```markdown
+## Step 1: Create GitHub Issue
+
+Create an issue for your feature.
+
+## STOP - Verify Issue Created
+
+Before proceeding to Step 2, confirm:
+
+- [ ] GitHub issue created
+- [ ] Issue number recorded
+
+Only proceed after verification complete.
+
+## Step 2: Create Branch
+
+...
+```
+
+**Example - Good (Flow Language)**:
+
+```markdown
+## Step 1: Create GitHub Issue
+
+Create an issue for your feature.
+
+## Step 2: Create Branch
+
+After creating the issue, create a feature branch...
+```
+
+**Why This Works**:
+
+- Provides clear structure without interruption points
+- Uses flow language ("After X, do Y") not interruption language ("STOP before Y")
+- Allows continuous autonomous execution
+- Works for both models
+
+**Empirical Evidence** (Issue #1755, 6/8 benchmarks complete):
+
+| Model  | With STOP Gates  | Without STOP Gates (V2)           |
+| ------ | ---------------- | --------------------------------- |
+| Sonnet | 8/22 steps (36%) | 22/22 steps (100%)                |
+| Opus   | 22/22 steps      | ~20/22 steps (maintains baseline) |
+
+**Performance Results**:
+
+- Sonnet V2: -16% cost improvement
+- Opus V2: -21% cost improvement
+- Removing gates IMPROVES performance (STOP Gate Paradox)
+
+**Key Points**:
+
+- Different models interpret "STOP" differently
+- Opus: Treats as checkpoint, proceeds
+- Sonnet: Treats as permission gate, asks user
+- High-salience language ("STOP", "MUST", ALL CAPS) risky
+- Always test multi-model before deploying guidance changes
+
+**When to Use Flow Language**:
+
+- "After X, proceed to Y" ✅
+- "When X completes, Y begins" ✅
+- "Following X, continue with Y" ✅
+
+**When to AVOID Interruption Language**:
+
+- "STOP before Y" ❌
+- "Only proceed after X" ❌
+- "Wait for confirmation before Y" ❌
+
+**Related**: Issue #1755, DISCOVERIES.md (2025-12-01)
+**Validation**: 75% complete (6/8 benchmarks), both models tested
+**Impact**: $20K-$406K annual savings from removing STOP gates
+
+---
 
 ## Remember
 

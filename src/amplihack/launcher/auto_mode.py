@@ -9,6 +9,7 @@ import subprocess
 import sys
 import threading
 import time
+from contextlib import nullcontext
 from pathlib import Path
 from typing import Optional, Tuple
 
@@ -80,7 +81,7 @@ class AutoMode:
         max_turns: int = 10,
         working_dir: Optional[Path] = None,
         ui_mode: bool = False,
-        query_timeout_minutes: float = 5.0,
+        query_timeout_minutes: Optional[float] = 30.0,
     ):
         """Initialize auto mode.
 
@@ -90,7 +91,8 @@ class AutoMode:
             max_turns: Max iterations (default 10)
             working_dir: Working directory (defaults to current dir)
             ui_mode: Enable interactive UI mode (requires Rich library)
-            query_timeout_minutes: Timeout for each SDK query in minutes (default 5.0)
+            query_timeout_minutes: Timeout for each SDK query in minutes (default 30.0).
+                None disables timeout. Opus detection is handled by cli.py:resolve_timeout().
         """
         self.sdk = sdk
         self.prompt = prompt
@@ -100,13 +102,23 @@ class AutoMode:
         self.working_dir = working_dir if working_dir is not None else Path.cwd()
         self.ui_enabled = ui_mode
         self.ui = None
-        # Validate timeout value
-        if query_timeout_minutes <= 0:
-            raise ValueError(f"query_timeout_minutes must be positive, got {query_timeout_minutes}")
-        if query_timeout_minutes > 120:  # 2 hours max - warn but allow
-            print(f"Warning: Very long timeout ({query_timeout_minutes} minutes)", file=sys.stderr)
 
-        self.query_timeout_seconds = query_timeout_minutes * 60.0  # Keep as float for precision
+        # Handle timeout: None means no timeout, otherwise validate
+        if query_timeout_minutes is None:
+            # No timeout - used for --no-timeout flag
+            self.query_timeout_seconds: Optional[float] = None
+        else:
+            # Validate positive timeout
+            if query_timeout_minutes <= 0:
+                raise ValueError(
+                    f"query_timeout_minutes must be positive, got {query_timeout_minutes}"
+                )
+            if query_timeout_minutes > 120:  # 2 hours max - warn but allow
+                print(
+                    f"Warning: Very long timeout ({query_timeout_minutes} minutes)", file=sys.stderr
+                )
+
+            self.query_timeout_seconds = query_timeout_minutes * 60.0  # Keep as float for precision
         self.log_dir = (
             self.working_dir / ".claude" / "runtime" / "logs" / f"auto_{sdk}_{int(time.time())}"
         )
@@ -527,8 +539,13 @@ Document your decisions and reasoning in comments/logs."""
             # Track turn start time for accurate timeout reporting
             turn_start_time = time.time()
 
-            # Add timeout wrapper around SDK query
-            async with asyncio.timeout(self.query_timeout_seconds):
+            # Add timeout wrapper around SDK query (use nullcontext if no timeout)
+            timeout_ctx = (
+                asyncio.timeout(self.query_timeout_seconds)
+                if self.query_timeout_seconds is not None
+                else nullcontext()
+            )
+            async with timeout_ctx:
                 async for message in query(prompt=prompt, options=options):
                     print("\n[DEBUG] 💬 Got a message from query()", flush=True)
                     # Handle different message types
@@ -1341,33 +1358,19 @@ Current Turn: {turn}/{self.max_turns}"""
                 self.log("Transcript builder not found, skipping export", level="INFO")
                 return
 
-            builder = ClaudeTranscriptBuilder(
-                session_id=self.log_dir.name, working_dir=self.working_dir
-            )
+            builder = ClaudeTranscriptBuilder(session_id=self.log_dir.name, working_dir=self.working_dir)
             messages = self.message_capture.get_messages()
 
             if not messages:
                 self.log("No messages captured for export", level="DEBUG")
                 return
 
-            # Validate export path BEFORE exporting
-            expected_session_dir = self.log_dir
+            # Log where transcripts will be exported
             actual_session_dir = builder.session_dir
-
-            # Check if builder's session_dir matches our expected location
-            if expected_session_dir.resolve() != actual_session_dir.resolve():
-                error_msg = (
-                    f"Transcript export path mismatch detected!\n"
-                    f"  Expected: {expected_session_dir}\n"
-                    f"  Actual:   {actual_session_dir}\n"
-                    f"  This usually means project root detection failed.\n"
-                    f"  Refusing to export to wrong location to prevent silent data loss."
-                )
-                self.log(error_msg, level="ERROR")
-                raise ValueError(error_msg)
-
-            # Log where transcripts will be exported (helps debugging)
             self.log(f"Exporting transcripts to: {actual_session_dir}", level="DEBUG")
+
+            # Note: We don't validate path location - transcript export works
+            # whether it's in workspace or venv site-packages (remote execution)
 
             # Calculate total duration across all forks
             total_duration = self.total_session_time + (time.time() - self.start_time)

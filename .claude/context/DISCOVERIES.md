@@ -1,875 +1,295 @@
 # DISCOVERIES.md
 
-This file documents non-obvious problems, solutions, and patterns discovered
-during development. It serves as a living knowledge base that grows with the
-project.
+This file documents non-obvious problems, solutions, and patterns discovered during development. It serves as a living knowledge base.
+
+**Archive**: Entries older than 3 months are moved to [DISCOVERIES_ARCHIVE.md](./DISCOVERIES_ARCHIVE.md).
+
+## Table of Contents
+
+### Recent (December 2025)
+
+- [Mandatory User Testing Validates Its Own Value](#mandatory-user-testing-validates-value-2025-12-02)
+- [System Metadata vs User Content in Git Conflict Detection](#system-metadata-vs-user-content-git-conflict-2025-12-01)
+
+### November 2025
+
+- [Power-Steering Session Type Detection Fix](#power-steering-session-type-detection-fix-2025-11-25)
+- [Transcripts System Architecture Validation](#transcripts-system-investigation-2025-11-22)
+- [Hook Double Execution - Claude Code Bug](#hook-double-execution-claude-code-bug-2025-11-21)
+- [StatusLine Configuration Missing](#statusline-configuration-missing-2025-11-18)
+- [Power-Steering Path Validation Bug](#power-steering-path-validation-bug-2025-11-17)
+- [Power Steering Branch Divergence](#power-steering-mode-branch-divergence-2025-11-16)
+- [Mandatory End-to-End Testing Pattern](#mandatory-end-to-end-testing-pattern-2025-11-10)
+- [Neo4j Container Port Mismatch](#neo4j-container-port-mismatch-bug-2025-11-08)
+- [Parallel Reflection Workstream Success](#parallel-reflection-workstream-execution-2025-11-05)
+
+### October 2025
+
+- [Pattern Applicability Framework](#pattern-applicability-analysis-framework-2025-10-20)
+- [Socratic Questioning Pattern](#socratic-questioning-pattern-2025-10-18)
+- [Expert Agent Creation Pattern](#expert-agent-creation-pattern-2025-10-18)
+
+---
+
+## Entry Format Template
+
+```markdown
+## [Brief Title] (YYYY-MM-DD)
+
+### Problem
+
+What challenge was encountered?
+
+### Root Cause
+
+Why did this happen?
+
+### Solution
+
+How was it resolved? Include code if relevant.
+
+### Key Learnings
+
+What insights should be remembered?
+```
+
+---
+
+## System Metadata vs User Content in Git Conflict Detection (2025-12-01)
+
+### Problem
+
+User reported: "amplihack's copytree_manifest fails when .claude/ has uncommitted changes" specifically with `.claude/.version` file modified. Despite having a comprehensive safety system (GitConflictDetector + SafeCopyStrategy), deployment proceeded without warning and created a version mismatch state.
+
+### Root Cause
+
+The `.version` file is a **system-generated tracking file** that stores the git commit hash of the deployed amplihack package. The issue occurred due to a semantic classification gap:
+
+1. **Git Status Detection**: `GitConflictDetector._get_uncommitted_files()` correctly detects ALL uncommitted files including `.version` (status: M)
+
+2. **Filtering Logic Gap**: `_filter_conflicts()` at lines 82-97 in `git_conflict_detector.py` only checks files against ESSENTIAL_DIRS patterns:
+   ```python
+   for essential_dir in essential_dirs:
+       if relative_path.startswith(essential_dir + "/"):
+           conflicts.append(file_path)
+   ```
+
+3. **ESSENTIAL_DIRS Are All Subdirectories**: `["agents/amplihack", "commands/amplihack", "context/", ...]` - all contain "/"
+
+4. **Root-Level Files Filtered Out**: `.version` at `.claude/.version` doesn't match any pattern → filtered OUT → `has_conflicts = False`
+
+5. **No Warning Issued**: SafeCopyStrategy sees no conflicts, proceeds to working directory without prompting user
+
+6. **Version Mismatch Created**: copytree_manifest copies fresh directories but **doesn't copy `.version`** (not in ESSENTIAL_FILES), leaving stale version marker with fresh code
+
+### Solution
+
+Exclude system-generated metadata files from conflict detection by adding explicit categorization:
+
+```python
+# In src/amplihack/safety/git_conflict_detector.py
+
+SYSTEM_METADATA = {
+    ".version",        # Framework version tracking (auto-generated)
+    "settings.json",   # Runtime settings (auto-generated)
+}
+
+def _filter_conflicts(
+    self, uncommitted_files: List[str], essential_dirs: List[str]
+) -> List[str]:
+    """Filter uncommitted files for conflicts with essential_dirs."""
+    conflicts = []
+    for file_path in uncommitted_files:
+        if file_path.startswith(".claude/"):
+            relative_path = file_path[8:]
+
+            # Skip system-generated metadata - safe to overwrite
+            if relative_path in SYSTEM_METADATA:
+                continue
+
+            # Existing filtering logic for essential directories
+            for essential_dir in essential_dirs:
+                if (
+                    relative_path.startswith(essential_dir + "/")
+                    or relative_path == essential_dir
+                ):
+                    conflicts.append(file_path)
+                    break
+    return conflicts
+```
+
+**Rationale**:
+- **Semantic Classification**: Filter by PURPOSE (system vs user), not just directory structure
+- **Ruthlessly Simple**: 3-line change, surgical fix
+- **Philosophy-Aligned**: Treats system files appropriately (not user content)
+- **Zero-BS**: Fixes exact issue without over-engineering
+
+### Key Learnings
+
+1. **Root-Level Files Need Special Handling**: Directory-based filtering (checking for "/") misses root-level files entirely. System metadata often lives at root.
+
+2. **Semantic > Structural Classification**: Git conflict detection should categorize by FILE PURPOSE (user-managed vs system-generated), not just location patterns.
+
+3. **Auto-Generated Files vs User Content**: Framework metadata files like `.version`, `*.lock`, `.state` should never trigger conflict warnings - they're infrastructure, not content.
+
+4. **ESSENTIAL_DIRS Pattern Limitation**: Works great for subdirectories (`context/`, `tools/`), but silently excludes root-level files. Need explicit system file list.
+
+5. **False Negatives Are Worse Than False Positives**: Safety system failing to warn about user content is bad, but warning about system files breaks user trust and workflow.
+
+6. **Version Files Are Special**: Any framework with version tracking faces this - `.version`, `.state`, `.lock` files should be treated as disposable metadata, not user content to protect.
+
+### Related Patterns
+
+- See PATTERNS.md: "System Metadata vs User Content Classification" - NEW pattern added from this discovery
+- Relates to "Graceful Environment Adaptation" (different file handling per environment)
+- Reinforces "Fail-Fast Prerequisite Checking" (but needs correct semantic classification)
+
+### Impact
+
+- **Affects**: All deployments where `.version` or other system metadata has uncommitted changes
+- **Frequency**: Common after updates (`.version` auto-updated but not committed)
+- **User Experience**: Confusing "version mismatch" errors despite fresh deployment
+- **Fix Priority**: High - breaks user trust in safety system
+
+### Verification
+
+Test cases added:
+- Uncommitted `.version` doesn't trigger conflict warning ✅
+- Uncommitted user content (`.claude/context/custom.md`) DOES trigger warning ✅
+- Deployment proceeds smoothly with modified `.version` ✅
+- Version mismatch detection still works correctly ✅
+
+---
+
+## Auto Mode Timeout Causing Opus Model Workflow Failures (2025-11-26)
+
+### Problem
+
+Opus model was "skipping" workflow steps during auto mode execution. Investigation revealed the 5-minute per-turn timeout was cutting off Opus execution mid-workflow due to extended thinking requirements.
+
+### Root Cause
+
+The default per-turn timeout of 5 minutes was too aggressive for Opus model, which requires extended thinking time. Log analysis showed:
+
+- `Turn 2 timed out after 300.0s`
+- `Turn 1 timed out after 600.1s`
+
+### Solution (PR #1676)
+
+Implemented flexible timeout resolution system:
+
+1. **Increased default timeout**: 5 min → 30 min
+2. **Added `--no-timeout` flag**: Disables timeout entirely using `nullcontext()`
+3. **Opus auto-detection**: Model names containing "opus" automatically get 60 min timeout
+4. **Clear priority system**: `--no-timeout` > explicit > auto-detect > default
+
+### Key Insight
+
+**Extended thinking models like Opus need significantly longer timeouts.** Auto-detection based on model name provides a good default without requiring users to remember to adjust settings.
+
+### Files Changed
+
+- `src/amplihack/cli.py`: Added `--no-timeout` flag and `resolve_timeout()` function
+- `src/amplihack/launcher/auto_mode.py`: Accept `None` timeout using `nullcontext`
+- `tests/unit/test_auto_mode_timeout.py`: 19 comprehensive tests
+- `docs/AUTO_MODE.md`: Added timeout configuration documentation
 
 ## Power-Steering Session Type Detection Fix (2025-11-25)
 
 ### Problem
 
-Power-steering was incorrectly blocking investigation/troubleshooting sessions with development-specific checks (PR, CI/CD, tests). Sessions like "Investigate SSH connection issues" were being classified as DEVELOPMENT or MAINTENANCE based on tool usage patterns (Bash commands, doc updates), even though they should be INVESTIGATION.
+Power-steering incorrectly blocking investigation sessions with development-specific checks. Sessions like "Investigate SSH issues" were misclassified as DEVELOPMENT.
 
 ### Root Cause
 
-The `detect_session_type()` method relied solely on tool-based heuristics:
+`detect_session_type()` relied solely on tool-based heuristics. Troubleshooting sessions involve Bash commands and doc updates, matching development patterns.
 
-- Bash commands → could indicate DEVELOPMENT (tests) or MAINTENANCE (git)
-- Doc file edits → MAINTENANCE
-- Read/Grep operations → INVESTIGATION (but only if no writes)
+### Solution
 
-Troubleshooting sessions often involve:
+Added **keyword-based detection** with priority over tool heuristics. Check first 5 user messages for investigation keywords (investigate, troubleshoot, diagnose, debug, analyze).
 
-- Bash commands to diagnose/fix issues (SSH, docker, etc.)
-- Doc updates (DISCOVERIES.md) to record findings
-- These patterns were misclassified
+### Key Learnings
 
-### Solution (PR #1606)
+**User intent (keywords) is more reliable than tool usage patterns** for session classification.
 
-Added **keyword-based session type detection** with priority over tool heuristics:
+---
 
-1. Check first 5 user messages for investigation keywords
-2. Keywords include: investigate, troubleshoot, diagnose, debug, analyze, research, explore, understand, figure out, why does, how does, what causes, root cause, explain
-3. If found → immediately classify as INVESTIGATION
-4. Fall back to tool-based heuristics only if no keywords
+## Transcripts System Investigation (2025-11-22)
 
-### Key Insight
+### Problem
 
-**User intent (expressed through keywords) is more reliable than tool usage patterns** for classifying session types. A user saying "troubleshoot the SSH issue" clearly wants an investigation, regardless of what tools get used.
-
-### Files Changed
-
-- `.claude/tools/amplihack/hooks/power_steering_checker.py`: Added `INVESTIGATION_KEYWORDS`, `_has_investigation_keywords()`, updated `detect_session_type()`
-- `.claude/tools/amplihack/hooks/tests/test_session_classification.py`: Added 18 tests for keyword detection
-
-## Transcripts System Investigation - Architecture Validated, Microsoft Amplifier Comparison Complete (2025-11-22)
-
-### Investigation Summary
-
-Conducted comprehensive investigation of amplihack's transcript system architecture, validated against documentation, and compared with Microsoft Amplifier's approach. **Key finding: amplihack's independent, philosophy-aligned architecture is superior for its use case.**
+Needed validation of amplihack's transcript architecture vs Microsoft Amplifier approach.
 
 ### Key Findings
 
-**Decision**: Maintain current transcript system architecture
-**Rationale**: Perfect philosophy alignment (30/30) + proven stability + zero user demand for alternatives
+- **Decision**: Maintain current 2-tier builder architecture
+- **Rationale**: Perfect philosophy alignment (30/30) + proven stability
+- **Architecture**: ClaudeTranscriptBuilder + CodexTranscriptsBuilder with 4 strategic hooks
+- **5 advantages over Amplifier**: Session isolation, human-readable Markdown, fail-safe architecture, original request tracking, zero external dependencies
 
-#### Architecture Validation
+### Key Learnings
 
-amplihack transcript system uses **2-tier builder pattern**:
+Independent innovation can be better than adopting external patterns. Session isolation beats centralized state.
 
-- **ClaudeTranscriptBuilder** (596 lines) - Raw data capture from hooks
-- **CodexTranscriptsBuilder** (769 lines) - Knowledge extraction and Markdown generation
+---
 
-**4 Strategic Hooks**: SessionStart, PostToolUse, PreCompact, Stop
+## Hook Double Execution - Claude Code Bug (2025-11-21)
 
-**Session-Isolated Storage**: `.claude/runtime/logs/{session_id}/` with JSON + Markdown formats
+### Problem
 
-**Philosophy Score**: 30/30 (perfect alignment)
-
-#### Documentation Validation Results
-
-**Documentation accuracy**: 100% - All verified correct
-
-- ✅ All path references correctly use `.claude/runtime/logs/`
-- ✅ Architecture correctly described
-- ✅ Hook integration points accurate
-
-**Note**: Initial investigation draft incorrectly suggested a path error in PROJECT.md line 347. Comprehensive verification found NO such error - all documentation uses correct paths.
-
-#### Strategic Recommendation
-
-**MAINTAIN CURRENT ARCHITECTURE** - amplihack's system has 5 MAJOR advantages over Microsoft Amplifier patterns (session isolation, human-readable Markdown, fail-safe architecture, original request tracking, zero external dependencies).
-
-### Lessons Learned
-
-1. **Independent innovation can be better than adoption**
-2. **Session isolation beats centralized state**
-3. **Philosophy score predicts success** - Systems scoring 25+ out of 30 have been stable
-
-## StatusLine Configuration Missing from Installation Templates (2025-11-18)
-
-### Problem Discovered
-
-**Custom status line feature is fully implemented but never configured during installation**. The `statusline.sh` script exists and works perfectly, but neither installation method (regular or UVX) adds the statusLine configuration to settings.json.
-
-**Result**: Users lose custom status line on install/update, or never discover the feature exists.
+SessionStart and Stop hooks execute **twice per session** with different PIDs.
 
 ### Root Cause
 
-**Both installation paths exclude statusLine configuration**:
+**Claude Code internal bug #10871** - Hook execution engine spawns two separate processes regardless of configuration. Our config is correct per schema.
 
-1. **Regular Installation** (`.claude/tools/amplihack/install.sh`):
-   - Creates hardcoded settings.json template (lines 126-178)
-   - Template includes permissions, hooks, MCP settings
-   - Template **excludes statusLine** configuration
+### Solution
 
-2. **UVX Installation** (`src/amplihack/utils/uvx_settings_template.json`):
-   - Auto-generated on first UVX run if settings missing or lacks bypass permissions
-   - Template includes permissions, hooks, MCP settings
-   - Template **also excludes statusLine** configuration
+**NO CODE FIX AVAILABLE**. Accept duplication as known limitation. Hooks are idempotent, safe but wasteful (~2 seconds per session).
 
-**Why This Happens**: Templates were created independently of the statusline.sh implementation. The script exists at `.claude/tools/statusline.sh` but is never referenced in any installation automation.
+### Key Learnings
 
-### Impact
+1. Configuration was correct - the `"hooks": []` wrapper is required by schema
+2. Schema validation prevents incorrect "fixes"
+3. Upstream bugs affect downstream projects
 
-- Users in regular mode: Lose statusLine config when running install.sh
-- Users in UVX mode: Never get statusLine configured automatically
-- Feature discoverability: Zero - not documented in README, prerequisites, or setup guides
-- User experience: Must manually edit settings.json to enable this production-ready feature
+**Tracking**: Claude Code GitHub Issue #10871
 
-### The StatusLine Feature
+---
 
-**Location**: `.claude/tools/statusline.sh`
+## StatusLine Configuration Missing (2025-11-18)
 
-**Shows**:
+### Problem
 
-- Directory path (with ~ for home)
-- Git branch with dirty state indicator
-- Git remote tracking
-- Model name (color-coded: Red=Opus, Green=Sonnet, Blue=Haiku)
-- Token usage (formatted with K/M suffixes)
-- Cost tracking (USD)
-- Session duration
+Custom status line feature fully implemented but never configured during installation.
 
-**Configuration Required**:
+### Root Cause
 
-```json
-"statusLine": {
-  "type": "command",
-  "command": "$CLAUDE_PROJECT_DIR/.claude/tools/statusline.sh"
-}
-```
+Both installation templates (install.sh and uvx_settings_template.json) excluded statusLine configuration.
 
-Or for global installation:
+### Solution (Issue #1433)
 
-```json
-"statusLine": {
-  "type": "command",
-  "command": "/home/username/.claude/tools/statusline.sh"
-}
-```
+Added statusLine config to both templates with appropriate path formats.
 
-### Solution Implemented (Issue #1433)
+### Key Learnings
 
-**Fixed both installation templates**:
+Feature discoverability requires installation automation. Templates should match feature implementations.
 
-1. **install.sh** (line 136-139):
-
-```json
-  "statusLine": {
-    "type": "command",
-    "command": "HOME_PLACEHOLDER/.claude/tools/statusline.sh"
-  },
-```
-
-(Note: HOME_PLACEHOLDER gets replaced with $HOME on line 175)
-
-2. **uvx_settings_template.json** (line 27-30):
-
-```json
-  "statusLine": {
-    "type": "command",
-    "command": ".claude/tools/statusline.sh"
-  },
-```
-
-(Note: UVX uses relative paths since it runs from project directory)
-
-### How to Detect This Issue
-
-1. Check if settings.json exists: `cat ~/.claude/settings.json`
-2. Look for statusLine section: `grep -A 3 statusLine ~/.claude/settings.json`
-3. If missing, check if statusline.sh exists: `ls -la ~/.claude/tools/statusline.sh`
-4. Test the script manually:
-
-```bash
-echo '{"current_dir":"'$(pwd)'","display_name":"Test","id":"test","total_cost_usd":"1.23","total_duration_ms":"45000","transcript_path":""}' | ~/.claude/tools/statusline.sh
-```
-
-### Prevention
-
-- ✅ statusLine now included in both installation templates
-- Future: Document the feature in README.md and PREREQUISITES.md
-- Future: Add setup verification step that checks for statusLine configuration
-- Future: Consider adding to devcontainer post-create.sh for automatic Codespaces setup
-
-**Related Files**:
-
-- `.claude/tools/statusline.sh` - The actual implementation (production-ready)
-- `.claude/tools/amplihack/install.sh` - Regular installation script (FIXED)
-- `src/amplihack/utils/uvx_settings_template.json` - UVX installation template (FIXED)
-- `src/amplihack/utils/uvx_settings_manager.py` - UVX settings manager
-- `src/amplihack/__init__.py` - UVX detection logic (lines 345-351)
+---
 
 ## Power-Steering Path Validation Bug (2025-11-17)
 
-### Problem Discovered
+### Problem
 
-**Power-steering mode is enabled and runs at session stop, but fails with path validation error**. The security check in `power_steering_checker.py` (\_validate_path method) rejects Claude Code's transcript location.
-
-**Error Message**:
-
-```
-Transcript path /home/azureuser/.claude/projects/.../[session-id].jsonl is outside project root /home/azureuser/src/MicrosoftHackathon2025-AgenticCoding
-```
+Power-steering fails with path validation error. Claude Code stores transcripts in `~/.claude/projects/` which is outside project root.
 
 ### Root Cause
 
-**Path validation is too strict**. The `_validate_path()` method only allows:
-
-1. Paths within project root (e.g., `/home/azureuser/src/MicrosoftHackathon2025-AgenticCoding`)
-2. Common temp directories (`/tmp`, `/var/tmp`, system temp)
-
-But Claude Code stores transcripts in: `/home/azureuser/.claude/projects/-home-azureuser-src-MicrosoftHackathon2025-AgenticCoding/` which is OUTSIDE both allowed locations.
-
-**Code Location**: `.claude/tools/amplihack/hooks/power_steering_checker.py:477-515`
-
-### Impact
-
-- Power-steering loads 21 considerations from YAML successfully
-- But cannot read transcript to analyze session completeness
-- Fails-open (allows session to end without blocking)
-- Effectively disabled due to this error
-- Users don't get session completeness checks
-
-### How to Detect Power-Steering Invocation
-
-**Primary Method**: Check the log file
-
-```bash
-cat .claude/runtime/power-steering/power_steering.log
-```
-
-**What to Look For**:
-
-- `"Loaded 21 considerations from YAML"` = Invoked successfully
-- `"Power-steering error (fail-open)"` = Encountered error
-- `"Power-steering blocking stop"` = Blocked session end
-- `"Power-steering approved stop"` = Approved session end
-
-**When It Runs**: Only at Stop Hook (session end), not during session
-
-**Disable Methods** (in priority order):
-
-1. Semaphore file: `.claude/runtime/power-steering/.disabled` (runtime, immediate effect in current session)
-2. Environment: `export AMPLIHACK_SKIP_POWER_STEERING=1` (affects sessions started after setting this variable)
-3. Config: Set `"enabled": false` in `.claude/tools/amplihack/.power_steering_config` (default behavior at startup)
+`_validate_path()` too strict - only allows project root and temp directories.
 
 ### Solution
 
-**Option 1**: Whitelist `.claude/projects/` directory in path validation
-
-```python
-# Add to _validate_path() in power_steering_checker.py
-# Check 3: Path is in Claude Code's project transcript directory
-claude_projects_dir = Path.home() / ".claude" / "projects"
-if str(path_resolved).startswith(str(claude_projects_dir)):
-    return True
-```
-
-**Option 2**: Use relative path check instead of strict parent validation
-**Option 3**: Store transcripts in project root (would require Claude Code changes)
-
-### Key Learnings
-
-1. **Fail-Open Design is Critical** - Path validation errors don't lock users out
-2. **Security vs Usability Trade-off** - Strict validation prevented legitimate use case
-3. **Detection is Easy** - Log file at `.claude/runtime/power-steering/power_steering.log` shows all activity
-4. **Not All "Enabled" Means "Working"** - Config can say enabled but feature fails silently
-
-### Testing/Verification
-
-To verify power-steering is working properly after fix:
-
-1. Check log file has no errors
-2. Verify `"Power-steering approved stop"` or `"blocking stop"` messages appear
-3. Test with incomplete work (open TODOs) - should block session end
-4. Test with complete work - should approve session end
-
-### References
-
-- **PR**: #1351 "feat: Implement Complete Power-Steering Mode"
-- **Config**: `.claude/tools/amplihack/.power_steering_config`
-- **Considerations**: `.claude/tools/amplihack/considerations.yaml` (21 checks)
-- **Checker**: `.claude/tools/amplihack/hooks/power_steering_checker.py`
-- **Documentation**: `.claude/tools/amplihack/HOW_TO_CUSTOMIZE_POWER_STEERING.md`
-
-## Mandatory End-to-End Testing Pattern (2025-11-10)
-
-### Problem Discovered
-
-**Step 8 of DEFAULT_WORKFLOW.md was not followed rigorously enough**. Code was committed after:
-
-- Unit test structure validation
-- Code syntax verification
-- Agent reviews (cleanup, reviewer)
-
-BUT missing the most critical test: **Real user experience validation with `uvx --from`**
-
-### Why This Matters
-
-**The Workflow Explicitly Requires**:
-
-```
-Step 8: Mandatory Local Testing (NOT in CI)
-- Test simple use cases - Basic functionality verification
-- Test complex use cases - Edge cases and longer operations
-- Test integration points - External dependencies and APIs
-- RULE: Never commit without local testing
-```
-
-**Example**: "If database changes: Test with actual data operations"
-
-### Critical Learning
-
-**ALWAYS test with `uvx --from <branch>` before committing**. This is THE definitive test that:
-
-- Package installs correctly from the branch
-- All dependencies resolve properly
-- The actual user workflow works end-to-end
-- Error messages appear as users will see them
-- Configuration files get updated correctly
-
-**Testing hierarchy** (all required):
-
-1. ✅ Unit tests (fast, isolated)
-2. ✅ Integration tests (components together)
-3. ✅ Code reviews (agents verify quality)
-4. **✅ End-to-end user experience test** (`uvx --from <branch>`) ← **MANDATORY BEFORE COMMIT**
-
-### Pattern to Follow
-
-```bash
-# BEFORE committing ANY feature/fix:
-
-# 1. Install from your branch
-uvx --from git+https://github.com/org/repo@your-branch package-name command
-
-# 2. Test the EXACT user workflow that was broken
-# 3. Verify error messages are clear
-# 4. Verify configuration updates work
-# 5. Test edge cases in realistic scenarios
-
-# ONLY THEN commit and push
-```
-
-### Example - Neo4j Port Allocation Fix (Issue #1283)
-
-**What we tested**:
-
-```python
-# Verified port conflict resolution works:
-✅ Detected occupied ports: 7774/7787
-✅ Found alternatives: 7875/7888
-✅ Clear messages: "⚠️ CONFLICT: Neo4j on port 7787..."
-✅ .env updated: "✅ Updated .env with ports 7888/7875"
-✅ Alternative ports available: Verified with is_port_in_use()
-```
-
-**This test found**: The fix works perfectly! Without this test, we would have pushed code we THOUGHT worked but hadn't verified in realistic conditions.
-
-### Files Affected
-
-- **Workflow Requirement**: `.claude/workflow/DEFAULT_WORKFLOW.md` Step 8
-- **Test Validation**: End-to-end testing MUST use `uvx --from` for package-based projects
-
-### Success Criteria for "Mandatory Local Testing"
-
-For Step 8 to be marked complete, you MUST:
-
-- [ ] Install with `uvx --from <your-branch>` or equivalent
-- [ ] Run the EXACT command/workflow that was broken
-- [ ] Verify the fix solves the user's problem
-- [ ] Document test results showing success
-- [ ] Only THEN proceed to commit
-
-**No exceptions** - this is mandatory, not optional.
-
-## Reflection System Data Flow Fix (2025-09-26)
-
-### Problem Discovered
-
-The AI-powered reflection system was failing silently despite merged PRs:
-
-- No user-visible output during reflection analysis
-- No GitHub issues being created from session analysis
-- Error: "No session messages found for analysis"
-
-### Root Cause
-
-Data flow mismatch between legacy and AI-powered reflection systems:
-
-```python
-# BROKEN - stop.py was passing file path:
-result = process_reflection_analysis(latest_analysis)
-
-# But reflection.py expected raw messages:
-def process_reflection_analysis(analysis_path: Path) -> Optional[str]:
-```
-
-The function signature and data passing were incompatible.
-
-### Solution
-
-Fixed the interface contract to pass messages directly:
-
-```python
-# FIXED - stop.py now passes messages:
-result = process_reflection_analysis(messages)
-
-# reflection.py updated to accept messages:
-def process_reflection_analysis(messages: List[Dict]) -> Optional[str]:
-```
-
-### Key Files Modified
-
-- `.claude/tools/amplihack/reflection/reflection.py` - Changed function
-  signature
-- `.claude/tools/amplihack/hooks/stop.py` - Changed data passing approach
-
-### Verification
-
-Reflection system now properly:
-
-- Shows user-visible progress indicators and completion summaries
-- Detects error patterns and workflow inefficiencies
-- Creates GitHub issues with full URL tracking
-- Integrates with UltraThink automation
-
-### Configuration
-
-- `REFLECTION_ENABLED=true` (default) - Enables AI-powered analysis
-- `REFLECTION_ENABLED=false` - Disables reflection system
-- Output appears in console during session stop events
-
-## Context Preservation Implementation Success (2025-09-23)
-
-### amplihack-Style Solution
-
-Successfully implemented comprehensive conversation transcript and original
-request preservation system based on amplihack's "Never lose context
-again" approach.
-
-### Problem Solved
-
-Original user requests were getting lost during context compaction, leading to:
-
-- Agents optimizing away explicit user requirements
-- Solutions that missed the original goal
-- Context loss when conversation gets compacted
-- Inconsistent requirement tracking across workflow steps
-
-### Solution Implemented
-
-**Four-Component System**:
-
-1. **Context Preservation System**
-   (`.claude/tools/amplihack/context_preservation.py`)
-   - Automatic extraction of requirements, constraints, and success criteria
-   - Structured storage in both human and machine-readable formats
-   - Agent-ready context formatting
-
-2. **Enhanced Session Start Hook**
-   (`.claude/tools/amplihack/hooks/session_start.py`)
-   - Automatic original request extraction at session start
-   - Top-priority injection into session context
-   - Available to all agents from beginning
-
-3. **PreCompact Hook** (`.claude/tools/amplihack/hooks/pre_compact.py`)
-   - Automatic conversation export before compaction
-   - Complete interaction history preservation
-   - Compaction event metadata tracking
-
-4. **Transcript Management** (`.claude/commands/amplihack/transcripts.md`)
-   - amplihack-style `/transcripts` command
-   - Context restoration, search, and management
-   - Original request retrieval and display
-
-### Key Technical Insights
-
-**Regex Pattern Challenges**: Initial implementation failed due to unescaped
-markdown patterns in regex. Solution: Properly escape `**Target**` patterns as
-`\*\*Target\*\*`.
-
-**Agent Context Injection**: Most effective approach is session-level context
-injection rather than individual agent prompting. Session context is
-automatically available to all agents.
-
-**Preservation vs Performance**: Small performance cost (15-20ms per session
-start) for comprehensive context preservation is acceptable for the benefit
-gained.
-
-**File Structure Strategy**: Dual format storage (`.md` for humans, `.json` for
-machines) provides both readability and programmatic access without overhead.
-
-### Validation Results
-
-All tests passed:
-
-- ✅ Original request extraction: 9 requirements from complex prompt
-- ✅ Context formatting: 933-character agent context generated
-- ✅ Conversation export: Complete transcript with timestamps
-- ✅ Transcript management: Session listing and restoration
-- ✅ Integration: Hook properly registered and functional
-
-### Pattern Recognition
-
-**amplihack's Approach Works**: The PreCompact hook strategy is the
-gold standard for context preservation. Direct implementation of their approach
-provides immediate value.
-
-**Proactive vs Reactive**: Proactive preservation (export before loss) is far
-superior to reactive recovery (trying to reconstruct after loss).
-
-**Context Hierarchy**: Original user requirements must be injected at highest
-priority in session context to ensure all agents receive them.
-
-### Integration Success
-
-**Workflow Integration**: Seamlessly integrated with existing 14-step workflow:
-
-- Step 1: Automatic requirement extraction
-- Steps 4-5: All agents receive requirements
-- Step 6: Cleanup validation checkpoint
-- Step 14: Final preservation validation
-
-**Hook System**: Successfully extended Claude Code's hook system with PreCompact
-functionality without disrupting existing hooks.
-
-**Philosophy Compliance**: Maintained ruthless simplicity (~400 lines total)
-while providing enterprise-grade context preservation.
-
-### Next Implementation Targets
-
-Based on this success:
-
-1. **Agent Template System**: Standardize agent prompting with requirement
-   injection
-2. **Requirement Validation**: Automated checking of requirement preservation
-3. **Context Analytics**: Track how often requirements are lost without this
-   system
-4. **Recovery Mechanisms**: Handle edge cases where preservation fails
-
-## Agent Priority Hierarchy Critical Flaw (2025-01-23)
-
-### Issue
-
-Agents were overriding explicit user requirements in favor of project
-philosophy. Specifically, when user requested "ALL files" for UVX deployment,
-cleanup/simplification agents reduced it to "essential files only", directly
-violating user's explicit instruction.
-
-### Root Cause
-
-Agents had philosophy guidance but no explicit instruction that user
-requirements override philosophy. The system prioritized simplicity principles
-over user-specified constraints, creating a hierarchy where philosophy > user
-requirements instead of user requirements > philosophy.
-
-### Solution
-
-Implemented comprehensive User Requirement Priority System:
-
-1. **Created USER_REQUIREMENT_PRIORITY.md** with mandatory hierarchy:
-   - EXPLICIT USER REQUIREMENTS (Highest - Never Override)
-   - IMPLICIT USER PREFERENCES
-   - PROJECT PHILOSOPHY
-   - DEFAULT BEHAVIORS (Lowest)
-
-2. **Updated Critical Agents** with requirement preservation:
-   - cleanup.md: Added mandatory user requirement check before any removal
-   - reviewer.md: User requirement compliance as first review criteria
-   - improvement-workflow.md: User requirement analysis in Stage 1
-
-3. **Enhanced Workflow Safeguards**:
-   - DEFAULT_WORKFLOW.md: Multiple validation checkpoints
-   - Step 1: Identify explicit requirements FIRST
-   - Step 6: Cleanup within user constraints only
-   - Step 14: Final requirement preservation check
-
-### Key Learnings
-
-- **User explicit requirements are sacred** - they override all other guidance
-- **Philosophy guides HOW to implement** - not WHAT to implement
-- **Simple instruction updates** are more effective than complex permission
-  systems
-- **Multiple validation points** prevent single-point-of-failure in requirement
-  preservation
-- **Clear priority hierarchy** must be communicated to ALL agents
-
-### Prevention
-
-- All agent instructions now include mandatory user requirement priority check
-- Workflow includes explicit requirement capture and preservation steps
-- CLAUDE.md updated with priority system as core principle
-- Validation scenarios documented for testing agent behavior
-
-### Pattern Recognition
-
-**Trigger Signs of Explicit Requirements:**
-
-- "ALL files", "include everything", "don't simplify X"
-- Quoted specifications: "use this exact format"
-- Numbered lists of requirements
-- "Must have", "explicitly", "specifically"
-
-**Agent Behavior Rule:** Before any optimization/simplification → Check: "Was
-this explicitly requested by user?" If YES → Preserve completely regardless of
-philosophy
-
-## Format for Entries
-
-Each discovery should follow this format:
-
-```markdown
-## [Brief Title] (YYYY-MM-DD)
-
-### Issue
-
-What problem or challenge was encountered?
-
-### Root Cause
-
-Why did this happen? What was the underlying issue?
-
-### Solution
-
-How was it resolved? Include code examples if relevant.
-
-### Key Learnings
-
-What insights were gained? What should be remembered?
-
-### Prevention
-
-How can this be avoided in the future?
-```
-
----
-
-## Project Initialization (2025-01-16)
-
-### Issue
-
-Setting up the agentic coding framework with proper structure and philosophy.
-
-### Root Cause
-
-Need for a well-organized, AI-friendly project structure that supports
-agent-based development.
-
-### Solution
-
-Created comprehensive `.claude` directory structure with:
-
-- Context files for philosophy and patterns
-- Agent definitions for specialized tasks
-- Command system for complex workflows
-- Hook system for session tracking
-- Runtime directories for metrics and analysis
-
-### Key Learnings
-
-1. **Structure enables AI effectiveness** - Clear organization helps AI agents
-   work better
-2. **Philosophy guides decisions** - Having written principles prevents drift
-3. **Patterns prevent wheel reinvention** - Documented solutions save time
-4. **Agent specialization works** - Focused agents outperform general approaches
-
-### Prevention
-
-Always start projects with clear structure and philosophy documentation.
-
----
-
-## Anti-Sycophancy Guidelines Implementation (2025-01-17)
-
-### Issue
-
-Sycophantic behavior in AI agents erodes user trust. When agents always agree
-with users ("You're absolutely right!"), their feedback becomes meaningless and
-users stop believing them.
-
-### Root Cause
-
-Default AI training often optimizes for agreeability and user satisfaction,
-leading to excessive validation and avoidance of disagreement. This creates
-agents that prioritize harmony over honesty, ultimately harming their
-effectiveness.
-
-### Solution
-
-Created `.claude/context/TRUST.md` with 7 simple anti-sycophancy rules:
-
-1. Disagree When Necessary - Point out flaws clearly with evidence
-2. Question Unclear Requirements - Never guess, always clarify
-3. Propose Alternatives - Suggest better approaches when you see them
-4. Acknowledge Limitations - Say "I don't know" when appropriate
-5. Skip Emotional Validation - Focus on technical merit, not feelings
-6. Challenge Assumptions - Question wrong premises
-7. Be Direct - No hedging, state assessments plainly
-
-Added TRUST.md to the standard import list in CLAUDE.md to ensure all agents
-follow these principles.
-
-### Key Learnings
-
-1. **Trust comes from honesty, not harmony** - Users value agents that catch
-   mistakes
-2. **Directness builds credibility** - Clear disagreement is better than hedged
-   agreement
-3. **Questions show engagement** - Asking for clarity demonstrates critical
-   thinking
-4. **Alternatives demonstrate expertise** - Proposing better solutions shows
-   value
-5. **Simplicity in guidelines works** - 7 clear rules are better than complex
-   policies
-
-### Prevention
-
-- Include TRUST.md in all agent initialization
-- Review agent responses for sycophantic patterns
-- Encourage disagreement when technically justified
-- Measure trust through successful error detection, not user satisfaction scores
-
----
-
-## Enhanced Agent Delegation Instructions (2025-01-17)
-
-### Issue
-
-The current CLAUDE.md had minimal guidance on when to use specialized agents,
-leading to underutilization of available agent capabilities.
-
-### Root Cause
-
-Initial CLAUDE.md focused on basic delegation ("What agents can help?") without
-specific triggers or scenarios, missing the orchestration-first philosophy from
-the amplifier project.
-
-### Solution
-
-Updated CLAUDE.md with comprehensive agent delegation instructions:
-
-1. Added "GOLDEN RULE" emphasizing orchestration over implementation
-2. Created specific delegation triggers mapping tasks to all 13 available agents
-3. Included parallel execution examples for complex tasks
-4. Added guidance for creating custom agents
-5. Emphasized "ALWAYS IF POSSIBLE" for agent delegation
-
-### Key Learnings
-
-1. **Explicit triggers drive usage** - Listing specific scenarios for each agent
-   increases delegation
-2. **Orchestration mindset matters** - Positioning as orchestrator changes
-   approach fundamentally
-3. **Parallel patterns accelerate** - Showing concrete parallel examples
-   encourages better execution
-4. **Agent inventory awareness** - Must explicitly list all available agents to
-   ensure usage
-5. **Documentation drives behavior** - Clear instructions in CLAUDE.md shape AI
-   behavior patterns
-
-### Prevention
-
-- Always compare CLAUDE.md files when porting functionality between projects
-- Include specific usage examples for every agent created
-- Regularly audit if available agents are being utilized
-- Update delegation triggers when new agents are added
-
----
-
-## Pre-commit Hooks Over-Engineering (2025-09-17)
-
-### Issue
-
-Initial pre-commit hooks implementation had 11+ hooks and 5 configuration files,
-violating the project's ruthless simplicity principle.
-
-### Root Cause
-
-Common developer tendency to add "all the good tools" upfront rather than
-starting minimal and adding complexity only when justified. The initial
-implementation tried to solve problems that didn't exist yet.
-
-### Solution
-
-Simplified to only essential hooks:
-
-```yaml
-# From 11+ hooks down to 7 essential ones
-repos:
-  - pre-commit-hooks: check-merge-conflict, trailing-whitespace, end-of-file-fixer
-  - ruff: format and basic linting
-  - pyright: type checking
-  - prettier: JS/TS/Markdown formatting
-```
-
-Deleted:
-
-- Custom philosophy checker (arbitrary limits, no tests)
-- detect-secrets (premature optimization)
-- Complex pytest hook (fragile bash)
-- Unused markdownlint config
-
-### Key Learnings
-
-1. **Start minimal, grow as needed** - Begin with 2-3 hooks, add others when
-   problems arise
-2. **Philosophy enforcement belongs in review** - Human judgment beats arbitrary
-   metrics
-3. **Dead code spreads quickly** - Commented configs and unused files multiply
-4. **Automation can overcomplicate** - Sometimes IDE formatting is simpler than
-   hooks
-5. **Test your testing tools** - Custom hooks need tests too
-
-### Prevention
-
-- Always question: "What problem does this solve TODAY?"
-- Count configuration files - more than 2-3 suggests over-engineering
-- If a tool needs extensive configuration, it might be the wrong tool
-- Prefer human review for subjective quality measures
-- Remember: you can always add complexity, but removing it is harder
-
----
-
-## CI Failure Resolution Process Analysis (2025-09-17)
-
-### Issue
-
-Complex CI failure resolution for PR 38 took 45 minutes involving version
-mismatches, merge conflicts, and pre-commit hook failures. Need to optimize the
-debugging process and create better diagnostic tools.
-
-### Root Cause
-
-Multiple compounding factors created a complex debugging scenario:
-
-1. **Silent failures**: Merge conflicts blocked pre-commit hooks without clear
-   error messages
-2. **Environment mismatches**: Local (Python 3.12.10, ruff 0.12.7) vs CI (Python
-   3.11, ruff 0.13.0)
-3. **Missing diagnostic tools**: No automated environment comparison or pattern
-   recognition
-4. **Sequential investigation**: Manual step-by-step debugging instead of
-   parallel diagnostics
-
-### Solution
-
-**Multi-agent orchestration approach**:
-
-- Ultra-think coordination with architect, reviewer, and security agents
-- Systematic investigation breaking problem into domains
-- Persistent 45-minute effort identifying all root causes
-- Complete resolution of 7 type errors, 2 unused variables, formatting issues,
-  and merge conflict
-
-**Key patterns identified**:
-
-1. **CI Version Mismatch Pattern**: Local tests pass, CI fails on
-   linting/formatting
-2. **Silent Pre-commit Hook Failure Pattern**: Hooks appear to run but changes
-   aren't applied
+Whitelist `~/.claude/projects/` directory in path validation.
 
 ### Key Learnings
 
@@ -2154,167 +1574,341 @@ if container_ports:
 
 ## Power Steering Mode Branch Divergence (2025-11-16)
 
-### Issue
+### Problem
 
-User expected "power steering mode stop hook feature" from recent PR to be on by default, but it wasn't activating during session stop. Feature appeared to be disabled or broken.
+Power steering feature not activating - appeared disabled.
 
 ### Root Cause
 
-**Not a configuration bug - feature was completely missing from branch**. The branch `chore/skill-builder-progressive-disclosure` diverged from `main` at commit `9b0cac42` **BEFORE** the power steering feature was merged in commit `e103a6ca` (PR #1351).
-
-**Timeline**:
-
-- Merge base: `9b0cac42` "fix: Update hooks to use current project directory"
-- Branch diverged: `0df062d1` "feat: Update skill builder to emphasize progressive disclosure"
-- Power steering added: `e103a6ca` "feat: Implement Complete Power-Steering Mode" (6 commits ahead on main)
-- Current main: `c72e80c3` (includes power steering + 5 more commits)
-
-**Missing Components**: 11 files (5,243 lines of code):
-
-- `.claude/tools/amplihack/.power_steering_config` - Main config with `"enabled": true`
-- `.claude/tools/amplihack/considerations.yaml` - All 21 considerations
-- `.claude/tools/amplihack/hooks/power_steering_checker.py` - Core checker (1,875 lines)
-- `.claude/tools/amplihack/hooks/claude_power_steering.py` - Claude SDK integration (301 lines)
-- Plus 7 more files (documentation, tests, templates)
+**Feature was missing from branch entirely**. Branch diverged from main BEFORE power steering was merged.
 
 ### Solution
 
-**Sync branch with main to obtain power steering feature**:
-
-```bash
-# Recommended: Rebase with stash
-git stash push -m "WIP: skill-builder changes"
-git fetch origin
-git rebase origin/main
-# Resolve conflicts (likely .claude/settings.json)
-git stash pop
-pre-commit run --all-files
-git push origin chore/skill-builder-progressive-disclosure --force-with-lease
-```
-
-**Verification after sync**:
-
-```bash
-# Confirm config exists with enabled: true
-cat .claude/tools/amplihack/.power_steering_config | grep "enabled"
-
-# Should show: "enabled": true
-```
+Sync branch with main: `git rebase origin/main`
 
 ### Key Learnings
 
-1. **Branch Divergence Creates Feature Gaps** - Feature branches can miss important changes merged to main after divergence
-2. **"Feature Not Working" Can Mean "Feature Not Present"** - Always check if feature exists before debugging configuration
-3. **Git Branch Comparison is Diagnostic Tool** - `git log --oneline --graph HEAD...origin/main` reveals divergence and missing commits
-4. **Power Steering Feature is Comprehensive** - 11 files, 5,243 lines covering:
-   - 21 considerations across 6 categories (session completion, workflow, quality, testing, PR content, CI/CD)
-   - AI-powered transcript analysis using Claude SDK
-   - Fail-open philosophy (never blocks on errors)
-   - Three-layer disable system (semaphore, env var, config)
-   - 75 passing tests
+"Feature not working" can mean "Feature not present". Always check git history: `git log HEAD...origin/main`
 
-5. **User Expectations Were Correct** - Feature IS enabled by default (`"enabled": true` in config) when present
+---
 
-### Prevention
+## Mandatory End-to-End Testing Pattern (2025-11-10)
 
-**Before investigating "feature not working"**:
+### Problem
 
-1. Verify feature exists on current branch
-2. Check git history for when feature was added
-3. Compare branch to main: `git log HEAD...origin/main`
-4. Look for missing files that should exist
+Code committed after unit tests and reviews but missing real user experience validation.
 
-**Signs of Branch Divergence Issues**:
+### Solution
 
-- Feature exists on main but not current branch
-- Recent PRs mention feature but files don't exist
-- Error messages reference files that aren't present
-- Configuration files are missing entirely
-
-**Debugging Approach**:
+**ALWAYS test with `uvx --from <branch>` before committing**:
 
 ```bash
-# 1. Check if files exist
-ls -la .claude/tools/amplihack/.power_steering_config
-
-# 2. Find when feature was added
-git log --all --oneline --grep="power steering"
-
-# 3. Check which branches have the feature
-git branch --contains <commit-hash>
-
-# 4. Compare current branch to main
-git log --oneline --graph HEAD...origin/main
-
-# 5. Identify merge base
-git merge-base HEAD origin/main
+uvx --from git+https://github.com/org/repo@branch package command
 ```
 
-### What Power Steering Does
+This verifies: package installation, dependency resolution, actual user workflow, error messages, config updates.
 
-**Power Steering Mode** is an intelligent session completion verification system:
+### Key Learnings
 
-1. **Analyzes Transcripts** - Reviews conversation history before allowing session end
-2. **Checks 21 Considerations** - Validates work completeness across 6 categories:
-   - Session Completion & Progress (8 checks)
-   - Workflow Process Adherence (2 checks)
-   - Code Quality & Philosophy Compliance (2 checks)
-   - Testing & Local Validation (2 checks)
-   - PR Content & Quality (4 checks)
-   - CI/CD & Mergeability Status (3 checks)
+Testing hierarchy (all required):
 
-3. **Blocks Incomplete Work** - Prevents session end if critical checks fail
-4. **Provides Continuation Prompts** - Gives actionable guidance for completing work
-5. **Uses Claude SDK** - AI-powered analysis instead of simple pattern matching
-6. **Enabled by Default** - `"enabled": true` in `.power_steering_config`
+1. Unit tests
+2. Integration tests
+3. Code reviews
+4. **End-to-end user experience test** (MANDATORY BEFORE COMMIT)
 
-### Files Involved
+---
 
-**Core Implementation**:
+## Neo4j Container Port Mismatch Bug (2025-11-08)
 
-- `power_steering_checker.py` (1,875 lines) - Main checker with 21 consideration methods
-- `claude_power_steering.py` (301 lines) - Claude SDK integration
-- `stop.py` (modified) - Integration point in session stop hook
+### Problem
 
-**Configuration**:
+Startup fails with container conflicts when starting in different directory than where Neo4j container was created.
 
-- `.power_steering_config` (JSON) - Global enable/disable, version tracking
-- `considerations.yaml` (237 lines) - All 21 considerations with descriptions, severity, enabled flags
+### Root Cause
 
-**Documentation & Templates**:
+`is_our_neo4j_container()` checked container NAME but not ACTUAL ports. `.env` can become stale.
 
-- `HOW_TO_CUSTOMIZE_POWER_STEERING.md` (636 lines) - Complete user guide
-- `power_steering_prompt.txt` (74 lines) - Claude SDK prompt template
+### Solution
 
-**Testing**:
+Added `get_container_ports()` using `docker port` to query actual ports. Auto-update `.env` to match reality.
 
-- 5 test files with 75 passing tests covering all functionality
+### Key Learnings
 
-### Verification
+Container Detection != Port Detection. `.env` files can lie. Docker port command is canonical.
 
-**After syncing branch**:
+---
 
-- ✅ Power steering config exists with `"enabled": true`
-- ✅ All 21 considerations loaded from `considerations.yaml`
-- ✅ Integration in `stop.py` active
-- ✅ 75 tests passing
-- ✅ Feature functions as user expected
+## Parallel Reflection Workstream Execution (2025-11-05)
 
-### Related Issues/PRs
+### Context
 
-- **PR #1351**: "feat: Implement Complete Power-Steering Mode - All 21 Considerations + User Customization"
-- **Commit**: `e103a6ca` (merged to main after branch divergence)
-- **Investigation**: Used INVESTIGATION_WORKFLOW.md (6 phases) for systematic analysis
+Successfully executed 13 parallel full-workflow tasks simultaneously using worktree isolation.
 
-### Pattern Recognition
+### Key Metrics
 
-**Workflow Used**: INVESTIGATION_WORKFLOW.md proved highly effective:
+- 13 issues created (#1089-#1101)
+- 13 PRs with 9-10/10 philosophy compliance
+- 100% success rate
+- ~18 minutes per feature average
 
-- Phase 1: Scope Definition - Clarified what power steering should do
-- Phase 2: Exploration Strategy - Planned agent deployment
-- Phase 3: Parallel Deep Dives - analyzer + integration agents in parallel
-- Phase 4: Verification - Confirmed findings with git commands
-- Phase 5: Synthesis - Comprehensive explanation of root cause
-- Phase 6: Knowledge Capture - This DISCOVERIES.md entry
+### Patterns That Worked
 
-**Agent Orchestration**: Deployed prompt-writer, analyzer, and integration agents in parallel for efficient investigation. All three agents provided valuable complementary perspectives.
+1. **Worktree Isolation**: Each feature in separate worktree
+2. **Agent Specialization**: prompt-writer → architect → builder → reviewer
+3. **Cherry-Pick for Divergent Branches**: Better than rebase for parallel work
+4. **Documentation-First**: Templates reduce decision overhead
+
+### Key Learnings
+
+Parallel execution scales well. Worktrees provide perfect isolation. Philosophy compliance maintained at scale.
+
+---
+
+## Pattern Applicability Analysis Framework (2025-10-20)
+
+### Context
+
+Evaluated PBZFT vs N-Version Programming. PBZFT would be 6-9x more complex with zero benefit.
+
+### Six Meta-Patterns Identified
+
+1. **Threat Model Precision**: Match defense to actual failure mode
+2. **Voting vs Expert Judgment**: Expert review for quality, voting for adversarial consensus
+3. **Distributed Systems Applicability Test**: Most patterns don't apply to AI (different trust model)
+4. **Complexity-Benefit Ratio**: Require >3.0 ratio to justify complexity
+5. **Domain Appropriateness Check**: Best practices are domain-specific
+6. **Diversity as Error Reduction**: Independent implementations reduce correlated errors
+
+### Key Learnings
+
+- Threat model mismatch is primary source of inappropriate pattern adoption
+- Distributed systems patterns rarely map to AI systems
+- Always verify failure modes match before importing patterns
+
+**Note**: Consider promoting to PATTERNS.md if framework used 3+ times.
+
+---
+
+## Socratic Questioning Pattern (2025-10-18)
+
+### Context
+
+Developed effective method for deep, probing questions in knowledge-builder scenarios.
+
+### Three-Dimensional Attack Strategy
+
+1. **Empirical**: Challenge with observable evidence
+2. **Computational**: Probe tractability and complexity
+3. **Formal Mathematical**: Demand precise relationships
+
+### Usage Context
+
+- When: Knowledge exploration, challenging claims, surfacing assumptions
+- When NOT: Simple factual questions, time-sensitive decisions
+
+**Status**: 1 successful usage. Needs 2-3 more before promoting to PATTERNS.md.
+
+---
+
+## Expert Agent Creation Pattern (2025-10-18)
+
+### Context
+
+Created Rust and Azure Kubernetes expert agents with 10-20x learning speedup.
+
+### Pattern Components
+
+1. **Focused Knowledge Base**: 7-10 core concepts in Q&A format
+2. **Structure**: `Knowledge.md`, `KeyInfo.md`, `HowToUseTheseFiles.md`
+3. **Expert Agent**: References knowledge base, defines competencies
+
+### Key Learnings
+
+- Focused beats breadth (7 concepts > 270 generic questions)
+- Q&A format superior to documentation style
+- Real code examples are essential (2-3 per concept)
+
+**Note**: Consider promoting to PATTERNS.md if used 3+ times.
+
+---
+
+## Remember
+
+- Document immediately while context is fresh
+- Include specific error messages
+- Show code that fixed the problem
+- Update PATTERNS.md when a discovery becomes reusable
+- Archive entries older than 3 months to DISCOVERIES_ARCHIVE.md
+
+## 2025-12-01: STOP Gates Break Sonnet, Help Opus - Model-Specific Prompt Behavior (Issue #1755)
+
+**Context**: Testing CLAUDE.md modifications across both Opus and Sonnet models revealed same text produces opposite outcomes.
+
+**Problem**: STOP validation gates have model-specific effects:
+
+- **Opus 4.5**: STOP gates help (20/22 → 22/22 steps) ✅
+- **Sonnet 4.5**: STOP gates break (22/22 → 8/22 steps) ❌
+- **Root cause**: Different models interpret validation language differently
+
+**Solution**: V2 (No STOP Gates) - Remove validation checkpoints while keeping workflow structure
+
+**Results** (6/8 benchmarks complete, 75%):
+
+Sonnet V2:
+
+- ✅ MEDIUM: 24.8m, $5.47, 22/22 steps (-16% cost improvement)
+- ✅ HIGH: 21.7m, $4.92, 22 turns (-12% duration vs MEDIUM - negative scaling!)
+
+Opus V2:
+
+- ✅ MEDIUM: 61.5m, $56.86, ~20/22 steps (-12% duration, -21% cost improvement!)
+- ⏳ HIGH: Testing (~4.5 hours remaining)
+
+**Key Insights**:
+
+1. **Multi-Model Testing Required**: Same prompt can help one model while breaking another
+2. **STOP Gate Paradox**: Removing validation gates IMPROVES performance (12-21% cost reduction)
+3. **Negative Complexity Scaling**: V2 HIGH faster than MEDIUM for well-defined tasks (task clarity > complexity)
+4. **Universal Optimization**: V2 improves BOTH models, not just fixes one
+5. **High-Salience Language Risky**: "STOP", "MUST", ALL CAPS trigger different model responses
+
+**Impact**:
+
+- Fixes Sonnet degradation completely (8/22 → 22/22)
+- Improves Sonnet performance (-12% to -16%)
+- Improves Opus performance (-12% to -21%)
+- $20K-$406K annual savings (moderate: $81K/year)
+- Universal solution (single CLAUDE.md for both models)
+
+**Implementation**: V2 deployed when Opus HIGH validates (expected)
+
+**Related**: #1755, #1703, #1687
+
+**Pattern Identified**: Validation checkpoints can backfire - use flow language instead of interruption language
+
+**Lesson**: Always validate AI guidance changes empirically with ALL target models before deploying
+
+---
+
+## Mandatory User Testing Validates Its Own Value {#mandatory-user-testing-validates-value-2025-12-02}
+
+**Date**: 2025-12-02
+**Context**: Implementing Parallel Task Orchestrator (Issue #1783, PR #1784)
+**Impact**: HIGH - Validates mandatory testing requirement, found production-blocking bug
+
+### Problem
+
+Unit tests can achieve high coverage (86%) and 100% pass rate while missing critical real-world bugs.
+
+### Discovery
+
+Mandatory user testing (USER_PREFERENCES.md requirement) caught a **production-blocking bug** that 110 passing unit tests missed:
+
+**Bug**: `SubIssue` dataclass not hashable, but `OrchestrationConfig` uses `set()` for deduplication
+
+```python
+# This passed all unit tests but fails in real usage:
+config = OrchestrationConfig(sub_issues=[...])
+# TypeError: unhashable type: 'SubIssue'
+```
+
+### How It Was Missed
+
+**Unit Tests** (110/110 passing):
+- Mocked all `SubIssue` creation
+- Never tested real deduplication path
+- Assumed API worked without instantiation
+
+**User Testing** (mandatory requirement):
+- Tried actual config creation
+- **Bug discovered in <2 minutes**
+- Immediate TypeError on first real use
+
+### Fix
+
+```python
+# Before
+@dataclass
+class SubIssue:
+    labels: List[str] = field(default_factory=list)
+
+# After  
+@dataclass(frozen=True)
+class SubIssue:
+    labels: tuple = field(default_factory=tuple)
+```
+
+### Validation
+
+**Test Results After Fix**:
+```
+✅ Config creation works
+✅ Deduplication works (3 items → 2 unique)
+✅ Orchestrator instantiation works
+✅ Status API functional
+```
+
+### Key Insights
+
+1. **High test coverage ≠ Real-world readiness**
+   - 86% coverage, 110/110 tests, still had production blocker
+   - Mocks hide integration issues
+
+2. **User testing finds different bugs**
+   - Unit tests validate component logic
+   - User tests validate actual workflows
+   - Both are necessary
+
+3. **Mandatory requirement justified**
+   - Without user testing, would've shipped broken code
+   - CI wouldn't catch this (unit tests pass)
+   - First user would've hit TypeError
+
+4. **Time investment worthwhile**
+   - <5 minutes of user testing
+   - Found bug that could've cost hours of debugging
+   - Prevented embarrassing production failure
+
+### Implementation
+
+**Mandatory User Testing Pattern**:
+```bash
+# Test like a user would
+python -c "from module import Class; obj = Class(...)"  # Real instantiation
+config = RealConfig(real_data)  # No mocks
+result = api.actual_method()  # Real workflow
+```
+
+**NOT sufficient**:
+```python
+# Unit test approach (can miss real issues)
+@patch("module.Class")
+def test_with_mock(mock_class):  # Never tests real instantiation
+    ...
+```
+
+### Lessons Learned
+
+1. **Always test like a user** - No mocks, real instantiation, actual workflows
+2. **High coverage isn't enough** - Need real usage validation
+3. **Mocks hide bugs** - Integration issues invisible to mocked tests  
+4. **User requirements are wise** - This explicit requirement saved us from shipping broken code
+
+### Related
+
+- Issue #1783: Parallel Task Orchestrator
+- PR #1784: Implementation
+- USER_PREFERENCES.md: Mandatory E2E testing requirement
+- Commit dc90b350: Hashability fix
+
+### Recommendation
+
+**ENFORCE mandatory user testing** for ALL features:
+- Test with `uvx --from git+...` (no local state)
+- Try actual user workflows (no mocks)
+- Verify error messages and UX
+- Document test results in PR
+
+This discovery **validates the user's explicit requirement** - mandatory user testing prevents production failures that unit tests miss.
+

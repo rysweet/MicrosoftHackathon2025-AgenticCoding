@@ -4,12 +4,15 @@ import argparse
 import os
 import sys
 from pathlib import Path
-from typing import List, Optional
+from typing import TYPE_CHECKING
 
 from .docker import DockerManager
 from .launcher import ClaudeLauncher
 from .proxy import ProxyConfig, ProxyManager
 from .utils import is_uvx_deployment
+
+if TYPE_CHECKING:
+    pass
 
 
 def ensure_ultrathink_command(prompt: str) -> str:
@@ -48,8 +51,8 @@ def ensure_ultrathink_command(prompt: str) -> str:
 
 
 def wrap_prompt_with_ultrathink(
-    claude_args: Optional[List[str]], no_ultrathink: bool = False
-) -> Optional[List[str]]:
+    claude_args: list[str] | None, no_ultrathink: bool = False
+) -> list[str] | None:
     """Wrap prompt in claude_args with /amplihack:ultrathink command.
 
     Modifies the prompt passed via -p flag to use workflow orchestration.
@@ -85,7 +88,7 @@ def wrap_prompt_with_ultrathink(
     return claude_args
 
 
-def launch_command(args: argparse.Namespace, claude_args: Optional[List[str]] = None) -> int:
+def launch_command(args: argparse.Namespace, claude_args: list[str] | None = None) -> int:
     """Handle the launch command.
 
     Args:
@@ -95,20 +98,23 @@ def launch_command(args: argparse.Namespace, claude_args: Optional[List[str]] = 
     Returns:
         Exit code.
     """
-    # Handle backwards compatibility: Check for deprecated --use-graph-mem flag
-    use_graph_mem = getattr(args, "use_graph_mem", False)
+    # Handle graph backend selection (new unified approach)
+    graph_backend = getattr(args, "graph_backend", "auto")
     enable_neo4j = getattr(args, "enable_neo4j_memory", False)
+    use_graph_mem = getattr(args, "use_graph_mem", False)  # Deprecated
 
-    # Set environment variable for Neo4j opt-in (Why: Makes flag accessible to session hooks and launcher)
-    if use_graph_mem or enable_neo4j:
+    # Set environment variable for graph backend selection
+    if graph_backend != "auto":
+        os.environ["AMPLIHACK_GRAPH_BACKEND"] = graph_backend
+        print(f"Graph backend set to: {graph_backend}")
+    elif enable_neo4j or use_graph_mem:
+        os.environ["AMPLIHACK_GRAPH_BACKEND"] = "neo4j"
         os.environ["AMPLIHACK_ENABLE_NEO4J_MEMORY"] = "1"
         if use_graph_mem:
             print(
-                "WARNING: --use-graph-mem is deprecated. Please use --enable-neo4j-memory instead."
+                "WARNING: --use-graph-mem is deprecated. Please use --graph-backend neo4j instead."
             )
-            print("Neo4j graph memory enabled via --use-graph-mem flag (deprecated)")
-        else:
-            print("Neo4j graph memory enabled via --enable-neo4j-memory flag")
+        print("Graph backend set to: neo4j")
 
         # Set container name if provided
         if getattr(args, "use_memory_db", None):
@@ -204,9 +210,7 @@ def launch_command(args: argparse.Namespace, claude_args: Optional[List[str]] = 
     return launcher.launch_interactive()
 
 
-def handle_auto_mode(
-    sdk: str, args: argparse.Namespace, cmd_args: Optional[List[str]]
-) -> Optional[int]:
+def handle_auto_mode(sdk: str, args: argparse.Namespace, cmd_args: list[str] | None) -> int | None:
     """Handle auto mode for claude, copilot, or codex commands.
 
     Args:
@@ -241,10 +245,22 @@ def handle_auto_mode(
     # Check if UI mode is enabled
     ui_mode = getattr(args, "ui", False)
 
-    # Extract timeout from args
-    query_timeout = getattr(args, "query_timeout_minutes", 5.0)
+    # Extract model from cmd_args for timeout auto-detection
+    model = None
+    if cmd_args and "--model" in cmd_args:
+        try:
+            model_idx = cmd_args.index("--model")
+            if model_idx + 1 < len(cmd_args):
+                model = cmd_args[model_idx + 1]
+        except (ValueError, IndexError):
+            pass
 
-    auto = AutoMode(sdk, prompt, args.max_turns, ui_mode=ui_mode, query_timeout_minutes=query_timeout)
+    # Resolve timeout using priority: --no-timeout > explicit > model auto-detect > default
+    query_timeout = resolve_timeout(args, model)
+
+    auto = AutoMode(
+        sdk, prompt, args.max_turns, ui_mode=ui_mode, query_timeout_minutes=query_timeout
+    )
     return auto.run()
 
 
@@ -287,8 +303,8 @@ def handle_append_instruction(args: argparse.Namespace) -> int:
 
 
 def parse_args_with_passthrough(
-    argv: Optional[List[str]] = None,
-) -> "tuple[argparse.Namespace, List[str]]":
+    argv: list[str] | None = None,
+) -> "tuple[argparse.Namespace, list[str]]":
     """Parse arguments with support for -- separator for Claude argument forwarding.
 
     Args:
@@ -353,14 +369,51 @@ def add_auto_mode_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--query-timeout-minutes",
         type=float,
-        default=5.0,
+        default=30.0,
         metavar="MINUTES",
         help=(
-            "Timeout for each SDK query in minutes (default: 5.0). "
-            "Prevents indefinite hangs in complex sessions. "
-            "Use higher values (10-15) for very long-running operations."
+            "Timeout for each SDK query in minutes (default: 30). "
+            "Opus models auto-detect to 60 minutes. "
+            "Use --no-timeout to disable timeout completely."
         ),
     )
+    parser.add_argument(
+        "--no-timeout",
+        action="store_true",
+        help="Disable timeout for SDK queries (allows indefinite execution).",
+    )
+
+
+def resolve_timeout(args: argparse.Namespace, model: str | None = None) -> float | None:
+    """Resolve timeout value based on CLI args and model detection.
+
+    Priority order:
+    1. --no-timeout flag (returns None)
+    2. Explicit --query-timeout-minutes value (if not default 30.0)
+    3. Auto-detect Opus model (60 minutes)
+    4. Default from argparse (30 minutes)
+
+    Args:
+        args: Parsed command line arguments
+        model: Model name from --model arg (for Opus detection)
+
+    Returns:
+        Timeout in minutes, or None for no timeout
+    """
+    # Priority 1: --no-timeout flag takes precedence
+    if getattr(args, "no_timeout", False):
+        return None
+
+    # Get the timeout value (defaults to 30.0 from argparse)
+    timeout = getattr(args, "query_timeout_minutes", 30.0)
+
+    # Priority 3: Auto-detect Opus model (60 minute timeout)
+    # Only apply if timeout is the default (30.0), meaning user didn't explicitly override
+    if model and "opus" in model.lower() and timeout == 30.0:
+        return 60.0
+
+    # Return the timeout value (explicit or default)
+    return timeout
 
 
 def add_common_sdk_args(parser: argparse.ArgumentParser) -> None:
@@ -427,6 +480,30 @@ def add_neo4j_args(parser: argparse.ArgumentParser) -> None:
     )
 
 
+def add_graph_backend_args(parser: argparse.ArgumentParser) -> None:
+    """Add graph backend selection arguments to a parser.
+
+    Args:
+        parser: ArgumentParser to add arguments to.
+    """
+    parser.add_argument(
+        "--graph-backend",
+        choices=["kuzu", "neo4j", "auto"],
+        default="auto",
+        metavar="BACKEND",
+        help=(
+            "Select graph database backend for memory system. "
+            "Options: kuzu (embedded, zero-config), neo4j (Docker), auto (default). "
+            "Kùzu is auto-installed if needed."
+        ),
+    )
+    parser.add_argument(
+        "--enable-neo4j-memory",
+        action="store_true",
+        help="Enable Neo4j graph memory (alias for --graph-backend neo4j).",
+    )
+
+
 def create_parser() -> argparse.ArgumentParser:
     """Create the argument parser for amplihack CLI.
 
@@ -469,12 +546,13 @@ For comprehensive auto mode documentation, see docs/AUTO_MODE.md""",
     add_claude_specific_args(launch_parser)
     add_auto_mode_args(launch_parser)
     add_neo4j_args(launch_parser)
+    add_graph_backend_args(launch_parser)
     add_common_sdk_args(launch_parser)
     launch_parser.add_argument(
         "--profile",
         type=str,
         default=None,
-        help="Profile URI to use for this launch (overrides configured profile)"
+        help="Profile URI to use for this launch (overrides configured profile)",
     )
 
     # Claude command (alias for launch)
@@ -482,12 +560,13 @@ For comprehensive auto mode documentation, see docs/AUTO_MODE.md""",
     add_claude_specific_args(claude_parser)
     add_auto_mode_args(claude_parser)
     add_neo4j_args(claude_parser)
+    add_graph_backend_args(claude_parser)
     add_common_sdk_args(claude_parser)
     claude_parser.add_argument(
         "--profile",
         type=str,
         default=None,
-        help="Profile URI to use for this launch (overrides configured profile)"
+        help="Profile URI to use for this launch (overrides configured profile)",
     )
 
     # Copilot command
@@ -509,11 +588,17 @@ For comprehensive auto mode documentation, see docs/AUTO_MODE.md""",
     remote_parser = subparsers.add_parser("remote", help="Execute on remote Azure VMs via azlin")
     remote_parser.add_argument("remote_command", choices=["auto", "ultrathink"], help="Command")
     remote_parser.add_argument("prompt", help="Task prompt")
-    remote_parser.add_argument("--max-turns", type=int, default=10, help="Max turns")
-    remote_parser.add_argument("--vm-size", default="m", help="VM size: s/m/l/xl")
+    remote_parser.add_argument("--max-turns", type=int, default=10, help="Max turns (default: 10)")
+    remote_parser.add_argument("--vm-size", default="m", help="VM size: s/m/l/xl (default: m)")
+    remote_parser.add_argument("--vm-name", help="Use specific existing VM (skips provisioning)")
     remote_parser.add_argument("--region", help="Azure region")
-    remote_parser.add_argument("--keep-vm", action="store_true", help="Keep VM")
-    remote_parser.add_argument("--timeout", type=int, default=120, help="Timeout")
+    remote_parser.add_argument("--keep-vm", action="store_true", help="Keep VM after execution")
+    remote_parser.add_argument("--timeout", type=int, default=120, help="Timeout in minutes")
+    remote_parser.add_argument(
+        "--skip-secret-scan",
+        action="store_true",
+        help="Skip secret scanning (use with caution - for development with ephemeral VMs)",
+    )
 
     # Goal Agent Generator command
     new_parser = subparsers.add_parser(
@@ -547,13 +632,13 @@ For comprehensive auto mode documentation, see docs/AUTO_MODE.md""",
         "--profile",
         type=str,
         default=None,
-        help="Profile URI to use for this install (overrides configured profile)"
+        help="Profile URI to use for this install (overrides configured profile)",
     )
 
     return parser
 
 
-def main(argv: Optional[List[str]] = None) -> int:
+def main(argv: list[str] | None = None) -> int:
     """Main entry point for amplihack CLI.
 
     Args:
@@ -610,7 +695,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         # Find the amplihack package location
         import amplihack
 
-        from . import copytree_manifest, ESSENTIAL_DIRS
+        from . import ESSENTIAL_DIRS, copytree_manifest
 
         amplihack_src = os.path.dirname(os.path.abspath(amplihack.__file__))
 
@@ -625,8 +710,11 @@ def main(argv: Optional[List[str]] = None) -> int:
                 if os.path.exists(claude_tools_path):
                     sys.path.insert(0, claude_tools_path)
                     from profile_management.staging import create_staging_manifest
+
                     manifest = create_staging_manifest(ESSENTIAL_DIRS, profile_uri)
-                    if manifest.profile_name != "all" and not manifest.profile_name.endswith("(fallback)"):
+                    if manifest.profile_name != "all" and not manifest.profile_name.endswith(
+                        "(fallback)"
+                    ):
                         print(f"📦 Using profile: {manifest.profile_name}")
             except Exception as e:
                 # Fall back to full staging on errors
@@ -634,19 +722,34 @@ def main(argv: Optional[List[str]] = None) -> int:
 
         # Copy .claude contents to temp .claude directory
         # Note: copytree_manifest copies TO the dst, not INTO dst/.claude
-        copied = copytree_manifest(
-            amplihack_src,
-            temp_claude_dir,
-            ".claude",
-            manifest=manifest
-        )
+        copied = copytree_manifest(amplihack_src, temp_claude_dir, ".claude", manifest=manifest)
 
-        # Smart PROJECT.md initialization for UVX mode
+        # Handle CLAUDE.md preservation FIRST during UVX deployment (Issue #1746)
+        # Must run before PROJECT.md initialization to preserve custom content
+        if copied:
+            try:
+                from .utils.claude_md_preserver import HandleMode, handle_claude_md
+
+                source_claude = Path(amplihack_src) / "CLAUDE.md"
+                result = handle_claude_md(
+                    source_claude=source_claude, target_dir=Path(original_cwd), mode=HandleMode.AUTO
+                )
+                if result.success:
+                    if os.environ.get("AMPLIHACK_DEBUG", "").lower() == "true":
+                        print(f"✅ {result.message}")
+                    if result.backup_path:
+                        print(f"💾 Your custom CLAUDE.md preserved at: {result.backup_path}")
+            except Exception as e:
+                if os.environ.get("AMPLIHACK_DEBUG", "").lower() == "true":
+                    print(f"Warning: CLAUDE.md handling failed: {e}")
+
+        # Smart PROJECT.md initialization for UVX mode (after CLAUDE.md preservation)
+        # Use AUTO mode instead of FORCE to preserve existing PROJECT.md content
         if copied:
             try:
                 from .utils.project_initializer import InitMode, initialize_project_md
 
-                result = initialize_project_md(Path(original_cwd), mode=InitMode.FORCE)
+                result = initialize_project_md(Path(original_cwd), mode=InitMode.AUTO)
                 if result.success and result.action_taken.value in ["initialized", "regenerated"]:
                     if os.environ.get("AMPLIHACK_DEBUG", "").lower() == "true":
                         print(
@@ -672,12 +775,12 @@ def main(argv: Optional[List[str]] = None) -> int:
                 def replace_paths(obj):
                     if isinstance(obj, dict):
                         for key, value in obj.items():
-                            if key == "command" and isinstance(value, str) and value.startswith(
-                                ".claude/"
+                            if (
+                                key == "command"
+                                and isinstance(value, str)
+                                and value.startswith(".claude/")
                             ):
-                                obj[key] = value.replace(
-                                    ".claude/", "$CLAUDE_PROJECT_DIR/.claude/"
-                                )
+                                obj[key] = value.replace(".claude/", "$CLAUDE_PROJECT_DIR/.claude/")
                             else:
                                 replace_paths(value)
                     elif isinstance(obj, list):
@@ -761,21 +864,20 @@ def main(argv: Optional[List[str]] = None) -> int:
             # _local_install expects repo root, so pass package_dir (which contains .claude/)
             _local_install(str(package_dir))
             return 0
-        else:
-            # Fallback: Clone from GitHub (for old installations)
-            import subprocess
-            import tempfile
+        # Fallback: Clone from GitHub (for old installations)
+        import subprocess
+        import tempfile
 
-            print("⚠️  Package .claude/ not found, cloning from GitHub...")
-            with tempfile.TemporaryDirectory() as tmp:
-                repo_url = "https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding"
-                try:
-                    subprocess.check_call(["git", "clone", "--depth", "1", repo_url, tmp])
-                    _local_install(tmp)
-                    return 0
-                except subprocess.CalledProcessError as e:
-                    print(f"Failed to install: {e}")
-                    return 1
+        print("⚠️  Package .claude/ not found, cloning from GitHub...")
+        with tempfile.TemporaryDirectory() as tmp:
+            repo_url = "https://github.com/rysweet/MicrosoftHackathon2025-AgenticCoding"
+            try:
+                subprocess.check_call(["git", "clone", "--depth", "1", repo_url, tmp])
+                _local_install(tmp)
+                return 0
+            except subprocess.CalledProcessError as e:
+                print(f"Failed to install: {e}")
+                return 1
 
     elif args.command == "uninstall":
         uninstall()
@@ -912,15 +1014,24 @@ def main(argv: Optional[List[str]] = None) -> int:
             print("Error: .claude directory not found", file=sys.stderr)
             return 1
 
-        sys.path.insert(0, str(claude_dir / "tools" / "amplihack"))
+        # Add remote module to path for import
+        # Using sys.path approach - simpler and works with relative imports
+        remote_tools_path = claude_dir / "tools" / "amplihack"
+        if remote_tools_path not in [Path(p) for p in sys.path]:
+            sys.path.insert(0, str(remote_tools_path))
 
         try:
-            from remote.cli import execute_remote_workflow
-            from remote.orchestrator import VMOptions
+            # Import using standard import (works because we added to sys.path)
+            # pyright: ignore[reportMissingImports] - dynamic path, module exists at runtime
+            from remote.cli import execute_remote_workflow  # type: ignore[import-not-found]
+            from remote.orchestrator import VMOptions  # type: ignore[import-not-found]
 
+            # Note: azlin handles size mapping (s/m/l/xl -> Azure VM sizes)
+            # We pass the size directly to azlin without mapping
             vm_options = VMOptions(
                 size=args.vm_size,
                 region=args.region,
+                vm_name=args.vm_name,
                 keep_vm=args.keep_vm,
             )
 
@@ -931,10 +1042,14 @@ def main(argv: Optional[List[str]] = None) -> int:
                 max_turns=args.max_turns,
                 vm_options=vm_options,
                 timeout=args.timeout,
+                skip_secret_scan=args.skip_secret_scan,
             )
             return 0
         except Exception as e:
             print(f"Error: {e}", file=sys.stderr)
+            import traceback
+
+            traceback.print_exc()
             return 1
 
     else:
