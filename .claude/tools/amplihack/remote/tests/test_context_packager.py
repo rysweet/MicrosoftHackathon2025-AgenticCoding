@@ -125,14 +125,15 @@ class TestContextPackager(unittest.TestCase):
     def test_package_with_secrets_fails(self):
         """Test that packaging fails when secrets detected."""
         # Add secret (realistic format: sk-ant-api03-{64 chars})
-        test_file = self.repo_path / "secret.py"
+        # Use 'config.py' not 'secret.py' since *secret* files are auto-excluded
+        test_file = self.repo_path / "config.py"
         realistic_secret = (
             "sk-ant-api03-" + "a" * 64
         )  # Realistic Anthropic API key format # pragma: allowlist secret
         test_file.write_text(f'API_KEY = "{realistic_secret}"')
-        subprocess.run(["git", "add", "secret.py"], cwd=self.repo_path, check=True)
+        subprocess.run(["git", "add", "config.py"], cwd=self.repo_path, check=True)
         subprocess.run(
-            ["git", "commit", "-m", "Add secret"],
+            ["git", "commit", "-m", "Add config"],
             cwd=self.repo_path,
             check=True,
             capture_output=True,
@@ -178,10 +179,14 @@ class TestContextPackager(unittest.TestCase):
 
     def test_archive_size_limit(self):
         """Test that oversized archives are rejected."""
-        # Add large file to exceed 1KB limit
-        large_file = self.repo_path / "large.txt"
-        large_file.write_text("x" * 5000)  # 5KB file
-        subprocess.run(["git", "add", "large.txt"], cwd=self.repo_path, check=True)
+        # Add large random file that won't compress well (binary-like data)
+        large_file = self.repo_path / "large.bin"
+        # Use random-ish data that compresses poorly
+        import random
+        random.seed(42)
+        large_content = bytes([random.randint(0, 255) for _ in range(50000)])  # 50KB random
+        large_file.write_bytes(large_content)
+        subprocess.run(["git", "add", "large.bin"], cwd=self.repo_path, check=True)
         subprocess.run(
             ["git", "commit", "-m", "Add large file"],
             cwd=self.repo_path,
@@ -189,8 +194,8 @@ class TestContextPackager(unittest.TestCase):
             capture_output=True,
         )
 
-        # Create packager with tiny size limit
-        packager = ContextPackager(self.repo_path, max_size_mb=0.001)  # 1KB
+        # Create packager with tiny size limit (500 bytes)
+        packager = ContextPackager(self.repo_path, max_size_mb=0.0005)  # 500 bytes
 
         with self.assertRaises(PackagingError) as ctx:
             with packager:
