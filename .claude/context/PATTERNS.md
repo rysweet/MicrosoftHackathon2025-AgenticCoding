@@ -523,85 +523,6 @@ def write_with_retry(filepath: Path, data: str, max_retries: int = 3):
 - Inform user about delays
 - Create parent directories
 
-### Pattern: System Metadata vs User Content Classification in Git Operations
-
-**Challenge**: Git-aware operations treat framework-generated metadata files (like `.version`, `.state`) as user content, causing false conflict warnings when files are auto-updated by the system.
-
-**Solution**: Explicitly categorize and filter system-generated files based on semantic purpose, not just directory structure.
-
-```python
-from pathlib import Path
-from typing import Set, List
-
-class GitAwareFileFilter:
-    """Distinguish system metadata from user content in git operations"""
-
-    # System-generated files that should never trigger conflicts
-    SYSTEM_METADATA = {
-        ".version",           # Framework version tracking
-        ".state",            # Runtime state
-        "settings.json",     # Auto-generated settings
-        "*.pyc",             # Compiled bytecode
-        "__pycache__",       # Python cache
-        ".pytest_cache",     # Test cache
-    }
-
-    def _filter_conflicts(
-        self, uncommitted_files: List[str], essential_dirs: List[str]
-    ) -> List[str]:
-        """Filter git status to exclude system metadata"""
-        conflicts = []
-        for file_path in uncommitted_files:
-            if file_path.startswith(".claude/"):
-                relative_path = file_path[8:]  # Strip ".claude/"
-
-                # Skip system-generated metadata - safe to overwrite
-                if relative_path in self.SYSTEM_METADATA:
-                    continue
-
-                # Check if file is in essential directories (user content)
-                for essential_dir in essential_dirs:
-                    if (
-                        relative_path.startswith(essential_dir + "/")
-                        or relative_path == essential_dir
-                    ):
-                        conflicts.append(file_path)
-                        break
-
-        return conflicts
-```
-
-**Usage in conflict detection**:
-
-```python
-class ConflictChecker:
-    def check_conflicts(self, source_dir: Path, essential_dirs: List[str]) -> List[Path]:
-        """Check for REAL conflicts - ignore system metadata"""
-        result = subprocess.run(
-            ["git", "status", "--porcelain"],
-            capture_output=True, text=True, cwd=source_dir
-        )
-
-        uncommitted = self._parse_git_status(result.stdout)
-        user_changes = self._filter_conflicts(uncommitted, essential_dirs)
-
-        if user_changes:
-            raise ConflictError(
-                f"Uncommitted user content: {user_changes}\n"
-                f"(System metadata changes are normal and ignored)"
-            )
-```
-
-**Key Points**:
-
-- **Semantic categorization**: Filter by PURPOSE (system vs user), not location
-- **Root-level awareness**: Don't assume all root files are user content
-- **Clear error messages**: Tell users when conflicts are real vs system noise
-- **Philosophy alignment**: Ruthlessly simple - add explicit exclusion list
-- **Common pitfall**: Only checking subdirectories and missing root-level system files
-
-> **Origin**: Discovered investigating `.version` file causing false conflicts during UVX deployment. See DISCOVERIES.md (2025-12-01).
-
 ### Pattern: Async Context Management
 
 **Challenge**: Nested asyncio event loops cause hangs.
@@ -809,3 +730,75 @@ These patterns represent proven solutions from real development challenges:
 3. **Include context** - Explain why, not just how
 4. **Show working code** - Examples should be copy-pasteable
 5. **Document gotchas** - Save others from the same pain
+
+### Pattern: Outcome-Focused Prompts for AI Workflow Compliance
+
+**Challenge**: AI models (especially Opus) skip workflow steps when they judge tasks as "too simple" for the full process.
+
+**Solution**: Focus prompts on OUTCOMES (deliverables) rather than PROCESS (how to execute).
+
+**Anti-Pattern - Process-Focused**:
+
+```markdown
+## Workflow Steps
+
+1. Create GitHub issue
+2. Create feature branch
+3. Write tests
+   ...
+4. Ensure mergeable
+
+Follow these steps in order.
+```
+
+**Better Pattern - Outcome-Focused**:
+
+```markdown
+## Mandatory Workflow Deliverables
+
+Every workflow execution MUST produce these artifacts:
+
+**Process Artifacts** (Steps 1-3):
+
+- [ ] GitHub issue created (tracks requirements)
+- [ ] Feature branch created (isolates changes)
+
+**Implementation Artifacts** (Steps 4-10):
+
+- [ ] Tests written (validates behavior)
+- [ ] Code implemented (solves problem)
+- [ ] Code reviewed (ensures quality)
+
+**Integration Artifacts** (Steps 11-22):
+
+- [ ] Documentation updated (explains changes)
+- [ ] Pull request created (enables review)
+- [ ] CI passing (proves stability)
+
+Missing ANY artifact = incomplete workflow.
+```
+
+**Why It Works**:
+
+- Tells AI WHAT to create, not HOW to execute
+- AI naturally figures out the process to achieve outcomes
+- Creates urgency through "Missing ANY artifact = incomplete"
+- Groups by phase for clarity
+- Uses checkboxes for psychological completion drive
+
+**Results**:
+
+- Opus: 3/22 steps → 22/22 steps (with outcome focus)
+- Cost: $56.86 → $4.57 (92% reduction)
+- Duration: 61.4m → 23.8m (61% faster)
+- Works for both Opus and Sonnet (universal)
+
+**Key Points**:
+
+- Position at top of CLAUDE.md for visibility
+- Keep simple (9 items vs 22 steps)
+- Group related outcomes together
+- No STOP gates or validation checkpoints
+- Clear consequence statement
+
+> **Origin**: Discovered in Issue #1785 V5 (Outcome Emphasis) testing. This pattern achieved Opus 22/22 compliance at lowest cost after 4 previous experimental approaches.
