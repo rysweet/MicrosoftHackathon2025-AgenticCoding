@@ -22,7 +22,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Optional, Set
+
+from .state_lock import file_lock
 
 logger = logging.getLogger(__name__)
 
@@ -74,11 +75,11 @@ class Session:
     status: SessionStatus
     memory_mb: int
     created_at: datetime
-    started_at: Optional[datetime] = None
-    completed_at: Optional[datetime] = None
-    exit_code: Optional[int] = None
+    started_at: datetime | None = None
+    completed_at: datetime | None = None
+    exit_code: int | None = None
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         """Convert session to dictionary for JSON serialization."""
         return {
             "session_id": self.session_id,
@@ -97,7 +98,7 @@ class Session:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict) -> "Session":
+    def from_dict(cls, data: dict) -> "Session":
         """Create session from dictionary (JSON deserialization)."""
         return cls(
             session_id=data["session_id"],
@@ -133,7 +134,7 @@ class SessionManager:
     DEFAULT_COMMAND = "auto"
     DEFAULT_MAX_TURNS = 10
 
-    def __init__(self, state_file: Optional[Path] = None):
+    def __init__(self, state_file: Path | None = None):
         """Initialize SessionManager.
 
         Args:
@@ -146,8 +147,8 @@ class SessionManager:
             state_file = Path.home() / ".amplihack" / "remote-state.json"
 
         self._state_file = state_file
-        self._sessions: Dict[str, Session] = {}
-        self._used_ids: Set[str] = set()  # Track used IDs for uniqueness in same second
+        self._sessions: dict[str, Session] = {}
+        self._used_ids: set[str] = set()  # Track used IDs for uniqueness in same second
 
         self._load_state()
 
@@ -206,47 +207,55 @@ class SessionManager:
             raise ValueError(f"State file corrupt: {e}")
 
     def _save_state(self) -> None:
-        """Save state to JSON file atomically.
+        """Save state to JSON file atomically with file locking.
 
+        Uses file locking to prevent concurrent write corruption.
         Uses temp file + rename for atomic writes.
         Creates parent directories if needed.
         Merges with existing state to handle concurrent access.
+        Sets secure permissions (0o600) on state file.
         """
-        # Ensure parent directory exists
-        self._state_file.parent.mkdir(parents=True, exist_ok=True)
+        # Acquire exclusive lock before reading/writing
+        lock_path = self._state_file.with_suffix(".lock")
 
-        # Load existing state from disk to merge with (handles concurrent access)
-        existing_sessions: Dict[str, Dict] = {}
-        if self._state_file.exists():
+        with file_lock(lock_path):
+            # Ensure parent directory exists
+            self._state_file.parent.mkdir(parents=True, exist_ok=True)
+
+            # Load existing state from disk to merge with (handles concurrent access)
+            existing_sessions: dict[str, dict] = {}
+            if self._state_file.exists():
+                try:
+                    content = self._state_file.read_text()
+                    if content.strip():
+                        existing_data = json.loads(content)
+                        existing_sessions = existing_data.get("sessions", {})
+                except (json.JSONDecodeError, OSError):
+                    # If we can't read existing state, just use our sessions
+                    pass
+
+            # Merge: our sessions take precedence over existing ones
+            merged_sessions = existing_sessions.copy()
+            for sid, session in self._sessions.items():
+                merged_sessions[sid] = session.to_dict()
+
+            state_data = {
+                "sessions": merged_sessions,
+            }
+
+            # Atomic write: write to temp file, then rename
+            temp_fd, temp_path = tempfile.mkstemp(dir=self._state_file.parent, suffix=".tmp")
             try:
-                content = self._state_file.read_text()
-                if content.strip():
-                    existing_data = json.loads(content)
-                    existing_sessions = existing_data.get("sessions", {})
-            except (json.JSONDecodeError, OSError):
-                # If we can't read existing state, just use our sessions
-                pass
-
-        # Merge: our sessions take precedence over existing ones
-        merged_sessions = existing_sessions.copy()
-        for sid, session in self._sessions.items():
-            merged_sessions[sid] = session.to_dict()
-
-        state_data = {
-            "sessions": merged_sessions,
-        }
-
-        # Atomic write: write to temp file, then rename
-        temp_fd, temp_path = tempfile.mkstemp(dir=self._state_file.parent, suffix=".tmp")
-        try:
-            with os.fdopen(temp_fd, "w") as f:
-                json.dump(state_data, f, indent=2)
-            os.rename(temp_path, self._state_file)
-        except Exception:
-            # Clean up temp file on error
-            if os.path.exists(temp_path):
-                os.unlink(temp_path)
-            raise
+                with os.fdopen(temp_fd, "w") as f:
+                    json.dump(state_data, f, indent=2)
+                os.rename(temp_path, self._state_file)
+                # Set secure permissions (owner read/write only)
+                os.chmod(self._state_file, 0o600)
+            except Exception:
+                # Clean up temp file on error
+                if os.path.exists(temp_path):
+                    os.unlink(temp_path)
+                raise
 
     def create_session(
         self,
@@ -343,7 +352,7 @@ class SessionManager:
 
         return session
 
-    def get_session(self, session_id: str) -> Optional[Session]:
+    def get_session(self, session_id: str) -> Session | None:
         """Get a session by ID.
 
         Args:
@@ -354,7 +363,7 @@ class SessionManager:
         """
         return self._sessions.get(session_id)
 
-    def list_sessions(self, status: Optional[SessionStatus] = None) -> List[Session]:
+    def list_sessions(self, status: SessionStatus | None = None) -> list[Session]:
         """List all sessions, optionally filtered by status.
 
         Args:
