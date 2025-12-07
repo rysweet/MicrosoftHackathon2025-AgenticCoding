@@ -1,23 +1,14 @@
-"""Unit tests for string utility functions - TDD approach.
+"""Unit tests for string utility functions.
 
-Tests the slugify function that converts strings to URL-safe slugs.
-Function to be implemented in amplihack/utils/string_utils.py
+Tests the string_utils module including:
+- slugify: Convert strings to URL-safe slugs
+- titlecase: Convert strings to proper Title Case
+- SMALL_WORDS: Constant for title case small words
 
-Following TDD approach - these tests should FAIL initially as slugify is not implemented.
-
-Test Coverage:
-- Basic text to slug conversion
-- Empty string handling
-- Special character removal
-- Unicode normalization (accents, diacritics)
-- Multiple consecutive spaces
-- Leading and trailing spaces
-- Already valid slugs
-- Numbers in strings
-- Only special characters
-- Mixed case conversion
-- Consecutive hyphens
-- Complex edge cases
+Test Coverage (66 tests):
+- slugify: 31 tests for slug conversion
+- titlecase: 31 tests for title case conversion
+- SMALL_WORDS: 4 tests for constant validation
 """
 
 import sys
@@ -27,21 +18,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
 
-# slugify function to be implemented
-try:
-    from amplihack.utils.string_utils import slugify
-except ImportError:
-    # Define placeholder so tests can be written
-    def slugify(text: str) -> str:
-        """Placeholder - to be implemented.
-
-        Args:
-            text: String to convert to slug
-
-        Returns:
-            URL-safe slug string
-        """
-        raise NotImplementedError("slugify not yet implemented")
+# Import string utility functions
+from amplihack.utils.string_utils import SMALL_WORDS, slugify, titlecase
 
 
 class TestSlugify:
@@ -410,3 +388,231 @@ class TestSlugify:
         """
         result = slugify("already-a-slug")
         assert result == "already-a-slug", "Already valid hyphen-separated slug should remain"
+
+
+class TestTitlecase:
+    """Test titlecase function for converting strings to proper Title Case.
+
+    The titlecase function should:
+    1. Capitalize first and last words always
+    2. Capitalize words not in SMALL_WORDS
+    3. Preserve acronyms (consecutive uppercase letters, 2+ chars)
+    4. Handle hyphenated words (capitalize each part)
+    5. Capitalize word after colon
+    6. Handle all-caps input by converting to proper title case
+    """
+
+    # ==========================================================================
+    # UNIT TESTS - Basic Functionality (60% of tests)
+    # ==========================================================================
+
+    def test_basic_hello_world(self):
+        """Test basic conversion of simple text to title case."""
+        result = titlecase("hello world")
+        assert result == "Hello World", "Should convert 'hello world' to 'Hello World'"
+
+    def test_empty_string(self):
+        """Test handling of empty string input."""
+        result = titlecase("")
+        assert result == "", "Empty string should return empty string"
+
+    def test_single_word(self):
+        """Test single word input."""
+        result = titlecase("hello")
+        assert result == "Hello", "Should capitalize single word"
+
+    def test_already_title_case(self):
+        """Test string already in title case."""
+        result = titlecase("Hello World")
+        assert result == "Hello World", "Already title case should remain unchanged"
+
+    # ==========================================================================
+    # UNIT TESTS - Small Words Handling
+    # ==========================================================================
+
+    def test_small_words_lowercase_mid_title(self):
+        """Test that small words stay lowercase in middle of title."""
+        result = titlecase("the lord of the rings")
+        assert result == "The Lord of the Rings", "Small words should stay lowercase mid-title"
+
+    def test_first_word_always_capitalized(self):
+        """Test that first word is always capitalized even if small word."""
+        result = titlecase("a tale of two cities")
+        assert result == "A Tale of Two Cities", "First word always capitalized"
+
+    def test_last_word_always_capitalized(self):
+        """Test that last word is always capitalized even if small word."""
+        result = titlecase("turn it on")
+        assert result == "Turn It On", "Last word always capitalized"
+
+    def test_small_word_conjunction_and(self):
+        """Test handling of conjunction 'and'."""
+        result = titlecase("war and peace")
+        assert result == "War and Peace", "Conjunction 'and' stays lowercase mid-title"
+
+    def test_multiple_small_words(self):
+        """Test multiple small words in sequence."""
+        result = titlecase("the cat in the hat")
+        assert result == "The Cat in the Hat", "Multiple small words handled correctly"
+
+    # ==========================================================================
+    # UNIT TESTS - Acronyms
+    # ==========================================================================
+
+    def test_acronym_preserved(self):
+        """Test that acronyms are preserved."""
+        result = titlecase("NASA launches new satellite")
+        assert result == "NASA Launches New Satellite", "Acronym NASA should be preserved"
+
+    def test_acronym_mid_sentence(self):
+        """Test acronym in middle of sentence."""
+        result = titlecase("the NASA program")
+        assert result == "The NASA Program", "Acronym preserved mid-sentence"
+
+    def test_multiple_acronyms(self):
+        """Test multiple acronyms in same string."""
+        result = titlecase("NASA and ESA collaboration")
+        assert result == "NASA and ESA Collaboration", "Multiple acronyms preserved"
+
+    def test_two_letter_acronym(self):
+        """Test minimum acronym length (2 letters)."""
+        result = titlecase("AI technology")
+        assert result == "AI Technology", "Two-letter acronym preserved"
+
+    # ==========================================================================
+    # UNIT TESTS - Hyphenated Words
+    # ==========================================================================
+
+    def test_hyphenated_word(self):
+        """Test basic hyphenated word handling."""
+        result = titlecase("self-driving cars")
+        assert result == "Self-Driving Cars", "Hyphenated words should capitalize each part"
+
+    def test_hyphenated_word_multiple(self):
+        """Test multiple hyphenated words."""
+        result = titlecase("up-to-date information")
+        assert result == "Up-To-Date Information", "Multiple hyphenated parts capitalized"
+
+    def test_hyphenated_at_end(self):
+        """Test hyphenated word at end of title."""
+        result = titlecase("technology is cutting-edge")
+        assert result == "Technology Is Cutting-Edge", "Hyphenated word at end handled"
+
+    # ==========================================================================
+    # UNIT TESTS - Colon Handling
+    # ==========================================================================
+
+    def test_colon_capitalizes_next_word(self):
+        """Test that word after colon is capitalized."""
+        result = titlecase("intro: a guide")
+        assert result == "Intro: A Guide", "Word after colon should be capitalized"
+
+    def test_colon_with_small_word(self):
+        """Test colon followed by small word."""
+        result = titlecase("python: the basics")
+        assert result == "Python: The Basics", "Small word after colon capitalized"
+
+    # ==========================================================================
+    # UNIT TESTS - All Caps Input
+    # ==========================================================================
+
+    def test_all_caps_conversion(self):
+        """Test that all caps input is converted to proper title case."""
+        result = titlecase("THE LORD OF THE RINGS")
+        assert result == "The Lord of the Rings", "All caps should convert to title case"
+
+    def test_all_caps_simple(self):
+        """Test all caps simple case."""
+        result = titlecase("HELLO WORLD")
+        assert result == "Hello World", "All caps simple case"
+
+    # ==========================================================================
+    # INTEGRATION TESTS - Combined Features (30% of tests)
+    # ==========================================================================
+
+    def test_complex_title_with_acronym_and_small_words(self):
+        """Test complex title with acronyms and small words."""
+        result = titlecase("the NASA guide to the moon")
+        assert result == "The NASA Guide to the Moon", "Complex title with acronym and small words"
+
+    def test_colon_and_hyphenated(self):
+        """Test colon combined with hyphenated words."""
+        result = titlecase("tech: self-driving cars")
+        assert result == "Tech: Self-Driving Cars", "Colon and hyphenated combined"
+
+    def test_subtitle_pattern(self):
+        """Test common subtitle pattern."""
+        result = titlecase("python: a beginner's guide")
+        assert result == "Python: A Beginner's Guide", "Subtitle pattern handled"
+
+    def test_book_title_complex(self):
+        """Test realistic book title."""
+        result = titlecase("the hitchhiker's guide to the galaxy")
+        assert result == "The Hitchhiker's Guide to the Galaxy", "Complex book title"
+
+    # ==========================================================================
+    # EDGE CASE TESTS (10% of tests)
+    # ==========================================================================
+
+    def test_single_character(self):
+        """Test single character input."""
+        result = titlecase("a")
+        assert result == "A", "Single character should be capitalized"
+
+    def test_whitespace_only(self):
+        """Test string with only whitespace."""
+        result = titlecase("   ")
+        assert result == "", "Whitespace only should return empty string"
+
+    def test_multiple_spaces(self):
+        """Test handling of multiple consecutive spaces."""
+        result = titlecase("hello   world")
+        assert result == "Hello World", "Multiple spaces handled"
+
+    def test_possessive_apostrophe(self):
+        """Test words with possessive apostrophes."""
+        result = titlecase("john's book")
+        assert result == "John's Book", "Possessive apostrophe handled"
+
+    def test_mixed_case_input(self):
+        """Test mixed case input."""
+        result = titlecase("hElLo WoRlD")
+        assert result == "Hello World", "Mixed case normalized"
+
+    def test_numbers_in_title(self):
+        """Test numbers in title."""
+        result = titlecase("the 7 habits of success")
+        assert result == "The 7 Habits of Success", "Numbers in title handled"
+
+    def test_idempotency(self):
+        """Test that titlecase is idempotent."""
+        original = "the lord of the rings"
+        first_pass = titlecase(original)
+        second_pass = titlecase(first_pass)
+        assert first_pass == second_pass, "Titlecase should be idempotent"
+
+
+class TestSmallWordsConstant:
+    """Test the SMALL_WORDS constant."""
+
+    def test_small_words_contains_articles(self):
+        """Test SMALL_WORDS contains common articles."""
+        assert "a" in SMALL_WORDS, "Should contain article 'a'"
+        assert "an" in SMALL_WORDS, "Should contain article 'an'"
+        assert "the" in SMALL_WORDS, "Should contain article 'the'"
+
+    def test_small_words_contains_conjunctions(self):
+        """Test SMALL_WORDS contains common conjunctions."""
+        assert "and" in SMALL_WORDS, "Should contain conjunction 'and'"
+        assert "but" in SMALL_WORDS, "Should contain conjunction 'but'"
+        assert "or" in SMALL_WORDS, "Should contain conjunction 'or'"
+
+    def test_small_words_contains_prepositions(self):
+        """Test SMALL_WORDS contains common short prepositions."""
+        prepositions = ["at", "by", "in", "of", "on", "to"]
+        for prep in prepositions:
+            assert prep in SMALL_WORDS, f"Should contain preposition '{prep}'"
+
+    def test_small_words_is_set(self):
+        """Test SMALL_WORDS is a set for O(1) lookup."""
+        assert isinstance(SMALL_WORDS, set), "SMALL_WORDS should be a set"
