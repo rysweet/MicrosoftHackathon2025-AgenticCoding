@@ -15,6 +15,8 @@ Test Coverage:
 import sys
 from pathlib import Path
 
+import pytest
+
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
@@ -528,8 +530,6 @@ class TestTitlecase:
         - titlecase(None) should raise TypeError
         - Non-string inputs rejected
         """
-        import pytest
-
         with pytest.raises(TypeError):
             titlecase(None)
 
@@ -540,7 +540,5 @@ class TestTitlecase:
         - titlecase(123) should raise TypeError
         - Non-string inputs rejected
         """
-        import pytest
-
         with pytest.raises(TypeError):
             titlecase(123)
