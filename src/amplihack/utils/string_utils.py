@@ -10,6 +10,8 @@ Philosophy:
 
 Public API:
     slugify: Convert text to URL-safe slug format
+    titlecase: Convert text to Title Case
+    titlecase_safe: Type-safe wrapper with None/type coercion handling
 """
 
 import re
@@ -61,4 +63,50 @@ def slugify(text: str) -> str:
     return text.strip("-")
 
 
-__all__ = ["slugify"]
+def titlecase(text: str) -> str:
+    """Convert text to Title Case.
+
+    Uses Python's built-in str.title() method.
+
+    Note:
+        Python's str.title() has a known limitation with apostrophes:
+        "don't" becomes "Don'T" instead of "Don't".
+
+    Args:
+        text: Input string to convert.
+
+    Returns:
+        Title-cased string.
+
+    Examples:
+        >>> titlecase("hello world")
+        'Hello World'
+    """
+    return text.title()
+
+
+def titlecase_safe(text: str | None | float | bool) -> str:
+    """Type-safe wrapper around titlecase() with None and type coercion handling.
+
+    Args:
+        text: String, None, or common types that can be coerced to string.
+            - None returns empty string
+            - Non-strings converted via str()
+
+    Returns:
+        Title-cased string. Empty string for None input.
+
+    Examples:
+        >>> titlecase_safe(None)
+        ''
+        >>> titlecase_safe(42)
+        '42'
+        >>> titlecase_safe("hello world")
+        'Hello World'
+    """
+    if text is None:
+        return ""
+    return titlecase(str(text))
+
+
+__all__ = ["slugify", "titlecase", "titlecase_safe"]
