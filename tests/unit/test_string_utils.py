@@ -1,23 +1,15 @@
-"""Unit tests for string utility functions - TDD approach.
+"""Unit tests for string utility functions.
 
-Tests the slugify function that converts strings to URL-safe slugs.
-Function to be implemented in amplihack/utils/string_utils.py
-
-Following TDD approach - these tests should FAIL initially as slugify is not implemented.
+Tests for:
+- slugify: converts strings to URL-safe slugs
+- titlecase: converts strings to Title Case
 
 Test Coverage:
-- Basic text to slug conversion
+- Basic text conversions
 - Empty string handling
-- Special character removal
-- Unicode normalization (accents, diacritics)
-- Multiple consecutive spaces
-- Leading and trailing spaces
-- Already valid slugs
-- Numbers in strings
-- Only special characters
-- Mixed case conversion
-- Consecutive hyphens
-- Complex edge cases
+- Special character handling
+- Unicode normalization
+- Edge cases and boundary conditions
 """
 
 import sys
@@ -27,21 +19,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
 
-# slugify function to be implemented
-try:
-    from amplihack.utils.string_utils import slugify
-except ImportError:
-    # Define placeholder so tests can be written
-    def slugify(text: str) -> str:
-        """Placeholder - to be implemented.
-
-        Args:
-            text: String to convert to slug
-
-        Returns:
-            URL-safe slug string
-        """
-        raise NotImplementedError("slugify not yet implemented")
+from amplihack.utils.string_utils import slugify, titlecase
 
 
 class TestSlugify:
@@ -410,3 +388,159 @@ class TestSlugify:
         """
         result = slugify("already-a-slug")
         assert result == "already-a-slug", "Already valid hyphen-separated slug should remain"
+
+
+class TestTitlecase:
+    """Test titlecase function for converting strings to Title Case.
+
+    The titlecase function should:
+    1. Capitalize the first letter of each word
+    2. Lowercase the rest of each word
+    3. Treat whitespace, punctuation, and numbers as word boundaries
+    4. Preserve original whitespace
+    5. Reject non-string inputs with TypeError
+    """
+
+    def test_empty_string(self):
+        """Test handling of empty string input.
+
+        Expected behavior:
+        - Empty string "" should return ""
+        - No errors or exceptions
+        """
+        result = titlecase("")
+        assert result == "", "Empty string should return empty string"
+
+    def test_single_word(self):
+        """Test basic capitalization of single word.
+
+        Expected behavior:
+        - "hello" should become "Hello"
+        - First letter capitalized
+        - Rest lowercase
+        """
+        result = titlecase("hello")
+        assert result == "Hello", "Single word should be capitalized"
+
+    def test_basic_title_case(self):
+        """Test basic title case conversion.
+
+        Expected behavior:
+        - "hello world" should become "Hello World"
+        - Each word capitalized
+        - Space preserved
+        """
+        result = titlecase("hello world")
+        assert result == "Hello World", "Should convert 'hello world' to 'Hello World'"
+
+    def test_uppercase_normalized(self):
+        """Test that uppercase input is normalized.
+
+        Expected behavior:
+        - "HELLO WORLD" should become "Hello World"
+        - All uppercase converted to title case
+        - Not preserved as uppercase
+        """
+        result = titlecase("HELLO WORLD")
+        assert result == "Hello World", "Uppercase should be normalized to title case"
+
+    def test_mixed_case_normalized(self):
+        """Test that mixed case input is normalized.
+
+        Expected behavior:
+        - "hElLo WoRlD" should become "Hello World"
+        - Mixed case normalized consistently
+        - First letter uppercase, rest lowercase per word
+        """
+        result = titlecase("hElLo WoRlD")
+        assert result == "Hello World", "Mixed case should be normalized to title case"
+
+    def test_hyphen_as_word_boundary(self):
+        """Test hyphen treated as word boundary.
+
+        Expected behavior:
+        - "hello-world" should become "Hello-World"
+        - Hyphen preserved
+        - Both words capitalized
+        """
+        result = titlecase("hello-world")
+        assert result == "Hello-World", "Hyphen should act as word boundary"
+
+    def test_apostrophe_as_word_boundary(self):
+        """Test apostrophe treated as word boundary.
+
+        Expected behavior:
+        - "it's" should become "It'S"
+        - Apostrophe acts as word boundary
+        - Character after apostrophe capitalized
+        """
+        result = titlecase("it's")
+        assert result == "It'S", "Apostrophe should act as word boundary"
+
+    def test_numbers_as_word_boundaries(self):
+        """Test numbers treated as word boundaries.
+
+        Expected behavior:
+        - "hello123world" should become "Hello123World"
+        - Numbers act as word boundaries
+        - Letters after numbers capitalized
+        """
+        result = titlecase("hello123world")
+        assert result == "Hello123World", "Numbers should act as word boundaries"
+
+    def test_whitespace_preserved(self):
+        """Test that original whitespace is preserved.
+
+        Expected behavior:
+        - "  multiple   spaces  " should become "  Multiple   Spaces  "
+        - Leading spaces preserved
+        - Trailing spaces preserved
+        - Multiple spaces between words preserved
+        """
+        result = titlecase("  multiple   spaces  ")
+        assert result == "  Multiple   Spaces  ", "Whitespace should be preserved exactly"
+
+    def test_numbers_only_unchanged(self):
+        """Test that numeric-only string is unchanged.
+
+        Expected behavior:
+        - "123" should remain "123"
+        - No letters to capitalize
+        - Numbers preserved as-is
+        """
+        result = titlecase("123")
+        assert result == "123", "Numeric-only string should be unchanged"
+
+    def test_single_character(self):
+        """Test single character input.
+
+        Expected behavior:
+        - "a" should become "A"
+        - Single lowercase letter capitalized
+        """
+        result = titlecase("a")
+        assert result == "A", "Single character should be capitalized"
+
+    def test_none_input_raises_typeerror(self):
+        """Test that None input raises TypeError.
+
+        Expected behavior:
+        - titlecase(None) should raise TypeError
+        - Non-string inputs rejected
+        """
+        import pytest
+
+        with pytest.raises(TypeError):
+            titlecase(None)
+
+    def test_integer_input_raises_typeerror(self):
+        """Test that integer input raises TypeError.
+
+        Expected behavior:
+        - titlecase(123) should raise TypeError
+        - Non-string inputs rejected
+        """
+        import pytest
+
+        with pytest.raises(TypeError):
+            titlecase(123)

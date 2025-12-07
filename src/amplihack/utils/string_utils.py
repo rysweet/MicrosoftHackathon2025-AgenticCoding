@@ -10,6 +10,7 @@ Philosophy:
 
 Public API:
     slugify: Convert text to URL-safe slug format
+    titlecase: Convert string to Title Case
 """
 
 import re
@@ -61,4 +62,43 @@ def slugify(text: str) -> str:
     return text.strip("-")
 
 
-__all__ = ["slugify"]
+def titlecase(text: str) -> str:
+    """Convert string to Title Case.
+
+    Capitalizes the first letter of each word, lowercasing the rest.
+    Word boundaries include whitespace, punctuation, and numbers.
+
+    Args:
+        text: String to convert.
+
+    Returns:
+        Title-cased string with spacing and punctuation preserved.
+
+    Raises:
+        TypeError: If text is not a string.
+
+    Note:
+        Word boundaries are detected for ASCII letters (a-z, A-Z) only.
+        Non-ASCII letters are lowercased but don't trigger capitalization.
+
+    Examples:
+        >>> titlecase("hello world")
+        'Hello World'
+        >>> titlecase("hello-world")
+        'Hello-World'
+        >>> titlecase("it's")
+        "It'S"
+    """
+    if not isinstance(text, str):
+        raise TypeError(f"titlecase() argument must be str, not {type(text).__name__}")
+
+    if not text:
+        return text
+
+    # Pattern: match any letter preceded by start or non-letter
+    # Then lowercase everything and capitalize matches
+    result = text.lower()
+    return re.sub(r"(^|[^a-zA-Z])([a-zA-Z])", lambda m: m.group(1) + m.group(2).upper(), result)
+
+
+__all__ = ["slugify", "titlecase"]
