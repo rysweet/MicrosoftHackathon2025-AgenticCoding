@@ -1,6 +1,7 @@
 """String utility functions for text processing.
 
-This module provides utilities for converting strings to URL-safe formats.
+This module provides utilities for string conversion including URL-safe slugs
+and title case formatting.
 
 Philosophy:
 - Ruthless simplicity (stdlib only)
