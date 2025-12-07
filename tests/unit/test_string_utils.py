@@ -591,6 +591,21 @@ class TestTitlecase:
         second_pass = titlecase(first_pass)
         assert first_pass == second_pass, "Titlecase should be idempotent"
 
+    def test_hyphenated_with_acronym(self):
+        """Test acronym within hyphenated word is preserved."""
+        result = titlecase("NASA-approved program")
+        assert result == "NASA-Approved Program", "Acronym in hyphenated word preserved"
+
+    def test_long_uppercase_not_acronym(self):
+        """Test that 6+ char uppercase words are not treated as acronyms."""
+        result = titlecase("SHOUTED text")
+        assert result == "Shouted Text", "Long uppercase words normalized, not acronyms"
+
+    def test_acronym_with_special_chars(self):
+        """Test acronym containing special characters like &."""
+        result = titlecase("Q&A: basics")
+        assert result == "Q&A: Basics", "Q&A preserved as acronym (& stripped, QA detected)"
+
 
 class TestSmallWordsConstant:
     """Test the SMALL_WORDS constant."""

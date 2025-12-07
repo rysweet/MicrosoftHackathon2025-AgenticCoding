@@ -101,7 +101,7 @@ def titlecase(s: str) -> str:
     Transforms text following standard title case conventions:
     1. Capitalize first and last words always
     2. Capitalize words not in SMALL_WORDS
-    3. Preserve acronyms (consecutive uppercase letters, 2+ chars)
+    3. Preserve acronyms (2-5 consecutive uppercase letters)
     4. Handle hyphenated words (capitalize each part)
     5. Capitalize word after colon
 
