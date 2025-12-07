@@ -1,6 +1,7 @@
 """String utility functions for text processing.
 
-This module provides utilities for converting strings to URL-safe formats.
+This module provides utilities for converting strings to URL-safe formats
+and title case transformations.
 
 Philosophy:
 - Ruthless simplicity (stdlib only)
@@ -10,6 +11,7 @@ Philosophy:
 
 Public API:
     slugify: Convert text to URL-safe slug format
+    titlecase: Convert text to title case
 """
 
 import re
@@ -61,4 +63,49 @@ def slugify(text: str) -> str:
     return text.strip("-")
 
 
-__all__ = ["slugify"]
+def titlecase(text: str) -> str:
+    """Convert text to title case, capitalizing first letter of each word.
+
+    Word boundaries are: space, hyphen, underscore, tab, newline, carriage return.
+    Preserves whitespace positions and counts exactly.
+
+    Args:
+        text: Input string to convert.
+
+    Returns:
+        Title-cased string with first character of each word uppercased
+        and remaining characters lowercased.
+
+    Examples:
+        >>> titlecase("hello world")
+        'Hello World'
+        >>> titlecase("hello-world")
+        'Hello-World'
+        >>> titlecase("it's a test")
+        "It's A Test"
+        >>> titlecase("  hello  ")
+        '  Hello  '
+    """
+    if not text:
+        return text
+
+    word_boundaries = {" ", "-", "_", "\t", "\n", "\r"}
+    result = []
+    new_word = True
+
+    for char in text:
+        if char in word_boundaries:
+            result.append(char)
+            new_word = True
+        elif new_word:
+            result.append(char.upper())
+            # Only end new_word state if character is alphabetic
+            if char.isalpha():
+                new_word = False
+        else:
+            result.append(char.lower())
+
+    return "".join(result)
+
+
+__all__ = ["slugify", "titlecase"]

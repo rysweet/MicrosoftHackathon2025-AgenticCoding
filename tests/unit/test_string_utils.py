@@ -1,9 +1,7 @@
-"""Unit tests for string utility functions - TDD approach.
+"""Unit tests for string utility functions.
 
-Tests the slugify function that converts strings to URL-safe slugs.
-Function to be implemented in amplihack/utils/string_utils.py
-
-Following TDD approach - these tests should FAIL initially as slugify is not implemented.
+Tests the slugify and titlecase functions for string transformations.
+Functions implemented in amplihack/utils/string_utils.py
 
 Test Coverage:
 - Basic text to slug conversion
@@ -410,3 +408,374 @@ class TestSlugify:
         """
         result = slugify("already-a-slug")
         assert result == "already-a-slug", "Already valid hyphen-separated slug should remain"
+
+
+# titlecase function to be implemented
+try:
+    from amplihack.utils.string_utils import titlecase
+except ImportError:
+    # Define placeholder so tests can be written
+    def titlecase(text: str) -> str:
+        """Placeholder - to be implemented.
+
+        Args:
+            text: String to convert to title case
+
+        Returns:
+            Title cased string with preserved whitespace
+        """
+        raise NotImplementedError("titlecase not yet implemented")
+
+
+class TestTitlecase:
+    """Test titlecase function for converting strings to title case.
+
+    The titlecase function should:
+    1. Capitalize the first letter of each word
+    2. Lowercase all other letters in each word
+    3. Treat space, hyphen, underscore, tab, and newline as word boundaries
+    4. NOT treat apostrophes as word boundaries (it's -> It's, not It'S)
+    5. Preserve exact whitespace (multiple spaces, leading/trailing)
+    6. Be a pure function with O(n) complexity using stdlib only
+    """
+
+    def test_empty_string(self):
+        """Test handling of empty string input.
+
+        Expected behavior:
+        - Empty string "" should return ""
+        - No errors or exceptions
+        """
+        result = titlecase("")
+        assert result == "", "Empty string should return empty string"
+
+    def test_single_word_lowercase(self):
+        """Test single lowercase word conversion.
+
+        Expected behavior:
+        - "hello" should become "Hello"
+        - First letter capitalized, rest lowercase
+        """
+        result = titlecase("hello")
+        assert result == "Hello", "Single lowercase word should be capitalized"
+
+    def test_basic_two_words(self):
+        """Test basic two-word conversion with space separator.
+
+        Expected behavior:
+        - "hello world" should become "Hello World"
+        - Each word's first letter capitalized
+        - Space preserved as separator
+        """
+        result = titlecase("hello world")
+        assert result == "Hello World", "Basic two words should be title cased"
+
+    def test_all_uppercase_input(self):
+        """Test conversion of all uppercase input.
+
+        Expected behavior:
+        - "HELLO WORLD" should become "Hello World"
+        - All letters after first lowercased
+        - First letter of each word capitalized
+        """
+        result = titlecase("HELLO WORLD")
+        assert result == "Hello World", "All uppercase should convert to title case"
+
+    def test_mixed_case_input(self):
+        """Test conversion of mixed case input.
+
+        Expected behavior:
+        - "hELLo WoRLd" should become "Hello World"
+        - Irregular casing normalized to title case
+        """
+        result = titlecase("hELLo WoRLd")
+        assert result == "Hello World", "Mixed case should normalize to title case"
+
+    def test_hyphen_word_boundary(self):
+        """Test hyphen as word boundary.
+
+        Expected behavior:
+        - "hello-world" should become "Hello-World"
+        - Hyphen acts as word separator
+        - Hyphen preserved in output
+        """
+        result = titlecase("hello-world")
+        assert result == "Hello-World", "Hyphen should act as word boundary"
+
+    def test_underscore_word_boundary(self):
+        """Test underscore as word boundary.
+
+        Expected behavior:
+        - "hello_world" should become "Hello_World"
+        - Underscore acts as word separator
+        - Underscore preserved in output
+        """
+        result = titlecase("hello_world")
+        assert result == "Hello_World", "Underscore should act as word boundary"
+
+    def test_apostrophe_not_boundary(self):
+        """Test that apostrophe is NOT a word boundary.
+
+        Expected behavior:
+        - "it's" should become "It's"
+        - Apostrophe is NOT a word separator
+        - Letter after apostrophe stays lowercase
+        """
+        result = titlecase("it's")
+        assert result == "It's", "Apostrophe should NOT act as word boundary"
+
+    def test_multiple_spaces_preserved(self):
+        """Test preservation of multiple consecutive spaces.
+
+        Expected behavior:
+        - "hello  world" should become "Hello  World"
+        - Double space preserved exactly
+        - Words still properly capitalized
+        """
+        result = titlecase("hello  world")
+        assert result == "Hello  World", "Multiple spaces should be preserved exactly"
+
+    def test_leading_trailing_spaces_preserved(self):
+        """Test preservation of leading and trailing spaces.
+
+        Expected behavior:
+        - " hello " should become " Hello "
+        - Leading space preserved
+        - Trailing space preserved
+        """
+        result = titlecase(" hello ")
+        assert result == " Hello ", "Leading and trailing spaces should be preserved"
+
+    def test_newline_word_boundary(self):
+        """Test newline as word boundary.
+
+        Expected behavior:
+        - "hello\\nworld" should become "Hello\\nWorld"
+        - Newline acts as word separator
+        - Newline preserved in output
+        """
+        result = titlecase("hello\nworld")
+        assert result == "Hello\nWorld", "Newline should act as word boundary"
+
+    def test_tab_word_boundary(self):
+        """Test tab as word boundary.
+
+        Expected behavior:
+        - "hello\\tworld" should become "Hello\\tWorld"
+        - Tab acts as word separator
+        - Tab preserved in output
+        """
+        result = titlecase("hello\tworld")
+        assert result == "Hello\tWorld", "Tab should act as word boundary"
+
+    def test_numeric_only_string(self):
+        """Test string with only numbers.
+
+        Expected behavior:
+        - "123" should remain "123"
+        - Numbers have no case, pass through unchanged
+        """
+        result = titlecase("123")
+        assert result == "123", "Numeric-only string should be unchanged"
+
+    def test_word_starting_with_number(self):
+        """Test word that starts with a number.
+
+        Expected behavior:
+        - "hello123" should become "Hello123"
+        - First letter capitalized
+        - Numbers preserved in position
+        """
+        result = titlecase("hello123")
+        assert result == "Hello123", "Word with trailing numbers should title case"
+
+    def test_all_whitespace(self):
+        """Test string with only whitespace characters.
+
+        Expected behavior:
+        - "   " should remain "   "
+        - Whitespace preserved exactly
+        - No transformation needed
+        """
+        result = titlecase("   ")
+        assert result == "   ", "All whitespace should be preserved unchanged"
+
+    def test_single_character(self):
+        """Test single character input.
+
+        Expected behavior:
+        - "a" should become "A"
+        - Single letter capitalized
+        """
+        result = titlecase("a")
+        assert result == "A", "Single character should be capitalized"
+
+    def test_contractions_dont_capitalize_after_apostrophe(self):
+        """Test that contractions handle apostrophes correctly.
+
+        Expected behavior:
+        - "don't" should become "Don't" (not "Don'T")
+        - "i'm" should become "I'm" (not "I'M")
+        - "won't" should become "Won't"
+        """
+        assert titlecase("don't") == "Don't", "Contraction 'don't' should handle apostrophe"
+        assert titlecase("i'm") == "I'm", "Contraction 'i'm' should handle apostrophe"
+        assert titlecase("won't") == "Won't", "Contraction 'won't' should handle apostrophe"
+
+    def test_possessive_nouns(self):
+        """Test possessive nouns with apostrophe.
+
+        Expected behavior:
+        - "john's" should become "John's"
+        - Apostrophe not treated as boundary
+        """
+        result = titlecase("john's")
+        assert result == "John's", "Possessive noun should handle apostrophe correctly"
+
+    def test_multiple_boundary_types(self):
+        """Test string with multiple types of boundaries.
+
+        Expected behavior:
+        - "hello world-test_foo" should become "Hello World-Test_Foo"
+        - Space, hyphen, and underscore all act as boundaries
+        """
+        result = titlecase("hello world-test_foo")
+        assert result == "Hello World-Test_Foo", "Multiple boundary types should all work"
+
+    def test_consecutive_hyphens(self):
+        """Test consecutive hyphens preserved.
+
+        Expected behavior:
+        - "hello--world" should become "Hello--World"
+        - Both hyphens preserved
+        - Word after hyphens capitalized
+        """
+        result = titlecase("hello--world")
+        assert result == "Hello--World", "Consecutive hyphens should be preserved"
+
+    def test_leading_hyphen(self):
+        """Test leading hyphen preserved.
+
+        Expected behavior:
+        - "-hello" should become "-Hello"
+        - Leading hyphen preserved
+        - Word capitalized
+        """
+        result = titlecase("-hello")
+        assert result == "-Hello", "Leading hyphen should be preserved"
+
+    def test_trailing_hyphen(self):
+        """Test trailing hyphen preserved.
+
+        Expected behavior:
+        - "hello-" should become "Hello-"
+        - Trailing hyphen preserved
+        """
+        result = titlecase("hello-")
+        assert result == "Hello-", "Trailing hyphen should be preserved"
+
+    def test_number_followed_by_word(self):
+        """Test number followed by word after boundary.
+
+        Expected behavior:
+        - "123 hello" should become "123 Hello"
+        - Number unchanged
+        - Word after space capitalized
+        """
+        result = titlecase("123 hello")
+        assert result == "123 Hello", "Number followed by word should work"
+
+    def test_mixed_whitespace_boundaries(self):
+        """Test mixed whitespace characters.
+
+        Expected behavior:
+        - "hello\\t\\nworld" should become "Hello\\t\\nWorld"
+        - Tab and newline both act as boundaries
+        - Both preserved in output
+        """
+        result = titlecase("hello\t\nworld")
+        assert result == "Hello\t\nWorld", "Mixed whitespace boundaries should work"
+
+    def test_single_letter_words(self):
+        """Test single letter words separated by spaces.
+
+        Expected behavior:
+        - "a b c" should become "A B C"
+        - Each single letter capitalized
+        """
+        result = titlecase("a b c")
+        assert result == "A B C", "Single letter words should each be capitalized"
+
+    def test_long_sentence(self):
+        """Test longer sentence with various boundaries.
+
+        Expected behavior:
+        - "the quick-brown_fox jumps" should become "The Quick-Brown_Fox Jumps"
+        """
+        result = titlecase("the quick-brown_fox jumps")
+        assert result == "The Quick-Brown_Fox Jumps", "Longer sentence should title case correctly"
+
+    def test_apostrophe_at_start(self):
+        """Test apostrophe at start of word.
+
+        Expected behavior:
+        - "'twas" should become "'Twas"
+        - Letter after apostrophe at start gets capitalized
+        """
+        result = titlecase("'twas")
+        assert result == "'Twas", "Apostrophe at start should capitalize next letter"
+
+    def test_apostrophe_at_end(self):
+        """Test apostrophe at end of word.
+
+        Expected behavior:
+        - "dogs'" should become "Dogs'"
+        - Trailing apostrophe preserved
+        """
+        result = titlecase("dogs'")
+        assert result == "Dogs'", "Trailing apostrophe should be preserved"
+
+    def test_pure_function_no_side_effects(self):
+        """Test that titlecase is a pure function.
+
+        Expected behavior:
+        - Calling twice with same input gives same output
+        - Original input not modified
+        """
+        original = "hello world"
+        result1 = titlecase(original)
+        result2 = titlecase(original)
+        assert result1 == result2, "Same input should give same output"
+        assert original == "hello world", "Original string should not be modified"
+
+    def test_carriage_return_newline(self):
+        """Test Windows-style line endings.
+
+        Expected behavior:
+        - "hello\\r\\nworld" should become "Hello\\r\\nWorld"
+        - Carriage return and newline both as boundaries
+        """
+        result = titlecase("hello\r\nworld")
+        assert result == "Hello\r\nWorld", "CRLF should act as word boundary"
+
+    def test_only_boundaries(self):
+        """Test string with only boundary characters.
+
+        Expected behavior:
+        - " -_\\t\\n" should remain " -_\\t\\n"
+        - No letters to transform
+        - Boundaries preserved exactly
+        """
+        result = titlecase(" -_\t\n")
+        assert result == " -_\t\n", "Only boundaries should be preserved unchanged"
+
+    def test_word_all_numbers_with_boundaries(self):
+        """Test words that are all numbers between boundaries.
+
+        Expected behavior:
+        - "123-456_789" should remain "123-456_789"
+        - Numbers unchanged
+        - Boundaries preserved
+        """
+        result = titlecase("123-456_789")
+        assert result == "123-456_789", "Numeric words with boundaries should be unchanged"
