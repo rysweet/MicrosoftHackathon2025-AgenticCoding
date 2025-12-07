@@ -12,10 +12,10 @@ Standard types in most projects:
 - **Task** - Technical work (hours/days)
 - **Bug** - Defect or issue
 
-Check available types in yer project:
+Check available types in your project:
 
 ```bash
-python -m .claude.scenarios.az-devops-tools.list_types
+python .claude/scenarios/az-devops-tools/list_types.py
 ```
 
 ## Creating Work Items
@@ -23,7 +23,7 @@ python -m .claude.scenarios.az-devops-tools.list_types
 ### Basic Creation
 
 ```bash
-python -m .claude.scenarios.az-devops-tools.create_work_item \
+python .claude/scenarios/az-devops-tools/create_work_item.py \
   --type "User Story" \
   --title "Implement user login"
 ```
@@ -31,7 +31,7 @@ python -m .claude.scenarios.az-devops-tools.create_work_item \
 ### With Description (Markdown Auto-Converted)
 
 ```bash
-python -m .claude.scenarios.az-devops-tools.create_work_item \
+python .claude/scenarios/az-devops-tools/create_work_item.py \
   --type "User Story" \
   --title "User authentication" \
   --description "# Story
@@ -47,7 +47,7 @@ As a user, I want to log in with my credentials.
 ### With All Options
 
 ```bash
-python -m .claude.scenarios.az-devops-tools.create_work_item \
+python .claude/scenarios/az-devops-tools/create_work_item.py \
   --type Bug \
   --title "Login button not responding" \
   --description "Button click does nothing" \
@@ -63,7 +63,7 @@ python -m .claude.scenarios.az-devops-tools.create_work_item \
 
 ```bash
 # Creates Task and links to Story #1234
-python -m .claude.scenarios.az-devops-tools.create_work_item \
+python .claude/scenarios/az-devops-tools/create_work_item.py \
   --type Task \
   --title "Write unit tests" \
   --parent 1234
@@ -75,7 +75,7 @@ Create parent-child relationships:
 
 ```bash
 # Link Task #5678 to Story #1234
-python -m .claude.scenarios.az-devops-tools.link_parent \
+python .claude/scenarios/az-devops-tools/link_parent.py \
   --child 5678 \
   --parent 1234
 ```
@@ -87,20 +87,50 @@ Valid relationships:
 - User Story → Feature, Epic
 - Feature → Epic
 
+## Updating Work Items
+
+Update state, assignments, or other fields:
+
+```bash
+# Update state
+python .claude/scenarios/az-devops-tools/update_work_item.py --id 12345 --state "Active"
+
+# Reassign work item
+python .claude/scenarios/az-devops-tools/update_work_item.py --id 12345 --assign-to "user@domain.com"
+
+# Update multiple fields with comment
+python .claude/scenarios/az-devops-tools/update_work_item.py --id 12345 --state "Resolved" --comment "Fixed issue"
+```
+
+## Querying Work Items
+
+List and filter work items:
+
+```bash
+# List my active work items
+python .claude/scenarios/az-devops-tools/list_work_items.py --state Active --assigned-to @me
+
+# List all bugs
+python .claude/scenarios/az-devops-tools/list_work_items.py --type Bug
+
+# Use predefined query
+python .claude/scenarios/az-devops-tools/list_work_items.py --query mine
+```
+
 ## Common Workflows
 
 ### Create Epic with Features
 
 ```bash
 # Create Epic
-epic_output=$(python -m .claude.scenarios.az-devops-tools.create_work_item \
+epic_output=$(python .claude/scenarios/az-devops-tools/create_work_item.py \
   --type Epic \
   --title "Authentication System")
 epic_id=$(echo "$epic_output" | grep "ID:" | awk '{print $2}')
 
 # Create Features under Epic
 for feature in "OAuth Integration" "Session Management" "RBAC"; do
-  python -m .claude.scenarios.az-devops-tools.create_work_item \
+  python .claude/scenarios/az-devops-tools/create_work_item.py \
     --type Feature \
     --title "$feature" \
     --parent "$epic_id"
@@ -111,38 +141,18 @@ done
 
 ```bash
 # Create Story
-story_output=$(python -m .claude.scenarios.az-devops-tools.create_work_item \
+story_output=$(python .claude/scenarios/az-devops-tools/create_work_item.py \
   --type "User Story" \
   --title "Implement login UI")
 story_id=$(echo "$story_output" | grep "ID:" | awk '{print $2}')
 
 # Create Tasks
 for task in "Design mockup" "Implement form" "Add validation" "Write tests"; do
-  python -m .claude.scenarios.az-devops-tools.create_work_item \
+  python .claude/scenarios/az-devops-tools/create_work_item.py \
     --type Task \
     --title "$task" \
     --parent "$story_id"
 done
-```
-
-### Bulk Import from CSV
-
-```python
-import csv
-from .claude.scenarios.az_devops_tools.create_work_item import create_work_item
-
-with open('stories.csv') as f:
-    reader = csv.DictReader(f)
-    for row in reader:
-        work_item = create_work_item(
-            title=row['title'],
-            work_item_type="User Story",
-            org=org,
-            project=project,
-            description=row['description'],
-            tags=row.get('tags', '').split(','),
-        )
-        print(f"Created: {work_item['id']}")
 ```
 
 ## Field Reference
@@ -167,10 +177,10 @@ with open('stories.csv') as f:
 
 ```bash
 # Show fields for specific type
-python -m .claude.scenarios.az-devops-tools.list_types --type "User Story"
+python .claude/scenarios/az-devops-tools/list_types.py --type "User Story"
 
 # Show all fields including system
-python -m .claude.scenarios.az-devops-tools.list_types --type Bug --all-fields
+python .claude/scenarios/az-devops-tools/list_types.py --type Bug --all-fields
 ```
 
 ## Tips and Best Practices
@@ -188,7 +198,7 @@ python -m .claude.scenarios.az-devops-tools.list_types --type Bug --all-fields
 Check available types:
 
 ```bash
-python -m .claude.scenarios.az-devops-tools.list_types
+python .claude/scenarios/az-devops-tools/list_types.py
 ```
 
 ### "Work item type with spaces"
@@ -202,10 +212,10 @@ Use quotes:
 
 ### "Parent link failed"
 
-Verify both IDs exist and relationship be valid.
+Verify both IDs exist and relationship is valid.
 
 ## See Also
 
-- [WIQL Queries](queries.md) - Query work items
-- [HTML Formatting](html-formatting.md) - Rich descriptions
+- [@queries.md] - WIQL query patterns
+- [@html-formatting.md] - Rich text formatting
 - [MS Learn: Work Items](https://learn.microsoft.com/en-us/azure/devops/boards/work-items/)

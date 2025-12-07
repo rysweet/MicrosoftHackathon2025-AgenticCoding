@@ -1,125 +1,198 @@
-# Azure DevOps CLI Tools Documentation
+# Azure DevOps Integration
 
-Ahoy! Welcome to the Azure DevOps CLI tools documentation. This collection of Python tools helps ye manage Azure DevOps Boards efficiently through the command line.
+Complete Azure DevOps automation tools for boards, repositories, pipelines, and artifacts.
 
-## Table of Contents
+## What It Does
 
-- [Quick Start Guide](quick-start.md) - Get started in 5 minutes
-- [Authentication](authentication.md) - Set up authentication and configuration
-- [Work Items](work-items.md) - Create and manage work items
-- [Queries](queries.md) - Query work items with WIQL
-- [HTML Formatting](html-formatting.md) - Format descriptions and comments
-- [Troubleshooting](troubleshooting.md) - Common issues and solutions
+Provides CLI tools and AI guidance for:
 
-## Overview
+- **Work Items (Boards)** - Create, update, query, and manage work items
+- **Repositories** - List repos and create pull requests
+- **Pipelines** - Trigger builds and monitor execution (via az CLI)
+- **Artifacts** - Manage package feeds and versions (via az CLI)
 
-The az-devops-tools suite provides six specialized tools:
+## For AI Agents
 
-### 1. Authentication Check (`auth_check.py`)
+See `.claude/skills/azure-devops/SKILL.md` for complete skill definition with progressive loading references.
 
-Verify yer Azure DevOps setup be ready fer use.
+## For Humans
 
-- Checks az CLI installation
-- Verifies login status
-- Validates configuration
-- Tests org/project access
-- Auto-fix capability
+### Quick Setup
 
-### 2. HTML Formatter (`format_html.py`)
+1. **Install Azure CLI**
+   ```bash
+   # macOS
+   brew install azure-cli
 
-Convert markdown to Azure DevOps HTML format.
+   # Windows
+   winget install Microsoft.AzureCLI
 
-- Supports headings, lists, code blocks
-- Inline formatting (bold, italic, code)
-- CLI and importable functions
-- Standard library only
+   # Linux
+   curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+   ```
 
-### 3. Work Item Creator (`create_work_item.py`)
+2. **Install DevOps Extension**
+   ```bash
+   az extension add --name azure-devops
+   ```
 
-Create work items with auto-formatted descriptions.
+3. **Login and Configure**
+   ```bash
+   az login
+   az devops configure --defaults \
+     organization=https://dev.azure.com/YOUR_ORG \
+     project=YOUR_PROJECT
+   ```
 
-- All work item types (Story, Bug, Task, Feature, Epic)
-- Auto-converts markdown to HTML
-- Optional parent linking
-- Custom field support
+4. **Verify Setup**
+   ```bash
+   python .claude/scenarios/az-devops-tools/auth_check.py --auto-fix
+   ```
 
-### 4. Parent Linker (`link_parent.py`)
+### Available Tools
 
-Link work items in parent-child relationships.
+All tools are in `.claude/scenarios/az-devops-tools/`. Run any tool with `--help` for usage.
 
-- Validates both items exist
-- Checks type compatibility
-- Clear error messages
+#### Work Item Tools
+- `list_work_items.py` - Query and filter work items
+- `get_work_item.py` - Get single work item details
+- `create_work_item.py` - Create new work items
+- `update_work_item.py` - Update work item fields/state
+- `delete_work_item.py` - Delete work items (with confirmation)
+- `link_parent.py` - Link parent-child relationships
+- `query_wiql.py` - Execute custom WIQL queries
+- `list_types.py` - Discover work item types and fields
 
-### 5. WIQL Query Tool (`query_wiql.py`)
+#### Utility Tools
+- `auth_check.py` - Verify authentication and configuration
+- `format_html.py` - Convert markdown to HTML
 
-Query work items using WIQL.
+#### Repository Tools
+- `list_repos.py` - List repositories in project
+- `create_pr.py` - Create pull requests
 
-- 5 predefined queries
-- Custom WIQL support
-- Multiple output formats (table, json, csv, ids-only)
-- Result limiting
+### Quick Examples
 
-### 6. Type Lister (`list_types.py`)
-
-Discover work item types and fields.
-
-- List all types in project
-- Show field schemas
-- Required vs optional fields
-- Custom type support
-
-## Installation
-
-These tools require:
-
-- Python 3.8+
-- Azure CLI with DevOps extension
-- Azure DevOps authentication
-
-See [Authentication](authentication.md) fer setup instructions.
-
-## Quick Example
-
+#### Create Work Item
 ```bash
-# Check authentication
-python -m .claude.scenarios.az-devops-tools.auth_check
-
-# Create a User Story
-python -m .claude.scenarios.az-devops-tools.create_work_item \
+python .claude/scenarios/az-devops-tools/create_work_item.py \
   --type "User Story" \
   --title "Implement login" \
-  --description "# Story\n\nAs a user, I want to log in..."
+  --description "Add user authentication"
+```
 
-# Query yer work items
-python -m .claude.scenarios.az-devops-tools.query_wiql --query my-items
+#### List My Work Items
+```bash
+python .claude/scenarios/az-devops-tools/list_work_items.py --query mine
+```
+
+#### Create Pull Request
+```bash
+python .claude/scenarios/az-devops-tools/create_pr.py \
+  --source feature/auth \
+  --target main \
+  --title "Add authentication"
 ```
 
 ## Philosophy
 
-These tools follow amplihack principles:
+These tools follow clean architecture principles:
 
-- **Single responsibility** - Each tool does one thing well
-- **Composable** - Tools can be combined
-- **Clear errors** - Actionable error messages
-- **No stubs** - All code works
-- **Standard library** - Minimal dependencies
+- **Standard library + Azure CLI** - Minimal dependencies
+- **Self-contained** - Each tool is independent and regeneratable
+- **Clear error messages** - Actionable guidance when things fail
+- **Fail-fast validation** - Check prerequisites before operations
 
-## Getting Help
+## Common Workflows
 
-- Read the [Quick Start Guide](quick-start.md)
-- Check [Troubleshooting](troubleshooting.md)
-- See tool help: `python -m .claude.scenarios.az-devops-tools.TOOL_NAME --help`
-- Review [MS Learn Documentation](https://learn.microsoft.com/en-us/azure/devops/)
+### 1. Create Epic → Feature → Story Hierarchy
 
-## Contributing
+```bash
+# Create Epic
+python .claude/scenarios/az-devops-tools/create_work_item.py \
+  --type Epic \
+  --title "Authentication System"
 
-These tools be part of the amplihack framework. To create yer own tool:
+# Output shows: Created work item #100
 
-1. See [HOW_TO_CREATE_YOUR_OWN.md](../../.claude/scenarios/az-devops-tools/HOW_TO_CREATE_YOUR_OWN.md)
-2. Follow the template structure
-3. Use common utilities from `common.py`
-4. Add tests
-5. Update documentation
+# Create Feature under Epic
+python .claude/scenarios/az-devops-tools/create_work_item.py \
+  --type Feature \
+  --title "OAuth Integration" \
+  --parent-id 100
 
-Fair winds and following seas!
+# Output shows: Created work item #101
+```
+
+### 2. Query and Update Workflow
+
+```bash
+# Find my active work items
+python .claude/scenarios/az-devops-tools/list_work_items.py \
+  --state Active \
+  --assigned-to @me
+
+# Update work item
+python .claude/scenarios/az-devops-tools/update_work_item.py \
+  --id 101 \
+  --state "In Progress" \
+  --comment "Starting work"
+```
+
+### 3. Feature Branch to Pull Request
+
+```bash
+# Create feature branch
+git checkout -b feature/oauth main
+
+# ... make changes, commit ...
+
+# Push branch
+git push -u origin feature/oauth
+
+# Create PR
+python .claude/scenarios/az-devops-tools/create_pr.py \
+  --source feature/oauth \
+  --target main \
+  --title "Add OAuth integration" \
+  --work-items "101"
+```
+
+## Troubleshooting
+
+### "az: command not found"
+Install Azure CLI. See Quick Setup above.
+
+### "DevOps extension not installed"
+```bash
+az extension add --name azure-devops
+```
+
+### "Authentication failed"
+```bash
+az logout
+az login
+python .claude/scenarios/az-devops-tools/auth_check.py --auto-fix
+```
+
+### "Invalid work item type"
+```bash
+python .claude/scenarios/az-devops-tools/list_types.py
+```
+
+## Documentation
+
+For detailed AI-facing documentation, see:
+- `.claude/skills/azure-devops/authentication.md` - Auth setup
+- `.claude/skills/azure-devops/work-items.md` - Work item operations
+- `.claude/skills/azure-devops/queries.md` - WIQL query patterns
+- `.claude/skills/azure-devops/html-formatting.md` - HTML formatting
+- `.claude/skills/azure-devops/repos.md` - Repository operations
+- `.claude/skills/azure-devops/pipelines.md` - Pipeline operations
+- `.claude/skills/azure-devops/artifacts.md` - Artifact management
+
+## References
+
+- [Azure DevOps CLI Docs](https://learn.microsoft.com/en-us/cli/azure/devops)
+- [Work Items API](https://learn.microsoft.com/en-us/rest/api/azure/devops/wit/work-items)
+- [WIQL Syntax](https://learn.microsoft.com/en-us/azure/devops/boards/queries/wiql-syntax)

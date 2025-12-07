@@ -1,6 +1,6 @@
 # Authentication Setup
 
-Complete guide to setting up authentication fer Azure DevOps CLI tools.
+Complete guide to setting up authentication for Azure DevOps CLI tools.
 
 ## Prerequisites
 
@@ -52,11 +52,11 @@ az extension list --output table | grep azure-devops
 az login
 ```
 
-This opens yer browser fer interactive login. After successful login, ye'll see yer subscriptions listed.
+This opens your browser for interactive login. After successful login, you'll see your subscriptions listed.
 
 ### Alternative: Service Principal Login
 
-Fer automation/CI:
+For automation/CI:
 
 ```bash
 az login --service-principal \
@@ -86,7 +86,7 @@ az devops configure --list
 Use the auth_check tool:
 
 ```bash
-python -m .claude.scenarios.az-devops-tools.auth_check
+python .claude/scenarios/az-devops-tools/auth_check.py
 ```
 
 Expected output:
@@ -104,13 +104,13 @@ Expected output:
 ## Auto-Fix Common Issues
 
 ```bash
-python -m .claude.scenarios.az-devops-tools.auth_check --auto-fix
+python .claude/scenarios/az-devops-tools/auth_check.py --auto-fix
 ```
 
 This attempts to:
 
 - Install DevOps extension if missing
-- Guide ye through missing configuration
+- Guide you through missing configuration
 
 ## Configuration Priority
 
@@ -128,7 +128,7 @@ export AZURE_DEVOPS_ORG_URL="https://dev.azure.com/YOUR_ORG"
 export AZURE_DEVOPS_PROJECT="YOUR_PROJECT"
 ```
 
-Add to yer `~/.bashrc` or `~/.zshrc` fer persistence.
+Add to your `~/.bashrc` or `~/.zshrc` for persistence.
 
 ## Troubleshooting
 
@@ -178,11 +178,11 @@ az login
 
 ## Security Best Practices
 
-- Use service principals fer automation
+- Use service principals for automation
 - Rotate credentials regularly
 - Don't commit credentials to git
-- Use Azure Key Vault fer production
-- Enable MFA on yer Azure account
+- Use Azure Key Vault for production
+- Enable MFA on your Azure account
 
 ## See Also
 
