@@ -36,21 +36,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
 
-# slugify function to be implemented
-try:
-    from amplihack.utils.string_utils import slugify
-except ImportError:
-    # Define placeholder so tests can be written
-    def slugify(text: str) -> str:
-        """Placeholder - to be implemented.
-
-        Args:
-            text: String to convert to slug
-
-        Returns:
-            URL-safe slug string
-        """
-        raise NotImplementedError("slugify not yet implemented")
+# Import string utilities - fail fast if not available
+from amplihack.utils.string_utils import slugify, titlecase
 
 
 class TestSlugify:
@@ -419,16 +406,6 @@ class TestSlugify:
         """
         result = slugify("already-a-slug")
         assert result == "already-a-slug", "Already valid hyphen-separated slug should remain"
-
-
-# titlecase function to be implemented
-try:
-    from amplihack.utils.string_utils import titlecase
-except ImportError:
-    # Define placeholder so tests can be written - THIS SHOULD FAIL
-    def titlecase(text: str | None) -> str:
-        """Placeholder - to be implemented."""
-        raise NotImplementedError("titlecase not yet implemented")
 
 
 class TestTitlecaseBasicFunctionality:
