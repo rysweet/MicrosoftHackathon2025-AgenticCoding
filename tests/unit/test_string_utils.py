@@ -1,11 +1,12 @@
 """Unit tests for string utility functions - TDD approach.
 
-Tests the slugify function that converts strings to URL-safe slugs.
-Function to be implemented in amplihack/utils/string_utils.py
+Tests the string utility functions:
+- slugify: converts strings to URL-safe slugs
+- titlecase: converts strings to Title Case
 
-Following TDD approach - these tests should FAIL initially as slugify is not implemented.
+Following TDD approach - write tests first, then implement.
 
-Test Coverage:
+Test Coverage (slugify):
 - Basic text to slug conversion
 - Empty string handling
 - Special character removal
@@ -18,6 +19,14 @@ Test Coverage:
 - Mixed case conversion
 - Consecutive hyphens
 - Complex edge cases
+
+Test Coverage (titlecase):
+- Basic title case conversion
+- Empty string and None handling
+- Whitespace preservation
+- Numbers and special characters
+- Hyphenated words and apostrophes
+- Edge cases and idempotency
 """
 
 import sys
@@ -410,3 +419,193 @@ class TestSlugify:
         """
         result = slugify("already-a-slug")
         assert result == "already-a-slug", "Already valid hyphen-separated slug should remain"
+
+
+# titlecase function to be implemented
+try:
+    from amplihack.utils.string_utils import titlecase
+except ImportError:
+    # Define placeholder so tests can be written - THIS SHOULD FAIL
+    def titlecase(text: str | None) -> str:
+        """Placeholder - to be implemented."""
+        raise NotImplementedError("titlecase not yet implemented")
+
+
+class TestTitlecaseBasicFunctionality:
+    """Test basic titlecase functionality."""
+
+    def test_basic_hello_world(self):
+        """Test basic conversion of simple text to title case."""
+        result = titlecase("hello world")
+        assert result == "Hello World", "Should convert 'hello world' to 'Hello World'"
+
+    def test_single_word(self):
+        """Test conversion of single word."""
+        result = titlecase("hello")
+        assert result == "Hello", "Should capitalize single word 'hello' to 'Hello'"
+
+    def test_already_uppercase_word(self):
+        """Test conversion of already uppercase text."""
+        result = titlecase("HELLO")
+        assert result == "Hello", "Should convert 'HELLO' to 'Hello'"
+
+    def test_mixed_case_text(self):
+        """Test conversion of mixed case text."""
+        result = titlecase("hElLo WoRlD")
+        assert result == "Hello World", "Should normalize mixed case to 'Hello World'"
+
+    def test_single_character(self):
+        """Test conversion of single character."""
+        result = titlecase("a")
+        assert result == "A", "Should capitalize single char 'a' to 'A'"
+
+    def test_single_uppercase_character(self):
+        """Test single uppercase character remains uppercase."""
+        result = titlecase("A")
+        assert result == "A", "Single uppercase 'A' should remain 'A'"
+
+
+class TestTitlecaseEmptyAndNullHandling:
+    """Test titlecase handling of empty and null inputs."""
+
+    def test_empty_string(self):
+        """Test handling of empty string input."""
+        result = titlecase("")
+        assert result == "", "Empty string should return empty string"
+
+    def test_none_input(self):
+        """Test handling of None input."""
+        result = titlecase(None)
+        assert result == "", "None should return empty string"
+
+
+class TestTitlecaseWhitespaceHandling:
+    """Test titlecase handling of various whitespace scenarios."""
+
+    def test_multiple_spaces_preserved(self):
+        """Test that multiple consecutive spaces are preserved."""
+        result = titlecase("hello  world")
+        assert result == "Hello  World", "Should preserve multiple spaces"
+
+    def test_whitespace_only_preserved(self):
+        """Test that whitespace-only strings are preserved."""
+        result = titlecase("   ")
+        assert result == "   ", "Whitespace-only string should be preserved"
+
+    def test_newline_handling(self):
+        """Test handling of newline characters."""
+        result = titlecase("hello\nworld")
+        assert result == "Hello\nWorld", "Should handle newline as word separator"
+
+    def test_tab_handling(self):
+        """Test handling of tab characters."""
+        result = titlecase("hello\tworld")
+        assert result == "Hello\tWorld", "Should handle tab as word separator"
+
+    def test_leading_trailing_spaces(self):
+        """Test handling of leading and trailing spaces."""
+        result = titlecase(" hello ")
+        assert result == " Hello ", "Should preserve leading/trailing spaces"
+
+
+class TestTitlecaseNumbersAndSpecialChars:
+    """Test titlecase handling of numbers and special characters."""
+
+    def test_numbers_in_word(self):
+        """Test handling of numbers within words."""
+        result = titlecase("hello2world")
+        assert result == "Hello2World", "Should handle numbers"
+
+    def test_punctuation_preserved(self):
+        """Test that punctuation is preserved and affects title case."""
+        result = titlecase("hello, world!")
+        assert result == "Hello, World!", "Should preserve punctuation"
+
+    def test_hyphenated_words(self):
+        """Test handling of hyphenated words."""
+        result = titlecase("hello-world")
+        assert result == "Hello-World", "Should handle hyphen"
+
+    def test_apostrophe_handling(self):
+        """Test handling of apostrophes in words."""
+        result = titlecase("o'brien")
+        assert result == "O'Brien", "Should handle apostrophe"
+
+
+class TestTitlecaseEdgeCases:
+    """Test titlecase edge cases and boundary conditions."""
+
+    def test_numbers_only(self):
+        """Test string containing only numbers."""
+        result = titlecase("123")
+        assert result == "123", "Numbers-only string should remain unchanged"
+
+    def test_punctuation_only(self):
+        """Test string containing only punctuation."""
+        result = titlecase("...")
+        assert result == "...", "Punctuation-only string should remain unchanged"
+
+    def test_mixed_numbers_and_words(self):
+        """Test mixed numbers and words."""
+        result = titlecase("test123 hello")
+        assert result == "Test123 Hello", "Should handle mixed numbers and words"
+
+    def test_underscore_in_text(self):
+        """Test handling of underscores."""
+        result = titlecase("hello_world")
+        assert result == "Hello_World", "Should handle underscore as separator"
+
+    def test_parentheses(self):
+        """Test parentheses in text."""
+        result = titlecase("hello (world)")
+        assert result == "Hello (World)", "Should handle parentheses"
+
+
+class TestTitlecaseIdempotency:
+    """Test titlecase idempotency."""
+
+    def test_idempotent_basic(self):
+        """Test that titlecase is idempotent on basic input."""
+        original = "hello world"
+        first_pass = titlecase(original)
+        second_pass = titlecase(first_pass)
+        assert first_pass == second_pass, "Titlecase should be idempotent"
+
+    def test_idempotent_with_punctuation(self):
+        """Test idempotency with punctuation."""
+        original = "hello, world!"
+        first_pass = titlecase(original)
+        second_pass = titlecase(first_pass)
+        assert first_pass == second_pass, "Should be idempotent with punctuation"
+
+
+class TestTitlecaseTypeHandling:
+    """Test titlecase type handling and error cases."""
+
+    def test_returns_string_type(self):
+        """Test that titlecase always returns a string."""
+        result = titlecase("hello")
+        assert isinstance(result, str), "Should return string type"
+
+    def test_none_returns_string(self):
+        """Test that None input returns string (not None)."""
+        result = titlecase(None)
+        assert isinstance(result, str), "None input should return string type"
+        assert result == "", "None should return empty string"
+
+
+class TestTitlecaseKnownLimitations:
+    """Test documented str.title() behavior quirks."""
+
+    def test_apostrophe_quirk_documented(self):
+        """Document that str.title() capitalizes after apostrophe.
+
+        This is a known limitation of str.title() - it treats any
+        non-letter character as a word boundary. For example:
+        - "it's" becomes "It'S" (not "It's")
+        - "o'brien" becomes "O'Brien" (expected)
+
+        For AP-style title case, use a dedicated library.
+        """
+        result = titlecase("it's")
+        assert result == "It'S", "Known behavior: str.title() capitalizes after apostrophe"

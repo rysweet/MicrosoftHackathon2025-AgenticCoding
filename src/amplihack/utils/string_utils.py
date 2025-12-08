@@ -10,6 +10,7 @@ Philosophy:
 
 Public API:
     slugify: Convert text to URL-safe slug format
+    titlecase: Convert text to title case with graceful None handling
 """
 
 import re
@@ -61,4 +62,40 @@ def slugify(text: str) -> str:
     return text.strip("-")
 
 
-__all__ = ["slugify"]
+def titlecase(text: str | None) -> str:
+    """Convert text to title case with graceful None handling.
+
+    Transforms input text to title case (first letter of each word capitalized)
+    using Python's built-in str.title() method. Handles None input gracefully
+    by returning an empty string.
+
+    Args:
+        text: Input string to transform, or None.
+
+    Returns:
+        Title-cased string with first letter of each word capitalized.
+        Empty string if input is None.
+
+    Examples:
+        >>> titlecase("hello world")
+        'Hello World'
+        >>> titlecase("the quick brown fox")
+        'The Quick Brown Fox'
+        >>> titlecase(None)
+        ''
+        >>> titlecase("")
+        ''
+        >>> titlecase("ALREADY UPPERCASE")
+        'Already Uppercase'
+
+    Note:
+        Uses str.title() which capitalizes after any non-letter character.
+        This means "it's" becomes "It'S". For more sophisticated title
+        casing (e.g., AP style), consider a dedicated library.
+    """
+    if text is None:
+        return ""
+    return text.title()
+
+
+__all__ = ["slugify", "titlecase"]
