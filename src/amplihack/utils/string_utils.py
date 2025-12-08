@@ -1,6 +1,7 @@
 """String utility functions for text processing.
 
-This module provides utilities for converting strings to URL-safe formats.
+This module provides utilities for converting strings to URL-safe formats
+and text case transformations.
 
 Philosophy:
 - Ruthless simplicity (stdlib only)
@@ -10,6 +11,8 @@ Philosophy:
 
 Public API:
     slugify: Convert text to URL-safe slug format
+    titlecase: Convert text to Title Case format
+    titlecase_safe: Type-safe Title Case with None and type coercion
 """
 
 import re
@@ -61,4 +64,49 @@ def slugify(text: str) -> str:
     return text.strip("-")
 
 
-__all__ = ["slugify"]
+def titlecase(text: str) -> str:
+    """Convert text to Title Case format.
+
+    Args:
+        text: Input string to convert.
+
+    Returns:
+        Title Case formatted string.
+
+    Raises:
+        TypeError: If input is not a string.
+
+    Examples:
+        >>> titlecase("hello world")
+        'Hello World'
+        >>> titlecase("LOUD NOISES")
+        'Loud Noises'
+    """
+    if not isinstance(text, str):
+        raise TypeError(f"Expected str, got {type(text).__name__}")
+    return text.title()
+
+
+def titlecase_safe(value: str | None | float | bool) -> str:
+    """Type-safe Title Case with None and type coercion.
+
+    Args:
+        value: Any value to convert. None returns "", non-strings coerced.
+
+    Returns:
+        Title Case string, or "" for None.
+
+    Examples:
+        >>> titlecase_safe(None)
+        ''
+        >>> titlecase_safe("hello world")
+        'Hello World'
+        >>> titlecase_safe(42)
+        '42'
+    """
+    if value is None:
+        return ""
+    return titlecase(str(value))
+
+
+__all__ = ["slugify", "titlecase", "titlecase_safe"]

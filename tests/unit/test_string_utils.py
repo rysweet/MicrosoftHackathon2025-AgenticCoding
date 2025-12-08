@@ -1,9 +1,6 @@
-"""Unit tests for string utility functions - TDD approach.
+"""Unit tests for string utility functions.
 
-Tests the slugify function that converts strings to URL-safe slugs.
-Function to be implemented in amplihack/utils/string_utils.py
-
-Following TDD approach - these tests should FAIL initially as slugify is not implemented.
+Tests the slugify and slugify_safe functions that convert strings to URL-safe slugs.
 
 Test Coverage:
 - Basic text to slug conversion
@@ -18,10 +15,16 @@ Test Coverage:
 - Mixed case conversion
 - Consecutive hyphens
 - Complex edge cases
+- Type coercion (slugify_safe)
+- None handling (slugify_safe)
+- Title case conversion (titlecase)
+- Safe title case with None/type coercion (titlecase_safe)
 """
 
 import sys
 from pathlib import Path
+
+import pytest
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
@@ -410,3 +413,305 @@ class TestSlugify:
         """
         result = slugify("already-a-slug")
         assert result == "already-a-slug", "Already valid hyphen-separated slug should remain"
+
+
+# Import titlecase functions
+from amplihack.utils.string_utils import titlecase, titlecase_safe
+
+
+class TestTitlecase:
+    """Test titlecase function for converting strings to Title Case.
+
+    The titlecase function should:
+    1. Convert each word to Title Case using str.title()
+    2. Raise TypeError for non-string input
+    3. Preserve whitespace (spaces, tabs, newlines)
+    4. Known limitation: apostrophe handling follows stdlib behavior
+    """
+
+    def test_basic_hello_world(self):
+        """Test basic conversion of simple text to title case.
+
+        Expected behavior:
+        - "hello world" should become "Hello World"
+        - First letter of each word capitalized
+        - Other letters lowercased
+        """
+        result = titlecase("hello world")
+        assert result == "Hello World", "Should convert 'hello world' to 'Hello World'"
+
+    def test_empty_string(self):
+        """Test handling of empty string input.
+
+        Expected behavior:
+        - Empty string "" should return ""
+        - No errors or exceptions
+        """
+        result = titlecase("")
+        assert result == "", "Empty string should return empty string"
+
+    def test_whitespace_only(self):
+        """Test handling of whitespace-only string input.
+
+        Expected behavior:
+        - "   " should return "   "
+        - Whitespace is preserved unchanged
+        """
+        result = titlecase("   ")
+        assert result == "   ", "Whitespace-only string should preserve whitespace"
+
+    def test_single_word(self):
+        """Test title case of a single word.
+
+        Expected behavior:
+        - "hello" should become "Hello"
+        - First letter capitalized, rest lowercase
+        """
+        result = titlecase("hello")
+        assert result == "Hello", "Should capitalize single word"
+
+    def test_all_caps_normalization(self):
+        """Test normalization of all-caps input.
+
+        Expected behavior:
+        - "HELLO WORLD" should become "Hello World"
+        - All uppercase converted to title case
+        """
+        result = titlecase("HELLO WORLD")
+        assert result == "Hello World", "Should normalize all caps to title case"
+
+    def test_mixed_case_normalization(self):
+        """Test normalization of mixed case input.
+
+        Expected behavior:
+        - "hELLo WoRLD" should become "Hello World"
+        - Mixed case normalized to title case
+        """
+        result = titlecase("hELLo WoRLD")
+        assert result == "Hello World", "Should normalize mixed case to title case"
+
+    def test_preserves_multiple_spaces(self):
+        """Test that multiple consecutive spaces are preserved.
+
+        Expected behavior:
+        - "hello   world" should become "Hello   World"
+        - Multiple spaces between words preserved
+        """
+        result = titlecase("hello   world")
+        assert result == "Hello   World", "Should preserve multiple spaces"
+
+    def test_preserves_leading_trailing_spaces(self):
+        """Test that leading and trailing spaces are preserved.
+
+        Expected behavior:
+        - "  hello world  " should become "  Hello World  "
+        - Leading and trailing spaces preserved
+        """
+        result = titlecase("  hello world  ")
+        assert result == "  Hello World  ", "Should preserve leading/trailing spaces"
+
+    def test_handles_numbers(self):
+        """Test handling of numbers mixed with words.
+
+        Expected behavior:
+        - "hello 123 world" should become "Hello 123 World"
+        - Numbers preserved unchanged
+        """
+        result = titlecase("hello 123 world")
+        assert result == "Hello 123 World", "Should handle numbers in text"
+
+    def test_special_characters(self):
+        """Test handling of special characters like hyphens.
+
+        Expected behavior:
+        - "hello-world" should become "Hello-World"
+        - Title case applied after hyphens (stdlib behavior)
+        """
+        result = titlecase("hello-world")
+        assert result == "Hello-World", "Should apply title case after hyphens"
+
+    def test_apostrophe_stdlib_behavior(self):
+        """Test documented stdlib behavior with apostrophes.
+
+        Expected behavior:
+        - "it's" should become "It'S"
+        - This is the known stdlib str.title() behavior
+        - Character after apostrophe is capitalized
+        """
+        result = titlecase("it's")
+        assert result == "It'S", "Should follow stdlib apostrophe behavior (It'S)"
+
+    def test_newlines_preserved(self):
+        """Test that newline characters are preserved.
+
+        Expected behavior:
+        - "hello\\nworld" should become "Hello\\nWorld"
+        - Newlines act as word separators for title case
+        """
+        result = titlecase("hello\nworld")
+        assert result == "Hello\nWorld", "Should preserve newlines and title case each line"
+
+    def test_tabs_preserved(self):
+        """Test that tab characters are preserved.
+
+        Expected behavior:
+        - "hello\\tworld" should become "Hello\\tWorld"
+        - Tabs act as word separators for title case
+        """
+        result = titlecase("hello\tworld")
+        assert result == "Hello\tWorld", "Should preserve tabs and title case each word"
+
+    def test_unicode_chars(self):
+        """Test handling of unicode characters with accents.
+
+        Expected behavior:
+        - "cafe resume" should become "Cafe Resume"
+        - Unicode characters preserved and title cased
+        """
+        result = titlecase("cafe resume")
+        assert result == "Cafe Resume", "Should handle unicode characters"
+
+    def test_raises_type_error_for_none(self):
+        """Test that None input raises TypeError.
+
+        Expected behavior:
+        - titlecase(None) should raise TypeError
+        - Clear error message indicating expected type
+        """
+        with pytest.raises(TypeError):
+            titlecase(None)
+
+    def test_raises_type_error_for_int(self):
+        """Test that integer input raises TypeError.
+
+        Expected behavior:
+        - titlecase(42) should raise TypeError
+        - Non-string types are not accepted
+        """
+        with pytest.raises(TypeError):
+            titlecase(42)
+
+    def test_idempotency(self):
+        """Test that titlecase is idempotent - applying it twice gives same result.
+
+        Expected behavior:
+        - titlecase(titlecase(x)) == titlecase(x)
+        - Second application doesn't change result
+        """
+        original = "hello world"
+        first_pass = titlecase(original)
+        second_pass = titlecase(first_pass)
+        assert first_pass == second_pass, "Titlecase should be idempotent"
+
+
+class TestTitlecaseSafe:
+    """Test titlecase_safe function for safe title case conversion with type coercion.
+
+    The titlecase_safe function should:
+    1. Return empty string for None input
+    2. Coerce non-string values via str() before processing
+    3. Delegate to titlecase() for actual conversion
+    4. Never raise TypeError
+    """
+
+    def test_none_returns_empty(self):
+        """Test that None input returns empty string.
+
+        Expected behavior:
+        - titlecase_safe(None) should return ""
+        - No TypeError raised
+        """
+        result = titlecase_safe(None)
+        assert result == "", "None should return empty string"
+
+    def test_empty_string(self):
+        """Test handling of empty string input.
+
+        Expected behavior:
+        - titlecase_safe("") should return ""
+        - Empty string passthrough
+        """
+        result = titlecase_safe("")
+        assert result == "", "Empty string should return empty string"
+
+    def test_string_passthrough(self):
+        """Test that string input is processed normally.
+
+        Expected behavior:
+        - titlecase_safe("hello world") should return "Hello World"
+        - Same behavior as titlecase() for string input
+        """
+        result = titlecase_safe("hello world")
+        assert result == "Hello World", "Should convert string to title case"
+
+    def test_integer_coercion(self):
+        """Test coercion of positive integer to string.
+
+        Expected behavior:
+        - titlecase_safe(42) should return "42"
+        - Integer converted to string, no transformation needed
+        """
+        result = titlecase_safe(42)
+        assert result == "42", "Should coerce integer to string"
+
+    def test_negative_integer(self):
+        """Test coercion of negative integer to string.
+
+        Expected behavior:
+        - titlecase_safe(-123) should return "-123"
+        - Negative sign preserved
+        """
+        result = titlecase_safe(-123)
+        assert result == "-123", "Should coerce negative integer to string"
+
+    def test_float_coercion(self):
+        """Test coercion of float to string.
+
+        Expected behavior:
+        - titlecase_safe(12.5) should return "12.5"
+        - Float converted to string representation
+        """
+        result = titlecase_safe(12.5)
+        assert result == "12.5", "Should coerce float to string"
+
+    def test_boolean_true(self):
+        """Test coercion of boolean True to string.
+
+        Expected behavior:
+        - titlecase_safe(True) should return "True"
+        - Boolean string representation title cased
+        """
+        result = titlecase_safe(True)
+        assert result == "True", "Should coerce True to 'True'"
+
+    def test_boolean_false(self):
+        """Test coercion of boolean False to string.
+
+        Expected behavior:
+        - titlecase_safe(False) should return "False"
+        - Boolean string representation title cased
+        """
+        result = titlecase_safe(False)
+        assert result == "False", "Should coerce False to 'False'"
+
+    def test_zero_integer(self):
+        """Test coercion of zero integer to string.
+
+        Expected behavior:
+        - titlecase_safe(0) should return "0"
+        - Zero converted to string
+        """
+        result = titlecase_safe(0)
+        assert result == "0", "Should coerce zero to '0'"
+
+    def test_idempotency(self):
+        """Test that titlecase_safe is idempotent - applying it twice gives same result.
+
+        Expected behavior:
+        - titlecase_safe(titlecase_safe(x)) == titlecase_safe(x)
+        - Second application doesn't change result
+        """
+        original = "hello world"
+        first_pass = titlecase_safe(original)
+        second_pass = titlecase_safe(first_pass)
+        assert first_pass == second_pass, "Titlecase_safe should be idempotent"
