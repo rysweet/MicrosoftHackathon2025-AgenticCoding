@@ -18,7 +18,6 @@ try:
         ContextExtractor,
         ContextRehydrator,
         TokenMonitor,
-        check_status,
     )
 except ImportError:
     # Fallback for when running from hooks
@@ -141,9 +140,7 @@ class ContextAutomation:
             )
             if snapshot_created:
                 result["actions_taken"].append(f"auto_snapshot_at_{threshold_status}")
-                result["warnings"].append(
-                    f"⚠️  Auto-snapshot created at {usage.percentage:.1f}% usage"
-                )
+                result["warnings"].append(f"Auto-snapshot created at {usage.percentage:.1f}% usage")
 
         # Add recommendations based on usage
         if usage.percentage > 70:
@@ -221,7 +218,7 @@ class ContextAutomation:
         # Find most recent snapshot
         snapshots = self.state.get("snapshots_created", [])
         if not snapshots:
-            result["warnings"].append("⚠️  Compaction detected but no snapshots available")
+            result["warnings"].append("Compaction detected but no snapshots available")
             return
 
         # Get most recent snapshot
@@ -229,7 +226,7 @@ class ContextAutomation:
         snapshot_path = Path(recent_snapshot["path"])
 
         if not snapshot_path.exists():
-            result["warnings"].append("⚠️  Snapshot file not found")
+            result["warnings"].append("Snapshot file not found")
             return
 
         # Smart level selection based on usage before compaction
@@ -245,12 +242,12 @@ class ContextAutomation:
             level = "comprehensive"
 
         try:
-            # Rehydrate context
-            rehydrated = self.rehydrator.rehydrate(snapshot_path, level)
+            # Rehydrate context (result stored for potential future use)
+            _ = self.rehydrator.rehydrate(snapshot_path, level)
 
             result["actions_taken"].append(f"auto_rehydrated_at_{level}_level")
             result["warnings"].append(
-                f"✅ Context restored automatically ({level} level) from {recent_snapshot['timestamp']}"
+                f"Context restored automatically ({level} level) from {recent_snapshot['timestamp']}"
             )
 
             # Mark that we've rehydrated
@@ -263,7 +260,7 @@ class ContextAutomation:
             self._save_state()
 
         except Exception as e:
-            result["warnings"].append(f"⚠️  Auto-rehydration failed: {e}")
+            result["warnings"].append(f"Auto-rehydration failed: {e}")
 
 
 def run_automation(current_tokens: int, conversation_data: list | None = None):
